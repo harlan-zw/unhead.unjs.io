@@ -36,4 +36,4 @@ jobs:
         uses: nuxt-hub/action@v1
         id: deploy
         with:
-          project-key: unhead-unjs-io-dm7h
+          project-key: unhead-unjs-io-xtiq
