@@ -1,6 +1,8 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
 
+logger.info(`🚀 Using Nuxt UI Pro License: ${!!process.env.NUXT_UI_PRO_LICENSE}`)
+
 export default defineNuxtConfig({
   modules: [
     'nuxt-content-twoslash',
@@ -130,6 +132,11 @@ export default defineNuxtConfig({
         },
       },
     },
+  },
+
+  // CI Not picking this up for some reason ?
+  uiPro: {
+    license: process.env.NUXT_UI_PRO_LICENSE,
   },
 
   components: [
