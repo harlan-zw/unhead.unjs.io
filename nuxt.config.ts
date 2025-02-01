@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs'
+import { readFile, writeFile } from 'node:fs/promises'
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
 import { logger } from './logger'
@@ -26,6 +28,22 @@ export default defineNuxtConfig({
         // from sponsorkit
         nitro.options.alias.sharp = 'unenv/runtime/mock/empty'
         nitro.options.alias.pnpapi = 'unenv/runtime/mock/empty' // ?
+        nitro.hooks.hook('compiled', async (_nitro) => {
+          const routesPath = resolve(nitro.options.output.publicDir, '_routes.json')
+          if (existsSync(routesPath)) {
+            const routes: { version: number, include: string[], exclude: string[] } = await readFile(routesPath)
+              .then(buffer => JSON.parse(buffer.toString()))
+            const preSize = routes.exclude.length
+            routes.exclude = routes.exclude.filter(path => path.startsWith('/docs'))
+            if (!routes.exclude.includes('/docs/*')) {
+              routes.exclude.push('/docs/*')
+            }
+            if (preSize !== routes.exclude.length) {
+              logger.info(`Optimizing CloudFlare \`_routes.json\` for prerendered app ${gray(`(${100 - Math.round(routes.exclude.length / preSize * 100)}% smaller)`)}`)
+            }
+            await writeFile(routesPath, JSON.stringify(routes, void 0, 2))
+          }
+        })
       })
     },
   ],
@@ -84,6 +102,15 @@ export default defineNuxtConfig({
       crawlLinks: true,
       routes: ['/'],
     },
+    cloudflare: {
+      pages: {
+        routes: {
+          exclude: [
+            '/docs/*',
+          ],
+        },
+      },
+    },
   },
 
   linkChecker: {
@@ -91,7 +118,7 @@ export default defineNuxtConfig({
       // generate both a html and markdown report
       html: true,
       markdown: true,
-    }
+    },
   },
 
   site: {
