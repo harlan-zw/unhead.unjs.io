@@ -1,5 +1,6 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
+import { logger } from './logger'
 
 logger.info(`🚀 Using Nuxt UI Pro License: ${!!process.env.NUXT_UI_PRO_LICENSE}`)
 
