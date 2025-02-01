@@ -327,7 +327,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
               </UButton>
             </div>
           </div>
-          <div class="max-w-xl mx-auto">
+          <div v-if="sponsors" class="max-w-xl mx-auto">
             <div class="text-2xl font-semibold mb-5">
               Top Sponsors
             </div>
