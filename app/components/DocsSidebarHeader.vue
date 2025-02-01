@@ -10,7 +10,6 @@ const stats = inject('stats', ref({ modules: [] }))
 const files = inject('search')
 const nav = useDocsNav()
 
-// const selectedFramework = computed(() => route.path.split('/')[3])
 const { open } = useContentSearch()
 const versions = computed(() => {
   return (stats.value.versions || []).map((version) => {

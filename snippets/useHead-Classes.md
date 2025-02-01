@@ -4,7 +4,7 @@
 useHead({
   bodyAttrs: {
     // use strings
-    style: 'background-color: white; color: black',
+    style: 'background-color: #343434',
     // arrays
     class: ['dark', 'overflow'],
   },
@@ -16,7 +16,7 @@ useHead({
     },
     // computed boolean objects
     class: {
-      dark: () => isDarkMode.value,
+      dark: () => Date.now() % 2 === 0,
     },
   },
 })

@@ -75,7 +75,6 @@ export function enhanceTitlesAndIcons(n: NavItem) {
   }
   else if (n.title.endsWith('()')) {
     n.html = true
-    // n.icon = 'i-vscode-icons-file-type-typescript-official'
     const [fnName] = n.title.split('()')
     n.title = `<code class="language-ts shiki shiki-themes github-light github-light material-theme-palenight" language="ts"><span style="--shiki-light: #6F42C1; --shiki-default: #6F42C1; --shiki-dark: #82AAFF;">${fnName}</span><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #BABED8;">()</span></code>`
   }
@@ -85,9 +84,6 @@ export function enhanceTitlesAndIcons(n: NavItem) {
     n.title = `<code class="language-ts shiki shiki-themes github-light github-light material-theme-palenight" language="ts"><span class="line" line="2"><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #89DDFF;">  &lt;</span><span style="--shiki-light: #22863A; --shiki-default: #22863A; --shiki-dark: #F07178;">${inner}</span><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #89DDFF;"> /&gt;
 </span></span></code>`
   }
-  // if (n.children?.length === 1) {
-  //   n = n.children[0]
-  // }
   return n
 }
 
@@ -177,18 +173,6 @@ export function useDocsNav() {
                 }
               }
             }
-            // if (n.path.endsWith('/guides')) {
-            //   const idx = acc.findIndex(a => a.path.endsWith('/guides'))
-            //   if (idx > -1) {
-            //     acc[idx].children.unshift(...n.children)
-            //   }
-            //   else {
-            //     acc.push(n)
-            //   }
-            // }
-            // else {
-            //   // acc.push(n)
-            // }
             return acc
           }, [])
           .map(enhanceTitlesAndIcons)

@@ -3,7 +3,6 @@ import { Unhead } from '~~/const'
 import { enhanceTitlesAndIcons } from '~/composables/data'
 
 const nav = inject('navigation')
-// map children
 const unheadGuides = nav.value.filter(c => c.path.startsWith('/docs/guides')).map(enhanceTitlesAndIcons).map(c => ({ ...c, title: 'Unhead', icon: Unhead.icon }))
 const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/schema-org') || c.path.startsWith('/docs/scripts')).map(enhanceTitlesAndIcons).map(c => ({
   ...c,

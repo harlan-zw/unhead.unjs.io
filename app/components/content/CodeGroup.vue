@@ -26,7 +26,6 @@ const ui = {
 }
 
 const slots = useSlots()
-// const { ui, attrs } = useUI('content.codeGroup', undefined, config, toRef(props, 'class'), true)
 
 const selectedIndex = ref(0)
 defineExpose({ selectedIndex })

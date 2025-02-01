@@ -32,7 +32,6 @@ const config = {
 }
 
 const router = useRouter()
-// const { ui, attrs } = useUI('content.toc.links', toRef(props, 'ui'), config, toRef(props, 'class'), true)
 
 function scrollToHeading(id: string) {
   const encodedId = encodeURIComponent(id)

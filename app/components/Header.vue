@@ -17,7 +17,6 @@ const menu = computed(() => {
   return [
     {
       label: Unhead.label,
-      // icon: 'i-carbon-code',
       icon: Unhead.icon,
       to: '/docs/introduction',
       active: route.path.split('/')[2] && !['schema-org', 'scripts'].includes(route.path.split('/')[2]),
