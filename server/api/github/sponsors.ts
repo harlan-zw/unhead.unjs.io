@@ -29,13 +29,13 @@ export default defineCachedEventHandler(async (e) => {
 
   return sponsors.reduce((acc, sponsor) => {
     if (sponsor.monthlyDollars >= 25 && sponsor.monthlyDollars < 50) {
-      acc.$25.push(sponsor)
+      acc.$25?.push(sponsor)
     }
     else if (sponsor.monthlyDollars > 50) {
-      acc.$50.push(sponsor)
+      acc.$50?.push(sponsor)
     }
     else {
-      acc.others.push(sponsor)
+      acc.others?.push(sponsor)
     }
     return acc
   }, {
