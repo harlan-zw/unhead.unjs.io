@@ -5,4 +5,5 @@ useHead({
   title: 'Hello World',
   titleTemplate: '%s %separator My App',
 })
+// Hello World - My App
 ```

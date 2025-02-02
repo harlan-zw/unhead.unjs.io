@@ -52,7 +52,7 @@ const headline = ''
 const repoLinks = computed(() => [
   {
     label: 'Edit this page',
-    to: `https://github.com/test/edit/main/docs/content/${page.value.id.split('/').slice(3).join('/')}`,
+    to: `https://github.com/unjs/docs/edit/main/docs/${page.value.id.split('/').slice(3).join('/')}`,
     target: '_blank',
   },
 ])

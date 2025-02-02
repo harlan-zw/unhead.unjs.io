@@ -26,9 +26,6 @@ const version = versions.value[0]
 <template>
   <div v-if="module && nav" class="pt-5">
     <div v-if="module" class="isolate -ml-2.5">
-      <div class="hidden md:block md:sticky rounded bg-white dark:bg-gray-900 top-0 z-1 mb-2">
-        <ModuleCard :key="module.slug" :module="module" :version="false" class="mb-2" />
-      </div>
       <div class="block md:hidden flex items-center gap-1 font-bold mb-3">
         <UIcon v-if="module.icon" dynamic :name="module.icon" class="text-blue-500 dark:text-blue-300" />{{ module.label }}
       </div>

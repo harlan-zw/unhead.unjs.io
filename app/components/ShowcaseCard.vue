@@ -28,7 +28,7 @@ defineProps<{
           <h3 class="font-semibold">
             {{ label }}
           </h3>
-          <p class="text-sm mt-1 text-gray-400">
+          <p class="text-sm mt-1 text-[var(--ui-text-muted)]">
             {{ description }}
           </p>
         </div>

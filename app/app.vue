@@ -128,4 +128,9 @@ html.dark .shiki span {
   font-weight: var(--shiki-dark-font-weight);
   text-decoration: var(--shiki-dark-text-decoration);
 }
+
+.shiki span.line.highlight {
+  background-color:
+    color-mix(in oklab, var(--ui-border-muted) 75%, transparent) !important;
+}
 </style>

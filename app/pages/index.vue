@@ -159,7 +159,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         id: 2,
         icon: 'i-noto-rocket',
         title: 'Making Websites Faster',
-        description: 'Unhead ships to be treeshaken with client and server export paths.',
+        description: 'Unhead ships to be tree shaken with client and server export paths.',
         bg: 'dark:bg-purple-500/5 bg-purple-500/15',
         border: 'border-purple-500/10 border-purple-500/50',
       }"
@@ -200,10 +200,10 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
           Unhead Principals
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <ShowcaseCard label="Delightful Developer Experience" description="Full featured modules that do everything you expect and more.">
+          <ShowcaseCard label="Full Featured Developer Experience" description="Full featured modules that do everything you expect and more.">
             <UIcon name="i-noto-sparkles" class="w-1/2 h-1/2" />
           </ShowcaseCard>
-          <ShowcaseCard label="Mininum size, maxiumum DX" description="Prefer developer experience improvements over negligible kBs.">
+          <ShowcaseCard label="Minimal size (6.7kb kb)" description="Optional utils are tree shakable, keeping a small core and allowing for a minimal bundle size.">
             <UIcon name="i-noto-rocket" class="w-1/2 h-1/2" />
           </ShowcaseCard>
           <ShowcaseCard label="Extensible" description="Internally powered by hookable to allow for full customisatin over output.">
