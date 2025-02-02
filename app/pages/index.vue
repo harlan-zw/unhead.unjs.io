@@ -203,7 +203,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
           <ShowcaseCard label="Full Featured Developer Experience" description="Full featured modules that do everything you expect and more.">
             <UIcon name="i-noto-sparkles" class="w-1/2 h-1/2" />
           </ShowcaseCard>
-          <ShowcaseCard label="Minimal size (6.7kb kb)" description="Optional utils are tree shakable, keeping a small core and allowing for a minimal bundle size.">
+          <ShowcaseCard label="Minimal client build: 6.7kb gz" description="Optional utils are tree shakable, keeping a small core and allowing for a minimal bundle size.">
             <UIcon name="i-noto-rocket" class="w-1/2 h-1/2" />
           </ShowcaseCard>
           <ShowcaseCard label="Extensible" description="Internally powered by hookable to allow for full customisatin over output.">
