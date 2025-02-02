@@ -91,8 +91,6 @@ export function useDocsNav() {
   const { selectedFramework } = useFrameworkSelector()
   const route = useRoute()
   const navigation = inject('navigation')
-  let searchTiming: number
-  let navTiming: number
   return computed(() => {
     const _nav = Array.from(toValue(navigation))
     let lang = selectedFramework.value.slug
@@ -105,32 +103,27 @@ export function useDocsNav() {
       const children = Array.from(nav)
         .find(n => n.path.endsWith(maybeSubModulePath))
         ?.children
-      topNavItems = children.filter(n => n.path.endsWith(lang) || n.path.endsWith('introduction'))
+      topNavItems = children.filter(n => n.path.endsWith(lang) || n.path.endsWith('introduction') || n.path.endsWith('troubleshooting'))
         .flatMap(n => n.children ? n.children : n)
       isSubModule = true
       lang = maybeSubModulePath
     }
     else {
       topNavItems = Array.from(nav)
-        .filter(n => n.path.endsWith(lang) || n.path.startsWith('/docs/introduction') || n.path.startsWith('/docs/migration'))
+        .filter(n => n.path.endsWith(lang) || n.path.startsWith('/docs/introduction') || n.path.startsWith('/docs/troubleshooting') || n.path.startsWith('/docs/migration'))
     }
 
     const top = transformAsTopNav(topNavItems)
       // migration should always be last, introduction should always be first
+      // troubleshooting should be 2nd last
       .sort((a, b) => {
-        if (a.path.includes('introduction')) {
-          return -1
-        }
-        if (b.path.includes('introduction')) {
-          return 1
-        }
-        if (a.path.includes('migration')) {
-          return 1
-        }
-        if (b.path.includes('migration')) {
-          return -1
-        }
-        return 0
+        if (a.path.endsWith('migration')) return 1
+        if (b.path.endsWith('migration')) return -1
+        if (a.path.endsWith('introduction')) return -1
+        if (b.path.endsWith('introduction')) return 1
+        if (a.path.endsWith('troubleshooting')) return 1
+        if (b.path.endsWith('troubleshooting')) return -1
+        return
       })
 
     const mergedItems = ([...nav])
@@ -182,6 +175,6 @@ export function useDocsNav() {
       }
       return n
     })
-    return { navFlat, top, bottom, searchTiming, navTiming }
+    return { navFlat, top, bottom }
   })
 }
