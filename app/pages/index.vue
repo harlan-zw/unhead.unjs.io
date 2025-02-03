@@ -3,6 +3,7 @@ import { ShikiMagicMovePrecompiled } from 'shiki-magic-move/vue'
 import { humanNumber } from '~/composables/format'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 import { MagicMoveTokens } from '../magic-move'
+import { MagicMoveTokens as SideEffectTokens } from '../magic-move-mount'
 import 'shiki-magic-move/dist/style.css'
 
 definePageMeta({
@@ -41,6 +42,8 @@ useServerHead({
     },
   ],
 })
+
+const mounted = ref(false)
 
 const toggleCapo = ref(false)
 
@@ -97,7 +100,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
               The <span class="italic dark:text-gray-200 text-gray-800 ">full stack</span> <span class="font-cursive text-yellow-500">&lt;head&gt;</span> package for <span class="bg-green-500/10 dark:bg-green-400/40 px-2"> any framework</span>.
             </h1>
             <p class="max-w-xl text-gray-700 dark:text-gray-300 mt-4 max-w-3xl text-base md:text-xl">
-              Unhead is the any-framework document head manager built for SEO, performance and delightful developer experience.
+              Unhead wraps your document template, improving reactive SSR JavaScript framework SEO and performance.
             </p>
 
             <div class="flex mb-5 items-center gap-4 mt-5 md:mt-10  justify-start">
@@ -119,22 +122,57 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
       v-motion-fade-visible
       :section="{
         id: 4,
-        icon: 'i-noto-potted-plant',
-        title: 'Developer Experience First',
-        description: 'Fully reactive input that works however you\'d like it to work with fine-grain control over the final output.',
+        icon: 'i-noto-books',
+        title: 'Simply useHead()',
+        description: 'Unhead prefers a minimal API surface with most of the functionaltiy provided through the useHead() hook.',
         bg: 'dark:bg-green-500/5 bg-green-500/15',
         border: 'border-green-500/10 border-green-500/50',
       }"
     >
       <template #a>
         <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-Titles.md'))" />
-        <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-TemplateParams.md'))" />
         <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-TagProps.md'))" />
       </template>
       <template #b>
         <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-Classes.md'))" />
       </template>
     </ReuseSectionTemplate>
+    <div class="bg-neutral-200/50 dark:bg-gray-900/50 py-10">
+    <div class="max-w-2xl mx-auto">
+      <div class="relative h-full xl:py-10">
+        <div class="relative flex items-center gap-3 sticky top-[300px]">
+          <div>
+            <h2 class="text-3xl text-balance text-gray-700 dark:text-gray-100 leading-tight font-bold mb-3 flex items-center gap-2">
+              <UIcon name="i-noto-potted-plant" class="w-10 h-10" />
+              Side Effect DOM Updates
+            </h2>
+            <div class="text-balance dark:text-gray-300/80 text-gray-600 text-lg">
+              All side effects are tracked so that unmounting a component will revert its head modifications and reactive
+              updates can be made at any time.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto grid grid-cols-2">
+      <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('side-effects-a.md'))" />
+      <div class=" h-full flex items-center justify-center flex-col">
+      <ProsePre class="prose shiki">
+        <ProseCode>
+          <ShikiMagicMovePrecompiled
+            animate
+            :steps="SideEffectTokens"
+            :step="Number(mounted)"
+          />
+        </ProseCode>
+        <div class="flex items-center gap-2">
+          <UBadge variant="outline" :color="mounted ? 'success' : 'gray'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
+          <UButton color="info" @click="mounted = !mounted">{{ mounted ? 'Unmount' : 'Mount' }}</UButton>
+        </div>
+      </ProsePre>
+      </div>
+    </div>
+    </div>
     <ReuseSectionTemplate
       :section="{
         icon: 'i-noto-sparkles',
@@ -191,6 +229,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
             @update:model-value="toggleCapo = !toggleCapo"
           />
           <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useScript.md'))" />
+          <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-TemplateParams.md'))" />
         </div>
       </template>
     </ReuseSectionTemplate>
