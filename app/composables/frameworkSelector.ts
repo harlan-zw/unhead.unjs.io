@@ -6,10 +6,7 @@ export const frameworks = [
   { icon: 'i-logos-react', label: 'React', slug: 'react', soon: true },
   { icon: 'i-logos-svelte-icon', label: 'Svelte', slug: 'svelte', soon: true },
   { icon: 'i-logos-angular-icon', label: 'Angular', slug: 'angular', soon: true },
-  { icon: 'i-logos-solidjs-icon', label: 'Solid', slug: 'solid', soon: true },
-  { icon: 'i-logos-preact', label: 'Preact', slug: 'preact', soon: true },
   { icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt' },
-  { icon: 'i-logos-astro-icon', label: 'Astro', slug: 'astro', soon: true },
 ] as const
 
 export function useFrameworkSelector() {
