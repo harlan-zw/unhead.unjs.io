@@ -3,7 +3,7 @@ import { joinRelativeURL } from 'ufo'
 export const frameworks = [
   { icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript' },
   { icon: 'i-logos-vue', label: 'Vue', slug: 'vue' },
-  { icon: 'i-logos-react', label: 'React', slug: 'react', soon: true },
+  { icon: 'i-logos-react', label: 'React', slug: 'react' },
   { icon: 'i-logos-svelte-icon', label: 'Svelte', slug: 'svelte', soon: true },
   { icon: 'i-logos-angular-icon', label: 'Angular', slug: 'angular', soon: true },
   { icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt' },
