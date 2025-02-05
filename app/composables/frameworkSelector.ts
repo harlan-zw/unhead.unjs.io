@@ -13,7 +13,7 @@ export function useFrameworkSelector() {
   const router = useRouter()
   const selectedFramework = useCookie('framework', { default: () => 'typescript' })
   const toast = useToast()
-  function switchFramework(framework: typeof frameworks[number]) {
+  function switchFramework(framework: typeof frameworks[number], redirect: boolean = true) {
     if (framework.soon) {
       toast.add({
         title: 'Coming Soon',
@@ -24,17 +24,19 @@ export function useFrameworkSelector() {
       return
     }
     // if the current path contains the framework slug, then we swap to the new one, otherwise we don't
-    const frameworkSlug = router.currentRoute.value.path.includes(selectedFramework.value) ? framework.slug : ''
     selectedFramework.value = framework.slug
-    // if path 2nd arg is schema-org or scripts we're in a sub module
-    const lastPath = router.currentRoute.value.path.split('/').pop()
-    const validRedirectPaths = ['introduction', 'installation', 'troubleshooting']
-    const lastPathRedirect = validRedirectPaths.includes(lastPath) ? lastPath : 'introduction'
-    const subModule = router.currentRoute.value.path.split('/')[2]
-    if (['schema-org', 'scripts'].includes(subModule)) {
-      return router.push(joinRelativeURL('/docs', subModule, frameworkSlug, lastPathRedirect))
+    if (redirect) {
+      const frameworkSlug = router.currentRoute.value.path.includes(selectedFramework.value) ? framework.slug : ''
+      // if path 2nd arg is schema-org or scripts we're in a sub module
+      const lastPath = router.currentRoute.value.path.split('/').pop()
+      const validRedirectPaths = ['introduction', 'installation', 'troubleshooting']
+      const lastPathRedirect = validRedirectPaths.includes(lastPath) ? lastPath : 'introduction'
+      const subModule = router.currentRoute.value.path.split('/')[2]
+      if (['schema-org', 'scripts'].includes(subModule)) {
+        return router.push(joinRelativeURL('/docs', subModule, frameworkSlug, lastPathRedirect))
+      }
+      router.push(joinRelativeURL('/docs', frameworkSlug, lastPathRedirect))
     }
-    router.push(joinRelativeURL('/docs', frameworkSlug, lastPathRedirect))
   }
   return {
     switchFramework,

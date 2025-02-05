@@ -71,7 +71,7 @@ watch(selectedFramework, () => {
       <div class="hidden lg:flex items-center gap-2">
         <UModal v-model:open="open" title="Select your framework">
           <UButton class="cursor-pointer" variant="ghost" size="sm">
-            <UIcon dynamic :name="selectedFramework?.icon" class="w-6 h-6 text-primary-400 dark:text-sky-200" />
+            <UIcon :key="selectedFramework?.slug" dynamic :name="selectedFramework?.icon" class="w-6 h-6 text-primary-400 dark:text-sky-200" />
             <UIcon name="i-carbon-chevron-down" class="w-4 h-4 text-[var(--ui-text)]" />
           </UButton>
           <template #body>
