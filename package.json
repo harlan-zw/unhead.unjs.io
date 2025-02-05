@@ -58,8 +58,8 @@
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.7.3",
-    "vitest": "^3.0.4",
-    "wrangler": "^3.107.2"
+    "vitest": "^3.0.5",
+    "wrangler": "^3.107.3"
   },
   "resolutions": {
     "@octokit/webhooks": "13.4.3"
