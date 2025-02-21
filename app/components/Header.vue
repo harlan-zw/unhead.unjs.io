@@ -28,7 +28,7 @@ const menu = computed(() => {
       active: route.path.split('/')[2] === 'schema-org',
     },
     {
-      label: 'Scripts',
+      label: 'Third Party Scripts',
       icon: 'i-carbon-script',
       to: '/docs/scripts/introduction',
       active: route.path.split('/')[2] === 'scripts',
