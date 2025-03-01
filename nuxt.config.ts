@@ -158,6 +158,20 @@ export default defineNuxtConfig({
     },
   ],
 
+  llms: {
+    domain: 'https://unhead.unjs.io',
+    title: 'Unhead',
+    description: 'Unhead is the any-framework document head manager built for performance and delightful developer experience.',
+    notes: [
+      'The documentation only includes Unhead v2 docs.',
+      'The content is automatically generated from the same source as the official documentation.',
+    ],
+    full: {
+      title: 'Complete Documentation',
+      description: 'The complete documentation including all content',
+    },
+  },
+
   hooks: {
     'components:extend': function (components) {
       for (const component of components) {
@@ -214,6 +228,10 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/usage/composables/use-head': { redirect: { to: '/api/use-head', statusCode: 301 } },
+    '/usage/composables/use-seo-meta': { redirect: { to: '/api/use-seo-meta', statusCode: 301 } },
+    '/usage/composables/use-head-safe': { redirect: { to: '/api/use-head-safe', statusCode: 301 } },
+    '/api/core/hooks': { redirect: { to: '/guides/hooks', statusCode: 301 } },
   },
 
   css: [

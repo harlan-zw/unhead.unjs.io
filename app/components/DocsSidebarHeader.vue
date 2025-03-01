@@ -46,7 +46,7 @@ const version = versions.value[0]
       <ContentNavigation as="div" class="mb-5" default-open :collapsible="false" :navigation="[{ children: nav?.top || [] }]" highlight :ui="{ linkTrailing: 'hidden', list: '-ms-4', listWithChildren: 'ms-0 border-none' }">
         <template #link-leading="{ link, active }">
           <div v-if="link.icon" class="rounded-md p-1 inline-flex ring-inset ring-1 bg-gray-100/50 dark:bg-gray-800/50 ring-gray-300 dark:ring-gray-700 group-hover:bg-primary group-hover:ring-primary group-hover:text-background" :class="active ? 'dark:bg-teal-700' : ''">
-            <UIcon :name="link.icon" class="w-4 h-4 text-primary-400 dark:text-sky-200" />
+            <UIcon :name="link.icon" class="w-4 h-4 text-primary-600 dark:text-primary-200" />
           </div>
         </template>
       </ContentNavigation>
@@ -55,10 +55,10 @@ const version = versions.value[0]
         <template #link="{ link }">
           <div v-if="!link.html" class="flex items-center justify-between gap-2 w-full">
             <div class="flex items-center gap-2">
-              <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-primary-400 dark:text-sky-200" />
               <div :class="link.children?.length ? 'text-sm font-bold' : ''">
                 {{ link.title }}
               </div>
+              <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-primary-600 dark:text-primary-200" />
             </div>
             <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
           </div>

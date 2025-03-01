@@ -30,7 +30,9 @@ const menu = computed(() => {
     {
       label: 'Third Party Scripts',
       icon: 'i-carbon-script',
-      to: '/docs/scripts/introduction',
+      to: '/',
+      disabled: true,
+      badge: 'Coming Soon',
       active: route.path.split('/')[2] === 'scripts',
     },
     {

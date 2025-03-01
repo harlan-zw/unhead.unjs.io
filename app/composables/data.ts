@@ -149,12 +149,12 @@ export function useDocsNav() {
           ...([...nav])
             .filter(n => (n.path.startsWith('/docs/guides')) || n.path.startsWith(`/docs/${lang}`)),
           ...([...nav]
-            .filter(n => n.path.startsWith('/docs/build-plugins') || n.path.startsWith(`/docs/recipes`) || n.path.startsWith(`/docs/api`))),
+            .filter(n => n.path.startsWith('/docs/plugins') || n.path.startsWith('/docs/build-plugins') || n.path.startsWith(`/docs/recipes`) || n.path.startsWith(`/docs/api`))),
           ...mergedItems,
         ]
         // merge all /guide paths
           .reduce((acc, n) => {
-            const validPrefixes = ['/guides', '/build-plugins', '/recipes', '/api']
+            const validPrefixes = ['/guides', '/plugins', '/build-plugins', '/recipes', '/api']
             for (const prefix of validPrefixes) {
               if (n.path.includes(prefix)) {
                 const idx = acc.findIndex(a => a.path.includes(prefix))

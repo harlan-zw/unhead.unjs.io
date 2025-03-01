@@ -6,7 +6,7 @@ export const frameworks = [
   { icon: 'i-logos-react', label: 'React', slug: 'react' },
   { icon: 'i-logos-svelte-icon', label: 'Svelte', slug: 'svelte' },
   { icon: 'i-logos-solidjs-icon', label: 'Solid.js', slug: 'solid-js' },
-  { icon: 'i-logos-angular-icon', label: 'Angular', slug: 'angular', soon: true },
+  { icon: 'i-logos-angular-icon', label: 'Angular', slug: 'angular' },
   { icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt' },
 ] as const
 
@@ -31,7 +31,7 @@ export function useFrameworkSelector() {
       // if path 2nd arg is schema-org or scripts we're in a sub module
       const lastPath = router.currentRoute.value.path.split('/').pop()
       const validRedirectPaths = ['introduction', 'installation', 'troubleshooting']
-      const lastPathRedirect = validRedirectPaths.includes(lastPath) ? lastPath : 'introduction'
+      const lastPathRedirect = validRedirectPaths.includes(lastPath) ? lastPath : 'installation'
       const subModule = router.currentRoute.value.path.split('/')[2]
       if (['schema-org', 'scripts'].includes(subModule)) {
         return router.push(joinRelativeURL('/docs', subModule, frameworkSlug, lastPathRedirect))
