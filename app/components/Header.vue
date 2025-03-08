@@ -107,7 +107,7 @@ watch(selectedFramework, () => {
           <UNavigationMenu :items="menu.slice(3)" :ui="{ viewport: 'min-w-[500px] -left-full' }" class="justify-center" />
         </div>
         <UButton
-          to="https://github.com/unhead/unjs" target="_blank" class="text-black
+          to="https://github.com/unjs/unhead" target="_blank" class="text-black
         hidden sm:flex items-center justify-center items-center bg-gradient bg-gradient-to-r from-[#FBBF24] to-[#f0db4f]"
           size="sm"
         >
