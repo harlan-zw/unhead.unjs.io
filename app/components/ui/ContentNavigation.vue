@@ -8,6 +8,15 @@ import type { VariantProps } from 'tailwind-variants'
 import _appConfig from '#build/app.config'
 import theme from '#build/ui-pro/content/content-navigation'
 import { tv } from 'tailwind-variants'
+</script>
+
+<script setup lang="ts" generic="T extends ContentNavigationLink">
+import { useAppConfig, useRoute } from '#imports'
+import { mapContentNavigationItem } from '#ui-pro/utils/content'
+import { pickLinkProps } from '#ui/utils/link'
+import { createReusableTemplate, reactivePick } from '@vueuse/core'
+import { Primitive, useForwardPropsEmits } from 'reka-ui'
+import { computed } from 'vue'
 
 type ContentNavigationVariants = VariantProps<typeof contentNavigation>
 
@@ -71,21 +80,6 @@ export interface ContentNavigationSlots<T> {
   'link-trailing': SlotProps<T>
 }
 
-const appConfig = _appConfig as AppConfig & { uiPro: { contentNavigation: Partial<typeof theme> } }
-const contentNavigation = tv({ extend: tv(theme), ...(appConfig.uiPro?.contentNavigation || {}) })
-</script>
-
-<script setup lang="ts" generic="T extends ContentNavigationLink">
-import { useAppConfig, useRoute } from '#imports'
-import { mapContentNavigationItem } from '#ui-pro/utils/content'
-import { pickLinkProps } from '#ui/utils/link'
-import { createReusableTemplate, reactivePick } from '@vueuse/core'
-import { Primitive, useForwardPropsEmits } from 'reka-ui'
-import { computed } from 'vue'
-
-const slots = defineSlots<ContentNavigationSlots<T>>()
-const emits = defineEmits<ContentNavigationEmits>()
-
 const props = withDefaults(defineProps<ContentNavigationProps<T>>(), {
   as: 'nav',
   defaultOpen: undefined,
@@ -94,6 +88,10 @@ const props = withDefaults(defineProps<ContentNavigationProps<T>>(), {
   collapsible: true,
   highlight: false,
 })
+const emits = defineEmits<ContentNavigationEmits>()
+const slots = defineSlots<ContentNavigationSlots<T>>()
+const appConfig = _appConfig as AppConfig & { uiPro: { contentNavigation: Partial<typeof theme> } }
+const contentNavigation = tv({ extend: tv(theme), ...(appConfig.uiPro?.contentNavigation || {}) })
 
 const rootProps = useForwardPropsEmits(reactivePick(props, 'collapsible', 'disabled', 'type'), emits)
 

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Unhead } from '~~/const'
+import { useStats } from '~/composables/data'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 import FrameworkSelector from './FrameworkSelector.vue'
 
 const { selectedFramework } = useFrameworkSelector()
 
-const stats = inject('stats', ref())
+const stats = await useStats()
 const route = useRoute()
 
 const stars = computed(() => {
@@ -64,7 +65,7 @@ watch(selectedFramework, () => {
       <div class="flex items-center justify-between gap-2 h-16 xl:pl-10 xl:pr-5">
         <div class="flex items-center gap-10">
           <div class="flex items-center gap-3">
-            <UButton variant="ghost" to="/" title="Home" aria-label="Title" class="py-2 flex items-end gap-1.5 font-bold text-xl text-gray-900 dark:text-white font-title">
+            <UButton variant="ghost" to="/" title="Home" aria-label="Title" class="py-2 flex items-end gap-1.5 font-bold text-xl text-(--ui-text-highlighted) font-title">
               <Logo />
             </UButton>
           </div>
@@ -73,7 +74,7 @@ watch(selectedFramework, () => {
       <div class="hidden lg:flex items-center gap-2">
         <UModal v-model:open="open" title="Select your framework">
           <UButton class="cursor-pointer" variant="ghost" size="sm">
-            <UIcon :key="selectedFramework?.slug" dynamic :name="selectedFramework?.icon" class="w-6 h-6 text-primary-400 dark:text-sky-200" />
+            <UIcon :key="selectedFramework?.slug" dynamic :name="selectedFramework?.icon" class="w-6 h-6 text-(--ui-primary)-400 dark:text-sky-200" />
             <UIcon name="i-carbon-chevron-down" class="w-4 h-4 text-[var(--ui-text)]" />
           </UButton>
           <template #body>
@@ -84,7 +85,7 @@ watch(selectedFramework, () => {
       </div>
     </template>
 
-    <template #content>
+    <template #body>
       <div v-if="route.path.startsWith('/docs')">
         <DocsSidebarHeader />
         <USeparator class="mb-5" />
@@ -92,7 +93,7 @@ watch(selectedFramework, () => {
       <UContentNavigation :navigation="navigation">
         <template #link="{ link }">
           <div class="flex items-center gap-2">
-            <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-primary-400 dark:text-sky-200" />
+            <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-400 dark:text-sky-200" />
             <div :class="link.children?.length ? 'text-sm font-bold' : ''">
               {{ link.title }}
             </div>

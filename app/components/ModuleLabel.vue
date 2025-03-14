@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { modules } from '../../../src/const'
+import { useStats } from '~/composables/data'
 import { useModule } from '~/composables/module'
 
 const props = defineProps<{
@@ -7,7 +8,8 @@ const props = defineProps<{
   size?: 'sm' | 'md' | 'lg'
 }>()
 
-const module = useModule(ref(props.slug))
+const stats = await useStats()
+const module = useModule(stats, ref(props.slug))
 
 const textAttrs = computed(() => {
   switch (props.size || 'md') {

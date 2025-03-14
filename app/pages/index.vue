@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ShikiMagicMovePrecompiled } from 'shiki-magic-move/vue'
+import { useStats } from '~/composables/data'
 import { humanNumber } from '~/composables/format'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 import { MagicMoveTokens } from '../magic-move'
@@ -19,7 +20,7 @@ const snippets = await useAsyncData(`snippets`, async () => {
   return await queryCollection('snippets').all()
 })
 
-const stats = inject('stats')
+const stats = await useStats()
 
 useSeoMeta({
   title: '%siteName %separator Full stack <head> package',
@@ -27,7 +28,7 @@ useSeoMeta({
   titleTemplate: null,
 })
 
-const { data: sponsors } = await useFetch('/api/github/sponsors')
+const { data: sponsors } = await useFetch('/api/github/sponsors.json')
 
 // defineOgImageComponent('Home', {
 //   title: 'Nuxt SEO',
@@ -65,10 +66,10 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
           <div class="col-span-1 relative h-full xl:py-10">
             <div class="relative flex items-center gap-3 sticky top-[300px]">
               <div>
-                <h2 class="text-3xl text-balance text-gray-700 dark:text-gray-100 leading-tight font-bold mb-3 flex items-center gap-2">
+                <h2 class="text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
                   {{ section.title }}
                 </h2>
-                <div class="text-balance dark:text-gray-300/80 text-gray-600 text-lg">
+                <div class="text-balance dark:text-neutral-300/80 text-neutral-600 text-lg">
                   {{ section.description }}
                 </div>
               </div>
@@ -96,10 +97,10 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
       <UContainer class="container mx-auto">
         <div class="xl:flex gap-10">
           <div class="flex flex-col justify-center">
-            <h1 class="max-w-xl text-gray-900/90 dark:text-gray-100 text-4xl md:text-6xl leading-tight font-bold tracking-tight" style="line-height: 1.3;">
-              The <span class="italic dark:text-gray-200 text-gray-800 ">full stack</span> <span class="font-cursive text-yellow-500">&lt;head&gt;</span> package for <span class="bg-green-500/10 dark:bg-green-400/40 px-2"> any framework</span>.
+            <h1 class="max-w-xl text-neutral-900/90 dark:text-neutral-100 text-4xl md:text-6xl leading-tight font-bold tracking-tight" style="line-height: 1.3;">
+              The <span class="italic dark:text-neutral-200 text-neutral-800 ">full stack</span> <span class="font-cursive text-yellow-500">&lt;head&gt;</span> package for <span class="bg-green-500/10 dark:bg-green-400/40 px-2"> any framework</span>.
             </h1>
-            <p class="max-w-xl text-gray-700 dark:text-gray-300 mt-4 max-w-3xl text-base md:text-xl">
+            <p class="max-w-xl text-neutral-700 dark:text-neutral-300 mt-4 max-w-3xl text-base md:text-xl">
               Unhead wraps your document template, improving reactive SSR JavaScript framework SEO and performance.
             </p>
 
@@ -137,16 +138,16 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-Classes.md'))" />
       </template>
     </ReuseSectionTemplate>
-    <div class="bg-neutral-200/50 dark:bg-gray-900/50 py-10">
+    <div class="bg-neutral-200/50 dark:bg-neutral-900/50 py-10">
       <div class="max-w-2xl mx-auto">
         <div class="relative h-full xl:py-10">
           <div class="relative flex items-center gap-3 sticky top-[300px]">
             <div>
-              <h2 class="text-3xl text-balance text-gray-700 dark:text-gray-100 leading-tight font-bold mb-3 flex items-center gap-2">
+              <h2 class="text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
                 <UIcon name="i-noto-potted-plant" class="w-10 h-10" />
                 Side Effect DOM Updates
               </h2>
-              <div class="text-balance dark:text-gray-300/80 text-gray-600 text-lg">
+              <div class="text-balance dark:text-neutral-300/80 text-neutral-600 text-lg">
                 All side effects are tracked so that unmounting a component will revert its head modifications and reactive
                 updates can be made at any time.
               </div>
@@ -262,7 +263,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
                 Up To Date. Always.
                 <span class="text-blue-300 text-3xl" />
               </h2>
-              <p class="text-gray-700 mb-3 dark:text-gray-300 mt-4 max-w-3xl text-center text-xl lg:text-left">
+              <p class="text-neutral-700 mb-3 dark:text-neutral-300 mt-4 max-w-3xl text-center text-xl lg:text-left">
                 Unhead was started at the end of 2022 and has received continuous bug fixes and feature improvements from the community.
               </p>
               <div class="gap-2 mx-auto text-center grid grid-cols-12">
@@ -359,7 +360,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
               Funded by the community
               <span class="text-blue-300 text-3xl" />
             </h2>
-            <p class="mb-5 text-gray-700 dark:text-gray-300 mt-4 max-w-xl text-center text-xl lg:text-left">
+            <p class="mb-5 text-neutral-700 dark:text-neutral-300 mt-4 max-w-xl text-center text-xl lg:text-left">
               Unhead is completely free and open-source due to the generous support of the community.
             </p>
             <div>
@@ -380,7 +381,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
                     <div class="font-bold text-xl whitespace-nowrap">
                       {{ entry.sponsor.name }}
                     </div>
-                    <div v-if="entry.sponsor.websiteUrl" class="text-gray-400">
+                    <div v-if="entry.sponsor.websiteUrl" class="text-neutral-400">
                       {{ entry.sponsor.websiteUrl.replace('https://', '') }}
                     </div>
                   </div>
@@ -398,7 +399,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
                     <div class="font-bold text-sm whitespace-nowrap">
                       {{ entry.sponsor.name || entry.sponsor.login }}
                     </div>
-                    <div v-if="entry.sponsor.websiteUrl" class="text-xs text-gray-400">
+                    <div v-if="entry.sponsor.websiteUrl" class="text-xs text-neutral-400">
                       {{ entry.sponsor.websiteUrl.replace('https://', '') }}
                     </div>
                   </div>

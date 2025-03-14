@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useContentSearch } from '#ui-pro/composables/useContentSearch'
+import { useStats } from '~/composables/data'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
 const { selectedFramework } = useFrameworkSelector()
 
-const module = useModule()
+const stats = await useStats()
+const module = useModule(stats)
 const searchTerm = ref('')
-const stats = inject('stats', ref({ modules: [] }))
 const files = inject('search')
 const nav = useDocsNav()
 
@@ -45,8 +46,8 @@ const version = versions.value[0]
     <nav :key="selectedFramework?.slug" aria-title="Documentation Navigation">
       <ContentNavigation as="div" class="mb-5" default-open :collapsible="false" :navigation="[{ children: nav?.top || [] }]" highlight :ui="{ linkTrailing: 'hidden', list: '-ms-4', listWithChildren: 'ms-0 border-none' }">
         <template #link-leading="{ link, active }">
-          <div v-if="link.icon" class="rounded-md p-1 inline-flex ring-inset ring-1 bg-gray-100/50 dark:bg-gray-800/50 ring-gray-300 dark:ring-gray-700 group-hover:bg-primary group-hover:ring-primary group-hover:text-background" :class="active ? 'dark:bg-teal-700' : ''">
-            <UIcon :name="link.icon" class="w-4 h-4 text-primary-600 dark:text-primary-200" />
+          <div v-if="link.icon" class="rounded-md p-1 inline-flex ring-inset ring-1 bg-neutral-100/50 dark:bg-neutral-800/50 ring-neutral-300 dark:ring-neutral-700 group-hover:bg-primary group-hover:ring-primary group-hover:text-background" :class="active ? 'dark:bg-teal-700' : ''">
+            <UIcon :name="link.icon" class="w-4 h-4 text-(--ui-primary)-600 dark:text-(--ui-primary)-200" />
           </div>
         </template>
       </ContentNavigation>
@@ -58,12 +59,12 @@ const version = versions.value[0]
               <div :class="link.children?.length ? 'text-sm font-bold' : ''">
                 {{ link.title }}
               </div>
-              <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-primary-600 dark:text-primary-200" />
+              <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-600 dark:text-(--ui-primary)-200" />
             </div>
             <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
           </div>
           <div v-else>
-            <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-primary-400 dark:text-sky-200" />
+            <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-400 dark:text-sky-200" />
             <div v-html="link.title" />
           </div>
         </template>

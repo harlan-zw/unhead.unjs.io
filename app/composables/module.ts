@@ -1,10 +1,9 @@
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 import { modules } from '../../const'
 
-export function useModule(_slug?: Ref<string>) {
+export function useModule(stats: any, _slug?: Ref<string>) {
   const { selectedFramework } = useFrameworkSelector()
   const route = useRoute()
-  const stats = inject('stats', ref({ modules: [] }))
   return computed(() => {
     let slug = selectedFramework.value.slug === 'typescript' ? 'unhead' : selectedFramework.value.slug
     const maybeSubModulePath = route.path.split('/')[2]

@@ -2,6 +2,13 @@ import type { NavItem } from '@nuxt/content'
 import { titleCase } from 'scule'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
+export async function useStats() {
+  const { data: stats } = await useFetch('/api/stats.json', {
+    key: 'stats',
+  })
+  return stats
+}
+
 function mapPath(data) {
   return [...data.map((item) => {
     if (item.children?.length && !item.page) {

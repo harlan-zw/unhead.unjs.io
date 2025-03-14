@@ -2,8 +2,6 @@
 import { queryCollectionNavigation, useAsyncData } from '#imports'
 import { modules } from '../const'
 
-const { data: stats } = await useFetch('/api/stats')
-
 const appConfig = useAppConfig()
 
 const search = await useAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'))
@@ -15,7 +13,6 @@ const navigation = await useAsyncData(`navigation`, () => queryCollectionNavigat
 
 provide('search', search.data)
 provide('navigation', navigation.data)
-provide('stats', stats)
 provide('modules', modules)
 </script>
 

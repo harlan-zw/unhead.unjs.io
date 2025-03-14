@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { modules } from '../../../src/const'
 import { toRefs } from 'vue'
+import { useStats } from '~/composables/data'
 import { humanNumber } from '~/composables/format'
 import { useModule } from '~/composables/module'
 
@@ -19,7 +20,7 @@ const propsAsRefs = toRefs(reactive({
   version,
 }))
 
-const module = _module ? propsAsRefs.module : useModule(propsAsRefs.slug)
+const module = _module ? propsAsRefs.module : useModule(await useStats(), propsAsRefs.slug)
 </script>
 
 <template>
@@ -40,7 +41,7 @@ const module = _module ? propsAsRefs.module : useModule(propsAsRefs.slug)
           </UTooltip>
         </div>
         <div>
-          <div class="text-xs text-gray-500 dark:text-gray-400 font-normal" v-html="module.description" />
+          <div class="text-xs text-(--ui-text-muted) font-normal" v-html="module.description" />
         </div>
       </div>
     </div>
