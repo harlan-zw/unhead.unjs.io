@@ -24,8 +24,8 @@ export default defineNuxtConfig({
       // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
       nuxt.hooks.hook('nitro:init', (nitro) => {
         // from sponsorkit
-        nitro.options.alias.sharp = 'unenv/runtime/mock/empty'
-        nitro.options.alias.pnpapi = 'unenv/runtime/mock/empty' // ?
+        nitro.options.alias.sharp = 'unenv/mock/empty'
+        nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
       })
     },
   ],
