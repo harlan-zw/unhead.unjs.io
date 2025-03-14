@@ -45,9 +45,10 @@ const ad = computed(() => {
     </ClientOnly>
     <ScriptCarbonAds
       :key="$route.path"
+      format="cover"
       class="xl:min-h-[265px] Carbon border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50/50 dark:bg-white/5"
-      serve="CW7DTKJJ"
-      placement="nuxtseocom"
+      serve="CW7DTKJI"
+      placement="unheadunjsio"
       trigger="onNuxtReady"
     >
       <AdsFallback />
