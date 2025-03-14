@@ -100,6 +100,7 @@ export default defineNuxtConfig({
       // generate both a html and markdown report
       html: true,
       markdown: true,
+      report: true,
     },
   },
 
