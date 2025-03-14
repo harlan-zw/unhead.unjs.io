@@ -138,40 +138,42 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
       </template>
     </ReuseSectionTemplate>
     <div class="bg-neutral-200/50 dark:bg-gray-900/50 py-10">
-    <div class="max-w-2xl mx-auto">
-      <div class="relative h-full xl:py-10">
-        <div class="relative flex items-center gap-3 sticky top-[300px]">
-          <div>
-            <h2 class="text-3xl text-balance text-gray-700 dark:text-gray-100 leading-tight font-bold mb-3 flex items-center gap-2">
-              <UIcon name="i-noto-potted-plant" class="w-10 h-10" />
-              Side Effect DOM Updates
-            </h2>
-            <div class="text-balance dark:text-gray-300/80 text-gray-600 text-lg">
-              All side effects are tracked so that unmounting a component will revert its head modifications and reactive
-              updates can be made at any time.
+      <div class="max-w-2xl mx-auto">
+        <div class="relative h-full xl:py-10">
+          <div class="relative flex items-center gap-3 sticky top-[300px]">
+            <div>
+              <h2 class="text-3xl text-balance text-gray-700 dark:text-gray-100 leading-tight font-bold mb-3 flex items-center gap-2">
+                <UIcon name="i-noto-potted-plant" class="w-10 h-10" />
+                Side Effect DOM Updates
+              </h2>
+              <div class="text-balance dark:text-gray-300/80 text-gray-600 text-lg">
+                All side effects are tracked so that unmounting a component will revert its head modifications and reactive
+                updates can be made at any time.
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="max-w-5xl mx-auto grid grid-cols-2">
-      <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('side-effects-a.md'))" />
-      <div class=" h-full flex items-center justify-center flex-col">
-      <ProsePre class="prose shiki">
-        <ProseCode>
-          <ShikiMagicMovePrecompiled
-            animate
-            :steps="SideEffectTokens"
-            :step="Number(mounted)"
-          />
-        </ProseCode>
-        <div class="flex items-center gap-2">
-          <UBadge variant="outline" :color="mounted ? 'success' : 'gray'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
-          <UButton color="info" @click="mounted = !mounted">{{ mounted ? 'Unmount' : 'Mount' }}</UButton>
+      <div class="max-w-5xl mx-auto grid grid-cols-2">
+        <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('side-effects-a.md'))" />
+        <div class=" h-full flex items-center justify-center flex-col">
+          <ProsePre class="prose shiki">
+            <ProseCode>
+              <ShikiMagicMovePrecompiled
+                animate
+                :steps="SideEffectTokens"
+                :step="Number(mounted)"
+              />
+            </ProseCode>
+            <div class="flex items-center gap-2">
+              <UBadge variant="outline" :color="mounted ? 'success' : 'gray'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
+              <UButton color="info" @click="mounted = !mounted">
+                {{ mounted ? 'Unmount' : 'Mount' }}
+              </UButton>
+            </div>
+          </ProsePre>
         </div>
-      </ProsePre>
       </div>
-    </div>
     </div>
     <ReuseSectionTemplate
       :section="{

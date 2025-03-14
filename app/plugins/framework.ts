@@ -1,4 +1,4 @@
-import {useFrameworkSelector} from "~/composables/frameworkSelector";
+import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
 export default defineNuxtPlugin({
   setup() {
@@ -13,6 +13,5 @@ export default defineNuxtPlugin({
         switchFramework(newFramework, false)
       }
     })
-  }
+  },
 })
-

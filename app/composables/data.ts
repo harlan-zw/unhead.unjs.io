@@ -117,13 +117,18 @@ export function useDocsNav() {
       // migration should always be last, introduction should always be first
       // troubleshooting should be 2nd last
       .sort((a, b) => {
-        if (a.path.endsWith('migration')) return 1
-        if (b.path.endsWith('migration')) return -1
-        if (a.path.endsWith('introduction')) return -1
-        if (b.path.endsWith('introduction')) return 1
-        if (a.path.endsWith('troubleshooting')) return 1
-        if (b.path.endsWith('troubleshooting')) return -1
-        return
+        if (a.path.endsWith('migration'))
+          return 1
+        if (b.path.endsWith('migration'))
+          return -1
+        if (a.path.endsWith('introduction'))
+          return -1
+        if (b.path.endsWith('introduction'))
+          return 1
+        if (a.path.endsWith('troubleshooting'))
+          return 1
+        if (b.path.endsWith('troubleshooting'))
+          return -1
       })
 
     const mergedItems = ([...nav])

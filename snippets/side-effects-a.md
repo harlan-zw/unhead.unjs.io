@@ -5,8 +5,8 @@ useHead({
   htmlAttrs: {
     class: { dark: true, light: false }
   },
-  bodyAttrs: { 
-    style: { overflow: 'hidden' },
+  bodyAttrs: {
+    'style': { overflow: 'hidden' },
     'data-modal': true,
   },
   link: [{
