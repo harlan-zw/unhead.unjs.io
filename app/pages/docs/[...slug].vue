@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { replaceImportSpecifier } from '~~/utils/content'
+
 definePageMeta({
   layout: 'docs',
 })
@@ -20,6 +22,7 @@ const [{ data: page }, { data: surround }] = await Promise.all([
     },
   }),
 ])
+
 if (!page.value)
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 
@@ -35,6 +38,9 @@ useSeoMeta({
   description: () => page.value?.description,
   titleTemplate: '%s %separator %moduleName %separator %siteName',
 })
+
+const { selectedFramework } = useFrameworkSelector()
+console.log(selectedFramework.value)
 
 useHead({
   templateParams: {
@@ -53,10 +59,16 @@ const repoLinks = computed(() => [
 ])
 
 const isDev = import.meta.dev
+
+const transformedPage = computed(() => {
+  const p = structuredClone(page.value.body) as any as { value: any }
+  replaceImportSpecifier(p.value, '@unhead/dynamic-import', selectedFramework.value.import)
+  return p
+})
 </script>
 
 <template>
-  <div class="max-w-[66ch] ml-auto md:ml-0 md:mr-auto">
+  <div v-if="page" class="max-w-[66ch] ml-auto md:ml-0 md:mr-auto">
     <UPageHeader :title="page.title" :description="page.description" :headline="headline" class="text-balance">
       <div class="mt-5">
         <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-7" />
@@ -65,12 +77,12 @@ const isDev = import.meta.dev
 
     <UPageBody prose class="pb-0">
       <Ads v-if="!isDev" />
-      <ContentRenderer v-if="page.body" :value="page" />
+      <ContentRenderer v-if="page.body" :value="transformedPage" />
       <div class="justify-center flex items-center gap-2 font-semibold">
         <UIcon name="i-simple-icons-github" class="w-5 h-5" />
-                <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
-                  {{ repoLinks[0].label }}
-                </NuxtLink>
+        <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
+          {{ repoLinks[0].label }}
+        </NuxtLink>
       </div>
       <FeedbackButtons :edit-link="repoLinks[0].to" />
       <USeparator v-if="surround?.length" class="my-8" />

@@ -30,7 +30,7 @@ jobs:
       - name: Build application
         run: pnpm build
         env:
-          NODE_OPTIONS: "--max-old-space-size=8192"
+          NODE_OPTIONS: --max-old-space-size=8192
           NUXT_UI_PRO_LICENSE: ${{ vars.NUXT_UI_PRO_LICENSE }}
           NUXT_GITHUB_AUTH_TOKEN: ${{ vars.NUXT_GITHUB_AUTH_TOKEN }}
           NUXT_GITHUB_ACCESS_TOKEN: ${{ vars.NUXT_GITHUB_ACCESS_TOKEN }}
