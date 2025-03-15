@@ -1,0 +1,1 @@
+- new links should open in a new tab

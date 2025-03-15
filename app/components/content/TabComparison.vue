@@ -46,10 +46,11 @@ function transformSlot(slot: any, index: number) {
 const tabs = computed(() => slots.default?.()?.flatMap(transformSlot).filter(Boolean) || [])
 
 const { selectedFramework } = useFrameworkSelector()
-const selectedIndex = ref(tabs.value.findIndex(tab => tab.label.toLowerCase() === selectedFramework.value.slug))
+const selectedFrameworkIndex = tabs.value.findIndex(tab => tab.label.toLowerCase() === selectedFramework.value.slug)
+const selectedIndex = ref(selectedFrameworkIndex >= 0 ? selectedFrameworkIndex : 0)
 defineExpose({ selectedIndex })
 
-const selectedTab = computed(() => tabs.value.find((_, index) => index === selectedIndex.value))
+const selectedTab = computed(() => tabs.value.find((_, index) => index === selectedIndex.value) || tabs.value[0])
 
 onBeforeUpdate(() => {
   rerenderCounter.value += 1
@@ -58,6 +59,7 @@ onBeforeUpdate(() => {
 
 <template>
   <div :class="ui.wrapper" class="relative group [&>.group]:rounded-t-none [&>pre]:my-0 my-5">
+    {{ selectedIndex }}
     <div :class="ui.header">
       <button
         v-for="(tab, index) in tabs"

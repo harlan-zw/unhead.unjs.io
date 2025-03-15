@@ -83,7 +83,7 @@ export default defineAppConfig({
       variants: {
         active: {
           true: {
-            link: 'text-[var(--ui-text-toned)] after:-left-[1px] after:rounded-[var(--ui-radius)] after:w-full after:h-full after:absolute after:opacity-40 after:bottom-0 after:block after:bg-[var(--ui-primary)] text-black',
+            link: 'text-[var(--ui-text-toned)] after:-left-[1px] after:rounded-[var(--ui-radius)] after:w-full after:h-full after:absolute after:opacity-40 after:bottom-0 after:block after:border-yellow-500/50 after:bg-yellow-300/25 after:border text-black',
           },
           false: {
             link: 'text-[var(--ui-text-toned)]',

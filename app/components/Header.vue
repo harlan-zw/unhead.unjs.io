@@ -62,7 +62,7 @@ watch(selectedFramework, () => {
 <template>
   <UHeader :ui="{ root: 'bg-transparent border-none', container: 'max-w-full w-full' }">
     <template #left>
-      <div class="flex items-center justify-between gap-2 h-16 xl:pl-10 xl:pr-5">
+      <div class="flex items-center justify-between gap-2 h-16 pr-2 xl:pr-5">
         <div class="flex items-center gap-10">
           <div class="flex items-center gap-3">
             <UButton variant="ghost" to="/" title="Home" aria-label="Title" class="py-2 flex items-end gap-1.5 font-bold text-xl text-(--ui-text-highlighted) font-title">
@@ -72,7 +72,7 @@ watch(selectedFramework, () => {
         </div>
       </div>
       <div class="hidden lg:flex items-center gap-2">
-        <UModal v-model:open="open" title="Select your framework">
+        <UModal v-if="!route.path.startsWith('/docs')"  v-model:open="open" title="Select your framework">
           <UButton class="cursor-pointer" variant="ghost" size="sm">
             <UIcon :key="selectedFramework?.slug" dynamic :name="selectedFramework?.icon" class="w-6 h-6 text-(--ui-primary)-400 dark:text-sky-200" />
             <UIcon name="i-carbon-chevron-down" class="w-4 h-4 text-[var(--ui-text)]" />

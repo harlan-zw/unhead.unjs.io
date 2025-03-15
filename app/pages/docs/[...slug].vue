@@ -43,19 +43,16 @@ useHead({
 })
 
 const headline = ''
-// defineOgImageComponent('Module', {
-//   title: page.value?.title || '',
-//   moduleName: 'Test',
-//   description: page.value?.description,
-// })
 
 const repoLinks = computed(() => [
   {
     label: 'Edit this page',
-    to: `https://github.com/unjs/docs/edit/main/docs/${page.value.id.split('/').slice(3).join('/')}`,
+    to: `https://github.com/unjs/unhead/edit/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
     target: '_blank',
   },
 ])
+
+const isDev = import.meta.dev
 </script>
 
 <template>
@@ -67,13 +64,13 @@ const repoLinks = computed(() => [
     </UPageHeader>
 
     <UPageBody prose class="pb-0">
-      <Ads />
+      <Ads v-if="!isDev" />
       <ContentRenderer v-if="page.body" :value="page" />
       <div class="justify-center flex items-center gap-2 font-semibold">
         <UIcon name="i-simple-icons-github" class="w-5 h-5" />
-        <!--        <NuxtLink v-bind="repoLinks[0]" class="hover:underline"> -->
-        <!--          {{ repoLinks[0].label }} -->
-        <!--        </NuxtLink> -->
+                <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
+                  {{ repoLinks[0].label }}
+                </NuxtLink>
       </div>
       <FeedbackButtons :edit-link="repoLinks[0].to" />
       <USeparator v-if="surround?.length" class="my-8" />
