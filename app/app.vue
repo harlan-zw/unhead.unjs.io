@@ -33,8 +33,8 @@ const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(
           </div>
         </div>
         <USeparator orientation="vertical" color="neutral" class="h-10 w-2 mx-3" />
-        <div :key="selectedFramework" class="z-10 gap-1 flex text-blue-200 group-hover:text-blue-500 transition-all relative">
-          <UButton v-for="framework in frameworks.filter(f => f.slug !== selectedFramework.slug)" :key="framework.slug" :to="`/docs/${framework.slug}/installation`" type="button" class="cursor-pointer transition-all " :class="[framework.slug === selectedFramework.slug ? [] : ['hover:brightness-50 brightness-120 sepia']]" variant="ghost">
+        <div class="z-10 gap-1 flex text-blue-200 group-hover:text-blue-500 transition-all relative">
+          <UButton v-for="framework in frameworks.filter(f => f.slug !== selectedFramework.slug)" :title="`Switch to ${framework.label}`" :aria-label="framework.label" :key="framework.slug" :to="`/docs/${framework.slug}/installation`" type="button" class="cursor-pointer transition-all " :class="[framework.slug === selectedFramework.slug ? [] : ['hover:brightness-50 brightness-120 sepia']]" variant="ghost">
             <UIcon dynamic :name="framework.icon" class="w-5 h-5" />
           </UButton>
         </div>
