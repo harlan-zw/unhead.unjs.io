@@ -41,6 +41,7 @@ export function replaceImportSpecifier(
   payload: any,
   oldImport: string,
   newImport: string,
+  correctUseHeadForTypeScript: boolean,
 ): void {
   walk(
     payload,
@@ -50,7 +51,6 @@ export function replaceImportSpecifier(
         // do a string replace of the "copy"
         node[1].code = node[1].code.replaceAll(oldImport, newImport)
       }
-      let replaced = false
       if (!Array.isArray(node[2]))
         return
 
@@ -62,10 +62,17 @@ export function replaceImportSpecifier(
 
         for (let i = 0; i < line.length; i++) {
           const segment = line[i]
-          if (Array.isArray(segment) && segment[0] === 'span' && typeof segment[2] === 'string' && segment[2].includes(oldImport)) {
-            // Replace the string directly in the segment
-            segment[2] = segment[2].replace(oldImport, newImport)
-            replaced = true
+          if (Array.isArray(segment) && segment[0] === 'span' && typeof segment[2] === 'string') {
+            if (segment[2].includes(oldImport)) {
+              // Replace the string directly in the segment
+              segment[2] = segment[2].replace(oldImport, newImport)
+            }
+            else if (correctUseHeadForTypeScript && newImport === 'unhead' && ['useHead', 'useSeoMeta', 'useHeadSafe', 'useScript', 'useServerHead'].includes(segment[2])) {
+              // need to insert a span in two indexes ahead
+              // Insert the new segment at the correct index
+              line.splice(i + 2, 0, ['span', { style: 'color: var(--color-yellow-700)' }, 'unheadInstance'])
+              line.splice(i + 3, 0, ['span', { class: 'hljs-symbol' }, ', '])
+            }
           }
         }
       }

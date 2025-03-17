@@ -6,6 +6,24 @@ export const Unhead = {
   npm: 'unhead',
 }
 
+export const StackblitzPlaygrounds = {
+  vue: {
+    ssr: 'https://stackblitz.com/edit/github-1ftqrmwn',
+    spa: 'https://stackblitz.com/edit/vitejs-vite-9ztda642',
+  },
+  react: {
+    ssr: 'https://stackblitz.com/edit/github-5hqsxyid',
+    spa: 'https://stackblitz.com/edit/vitejs-vite-ggqxj5nx',
+  },
+  svelte: {
+    ssr: 'https://stackblitz.com/edit/github-ckbygkxk',
+    spa: 'https://stackblitz.com/edit/vitejs-vite-tfv9egtq',
+  },
+  typescript: {
+    ssr: 'https://stackblitz.com/edit/github-hhxywsb5',
+  },
+}
+
 export const modules = [
   {
     slug: 'unhead',
@@ -13,13 +31,6 @@ export const modules = [
     icon: 'i-carbon-machine-learning',
     description: 'Full-stack &lt;head&gt; package built for any framework.',
     npm: 'unhead',
-  },
-  {
-    slug: 'nuxt',
-    label: 'Nuxt',
-    icon: 'nuxt-icon',
-    description: 'Full-stack &lt;head&gt; package built for Nuxt.',
-    npm: 'Nuxt',
   },
   {
     slug: 'vue',
@@ -34,7 +45,6 @@ export const modules = [
     icon: 'angular',
     description: 'Full-stack &lt;head&gt; package built for Angular.',
     npm: '@unhead/angular',
-    comingSoon: true,
   },
   {
     slug: 'react',
@@ -42,14 +52,20 @@ export const modules = [
     icon: 'react',
     description: 'Full-stack &lt;head&gt; package built for React.',
     npm: '@unhead/react',
-    comingSoon: true,
   },
   {
-    slug: 'scripts',
-    label: 'Scripts',
-    icon: 'i-carbon-script',
-    description: 'Scripts with better performance, privacy, security and DX.',
-    npm: '@unhead/scripts',
+    slug: 'svelte',
+    label: 'Svelte',
+    icon: 'svelte',
+    description: 'Full-stack &lt;head&gt; package built for Svelte.',
+    npm: '@unhead/svelte',
+  },
+  {
+    slug: 'solid-js',
+    label: 'Solid.js',
+    icon: 'solid-js',
+    description: 'Full-stack &lt;head&gt; package built for Solid.js.',
+    npm: '@unhead/solid-js',
   },
   {
     slug: 'schema-org',

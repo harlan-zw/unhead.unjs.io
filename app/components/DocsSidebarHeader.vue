@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useContentSearch } from '#ui-pro/composables/useContentSearch'
+import { StackblitzPlaygrounds } from '~~/const'
 import { useStats } from '~/composables/data'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
@@ -7,76 +7,77 @@ const { selectedFramework } = useFrameworkSelector()
 
 const stats = await useStats()
 const module = useModule(stats)
-const searchTerm = ref('')
-const files = inject('search')
 const nav = useDocsNav()
 
-const { open } = useContentSearch()
-const versions = computed(() => {
-  return (stats.value.versions || []).map((version) => {
-    return {
-      label: version,
-      value: version,
-      disabled: true,
-    }
-  })
-})
-const version = versions.value[0]
+const topLinks = computed(() => [
+  {
+    title: 'Discord Support',
+    icon: 'i-logos-discord-icon',
+    to: 'https://discord.gg/nuxt',
+  },
+  {
+    title: `${selectedFramework.value.label} Playground`,
+    icon: 'i-logos-stackblitz-icon',
+    to: StackblitzPlaygrounds[selectedFramework.value.slug]?.ssr,
+  },
+].filter(l => !!l.to))
 </script>
 
 <template>
-  <div v-if="module && nav" class="pt-5">
-    <div v-if="module" class="isolate -ml-2.5">
-      <div class="block md:hidden flex items-center gap-1 font-bold mb-3">
-        <UIcon v-if="module.icon" dynamic :name="module.icon" class="text-blue-500 dark:text-blue-300" />{{ module.label }}
-      </div>
-      <div class="flex items-center gap-4 mb-5">
-        <UFormField label="Version" class="w-1/2">
-          <USelectMenu v-model="version" :search-input="false" size="sm" :items="versions" class="md:w-full" />
-        </UFormField>
-        <UFormField label="Search" class="w-1/2">
-          <UInput type="search" class="w-full" size="sm" @click="open = true">
-            <template #leading>
-              <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" />
-            </template>
-          </UInput>
-        </UFormField>
-      </div>
-    </div>
-    <nav :key="selectedFramework?.slug" aria-title="Documentation Navigation">
-      <ContentNavigation as="div" class="mb-5" default-open :collapsible="false" :navigation="[{ children: nav?.top || [] }]" highlight :ui="{ linkTrailing: 'hidden', list: '-ms-4', listWithChildren: 'ms-0 border-none' }">
-        <template #link-leading="{ link, active }">
-          <div v-if="link.icon" class="rounded-md p-1 inline-flex ring-inset ring-1 bg-neutral-100/50 dark:bg-neutral-800/50 ring-neutral-300 dark:ring-neutral-700 group-hover:bg-primary group-hover:ring-primary group-hover:text-background" :class="active ? 'dark:bg-teal-700' : ''">
-            <UIcon :name="link.icon" class="w-4 h-4 text-(--ui-primary)-600 dark:text-(--ui-primary)-200" />
-          </div>
-        </template>
-      </ContentNavigation>
-      <div class="bg-[var(--ui-border-accented)] h-[1px] my-5 mr-5" />
-      <ContentNavigation as="div" default-open :collapsible="false" :navigation="nav?.bottom || []" highlight :ui="{ listWithChildren: 'sm:ml-0 mt-2' }">
+  <div v-if="module && nav">
+    <nav :key="selectedFramework?.slug" aria-title="Documentation Navigation" class="flex flex-col gap-7">
+      <ul class="isolate -mx-2.5 -mb-2">
+        <li v-for="link in topLinks" :key="link.to">
+          <NuxtLink
+            :to="link.to" href="https://discord.gg/nuxt"
+            class="group relative w-full px-2.5 py-1.5 before:inset-y-px before:inset-x-0 flex items-center gap-1.5 text-sm before:absolute before:z-[-1] before:rounded-[calc(var(--ui-radius)*1.5)] focus:outline-none focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2 text-[var(--ui-text-toned)] focus-visible:before:ring-(--ui-primary) hover:text-(--ui-text-highlighted) hover:before:bg-(--ui-bg-elevated)/50 data-[state=open]:text-(--ui-text-highlighted) transition-colors before:transition-colors"
+          >
+            <div
+              class="rounded-md p-1 inline-flex ring-inset ring-1 bg-neutral-100/10 dark:bg-neutral-800/50 ring-neutral-200 dark:ring-neutral-700 group-hover:bg-primary group-hover:ring-primary group-hover:text-background"
+            >
+              <UIcon :name="link.icon" class="w-4 h-4 text-[var(--ui-text-dimmed)] brightness-120 sepia" />
+            </div>
+            <span class="truncate">{{ link.title }}</span>
+          </NuxtLink>
+        </li>
+      </ul>
+      <USeparator class="mt-0 pt-0" />
+      <ContentNavigation
+        as="div" default-open :collapsible="false" :navigation="nav?.bottom || []" highlight
+        :ui="{ listWithChildren: 'sm:ml-0 mt-2' }"
+      >
         <template #link="{ link }">
-          <div v-if="!link.html" class="flex items-center justify-between gap-2 w-full">
+          <div
+            v-if="!link.html" class="flex items-center justify-between gap-2 w-full"
+            :class="link.deprecated ? 'opacity-50' : ''"
+          >
             <div class="flex items-center gap-2">
               <div :class="link.children?.length ? 'text-sm font-bold' : ''">
                 {{ link.title }}
               </div>
-              <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-600 dark:text-(--ui-primary)-200" />
             </div>
-            <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
+            <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamclic ass="w-4 h-4" />
           </div>
-          <div v-else>
+          <div v-else :class="link.deprecated ? 'opacity-50' : ''">
             <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-400 dark:text-sky-200" />
             <div v-html="link.title" />
+          </div>
+          <UIcon
+            v-if="link.icon" :name="link.icon"
+            class="w-4 h-4 transition-all hover:brightness-50 brightness-120 sepia-[50%]"
+          />
+          <div v-if="link.new">
+            <UBadge size="sm" variant="subtle" color="success">
+              New
+            </UBadge>
+          </div>
+          <div v-else-if="link.deprecated" class="opacity-50">
+            <UBadge size="sm" variant="subtle" color="neutral">
+              Deprecated
+            </UBadge>
           </div>
         </template>
       </ContentNavigation>
     </nav>
-    <ClientOnly>
-      <LazyUContentSearch
-        v-model:search-term="searchTerm"
-        :files="files"
-        :navigation="[{ title: 'Getting Started', _path: `/docs/${module.slug}/getting-started`, path: `/docs/${module.slug}/getting-started`, children: nav.top }, ...nav.bottom]"
-        :fuse="{ resultLimit: 42 }"
-      />
-    </ClientOnly>
   </div>
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NuxtError } from '#app'
+import { queryCollectionNavigation, useAsyncData } from '#imports'
 import { modules } from '../const'
 
 defineProps<{
@@ -10,8 +11,13 @@ useSeoMeta({
   title: 'Page not found',
   description: 'We are sorry but this page could not be found.',
 })
+const { data: navigation } = await useAsyncData(`navigation`, () => queryCollectionNavigation('docsUnhead', ['new', 'deprecated']), {
+  transform(val) {
+    return val[0].children
+  },
+})
 
-// Provide
+provide('navigation', navigation)
 provide('modules', modules)
 </script>
 

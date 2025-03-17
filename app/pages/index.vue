@@ -35,14 +35,16 @@ const { data: sponsors } = await useFetch('/api/github/sponsors.json')
 //   version: useRuntimeConfig().public.version,
 // })
 
-useServerHead({
-  link: [
-    {
-      rel: 'dns-prefetch',
-      href: 'https://avatars.githubusercontent.com',
-    },
-  ],
-})
+if (import.meta.server) {
+  useHead({
+    link: [
+      {
+        rel: 'dns-prefetch',
+        href: 'https://avatars.githubusercontent.com',
+      },
+    ],
+  })
+}
 
 const mounted = ref(false)
 
@@ -54,9 +56,9 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
 <template>
   <div>
     <DefineSectionTemplate v-slot="{ section, $slots }">
-      <section class="pb-8">
+      <section class="pb-8 px-4">
         <div class="xl:grid xl:max-w-full max-w-3xl mx-auto xl:px-0 grid-cols-6">
-          <div class="col-span-1 pt-5 px-5 xl:p-0">
+          <div class="col-span-1 hidden md:block pt-5 px-5 xl:p-0">
             <div class="sticky top-[300px] xl:py-10 flex xl:justify-end mr-5">
               <div class=" text-4xl font-mono flex  items-center gap-3">
                 <UIcon :name="section.icon" class="w-10 h-10" />
@@ -64,18 +66,19 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
             </div>
           </div>
           <div class="col-span-1 relative h-full xl:py-10">
-            <div class="relative flex items-center gap-3 sticky top-[300px]">
+            <div class="flex items-center gap-3 sticky top-[300px]">
               <div>
-                <h2 class="text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
+                <h2 class="text-lg md:text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
+                  <UIcon :name="section.icon" class="block md:hidden size-5" />
                   {{ section.title }}
                 </h2>
-                <div class="text-balance dark:text-neutral-300/80 text-neutral-600 text-lg">
+                <div class="text-balance dark:text-neutral-300/80 text-neutral-600 md:text-lg">
                   {{ section.description }}
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-span-3 py-10 2xl:px-14 xl:pl-5">
+          <div class="col-span-3 py-5 md:py-10 2xl:px-14 xl:pl-5">
             <component :is="$slots.wrap || 'div'">
               <div class="xl:grid flex flex-col grid-cols-2 2xl:px-5 2xl:gap-10 gap-5">
                 <div>
@@ -105,10 +108,10 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
             </p>
 
             <div class="flex mb-5 items-center gap-4 mt-5 md:mt-10  justify-start">
-              <UButton size="lg" to="/docs/introduction" class=" font-bold bg-gradient bg-gradient-to-r from-[#FBBF24] to-[#f0db4f] text-neutral-800">
-                Learn More
+              <UButton size="lg" :to="`/docs/${selectedFramework.slug}/head/guides/get-started/overview`" class=" font-bold bg-gradient bg-gradient-to-r from-[#FBBF24] to-[#f0db4f] text-neutral-800 hover:text-neutral-500">
+                Get Started
               </UButton>
-              <UButton size="lg" color="neutral" icon="i-carbon-download" variant="ghost" :to="`/docs/${selectedFramework.slug}/installation`">
+              <UButton size="lg" color="neutral" icon="i-carbon-download" variant="ghost" :to="`/docs/${selectedFramework.slug}/head/guides/get-started/installation`">
                 Install Unhead
               </UButton>
             </div>
@@ -124,7 +127,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
       :section="{
         id: 4,
         icon: 'i-noto-books',
-        title: 'Simply useHead()',
+        title: 'Hello useHead()',
         description: 'Unhead prefers a minimal API surface with most of the functionaltiy provided through the useHead() hook.',
         bg: 'dark:bg-green-500/5 bg-green-500/15',
         border: 'border-green-500/10 border-green-500/50',
@@ -138,13 +141,13 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-Classes.md'))" />
       </template>
     </ReuseSectionTemplate>
-    <div class="bg-neutral-200/50 dark:bg-neutral-900/50 py-10">
+    <div class="px-4 bg-neutral-200/50 dark:bg-neutral-900/50 py-10">
       <div class="max-w-2xl mx-auto">
         <div class="relative h-full xl:py-10">
           <div class="relative flex items-center gap-3 sticky top-[300px]">
             <div>
-              <h2 class="text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
-                <UIcon name="i-noto-potted-plant" class="w-10 h-10" />
+              <h2 class="text-lg md:text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
+                <UIcon name="i-noto-potted-plant" class="size-5 md:size-10" />
                 Side Effect DOM Updates
               </h2>
               <div class="text-balance dark:text-neutral-300/80 text-neutral-600 text-lg">
@@ -155,7 +158,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
           </div>
         </div>
       </div>
-      <div class="max-w-5xl mx-auto grid grid-cols-2">
+      <div class="max-w-5xl mx-auto md:grid grid-cols-2">
         <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('side-effects-a.md'))" />
         <div class=" h-full flex items-center justify-center flex-col">
           <ProsePre class="prose shiki">
@@ -176,24 +179,26 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         </div>
       </div>
     </div>
-    <ReuseSectionTemplate
-      :section="{
-        icon: 'i-noto-sparkles',
-        title: 'Optimized SEO Tags',
-        description: 'Nail your SEO with foolproof flat meta config and the simplest Schema.org you\'ve ever worked with.',
-      }"
-    >
-      <template #a>
-        <div>
-          <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useSeoMeta.md'))" />
-        </div>
-      </template>
-      <template #b>
-        <div>
-          <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useSchemaOrg.md'))" />
-        </div>
-      </template>
-    </ReuseSectionTemplate>
+    <div class="pt-10">
+      <ReuseSectionTemplate
+        :section="{
+          icon: 'i-noto-sparkles',
+          title: 'Optimized SEO Tags',
+          description: 'Nail your SEO with foolproof flat meta config and the simplest Schema.org you\'ve ever worked with.',
+        }"
+      >
+        <template #a>
+          <div>
+            <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useSeoMeta.md'))" />
+          </div>
+        </template>
+        <template #b>
+          <div>
+            <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useSchemaOrg.md'))" />
+          </div>
+        </template>
+      </ReuseSectionTemplate>
+    </div>
     <ReuseSectionTemplate
       v-motion-fade-visible
       :section="{
@@ -242,15 +247,9 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
           Unhead Principals
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <ShowcaseCard label="Full Featured Developer Experience" description="Full featured modules that do everything you expect and more.">
-            <UIcon name="i-noto-sparkles" class="w-1/2 h-1/2" />
-          </ShowcaseCard>
-          <ShowcaseCard label="Minimal client build: 6.7kb gz" description="Optional utils are tree shakable, keeping a small core and allowing for a minimal bundle size.">
-            <UIcon name="i-noto-rocket" class="w-1/2 h-1/2" />
-          </ShowcaseCard>
-          <ShowcaseCard label="Extensible" description="Internally powered by hookable to allow for full customisatin over output.">
-            <UIcon name="i-noto-hook" class="w-1/2 h-1/2" />
-          </ShowcaseCard>
+          <UPageCard spotlight icon="i-noto-sparkles" title="Full Featured Developer Experience" description="Full featured modules that do everything you expect and more." />
+          <UPageCard spotlight icon="i-noto-rocket" title="Optimized for Performance" description="Optional utils are tree shakable, keeping a small core and allowing for a minimal bundle size." />
+          <UPageCard spotlight icon="i-noto-hook" title="Extensible" description="Internally powered by hookable to allow for full customisatin over output." />
         </div>
       </UContainer>
     </section>
@@ -259,11 +258,11 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         <div class="lg:flex gap-10 items-center justify-between">
           <div class="mb-10">
             <div class="mb-10 mx-auto max-w-[35rem] flex flex-col justify-center">
-              <h2 class="font-bold mb-5 text-5xl">
+              <h2 class="font-bold text-center mb-3 md:mb-5 text-xl md:text-5xl">
                 Up To Date. Always.
                 <span class="text-blue-300 text-3xl" />
               </h2>
-              <p class="text-neutral-700 mb-3 dark:text-neutral-300 mt-4 max-w-3xl text-center text-xl lg:text-left">
+              <p class="text-neutral-700 mb-5 dark:text-neutral-300 md:mt-4 max-w-3xl text-center text-xl lg:text-left">
                 Unhead was started at the end of 2022 and has received continuous bug fixes and feature improvements from the community.
               </p>
               <div class="gap-2 mx-auto text-center grid grid-cols-12">
@@ -347,7 +346,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         </div>
         <UCard class="max-w-full overflow-hidden sm:max-w-[600px] mx-auto p-5">
           <ClientOnly>
-            <ChartDownloads :value="stats.modules[0].downloads" />
+            <LazyChartDownloads :hydrate-after="2000" :value="stats.modules[0].downloads" />
           </ClientOnly>
         </UCard>
       </UContainer>

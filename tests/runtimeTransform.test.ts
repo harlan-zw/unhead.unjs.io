@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { replaceImportSpecifier } from '../../utils/content'
+import { replaceImportSpecifier } from '../utils/content'
 
 const payload = {
   type: 'minimal',

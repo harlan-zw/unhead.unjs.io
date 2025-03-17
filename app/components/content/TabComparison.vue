@@ -59,7 +59,6 @@ onBeforeUpdate(() => {
 
 <template>
   <div :class="ui.wrapper" class="relative group [&>.group]:rounded-t-none [&>pre]:my-0 my-5">
-    {{ selectedIndex }}
     <div :class="ui.header">
       <button
         v-for="(tab, index) in tabs"

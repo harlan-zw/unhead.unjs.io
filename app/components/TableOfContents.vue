@@ -46,12 +46,11 @@ function scrollToHeading(id: string) {
       <a
         :href="`#${link.id}`"
         :class="[config.base, config.inactive]"
+        class="text-sm"
         @click.prevent="scrollToHeading(link.id)"
       >
-        <span class="text-blue-300 mr-px">#</span> {{ link.text }}
+        {{ link.text }}
       </a>
-
-      <TableOfContents v-if="link.children" :links="link.children" :ui="config" />
     </li>
   </ul>
 </template>

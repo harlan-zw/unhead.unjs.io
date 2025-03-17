@@ -1,5 +1,5 @@
-/* eslint-disable */
 <script lang="ts">
+/* eslint-disable */
 import type { ContentNavigationItem } from '@nuxt/content'
 import type { AppConfig } from '@nuxt/schema'
 import type { BadgeProps, LinkProps } from '@nuxt/ui'
@@ -76,6 +76,7 @@ const contentNavigation = tv({ extend: tv(theme), ...(appConfig.uiPro?.contentNa
 </script>
 
 <script setup lang="ts" generic="T extends ContentNavigationLink">
+/* eslint-disable */
 import { useAppConfig, useRoute } from '#imports'
 import { mapContentNavigationItem } from '#ui-pro/utils/content'
 import { pickLinkProps } from '#ui/utils/link'
@@ -158,7 +159,7 @@ const defaultValue = computed(() => {
     <ul :class="level > 0 ? ui.listWithChildren({ class: props.ui?.listWithChildren }) : ui.list({ class: props.ui?.list })">
       <template v-for="(link, index) in navigation" :key="index">
         <li v-if="link.children?.length" :class="ui.itemWithChildren({ class: props.ui?.itemWithChildren })" :value="String(index)">
-          <div>
+          <div class="px-2">
             <ReuseLinkTemplate :link="link" />
           </div>
 

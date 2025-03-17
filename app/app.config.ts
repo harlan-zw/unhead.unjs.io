@@ -5,6 +5,7 @@ export default defineAppConfig({
     duration: 5000,
   },
   ui: {
+    tabs: { trigger: 'leading-8', label: 'font-medium', list: 'h-[48px] gap-5 p-0 ', variants: { size: { md: { trigger: 'px-0 pt-0' } } } },
     navigationMenu: {
       slots: {
         list: 'gap-1.5',
@@ -72,18 +73,19 @@ export default defineAppConfig({
     },
     colors: {
       primary: 'yellow',
-      gray: 'neutral',
+      neutral: 'zinc',
     },
   },
   uiPro: {
     contentNavigation: {
       slots: {
         list: 'space-y-2',
+        listWithChildren: 'border-none transform mb-5',
       },
       variants: {
         active: {
           true: {
-            link: 'text-[var(--ui-text-toned)] after:-left-[1px] after:rounded-[var(--ui-radius)] after:w-full after:h-full after:absolute after:opacity-40 after:bottom-0 after:block after:border-yellow-500/50 after:bg-yellow-300/25 after:border text-black',
+            link: 'text-[var(--ui-text-toned)] after:-left-[1px] font-semibold rounded-[10px] after:rounded-[10px] after:w-full after:h-full after:absolute after:bottom-0 after:block after:bg-[var(--ui-bg-elevated)]/50 after:shadow-xs',
           },
           false: {
             link: 'text-[var(--ui-text-toned)]',
@@ -97,7 +99,7 @@ export default defineAppConfig({
           variant: 'pill',
           active: true,
           class: {
-            link: 'text-[var(--ui-text-highlighted)]',
+            link: 'text-[var(--ui-text-highlighted)] ',
           },
         },
       ],

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
-const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector()
+const { selectedFramework, frameworks } = useFrameworkSelector()
 </script>
 
 <template>

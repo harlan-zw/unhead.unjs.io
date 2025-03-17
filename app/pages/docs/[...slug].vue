@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { withoutTrailingSlash } from 'ufo'
 import { replaceImportSpecifier } from '~~/utils/content'
+import { getPathSubSection, getPathWithoutFramework } from '~~/utils/urls'
 
 definePageMeta({
   layout: 'docs',
@@ -8,7 +10,9 @@ definePageMeta({
 const route = useRoute()
 
 const [{ data: page }, { data: surround }] = await Promise.all([
-  useAsyncData(`docs-${route.path}`, () => queryCollection('docsUnhead').path(route.path).first()),
+  useAsyncData(`docs-${route.path}`, () => queryCollection('docsUnhead')
+    .where('path', 'IN', [withoutTrailingSlash(route.path), getPathWithoutFramework(route.path)])
+    .first()),
   useAsyncData(`docs-${route.path}-surround`, () => queryCollectionItemSurroundings('docsUnhead', route.path, {
     fields: ['title', 'description', 'path'],
   }), {
@@ -23,37 +27,24 @@ const [{ data: page }, { data: surround }] = await Promise.all([
   }),
 ])
 
-if (!page.value)
+const content = page.value
+if (!content)
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 
-const moduleName = computed(() => {
-  const subModule = route.path.split('/')[2] || ''
-  if (['schema-org', 'scripts'].includes(subModule)) {
-    return subModule === 'schema-org' ? 'Schema.org' : 'Scripts'
-  }
-  return false
-})
 useSeoMeta({
-  title: () => (page.value?.title === moduleName.value ? '' : page.value?.title) || '',
-  description: () => page.value?.description,
-  titleTemplate: '%s %separator %moduleName %separator %siteName',
+  title: () => content?.title,
+  description: () => content?.description,
+  titleTemplate: '%s %separator %siteName',
 })
 
 const { selectedFramework } = useFrameworkSelector()
-console.log(selectedFramework.value)
 
-useHead({
-  templateParams: {
-    moduleName,
-  },
-})
-
-const headline = ''
+const headline = useDocsNav().value.navFlat.find(item => item.path === getPathSubSection(route.path))?.title
 
 const repoLinks = computed(() => [
   {
     label: 'Edit this page',
-    to: `https://github.com/unjs/unhead/edit/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
+    to: `https://github.com/unjs/unhead/edit/main/docs/${content.id.split('/').slice(2).join('/')}`,
     target: '_blank',
   },
 ])
@@ -61,32 +52,67 @@ const repoLinks = computed(() => [
 const isDev = import.meta.dev
 
 const transformedPage = computed(() => {
-  const p = structuredClone(page.value.body) as any as { value: any }
-  replaceImportSpecifier(p.value, '@unhead/dynamic-import', selectedFramework.value.import)
+  const p = structuredClone(content.body) as any as { value: any }
+  replaceImportSpecifier(p.value, '@unhead/dynamic-import', selectedFramework.value.import, !page.value.stem.includes('typescript/'))
   return p
 })
 </script>
 
 <template>
-  <div v-if="page" class="max-w-[66ch] ml-auto md:ml-0 md:mr-auto">
-    <UPageHeader :title="page.title" :description="page.description" :headline="headline" class="text-balance">
-      <div class="mt-5">
-        <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-7" />
-      </div>
-    </UPageHeader>
+  <UMain class="relative mb-20 px-5">
+    <svg viewBox="0 0 1440 181" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-900/30 pointer-events-none absolute w-full -top-px transition-all text-(--ui-primary) flex-shrink-0 duration-[400ms] opacity-20 z-20"><mask id="path-1-inside-1_414_5526" fill="white"><path d="M0 0H1440V181H0V0Z" /></mask><path d="M0 0H1440V181H0V0Z" fill="url(#paint0_linear_414_5526)" fill-opacity="0.22" /><path d="M0 2H1440V-2H0V2Z" fill="url(#paint1_linear_414_5526)" mask="url(#path-1-inside-1_414_5526)" /><defs><linearGradient id="paint0_linear_414_5526" x1="720" y1="0" x2="720" y2="181" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient><linearGradient id="paint1_linear_414_5526" x1="0" y1="90.5" x2="1440" y2="90.5" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" stop-opacity="0" /><stop offset="0.395" stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient></defs></svg>
+    <div class="max-w-[1400px] mx-auto lg:pt-5">
+      <UPage :ui="{ left: 'lg:col-span-3', right: 'lg:col-span-2 hidden lg:block', center: 'lg:col-span-5' }">
+        <template #right>
+          <div>
+            <div class="pl-10">
+              <div class="mt-5 flex items-center gap-2  text-[var(--ui-text-accented)]">
+                <UIcon name="i-tabler-align-left-2" class="size-4 " />
+                <div class="text-xs  font-medium">
+                  On this page
+                </div>
+              </div>
+              <div class="mt-5">
+                <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-7" />
+              </div>
+            </div>
+          </div>
+        </template>
+        <template #left>
+          <UPageAside class="max-w-[260px] pt-5 px-5">
+            <DocsSidebarHeader />
+          </UPageAside>
+        </template>
+        <div v-if="content" class="max-w-[66ch] ml-auto md:ml-0 md:mr-auto">
+          <UPageHeader :title="content.title" :headline="headline" class="text-balance pt-4" />
 
-    <UPageBody prose class="pb-0">
-      <Ads v-if="!isDev" />
-      <ContentRenderer v-if="page.body" :value="transformedPage" />
-      <div class="justify-center flex items-center gap-2 font-semibold">
-        <UIcon name="i-simple-icons-github" class="w-5 h-5" />
-        <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
-          {{ repoLinks[0].label }}
-        </NuxtLink>
-      </div>
-      <FeedbackButtons :edit-link="repoLinks[0].to" />
-      <USeparator v-if="surround?.length" class="my-8" />
-      <UContentSurround :surround="surround" />
-    </UPageBody>
-  </div>
+          <div class="block lg:hidden">
+            <div class="mt-5 flex items-center gap-2  text-[var(--ui-text-accented)]">
+              <UIcon name="i-tabler-align-left-2" class="size-4 " />
+              <div class="text-xs  font-medium">
+                On this page
+              </div>
+            </div>
+            <div class="mt-5">
+              <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-5" />
+            </div>
+          </div>
+
+          <UPageBody prose class="pb-0">
+            <Ads v-if="!isDev" />
+            <ContentRenderer v-if="content.body" :value="transformedPage" />
+            <div class="justify-center flex items-center gap-2 font-semibold">
+              <UIcon name="i-simple-icons-github" class="w-5 h-5" />
+              <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
+                {{ repoLinks[0].label }}
+              </NuxtLink>
+            </div>
+            <FeedbackButtons :edit-link="repoLinks[0].to" />
+            <USeparator v-if="surround?.length" class="my-8" />
+            <UContentSurround :surround="surround" />
+          </UPageBody>
+        </div>
+      </UPage>
+    </div>
+  </UMain>
 </template>

@@ -1,6 +1,6 @@
-import { joinRelativeURL } from 'ufo'
+import { getPathWithoutFramework } from '~~/utils/urls'
 
-export const frameworks = [
+const items = [
   { icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript', import: 'unhead' },
   { icon: 'i-logos-vue', label: 'Vue', slug: 'vue', import: '@unhead/vue' },
   { icon: 'i-logos-react', label: 'React', slug: 'react', import: '@unhead/react' },
@@ -10,38 +10,36 @@ export const frameworks = [
   { icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt', import: '#imports' },
 ] as const
 
-export function useFrameworkSelector() {
+export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
   const router = useRouter()
-  const selectedFramework = useCookie('framework', { default: () => 'typescript' })
-  const toast = useToast()
-  function switchFramework(framework: typeof frameworks[number], redirect: boolean = true) {
+  const route = useRoute()
+  const selectedFramework = useCookie('unhead-selected-framework', { maxAge: 3600 * 3600, default: () => 'typescript' })
+  function switchFramework(framework: typeof items[number], redirect: boolean = true) {
     // if the current path contains the framework slug, then we swap to the new one, otherwise we don't
     selectedFramework.value = framework.slug
     if (redirect) {
-      const frameworkSlug = router.currentRoute.value.path.includes(selectedFramework.value) ? framework.slug : ''
-      if (!frameworkSlug) {
-        if (router.currentRoute.value.path.startsWith('/docs')) {
-          // scroll to a little down to indicate the change
-          window.scrollTo({ top: 75, behavior: 'smooth' })
-        }
-        return
+      if (router.currentRoute.value.path.startsWith('/docs')) {
+        // scroll to a little down to indicate the change
+        window.scrollTo({ top: 75, behavior: 'smooth' })
       }
-      // if path 2nd arg is schema-org or scripts we're in a sub module
-      const lastPath = router.currentRoute.value.path.split('/').pop()
-      const validRedirectPaths = ['introduction', 'installation', 'troubleshooting']
-      const lastPathRedirect = validRedirectPaths.includes(lastPath) ? lastPath : 'installation'
-      const subModule = router.currentRoute.value.path.split('/')[2]
-      if (['schema-org', 'scripts'].includes(subModule)) {
-        return router.push(joinRelativeURL('/docs', subModule, frameworkSlug, lastPathRedirect))
-      }
-      router.push(joinRelativeURL('/docs', frameworkSlug, lastPathRedirect))
     }
   }
   return {
     switchFramework,
     selectedFramework: computed(() => {
-      return frameworks.find(f => f.slug === selectedFramework.value) || frameworks.find(f => f.slug === 'typescript')
+      return items.find(f => f.slug === selectedFramework.value) || items.find(f => f.slug === 'typescript')
     }),
-    frameworks,
+    frameworks: computed(() => {
+      if (!nav?.value) {
+        return items
+      }
+      return items.map((f) => {
+        const to = getPathWithoutFramework(route.path)
+        return {
+          ...f,
+          to: nav.value.navFlat.find(l => l?.path === to) ? getPathWithoutFramework(route.path, f.slug) : '/',
+        }
+      })
+    }),
   }
 }

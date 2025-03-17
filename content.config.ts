@@ -1,8 +1,13 @@
 import { existsSync } from 'node:fs'
-import { defineCollection, defineContentConfig } from '@nuxt/content'
+import { defineCollection, defineContentConfig, z } from '@nuxt/content'
 import { asSeoCollection } from '@nuxtjs/seo/content'
 import { relative, resolve } from 'pathe'
 import { logger } from './logger'
+
+const schema = z.object({
+  new: z.boolean().optional(),
+  deprecated: z.boolean().optional(),
+})
 
 function getSubModuleCollection() {
   const localDirPaths = new Set([
@@ -14,10 +19,11 @@ function getSubModuleCollection() {
       return defineCollection(asSeoCollection({
         type: 'page',
         source: {
-          include: '**/*.md',
+          include: '**/*.{md,yml}',
           cwd: localDirPath,
           prefix: '/docs',
         },
+        schema,
       }))
     }
   }
@@ -27,9 +33,10 @@ function getSubModuleCollection() {
     type: 'page',
     source: {
       repository: `https://github.com/unjs/unhead`,
-      include: 'docs/**/*.md',
+      include: 'docs/**/*.{md,yml}',
       prefix: `/docs`,
     },
+    schema,
   }))
 }
 

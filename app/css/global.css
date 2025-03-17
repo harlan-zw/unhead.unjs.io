@@ -2,8 +2,8 @@
 @import "@nuxt/ui-pro";
 
 @theme {
-  --font-family-sans: 'Hubot Sans', sans-serif;
-  --font-family-mono: 'Fira Code', monospace;
+  --font-sans: 'Hubot Sans', sans-serif;
+  --font-mono: 'Fira Code', monospace;
 
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;
