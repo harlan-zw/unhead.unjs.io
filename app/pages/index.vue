@@ -126,7 +126,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
       v-motion-fade-visible
       :section="{
         id: 4,
-        icon: 'i-noto-books',
+        icon: 'i-noto-waving-hand',
         title: 'Hello useHead()',
         description: 'Unhead prefers a minimal API surface with most of the functionaltiy provided through the useHead() hook.',
         bg: 'dark:bg-green-500/5 bg-green-500/15',
@@ -147,8 +147,8 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
           <div class="relative flex items-center gap-3 sticky top-[300px]">
             <div>
               <h2 class="text-lg md:text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
-                <UIcon name="i-noto-potted-plant" class="size-5 md:size-10" />
-                Side Effect DOM Updates
+                <UIcon name="i-noto-eyes" class="size-5 md:size-10" />
+                Built For Component Lifecycles
               </h2>
               <div class="text-balance dark:text-neutral-300/80 text-neutral-600 text-lg">
                 All side effects are tracked so that unmounting a component will revert its head modifications and reactive
