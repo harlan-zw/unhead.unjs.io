@@ -110,9 +110,12 @@ const subSectionLinks = computed(() => {
         </UModal>
         <UNavigationMenu highlight :items="menu.slice(0, 3)" class="justify-center" />
       </div>
-      <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[300px]" placeholder="Search..." @click="openSearch = true">
+      <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[300px]" shortcut="meta_k" placeholder="Search..." @click="openSearch = true">
         <template #leading>
           <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" />
+        </template>
+        <template #trailing>
+          <UKbd>/</UKbd>
         </template>
       </UInput>
     </template>

@@ -29,7 +29,7 @@ const topLinks = computed(() => [
       <ul class="isolate -mx-2.5 -mb-2">
         <li v-for="link in topLinks" :key="link.to">
           <NuxtLink
-            :to="link.to" href="https://discord.gg/nuxt"
+            :to="link.to"
             class="group relative w-full px-2.5 py-1.5 before:inset-y-px before:inset-x-0 flex items-center gap-1.5 text-sm before:absolute before:z-[-1] before:rounded-[calc(var(--ui-radius)*1.5)] focus:outline-none focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2 text-[var(--ui-text-toned)] focus-visible:before:ring-(--ui-primary) hover:text-(--ui-text-highlighted) hover:before:bg-(--ui-bg-elevated)/50 data-[state=open]:text-(--ui-text-highlighted) transition-colors before:transition-colors"
           >
             <div

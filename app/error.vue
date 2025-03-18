@@ -179,7 +179,7 @@ const { open: openSearch } = useContentSearch()
             <!-- Recommended Links -->
             <div class="bg-[var(--ui-bg)] border-[var(--ui-border)] rounded-lg shadow-sm border  overflow-hidden">
               <nav>
-                <ul class="divide-y divide-gray-100">
+                <ul class="divide-y divide-gray-100 dark:divide-neutral-800">
                   <li
                     v-for="(link, index) in recommendedLinks"
                     :key="index"
@@ -187,13 +187,26 @@ const { open: openSearch } = useContentSearch()
                   >
                     <NuxtLink
                       :to="getPathWithFramework(getPathWithoutFramework(link.item.path), selectedFramework.slug)"
-                      class="p-4 text-[var(--ui-text)] hover:text-indigo-600 block"
+                      class="p-4 text-[var(--ui-text)] hover:text-[var(--ui-text-inverse)] block"
                     >
                       <div class="text-sm text-[var(--ui-text-dimmed)] mb-1">
                         {{ link.item.hierarchy.slice(-3).join(' > ') }}
                       </div>
                       <div class="font-medium">
                         {{ link.item.title }}
+                      </div>
+                      <div
+                        v-if="!link.item.html" class="flex items-center justify-between gap-2 w-full"
+                        :class="link.item.deprecated ? 'opacity-50' : ''"
+                      >
+                        <div class="flex items-center gap-2">
+                          {{ link.title }}
+                        </div>
+                        <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamclic ass="w-4 h-4" />
+                      </div>
+                      <div v-else :class="link.item.deprecated ? 'opacity-50' : ''">
+                        <UIcon v-if="link.item.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-400 dark:text-sky-200" />
+                        <div v-html="link.item.title" />
                       </div>
                     </NuxtLink>
                   </li>

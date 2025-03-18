@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     '@nuxthub/core',
     '@nuxt/fonts',
     '@nuxt/content',
+    'nuxt-llms',
     '@nuxt/scripts',
     '@nuxt/image',
     // maybe buggy
@@ -92,6 +93,9 @@ export default defineNuxtConfig({
             '/guides/*',
             '/schema-org/*',
             '/docs/*',
+            '/plugins/*',
+            '/usage/*',
+            '/llms.txt',
           ],
         },
       },
@@ -162,7 +166,7 @@ export default defineNuxtConfig({
   ],
 
   llms: {
-    domain: 'https://unhead.unjs.io',
+    domain: 'https://unhead.unjs.io/',
     title: 'Unhead',
     description: 'Unhead is the any-framework document head manager built for performance and delightful developer experience.',
     notes: [
@@ -173,6 +177,16 @@ export default defineNuxtConfig({
       title: 'Complete Documentation',
       description: 'The complete documentation including all content',
     },
+    sections: [
+      {
+        title: 'Documentation',
+        description: 'Technical documentation and guides',
+        contentCollection: 'docsUnhead',
+        contentFilters: [
+          { field: 'extension', operator: '=', value: 'md' },
+        ],
+      },
+    ],
   },
 
   hooks: {

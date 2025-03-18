@@ -48,6 +48,11 @@ const repoLinks = computed(() => [
     to: `https://github.com/unjs/unhead/edit/main/docs/${content.id.split('/').slice(2).join('/')}`,
     target: '_blank',
   },
+  {
+    label: 'Markdown For LLMs',
+    to: `https://raw.githubusercontent.com/unjs/unhead/refs/heads/main/docs//${content.id.split('/').slice(2).join('/')}`,
+    target: '_blank',
+  },
 ])
 
 // allow pages to be cached for an hour
@@ -91,7 +96,11 @@ const transformedPage = computed(() => {
           </UPageAside>
         </template>
         <div v-if="content" class="max-w-[66ch] ml-auto md:ml-0 md:mr-auto">
-          <UPageHeader :title="content.title" :headline="headline" class="text-balance pt-4" />
+          <UPageHeader
+            :title="content.title" :headline="headline" class="text-balance pt-4" :links="[
+              { label: 'Copy Page', to: repoLinks[1].to, icon: 'i-carbon-copy', target: '_blank' },
+            ]"
+          />
 
           <div class="block lg:hidden">
             <div class="mt-5 flex items-center gap-2  text-[var(--ui-text-accented)]">
@@ -108,10 +117,14 @@ const transformedPage = computed(() => {
           <UPageBody prose class="pb-0">
             <Ads v-if="!isDev" />
             <ContentRenderer v-if="content.body" :value="transformedPage" />
-            <div class="justify-center flex items-center gap-2 font-semibold">
+            <div class="justify-center flex items-center gap-5 font-semibold">
               <UIcon name="i-simple-icons-github" class="w-5 h-5" />
               <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
                 {{ repoLinks[0].label }}
+              </NuxtLink>
+              <UIcon name="i-simple-icons-markdown" class="w-5 h-5" />
+              <NuxtLink v-bind="repoLinks[1]" class="hover:underline">
+                {{ repoLinks[1].label }}
               </NuxtLink>
             </div>
             <FeedbackButtons :edit-link="repoLinks[0].to" />

@@ -35,6 +35,7 @@ const searchNav = computed(() => {
     <ClientOnly>
       <LazyUContentSearch
         v-model:search-term="searchTerm"
+        shortcut="/"
         :files="search"
         :navigation="searchNav"
         :fuse="{ resultLimit: 42 }"
