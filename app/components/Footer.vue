@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Unhead } from '~~/const'
+import { getPathWithFramework } from '~~/utils/urls'
 import { enhanceTitlesAndIcons } from '~/composables/data'
+
+const { selectedFramework } = useFrameworkSelector()
 
 const nav = inject('navigation')
 const unheadGuides = nav.value.find(c => c.path.startsWith('/docs/head')).children[0].children.map(enhanceTitlesAndIcons).map(c => ({ ...c, icon: Unhead.icon }))
@@ -54,22 +57,52 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
             </ULink>
           </div>
         </div>
-        <div class="grid xl:grid-cols-4 lg:gap-20 gap-10">
-          <div v-for="(category, cKey) in [...unheadGuides, ...schemaOrgAndScriptGuides]" :key="cKey">
-            <h3 class="font-bold mb-5 flex items-center gap-1">
-              <UIcon v-if="category.icon" dynamic :name="category.icon" class="w-5 h-5" />
-              {{ category.title }}
+        <div class="md:grid grid-cols-2">
+          <div>
+            <h3 class="font-medium mb-7 text-base flex items-center gap-1">
+              <UIcon dynamic :name="unheadGuides[0].icon" class="w-5 h-5" />
+              Head
             </h3>
-            <nav>
-              <ul class="grid gap-6">
-                <li v-for="(link, key) in category.children" :key="key">
-                  <ULink :to="link.path" class="flex items-center gap-1 hover:underline transition">
-                    <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
-                    {{ link.title }}
-                  </ULink>
-                </li>
-              </ul>
-            </nav>
+            <div class="grid xl:grid-cols-2 gap-10 mb-12">
+              <div v-for="(category, cKey) in [...unheadGuides]" :key="cKey">
+                <div class="font-bold mb-3 text-xs flex items-center gap-1">
+                  {{ category.title }}
+                </div>
+                <nav>
+                  <ul class="grid gap-4">
+                    <li v-for="(link, key) in category.children" :key="key">
+                      <ULink :to="getPathWithFramework(link.path, selectedFramework.slug)" class="flex items-center gap-1 hover:underline transition">
+                        <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
+                        {{ link.title }}
+                      </ULink>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-medium mb-7 text-base flex items-center gap-1">
+              <UIcon dynamic :name="schemaOrgAndScriptGuides[0].icon" class="w-5 h-5" />
+              Schema.org
+            </h3>
+            <div class="grid xl:grid-cols-3 gap-10">
+              <div v-for="(category, cKey) in [...schemaOrgAndScriptGuides.flatMap(c => c.children)]" :key="cKey">
+                <div class="font-bold mb-3 text-xs flex items-center gap-1">
+                  {{ category.title }}
+                </div>
+                <nav>
+                  <ul class="grid gap-4">
+                    <li v-for="(link, key) in category.children" :key="key">
+                      <ULink :to="getPathWithFramework(link.path, selectedFramework.slug)" class="flex items-center gap-1 hover:underline transition">
+                        <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
+                        {{ link.title }}
+                      </ULink>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
           </div>
         </div>
       </UContainer>

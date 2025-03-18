@@ -296,6 +296,9 @@ export default defineNuxtConfig({
       mode: 'out-in',
     },
     head: {
+      meta: [
+        { name: 'google-site-verification', content: 'SnwVo-uFg39U69WHDoKma6bdT7hoh7sNYrviT8QuJww' },
+      ],
       link: [
         {
           rel: 'author',
