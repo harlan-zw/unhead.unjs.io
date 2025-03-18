@@ -49,6 +49,11 @@ const repoLinks = computed(() => [
   },
 ])
 
+// allow pages to be cached for an hour
+if (import.meta.server) {
+  setHeader(useRequestEvent(), 'Cache-Control', 'public, max-age=3600, s-maxage=3600')
+}
+
 const isDev = import.meta.dev
 
 const transformedPage = computed(() => {
