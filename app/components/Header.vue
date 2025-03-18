@@ -7,7 +7,8 @@ import { useStats } from '~/composables/data'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 import FrameworkSelector from './FrameworkSelector.vue'
 
-const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector()
+const docsNav = useDocsNav(true)
+const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNav)
 
 const stats = await useStats()
 const versions = computed(() => {
@@ -62,8 +63,6 @@ const open = ref(false)
 watch(selectedFramework, () => {
   open.value = false
 })
-
-const docsNav = useDocsNav(true)
 
 const { open: openSearch } = useContentSearch()
 
@@ -282,7 +281,7 @@ const subSectionLinks = computed(() => {
             v-for="framework in frameworks.filter(f => f.slug !== selectedFramework.slug)" :key="framework.slug"
             :title="`Switch to ${framework.label}`" :aria-label="framework.label" type="button"
             class="cursor-pointer transition-all "
-            :to="getPathWithoutFramework(route.path, framework.slug)"
+            :to="framework.to"
             :class="[framework.slug === selectedFramework.slug ? [] : ['hover:brightness-50 brightness-120 sepia-[90%]']]"
             variant="ghost" @click="switchFramework(framework)"
           >

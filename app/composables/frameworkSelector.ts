@@ -1,4 +1,4 @@
-import { getPathFramework, getPathWithoutFramework } from '~~/utils/urls'
+import {getPathFramework, getPathWithFramework, getPathWithoutFramework} from '~~/utils/urls'
 
 const items = [
   { icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript', import: 'unhead' },
@@ -14,12 +14,12 @@ const fallbackFramework = ref()
 
 export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
   const route = useRoute()
-  const selectedFramework = computed(() => {
+  const frameworkSlug = computed(() => {
     return getPathFramework(route.path) || fallbackFramework.value
   })
   watch(() => route.path, (v) => {
     if (getPathFramework(v)) {
-      fallbackFramework.value = getPathFramework(v)
+      frameworkSlug.value = getPathFramework(v)
     }
   }, {
     immediate: true,
@@ -28,11 +28,12 @@ export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
     // if the current path contains the framework slug, then we swap to the new one, otherwise we don't
     fallbackFramework.value = framework.slug
   }
+  const selectedFramework = computed(() => {
+    return items.find(f => f.slug === frameworkSlug.value) || items.find(f => f.slug === 'typescript')
+  })
   return {
     switchFramework,
-    selectedFramework: computed(() => {
-      return items.find(f => f.slug === selectedFramework.value) || items.find(f => f.slug === 'typescript')
-    }),
+    selectedFramework,
     frameworks: computed(() => {
       if (!nav?.value) {
         return items
@@ -41,7 +42,7 @@ export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
         const to = getPathWithoutFramework(route.path)
         return {
           ...f,
-          to: nav.value.navFlat.find(l => l?.path === to) ? getPathWithoutFramework(route.path, f.slug) : '/',
+          to: nav.value.navFlat.find(l => l?.path === to) ? getPathWithFramework(to, f.slug)  : `/docs/${f.slug}/head/guides/get-started/installation`,
         }
       })
     }),
