@@ -1,5 +1,4 @@
-```vue [Modal.vue]
-<script lang="ts" setup>
+```ts
 useHead({
   title: 'Subscribe now!',
   htmlAttrs: {
@@ -15,5 +14,4 @@ useHead({
     as: 'script',
   }],
 })
-</script>
 ```

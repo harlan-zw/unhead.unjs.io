@@ -72,7 +72,7 @@ const transformedPage = computed(() => {
 
 <template>
   <UMain class="relative mb-20 px-5">
-    <svg viewBox="0 0 1440 181" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-900/30 pointer-events-none absolute w-full -top-px transition-all text-(--ui-primary) flex-shrink-0 duration-[400ms] opacity-20 z-20"><mask id="path-1-inside-1_414_5526" fill="white"><path d="M0 0H1440V181H0V0Z" /></mask><path d="M0 0H1440V181H0V0Z" fill="url(#paint0_linear_414_5526)" fill-opacity="0.22" /><path d="M0 2H1440V-2H0V2Z" fill="url(#paint1_linear_414_5526)" mask="url(#path-1-inside-1_414_5526)" /><defs><linearGradient id="paint0_linear_414_5526" x1="720" y1="0" x2="720" y2="181" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient><linearGradient id="paint1_linear_414_5526" x1="0" y1="90.5" x2="1440" y2="90.5" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" stop-opacity="0" /><stop offset="0.395" stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient></defs></svg>
+    <svg viewBox="0 0 1440 181" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-900/30 pointer-events-none absolute max-w-full -top-px transition-all text-(--ui-primary) flex-shrink-0 duration-[400ms] opacity-20 z-20"><mask id="path-1-inside-1_414_5526" fill="white"><path d="M0 0H1440V181H0V0Z" /></mask><path d="M0 0H1440V181H0V0Z" fill="url(#paint0_linear_414_5526)" fill-opacity="0.22" /><path d="M0 2H1440V-2H0V2Z" fill="url(#paint1_linear_414_5526)" mask="url(#path-1-inside-1_414_5526)" /><defs><linearGradient id="paint0_linear_414_5526" x1="720" y1="0" x2="720" y2="181" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient><linearGradient id="paint1_linear_414_5526" x1="0" y1="90.5" x2="1440" y2="90.5" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" stop-opacity="0" /><stop offset="0.395" stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient></defs></svg>
     <div class="max-w-[1400px] mx-auto lg:pt-5">
       <UPage :ui="{ left: 'lg:col-span-3', right: 'lg:col-span-2 hidden lg:block', center: 'lg:col-span-5' }">
         <template #right>
@@ -118,14 +118,18 @@ const transformedPage = computed(() => {
             <Ads v-if="!isDev" />
             <ContentRenderer v-if="content.body" :value="transformedPage" />
             <div class="justify-center flex items-center gap-5 font-semibold">
-              <UIcon name="i-simple-icons-github" class="w-5 h-5" />
-              <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
-                {{ repoLinks[0].label }}
-              </NuxtLink>
-              <UIcon name="i-simple-icons-markdown" class="w-5 h-5" />
-              <NuxtLink v-bind="repoLinks[1]" class="hover:underline">
-                {{ repoLinks[1].label }}
-              </NuxtLink>
+              <div class="flex items-center gap-2">
+                <UIcon name="i-simple-icons-github" class="w-5 h-5" />
+                <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
+                  {{ repoLinks[0].label }}
+                </NuxtLink>
+              </div>
+              <div class="flex items-center gap-2">
+                <UIcon name="i-simple-icons-markdown" class="w-5 h-5" />
+                <NuxtLink v-bind="repoLinks[1]" class="hover:underline">
+                  {{ repoLinks[1].label }}
+                </NuxtLink>
+              </div>
             </div>
             <FeedbackButtons :edit-link="repoLinks[0].to" />
             <USeparator v-if="surround?.length" class="my-8" />

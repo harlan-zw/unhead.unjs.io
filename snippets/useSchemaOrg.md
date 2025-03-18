@@ -1,6 +1,6 @@
 ### Schema.org Graphs
 
-Rich result optimized Schema.org graphs without the `<script type="application/ld+json>`{lang="html"}.
+Rich result optimized Schema.org graphs without the `application/ld+json`{lang="html"}.
 
 ```ts twoslash
 useSchemaOrg([

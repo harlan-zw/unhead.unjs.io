@@ -123,7 +123,6 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
       </UContainer>
     </section>
     <ReuseSectionTemplate
-      v-motion-fade-visible
       :section="{
         id: 4,
         icon: 'i-noto-waving-hand',
@@ -148,7 +147,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
             <div>
               <h2 class="text-lg md:text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
                 <UIcon name="i-noto-eyes" class="size-5 md:size-10" />
-                Built For Component Lifecycles
+                Built For Reactive Lifecycles
               </h2>
               <div class="text-balance dark:text-neutral-300/80 text-neutral-600 text-lg">
                 All side effects are tracked so that unmounting a component will revert its head modifications and reactive
@@ -159,7 +158,14 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         </div>
       </div>
       <div class="max-w-5xl mx-auto md:grid grid-cols-2">
-        <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('side-effects-a.md'))" />
+        <div>
+          <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('side-effects-a.md'))" />
+          <div class="flex items-center gap-2 mt-2">
+            <UButton color="info" size="sm" @click="mounted = !mounted">
+              {{ mounted ? 'Unmount' : 'Mount' }}
+            </UButton>
+          </div>
+        </div>
         <div class=" h-full flex items-center justify-center flex-col">
           <ProsePre class="prose shiki">
             <ProseCode>
@@ -169,13 +175,8 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
                 :step="Number(mounted)"
               />
             </ProseCode>
-            <div class="flex items-center gap-2">
-              <UBadge variant="outline" :color="mounted ? 'success' : 'gray'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
-              <UButton color="info" @click="mounted = !mounted">
-                {{ mounted ? 'Unmount' : 'Mount' }}
-              </UButton>
-            </div>
           </ProsePre>
+          <UBadge variant="outline" :color="mounted ? 'success' : 'gray'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
         </div>
       </div>
     </div>
