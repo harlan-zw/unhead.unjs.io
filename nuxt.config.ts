@@ -38,6 +38,9 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
+    exclude: [
+      '**/.navigation',
+    ],
     xslColumns: [
       { label: 'URL', width: '100%' },
     ],
@@ -293,6 +296,12 @@ export default defineNuxtConfig({
       mode: 'out-in',
     },
     head: {
+      link: [
+        {
+          rel: 'author',
+          href: 'https://harlanzw.com/',
+        },
+      ],
       templateParams: {
         separator: '·',
       },

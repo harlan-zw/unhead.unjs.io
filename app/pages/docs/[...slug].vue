@@ -2,7 +2,7 @@
 import { setHeader } from 'h3'
 import { withoutTrailingSlash } from 'ufo'
 import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/utils/content'
-import { getPathSubSection, getPathWithoutFramework } from '~~/utils/urls'
+import { getPathSubSection, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
 
 definePageMeta({
   layout: 'docs',
@@ -38,7 +38,38 @@ useSeoMeta({
   titleTemplate: '%s %separator %siteName',
 })
 
-const { selectedFramework } = useFrameworkSelector()
+const { selectedFramework, frameworks } = useFrameworkSelector()
+
+useHead({
+  link: [{ rel: 'canonical', href: content.path }],
+})
+
+useHead({
+  link: () => {
+    const isFrameworkSpecific = content.path !== getPathWithoutFramework(content.path)
+    return [
+      { rel: 'canonical', href: `https://unhead.unjs.io${content.path}` },
+      ...(isFrameworkSpecific
+        ? frameworks.value.map((f) => {
+            return {
+              rel: 'alternate',
+              href: `https://unhead.unjs.io/${getPathWithFramework(content.path, f.slug)}`,
+              title: f.label,
+            }
+          })
+        : []),
+      // add prev and next using surround
+      ...(surround.value.length
+        ? surround.value.map((s, i) => {
+            return {
+              rel: i === 0 ? 'prev' : 'next',
+              href: `https://unhead.unjs.io/${s.path}`,
+            }
+          })
+        : []),
+    ]
+  },
+})
 
 const headline = useDocsNav().value.navFlat.find(item => item.path === getPathSubSection(route.path))?.title
 
