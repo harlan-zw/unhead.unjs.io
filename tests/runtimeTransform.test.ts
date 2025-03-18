@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { replaceImportSpecifier } from '../utils/content'
+import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '../utils/content'
 
 const payload = {
   type: 'minimal',
@@ -7720,8 +7720,106 @@ describe('runtime content transforms', () => {
       payload.value,
       '@unhead/vue',
       '@unhead/react',
+      false,
     )
     const payloadJson = JSON.stringify(payload.value)
     expect(payloadJson).not.toMatch(/@unhead\/vue/g)
+  })
+  it('should fix links', () => {
+    const links = modifyRelativeDocLinksWithFramework(payload.value, 'vue')
+    expect(links).toMatchInlineSnapshot(`
+      [
+        [
+          "a",
+          {
+            "href": "https://zhead.dev/",
+            "rel": "noopener noreferrer",
+            "target": "_blank",
+          },
+          "Zhead: Head Tag Database",
+        ],
+        [
+          "a",
+          {
+            "href": "#social-share",
+          },
+          "Social Share",
+        ],
+        [
+          "a",
+          {
+            "href": "#blog-posts",
+          },
+          "Blog Posts",
+        ],
+        [
+          "a",
+          {
+            "href": "https://nuxtseo.com/learn/controlling-crawlers",
+            "rel": "noopener noreferrer",
+            "target": "_blank",
+          },
+          "Controlling Web Crawlers",
+        ],
+        [
+          "a",
+          {
+            "href": "https://ogp.me/",
+            "rel": "noopener noreferrer",
+            "target": "_blank",
+          },
+          "open graph",
+        ],
+        [
+          "a",
+          {
+            "href": "https://ogp.me/",
+            "rel": "noopener noreferrer",
+            "target": "_blank",
+          },
+          "Open Graph",
+        ],
+        [
+          "a",
+          {
+            "href": "https://developer.twitter.com/en/docs/twitter-for-websites/cards/guides/getting-started",
+            "rel": [
+              "nofollow",
+            ],
+          },
+          "Twitter",
+        ],
+        [
+          "a",
+          {
+            "href": "#seo-starter",
+          },
+          "SEO Starter",
+        ],
+        [
+          "a",
+          {
+            "href": "#social-share",
+          },
+          "Social Share",
+        ],
+        [
+          "a",
+          {
+            "href": "/docs/vue/schema-org/recipes/blog",
+          },
+          "BlogPosting",
+        ],
+        [
+          "a",
+          {
+            "href": "https://realfavicongenerator.net/",
+            "rel": "noopener noreferrer",
+            "target": "_blank",
+          },
+          "RealFaviconGenerator",
+        ],
+      ]
+    `)
   })
 })

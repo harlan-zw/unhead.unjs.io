@@ -7,6 +7,12 @@ export function getPathWithoutFramework(path: string, replacement = ''): string 
   return path
 }
 
+export function getPathFramework(path: string): string {
+  // get framework slug from path, i.e vue, typescript, etc
+  const match = path.match(/\/(vue|typescript|react|svelte|solid-js|angular|nuxt)/)
+  return match ? match[1] : ''
+}
+
 export function getPathWithFramework(path: string, framework = ''): string {
   const without = getPathWithoutFramework(path)
   return without.replace('/docs/', `/docs/${framework}/`)

@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { setHeader } from 'h3'
 import { withoutTrailingSlash } from 'ufo'
-import { replaceImportSpecifier } from '~~/utils/content'
+import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/utils/content'
 import { getPathSubSection, getPathWithoutFramework } from '~~/utils/urls'
 
 definePageMeta({
@@ -59,6 +60,7 @@ const isDev = import.meta.dev
 const transformedPage = computed(() => {
   const p = structuredClone(content.body) as any as { value: any }
   replaceImportSpecifier(p.value, '@unhead/dynamic-import', selectedFramework.value.import, !page.value.stem.includes('typescript/'))
+  modifyRelativeDocLinksWithFramework(p.value, selectedFramework.value.slug)
   return p
 })
 </script>

@@ -37,6 +37,33 @@ export function walk<T = any>(
   }
 }
 
+export function modifyRelativeDocLinksWithFramework(
+  payload: any,
+  framework: string,
+): any[] {
+  const links = []
+  // find a tags and check the href, if it's relative and contains docs and does not have a framework (getPathFramework)
+  // then we should add the framework getPathWithFramework
+  walk(
+    payload,
+    node => Array.isArray(node) && node[0] === 'a' && typeof node[1].href === 'string',
+    (node) => {
+      const href = node[1].href
+      if (href.startsWith('/docs/') && !href.includes(`/docs/${framework}`)) {
+        // add the framework to the href
+        node[1].href = href.replace('/docs/', `/docs/${framework}/`)
+      }
+      // while we're here make any absolute links target="_blank"
+      else if (href.startsWith('http') && !href.includes('/docs/')) {
+        node[1].target = '_blank'
+        node[1].rel = 'noopener noreferrer'
+      }
+      links.push(node)
+    },
+  )
+  return links
+}
+
 export function replaceImportSpecifier(
   payload: any,
   oldImport: string,
