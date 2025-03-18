@@ -15,3 +15,5 @@ docs/.nuxt
 .data
 .output
 .nuxt
+
+.wrangler

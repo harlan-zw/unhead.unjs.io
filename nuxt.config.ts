@@ -42,6 +42,7 @@ export default defineNuxtConfig({
     ],
   },
 
+  // breaks build locally
   hub: {
     database: true,
     cache: true,
@@ -82,12 +83,14 @@ export default defineNuxtConfig({
     prerender: {
       failOnError: false,
       crawlLinks: true,
-      routes: ['/'],
+      routes: ['/', '/404.html'],
     },
     cloudflare: {
       pages: {
         routes: {
-          include: [
+          exclude: [
+            '/guides/*',
+            '/schema-org/*',
             '/docs/*',
           ],
         },

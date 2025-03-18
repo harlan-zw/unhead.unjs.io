@@ -126,13 +126,13 @@ const { open: openSearch } = useContentSearch()
         <div class="min-h-[60vh] flex gap-10 min-w-[50vw] items-center justify-center px-4 py-12 mb-15">
           <div class="w-4xl max-w-full">
             <!-- Error Title -->
-            <h1 class="text-4xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <h1 class="text-4xl font-bold  mb-4 flex items-center gap-2">
               <UIcon name="i-carbon-warning-square" class="size-15" />
               {{ error.statusCode === 404 ? 'Page Not Found' : 'Something Went Wrong' }}
             </h1>
 
             <!-- Error Description -->
-            <p class="text-xl text-gray-600 mb-8">
+            <p class="text-xl  text-[var(--ui-text-dimmed)] mb-8">
               {{ error.statusCode === 404 ? 'Oops... we can\'t find that page.' : 'Uh oh, looks like an error :(' }}
             </p>
 
@@ -142,7 +142,7 @@ const { open: openSearch } = useContentSearch()
             </div>
 
             <!-- Home Link -->
-            <div v-else class="mb-10">
+            <div v-else class="mb-3 text-[var(--ui-text-muted)]">
               <div>
                 <span class="">Go back</span>
                 <NuxtLink
@@ -172,24 +172,24 @@ const { open: openSearch } = useContentSearch()
 
           <!-- "Did you mean?" Section -->
           <div class="w-full max-w-2xl mx-auto">
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">
+            <h2 class="text-xl font-semibold  mb-4">
               Did you mean?
             </h2>
 
             <!-- Recommended Links -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="bg-[var(--ui-bg)] border-[var(--ui-border)] rounded-lg shadow-sm border  overflow-hidden">
               <nav>
                 <ul class="divide-y divide-gray-100">
                   <li
                     v-for="(link, index) in recommendedLinks"
                     :key="index"
-                    class="hover:bg-gray-50 transition-colors duration-150"
+                    class="hover:bg-[var(--ui-bg-elevated)] transition-colors duration-150"
                   >
                     <NuxtLink
                       :to="getPathWithFramework(getPathWithoutFramework(link.item.path), selectedFramework.slug)"
-                      class="p-4 text-gray-700 hover:text-indigo-600 block"
+                      class="p-4 text-[var(--ui-text)] hover:text-indigo-600 block"
                     >
-                      <div class="text-sm text-gray-500 mb-1">
+                      <div class="text-sm text-[var(--ui-text-dimmed)] mb-1">
                         {{ link.item.hierarchy.slice(-3).join(' > ') }}
                       </div>
                       <div class="font-medium">
