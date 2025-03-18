@@ -59,7 +59,7 @@ useHead({
           })
         : []),
       // add prev and next using surround
-      ...(surround.value.length
+      ...(surround.value?.length
         ? surround.value.map((s, i) => {
             return {
               rel: i === 0 ? 'prev' : 'next',
@@ -131,6 +131,7 @@ const transformedPage = computed(() => {
             :title="content.title" :headline="headline" class="text-balance pt-4" :links="[
               { label: 'Copy Page', to: repoLinks[1].to, icon: 'i-carbon-copy', target: '_blank' },
             ]"
+            :ui="{ title: 'leading-normal' }"
           />
 
           <div class="block lg:hidden">
