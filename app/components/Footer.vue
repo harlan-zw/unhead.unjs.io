@@ -51,7 +51,7 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
           </UButton>
           <div class="flex items-center gap-2">
             <div>LLM?</div>
-            <ULink target="_blank" href="/llms.txt" class="flex items-center gap-1 hover:underline transition">
+            <ULink target="_blank" external href="/llms.txt" class="flex items-center gap-1 hover:underline transition">
               <UIcon dynamic name="i-noto-sparkles" class="w-4 h-4" />
               /llms.txt
             </ULink>

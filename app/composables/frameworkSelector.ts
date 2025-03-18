@@ -1,4 +1,4 @@
-import { getPathWithoutFramework } from '~~/utils/urls'
+import { getPathFramework, getPathWithoutFramework } from '~~/utils/urls'
 
 const items = [
   { icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript', import: 'unhead' },
@@ -10,19 +10,23 @@ const items = [
   { icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt', import: '#imports' },
 ] as const
 
+const fallbackFramework = ref()
+
 export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
-  const router = useRouter()
   const route = useRoute()
-  const selectedFramework = useCookie('unhead-selected-framework', { maxAge: 3600 * 3600, default: () => 'typescript' })
-  function switchFramework(framework: typeof items[number], redirect: boolean = true) {
-    // if the current path contains the framework slug, then we swap to the new one, otherwise we don't
-    selectedFramework.value = framework.slug
-    if (redirect) {
-      if (router.currentRoute.value.path.startsWith('/docs')) {
-        // scroll to a little down to indicate the change
-        window.scrollTo({ top: 75, behavior: 'smooth' })
-      }
+  const selectedFramework = computed(() => {
+    return getPathFramework(route.path) || fallbackFramework.value
+  })
+  watch(() => route.path, (v) => {
+    if (getPathFramework(v)) {
+      fallbackFramework.value = getPathFramework(v)
     }
+  }, {
+    immediate: true,
+  })
+  function switchFramework(framework: typeof items[number]) {
+    // if the current path contains the framework slug, then we swap to the new one, otherwise we don't
+    fallbackFramework.value = framework.slug
   }
   return {
     switchFramework,

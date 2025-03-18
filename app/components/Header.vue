@@ -284,7 +284,7 @@ const subSectionLinks = computed(() => {
             class="cursor-pointer transition-all "
             :to="getPathWithoutFramework(route.path, framework.slug)"
             :class="[framework.slug === selectedFramework.slug ? [] : ['hover:brightness-50 brightness-120 sepia-[90%]']]"
-            variant="ghost" @click.prevent="switchFramework(framework)"
+            variant="ghost" @click="switchFramework(framework)"
           >
             <UIcon dynamic :name="framework.icon" class="w-5 h-5" />
           </UButton>
