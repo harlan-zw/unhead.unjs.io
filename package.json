@@ -19,7 +19,7 @@
     "@iconify-json/noto": "^1.2.3",
     "@iconify-json/ph": "^1.2.2",
     "@iconify-json/radix-icons": "^1.2.2",
-    "@iconify-json/simple-icons": "^1.2.28",
+    "@iconify-json/simple-icons": "^1.2.29",
     "@iconify-json/uil": "^1.2.3",
     "@iconify-json/unjs": "^1.2.0",
     "@iconify-json/vscode-icons": "^1.2.16",
@@ -27,7 +27,7 @@
     "@nuxt/content": "3.3.0",
     "@nuxt/devtools": "2.3.0",
     "@nuxt/fonts": "^0.11.0",
-    "@nuxt/image": "^1.9.0",
+    "@nuxt/image": "^1.10.0",
     "@nuxt/scripts": "^0.11.2",
     "@nuxt/ui-pro": "^3.0.0",
     "@nuxthub/core": "0.8.18",
@@ -40,7 +40,7 @@
     "bumpp": "^10.1.0",
     "case-police": "^1.0.0",
     "clsx": "^2.1.1",
-    "consola": "^3.4.1",
+    "consola": "^3.4.2",
     "eslint": "^9.22.0",
     "jsdom": "^26.0.0",
     "markdownlint-cli": "^0.44.0",
@@ -61,7 +61,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.7.3",
     "vitest": "^3.0.9",
-    "wrangler": "^4.1.0"
+    "wrangler": "^4.2.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -62,35 +62,87 @@ const HighlightedVersion = defineComponent({
 <template>
   <div>
     <div class="gradient" />
-    <section class=" py-5 sm:pb-12 xl:pb-20">
+    <section class="py-12 mb-14">
       <UContainer>
-        <UPageHeader title="Unhead Releases" description="See what has been shipping recently." />
+        <h2 class="text-3xl font-bold mb-8 text-center">Release Notes</h2>
+        <div class="text-center">
         <div class="mt-3 dark:text-neutral-300 text-sm">
           Last fetched:
           {{ formatTimeAgo(new Date(stats.fetchedAt)) }}.
         </div>
-        <div class="mt-3 dark:text-neutral-300 text-sm">
-          Please use GitHub to check for realtime updates, this list is only updated every 24 hours.
+        <div class="mt-1 text-[var(--ui-text-muted)] text-sm">
+          See <NuxtLink external href="https://github.com/unjs/unhead/releases" target="_blank">GitHub Releases</NuxtLink> for realtime updates.
         </div>
-      </UContainer>
-    </section>
-    <section class="mb-14">
-      <UContainer>
-        <ul class="space-y-5">
-          <li v-for="(release, key) in stats.releases" :key="key">
-            <div class="text-sm text-[var(--ui-text-muted)] mb-3">
-              <time :datatime="new Date(release.publishedAt).toString()">{{ formatTimeAgo(new Date(release.publishedAt)) }}</time>
+        </div>
+        <TransitionGroup
+          name="release-list"
+          tag="ul"
+          class="space-y-6 max-w-3xl mx-auto"
+        >
+          <li
+            v-for="(release, key) in stats.releases"
+            :key="key"
+            class="transform transition-all duration-300 hover:translate-y-[-2px]"
+          >
+            <div class="flex items-center mb-3">
+              <UBadge variant="soft" color="neutral">
+                <UIcon name="i-carbon-calendar" class="w-3.5 h-3.5" />
+                <time :datetime="new Date(release.publishedAt).toString()">
+                  {{ formatTimeAgo(new Date(release.publishedAt)) }}
+                </time>
+              </UBadge>
             </div>
-            <UCard class="col-span-8">
-              <div class="text-2xl font-bold flex items-center gap-3">
-                <HighlightedVersion :version="release.name.slice(1)" class="font-mono " />
+
+            <UCard
+              class="overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+              <div class="flex items-center gap-3 pb-4 mb-4 border-b border-gray-100 dark:border-gray-800">
+                <NuxtLink target="_blank" :to="`https://github.com/unjs/unhead/releases/tag/${release.name}`">
+                  <h3 class="text-xl font-bold flex items-center gap-2">
+                    <HighlightedVersion :version="release.name.slice(1)" class="font-mono" />
+                    <UBadge v-if="key === 0" icon="i-carbon-star" variant="soft">
+                  Latest release
+                </UBadge>
+                  </h3>
+                </NuxtLink>
               </div>
-              <MDC :value="release.body" />
+
+              <div class="prose prose-zinc dark:prose-invert prose-sm max-w-none">
+                <MDC :value="release.body" />
+              </div>
+
+              <div v-if="release.url" class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+                <UButton
+                  to="release.url"
+                  target="_blank"
+                  variant="ghost"
+                  size="sm"
+                  color="gray"
+                  class="text-xs font-medium"
+                  trailing-icon="i-heroicons-arrow-top-right-on-square"
+                >
+                  View on GitHub
+                </UButton>
+              </div>
             </UCard>
           </li>
-        </ul>
-        <div class="mt-10 text-center dark:text-neutral-300 text-sm">
-          Please check GitHub for releases further back.
+        </TransitionGroup>
+
+        <div class="mt-10 text-center">
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">
+            Looking for older releases?
+          </p>
+          <UButton
+            to="https://github.com/unjs/unhead/releases"
+            target="_blank"
+            variant="outline"
+            size="sm"
+            class="font-medium"
+            color="info"
+            trailing-icon="i-heroicons-arrow-right"
+          >
+            View all releases on GitHub
+          </UButton>
         </div>
       </UContainer>
     </section>
