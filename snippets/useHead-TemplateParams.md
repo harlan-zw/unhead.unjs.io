@@ -1,10 +1,16 @@
 ### ✅ Optimized Client Bundles
 
 ```ts twoslash
-// gets removed from the client build
-useServerHead({
-  script: [{
-    innerHTML: 'console.log("Hello World")',
-  }],
-})
+// Unhead tags are built to tree-shake, it just works
+if (import.meta.server) {
+  useHead({
+    meta: [{
+      name: 'description',
+      content: 'Hello World',
+    }],
+    script: [{
+      innerHTML: 'console.log("Hello World")',
+    }],
+  })
+}
 ```

@@ -49,7 +49,16 @@ const menu = computed(() => {
       disabled: true,
       badge: 'Soon',
       active: route.path.split('/')[2] === 'scripts',
-      class: 'hidden xl:flex',
+      class: 'hidden 2xl:flex',
+    },
+    {
+      label: 'OG Image',
+      icon: 'i-carbon-image',
+      to: '/',
+      disabled: true,
+      badge: 'Soon',
+      active: route.path.split('/')[2] === 'scripts',
+      class: 'hidden 2xl:flex',
     },
     {
       label: 'Releases',
@@ -107,9 +116,9 @@ const subSectionLinks = computed(() => {
             <FrameworkSelector />
           </template>
         </UModal>
-        <UNavigationMenu highlight :items="menu.slice(0, 3)" class="justify-center" />
+        <UNavigationMenu highlight :items="menu.slice(0, 4)" class="justify-center" />
       </div>
-      <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[300px]" shortcut="meta_k" placeholder="Search..." @click="openSearch = true">
+      <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[200px]" shortcut="meta_k" placeholder="Search..." @click="openSearch = true">
         <template #leading>
           <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" />
         </template>
@@ -124,7 +133,7 @@ const subSectionLinks = computed(() => {
         <div class="px-3 mb-3">
           <FrameworkSelectorMinimal size="small" />
         </div>
-        <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[300px]" placeholder="Search..." @click="openSearch = true">
+        <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[200px]" placeholder="Search..." @click="openSearch = true">
           <template #leading>
             <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" />
           </template>
@@ -211,7 +220,7 @@ const subSectionLinks = computed(() => {
     <template #right>
       <div class="flex items-center justify-end lg:-mr-1.5 ml-3 gap-3">
         <div class="hidden lg:block">
-          <UNavigationMenu :items="menu.slice(3)" :ui="{ viewport: 'min-w-[500px] -left-full' }" class="justify-center" />
+          <UNavigationMenu :items="menu.slice(4)" :ui="{ viewport: 'min-w-[500px] -left-full' }" class="justify-center" />
         </div>
         <UButton
           to="https://github.com/unjs/unhead" target="_blank" class="text-[var(--ui-text-highlighted)] dark:text-black hover:text-[var(--ui-text-muted)]

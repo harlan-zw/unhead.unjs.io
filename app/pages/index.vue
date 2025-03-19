@@ -127,7 +127,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         id: 4,
         icon: 'i-noto-waving-hand',
         title: 'Hello useHead()',
-        description: 'Unhead prefers a minimal API surface with most of the functionaltiy provided through the useHead() hook.',
+        description: 'Unhead aims to provide bullet-proof primitives for a minimal yet powerful API surface.',
         bg: 'dark:bg-green-500/5 bg-green-500/15',
         border: 'border-green-500/10 border-green-500/50',
       }"

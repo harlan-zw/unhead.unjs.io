@@ -128,9 +128,9 @@ const transformedPage = computed(() => {
         </template>
         <div v-if="content" class="max-w-[66ch] ml-auto md:ml-0 md:mr-auto">
           <UPageHeader
-            :title="content.title" :headline="headline" class="text-balance pt-4" :links="[
-              { label: 'Copy Page', to: repoLinks[1].to, icon: 'i-carbon-copy', target: '_blank' },
-            ]"
+            :title="content.title" :headline="headline" class="text-balance pt-4" :links="['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
+              { label: 'Copy for LLMs', to: repoLinks[1].to, icon: 'i-logos-markdown', target: '_blank' },
+            ] : []"
             :ui="{ title: 'leading-normal' }"
           />
 
