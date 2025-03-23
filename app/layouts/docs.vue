@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { motion } from 'motion-v'
+import { useCurrentDocPage } from '~/composables/data'
 
 const route = useRoute()
+
+const { page } = await useCurrentDocPage()
 </script>
 
 <template>
@@ -18,9 +21,10 @@ const route = useRoute()
                   On this page
                 </div>
               </div>
-              <div class="mt-5">
-                <!--                <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-7" /> -->
+              <div class="my-5">
+                <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" />
               </div>
+              <Ads />
             </div>
           </div>
         </template>

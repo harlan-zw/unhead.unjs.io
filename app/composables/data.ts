@@ -1,5 +1,6 @@
 import type { NavItem } from '@nuxt/content'
 import { titleCase } from 'scule'
+import { withoutTrailingSlash } from 'ufo'
 import {
   getLastPathSegment,
   getPathSection,
@@ -14,6 +15,31 @@ export async function useStats() {
     key: 'stats',
   })
   return stats
+}
+
+export async function useCurrentDocPage() {
+  const route = useRoute()
+  const [{ data: page }, { data: surround }] = await Promise.all([
+    useAsyncData(`docs-${route.path}`, () => queryCollection('docsUnhead')
+      .where('path', 'IN', [withoutTrailingSlash(route.path), getPathWithoutFramework(route.path)])
+      .first()),
+    useAsyncData(`docs-${route.path}-surround`, () => queryCollectionItemSurroundings('docsUnhead', route.path, {
+      fields: ['title', 'description', 'path'],
+    }), {
+      transform(items) {
+        return items.map((m) => {
+          return {
+            ...m,
+            _path: m.path,
+          }
+        })
+      },
+    }),
+  ])
+  return {
+    page,
+    surround,
+  }
 }
 
 function mapPath(data) {

@@ -1,9 +1,8 @@
 <template>
-  <div class="w-full xl:fixed my-5 block xl:w-[200px] bottom-5 right-5 xl:block grid grid-cols-2 gap-5 ">
+  <div>
     <ScriptCarbonAds
       :key="$route.path"
       format="cover"
-      class="xl:min-h-[265px] Carbon border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-white/5"
       serve="CW7DTKJI"
       placement="unheadunjsio"
       trigger="onNuxtReady"
@@ -14,109 +13,15 @@
 </template>
 
 <style>
-.dark .Carbon .carbon-text {
-  color: #9ca3af; /* text-neutral-400 */
-}
-.dark .Carbon .carbon-text:hover {
-  color: #e5e7eb; /* text-neutral-200 */
-}
-
-.light .Carbon .carbon-text {
-  color: #4b5563; /* text-neutral-600 */
-}
-.light .Carbon .carbon-text:hover {
-  color: #1f2937; /* text-neutral-800 */
+.dark #carbon-responsive {
+  --carbon-padding: 1em;
+  --carbon-max-char: 20ch;
+  --carbon-bg-primary: var(--ui-bg);
+  --carbon-bg-secondary: var(--ui-bg-muted);
+  --carbon-text-color: var(--ui-text);
 }
 
-.Carbon {
-  padding: 0.5rem; /* p-2 */
-  display: flex;
-  flex-direction: column;
-  max-width: 100%;
-}
-@media (min-width: 640px) {
-  .Carbon {
-    max-width: 20rem; /* max-w-xs */
-  }
-}
-@media (min-width: 1024px) {
-  .Carbon {
-    margin-top: 0; /* mt-0 */
-  }
-}
-
-#carbonads span {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-#carbonads span .carbon-wrap {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-@media (min-width: 320px) {
-  #carbonads span .carbon-wrap {
-    flex-direction: row;
-  }
-}
-@media (min-width: 1024px) {
-  #carbonads span .carbon-wrap {
-    flex-direction: column;
-  }
-}
-#carbonads span .carbon-wrap .carbon-img {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  margin-bottom: 0.5rem; /* mb-2 */
-}
-@media (min-width: 320px) {
-  #carbonads span .carbon-wrap .carbon-img {
-    margin-bottom: 0; /* mb-0 */
-  }
-}
-@media (min-width: 1024px) {
-  #carbonads span .carbon-wrap .carbon-img {
-    margin-bottom: 1rem; /* mb-4 */
-  }
-}
-#carbonads span .carbon-wrap .carbon-text {
-  flex: 1;
-  font-size: 0.875rem; /* text-sm */
-  width: 100%;
-  margin: 0;
-  text-align: left;
-  display: block;
-}
-#carbonads span .carbon-wrap .carbon-text:hover {
-  text-decoration: none; /* no-underline */
-}
-@media (min-width: 320px) {
-  #carbonads span .carbon-wrap .carbon-text {
-    margin-left: 1rem; /* ml-4 */
-  }
-}
-@media (min-width: 1024px) {
-  #carbonads span .carbon-wrap .carbon-text {
-    margin-left: 0; /* ml-0 */
-  }
-}
-
-.Carbon img {
-  width: 100%;
-}
-
-.Carbon .carbon-poweredby {
-  margin-left: 0.5rem; /* ml-2 */
-  font-size: 0.75rem; /* text-xs */
-  text-align: right;
-  color: #9ca3af; /* text-neutral-400 */
-  display: block;
-  padding-top: 0.5rem; /* pt-2 */
-}
-.Carbon .carbon-poweredby:hover {
-  text-decoration: none; /* no-underline */
-  color: #6b7280; /* text-neutral-500 */
+#carbon-responsive .carbon-responsive-wrap {
+  border-radius: var(--ui-radius);
 }
 </style>

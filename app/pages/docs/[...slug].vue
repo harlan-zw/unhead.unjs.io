@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { setHeader } from 'h3'
-import { withoutTrailingSlash } from 'ufo'
 import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/utils/content'
 import { getPathSubSection, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
+import { useCurrentDocPage } from '~/composables/data'
 
 definePageMeta({
   layout: 'docs',
@@ -10,23 +10,7 @@ definePageMeta({
 
 const route = useRoute()
 
-const [{ data: page }, { data: surround }] = await Promise.all([
-  useAsyncData(`docs-${route.path}`, () => queryCollection('docsUnhead')
-    .where('path', 'IN', [withoutTrailingSlash(route.path), getPathWithoutFramework(route.path)])
-    .first()),
-  useAsyncData(`docs-${route.path}-surround`, () => queryCollectionItemSurroundings('docsUnhead', route.path, {
-    fields: ['title', 'description', 'path'],
-  }), {
-    transform(items) {
-      return items.map((m) => {
-        return {
-          ...m,
-          _path: m.path,
-        }
-      })
-    },
-  }),
-])
+const { page, surround } = await useCurrentDocPage()
 
 const content = page.value
 if (!content)
@@ -132,7 +116,6 @@ const transformedPage = computed(() => {
     </div>
 
     <UPageBody prose class="pb-0">
-      <Ads v-if="!isDev" />
       <ContentRenderer v-if="content.body" :value="transformedPage" />
       <div class="justify-center flex items-center gap-5 font-semibold">
         <div class="flex items-center gap-2">
