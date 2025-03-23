@@ -72,8 +72,8 @@ export default defineAppConfig({
       search: 'i-carbon-search',
     },
     colors: {
-      primary: 'yellow',
-      neutral: 'zinc',
+      primary: 'amber',
+      neutral: 'stone',
     },
   },
   uiPro: {
@@ -110,10 +110,10 @@ export default defineAppConfig({
       },
       a: {
         base: [
-          'relative border-none underline underline-offset-6 text-[var(--ui-text)] decoration-transition-all decoration-[0.1rem] decoration-indigo-500/70',
+          'relative border-none underline underline-offset-6 text-[var(--ui-text)] decoration-transition-all decoration-[0.1rem] decoration-[var(--ui-text-secondary)]',
           // set a :after border under the link
           'transition-all',
-          'hover:text-indigo-500 hover:underline-offset-4 hover:decoration-[0.25rem]',
+          'hover:text-[var(--ui-text-secondary)] hover:underline-offset-4 hover:decoration-[0.25rem]',
         ],
       },
     },

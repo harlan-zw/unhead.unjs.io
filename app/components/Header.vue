@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useContentSearch } from '#ui-pro/composables/useContentSearch'
+import { motion } from 'motion-v'
 import { ref } from 'vue'
 import { Unhead } from '~~/const'
 import { getPathSection, getPathSegments, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
 import { useStats } from '~/composables/data'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
-import FrameworkSelector from './FrameworkSelector.vue'
 
 const docsNav = useDocsNav(true)
 const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNav)
@@ -24,27 +24,23 @@ const version = versions.value[0]
 
 const route = useRoute()
 
-const stars = computed(() => {
-  return Intl.NumberFormat('en', { notation: 'compact', compactDisplay: 'short' }).format(stats.value?.stars?.stars || 0)
-})
-
 const menu = computed(() => {
   return [
     {
       label: Unhead.label,
-      icon: Unhead.icon,
+      // icon: Unhead.icon,
       to: `/docs/${selectedFramework.value.slug}/head/guides/get-started/overview`,
       active: getPathSection(getPathWithoutFramework(route.path)) === '/docs/head',
     },
     {
       label: 'Schema.org',
-      icon: 'i-carbon-chart-relationship',
+      // icon: 'i-carbon-chart-relationship',
       to: `/docs/${selectedFramework.value.slug}/schema-org/guides/get-started/overview`,
       active: getPathSection(getPathWithoutFramework(route.path)) === '/docs/schema-org',
     },
     {
-      label: 'Third-Party Scripts',
-      icon: 'i-carbon-script',
+      label: 'Scripts',
+      // icon: 'i-carbon-script',
       to: '/',
       disabled: true,
       badge: 'Soon',
@@ -53,7 +49,7 @@ const menu = computed(() => {
     },
     {
       label: 'OG Image',
-      icon: 'i-carbon-image',
+      // icon: 'i-carbon-image',
       to: '/',
       disabled: true,
       badge: 'Soon',
@@ -62,7 +58,6 @@ const menu = computed(() => {
     },
     {
       label: 'Releases',
-      icon: 'i-carbon-version',
       to: '/releases',
     },
   ]
@@ -89,43 +84,18 @@ const subSectionLinks = computed(() => {
 </script>
 
 <template>
-  <UHeader :ui="{ root: 'bg-transparent border-none', container: 'max-w-[1500px] mx-auto ' }">
+  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 h-auto', container: 'max-w-[1450px] bg-gray-600/7 dark:bg-gray-900/10 mx-auto py-0 px-5 lg:px-3.5 rounded-lg' }">
     <template #left>
-      <div class="flex items-center justify-between gap-2 h-16 pr-2 xl:pr-5">
-        <div class="flex items-center gap-10">
-          <div class="flex items-center gap-3">
-            <UButton
-              variant="ghost" to="/" title="Home" aria-label="Title"
-              class="py-2 flex items-end gap-1.5 font-bold text-xl text-(--ui-text-highlighted) font-title"
-            >
-              <Logo />
-            </UButton>
-          </div>
-        </div>
-      </div>
+      <NuxtLink
+        to="/"
+        title="Home" aria-label="Title"
+        class="flex mr-4 items-end gap-1.5 font-bold text-base text-(--ui-text-highlighted) font-title"
+      >
+        <Logo />
+      </NuxtLink>
       <div class="hidden lg:flex items-center gap-2">
-        <UModal v-if="!route.path.startsWith('/docs')" v-model:open="open" title="Select your framework">
-          <UButton class="cursor-pointer" variant="ghost" size="sm">
-            <UIcon
-              :key="selectedFramework?.slug" dynamic :name="selectedFramework?.icon"
-              class="w-6 h-6 text-(--ui-primary)-400 dark:text-sky-200"
-            />
-            <UIcon name="i-carbon-chevron-down" class="w-4 h-4 text-[var(--ui-text)]" />
-          </UButton>
-          <template #body>
-            <FrameworkSelector />
-          </template>
-        </UModal>
         <UNavigationMenu highlight :items="menu.slice(0, 4)" class="justify-center" />
       </div>
-      <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[200px]" shortcut="meta_k" placeholder="Search..." @click="openSearch = true">
-        <template #leading>
-          <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" />
-        </template>
-        <template #trailing>
-          <UKbd>/</UKbd>
-        </template>
-      </UInput>
     </template>
 
     <template #body>
@@ -218,27 +188,19 @@ const subSectionLinks = computed(() => {
     </template>
 
     <template #right>
-      <div class="flex items-center justify-end lg:-mr-1.5 ml-3 gap-3">
+      <div class="flex items-center justify-end lg:-mr-1.5 gap-3">
         <div class="hidden lg:block">
           <UNavigationMenu :items="menu.slice(4)" :ui="{ viewport: 'min-w-[500px] -left-full' }" class="justify-center" />
         </div>
-        <UButton
-          to="https://github.com/unjs/unhead" target="_blank" class="text-[var(--ui-text-highlighted)] dark:text-black hover:text-[var(--ui-text-muted)]
-        hidden sm:flex justify-center items-center bg-gradient bg-gradient-to-r from-[#FBBF24] to-[#f0db4f]"
-          size="sm"
-        >
-          <div class="flex items-center font-medium gap-1">
-            <div>Star</div>
-            <div class="font-mono">
-              {{ stars }}
-            </div>
-            <UIcon name="i-tabler-star" class="size-3 sepia" />
-          </div>
-        </UButton>
-
+        <UInput type="search" class="cursor-pointer hidden lg:block w-[70px]" shortcut="meta_k" @click="openSearch = true">
+          <template #leading>
+            <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100" />
+          </template>
+          <template #trailing>
+            <UKbd>/</UKbd>
+          </template>
+        </UInput>
         <div class="flex items-center lg:gap-1.5">
-          <ColorModeButton />
-
           <UButton
             aria-label="Unhead on GitHub"
             to="https://github.com/unjs/unhead"
@@ -248,21 +210,11 @@ const subSectionLinks = computed(() => {
             class="hidden lg:inline-flex transition opacity-85"
             icon="i-carbon-logo-github"
           />
-
-          <UButton
-            aria-label="Harlan's Discord"
-            to="https://discord.com/invite/275MBUBvgP"
-            target="_blank"
-            color="neutral"
-            variant="ghost"
-            class="hidden lg:inline-flex transition opacity-85"
-            icon="i-carbon-logo-discord"
-          />
         </div>
       </div>
     </template>
   </UHeader>
-  <div v-if="route.path.startsWith('/docs')" :key="`${selectedFramework.slug}-${route.path}`" class=" border-black/10 border-t h-12">
+  <div v-if="route.path.startsWith('/docs')" class=" h-12">
     <div class="relative max-w-[1400px] mx-auto grid grid-cols-10 h-full justify-center items-center w-full">
       <div class="col-span-3 hidden lg:flex h-12">
         <div class="h-full flex text-sm space-x-6">
@@ -279,24 +231,47 @@ const subSectionLinks = computed(() => {
       </div>
       <div class="flex items-center gap-2 pl-5 col-span-5">
         <div class="z-10  flex gap-2 items-center dark:text-blue-200 group-hover:text-blue-500 transition-all">
-          <UIcon dynamic :name="selectedFramework.icon" class="w-5 h-5" />
           <div class="font-semibold">
-            {{ selectedFramework.label }}
+            <motion.div
+              :key="selectedFramework.slug"
+              :initial="{ opacity: 0, y: 16, filter: 'blur(0.2rem)' }"
+              :animate="{ opacity: 1, y: 0, filter: 'blur(0)' }"
+              :exit="{ opacity: 0, y: 16, filter: 'blur(0.2rem)' }"
+              :while-hover="{ scale: 1.2 }" layout
+            >
+              {{ selectedFramework.label }}
+            </motion.div>
           </div>
         </div>
-        <USeparator orientation="vertical" color="neutral" class="h-10 w-2 mx-3 hidden lg:block" />
-        <div class="z-10 gap-1 text-blue-200 group-hover:text-blue-500 hidden lg:flex transition-all relative">
-          <UButton
-            v-for="framework in frameworks.filter(f => f.slug !== selectedFramework.slug)" :key="framework.slug"
-            :title="`Switch to ${framework.label}`" :aria-label="framework.label" type="button"
-            class="cursor-pointer transition-all "
-            :to="framework.to"
-            :class="[framework.slug === selectedFramework.slug ? [] : ['hover:brightness-50 brightness-120 sepia-[90%]']]"
-            variant="ghost" @click="switchFramework(framework)"
+        <ul class="z-10 gap-1 text-blue-200 group-hover:text-blue-500 hidden lg:flex transition-all relative">
+          <motion.li
+            v-for="framework in frameworks"
+            :key="framework.slug"
+            :while-hover="{ scale: 1.2 }"
+            layout
+            :transition="{
+              type: 'spring',
+              damping: 20,
+              stiffness: 300,
+              duration: 2,
+            }"
+            :while-press="{
+              scale: selectedFramework.slug === framework.slug ? 1.2 : 0.8,
+              rotate: selectedFramework.slug === framework.slug ? 1.2 : 0.8,
+              transform: selectedFramework.slug === framework.slug ? 'rotate(33deg)' : 'rotate(0deg)',
+            }"
           >
-            <UIcon dynamic :name="framework.icon" class="w-5 h-5" />
-          </UButton>
-        </div>
+            <UButton
+              :title="`Switch to ${framework.label}`" :aria-label="framework.label" type="button"
+              class="cursor-pointer transition-all "
+              :to="framework.to"
+              :class="[framework.slug === selectedFramework.slug ? [] : ['hover:brightness-100 hover:sepia-[10%] brightness-120 sepia-[90%]']]"
+              variant="ghost" @click="switchFramework(framework)"
+            >
+              <UIcon dynamic :name="framework.icon" class="w-5 h-5" />
+            </UButton>
+          </motion.li>
+        </ul>
       </div>
       <div class="col-span-2 flex justify-end">
         <USelectMenu v-model="version" :search-input="false" size="sm" :items="versions" class="w-[120px]" />

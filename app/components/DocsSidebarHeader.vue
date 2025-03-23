@@ -13,7 +13,7 @@ const topLinks = computed(() => [
   {
     title: 'Discord Support',
     icon: 'i-logos-discord-icon',
-    to: 'https://discord.gg/nuxt',
+    to: 'https://discord.com/invite/275MBUBvgP',
   },
   {
     title: `${selectedFramework.value.label} Playground`,
@@ -46,7 +46,7 @@ const topLinks = computed(() => [
         as="div" default-open :collapsible="false" :navigation="nav?.bottom || []" highlight
         :ui="{ listWithChildren: 'sm:ml-0 mt-2' }"
       >
-        <template #link="{ link }">
+        <template #link="{ link, active }">
           <div
             v-if="!link.html" class="flex items-center justify-between gap-2 w-full"
             :class="link.deprecated ? 'opacity-50' : ''"
@@ -64,7 +64,8 @@ const topLinks = computed(() => [
           </div>
           <UIcon
             v-if="link.icon" :name="link.icon"
-            class="w-4 h-4 transition-all hover:brightness-50 brightness-120 sepia-[50%]"
+            class="w-4 h-4 transition-all hover:brightness-50 brightness-120"
+            :class="active ? 'sepia-[0%] brightness-100' : ' sepia-[50%]'"
           />
           <div v-if="link.new">
             <UBadge size="sm" variant="subtle" color="success">

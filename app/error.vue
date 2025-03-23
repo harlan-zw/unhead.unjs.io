@@ -171,7 +171,7 @@ const { open: openSearch } = useContentSearch()
           </div>
 
           <!-- "Did you mean?" Section -->
-          <div class="w-full max-w-2xl mx-auto">
+          <div v-if="error.statusCode === 404" class="w-full max-w-2xl mx-auto">
             <h2 class="text-xl font-semibold  mb-4">
               Did you mean?
             </h2>

@@ -1,4 +1,4 @@
-import {getPathFramework, getPathWithFramework, getPathWithoutFramework} from '~~/utils/urls'
+import { getPathFramework, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
 
 const items = [
   { icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript', import: 'unhead' },
@@ -31,6 +31,18 @@ export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
   const selectedFramework = computed(() => {
     return items.find(f => f.slug === frameworkSlug.value) || items.find(f => f.slug === 'typescript')
   })
+  const orderedFrameworks = computed(() => {
+    return items.toSorted((a, b) => {
+      // make sure selectedFramework.value is first
+      if (a.slug === selectedFramework.value.slug) {
+        return -1
+      }
+      if (b.slug === selectedFramework.value.slug) {
+        return 1
+      }
+      return Math.random() - 0.5
+    })
+  })
   return {
     switchFramework,
     selectedFramework,
@@ -38,11 +50,11 @@ export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
       if (!nav?.value) {
         return items
       }
-      return items.map((f) => {
+      return orderedFrameworks.value.map((f) => {
         const to = getPathWithoutFramework(route.path)
         return {
           ...f,
-          to: nav.value.navFlat.find(l => l?.path === to) ? getPathWithFramework(to, f.slug)  : `/docs/${f.slug}/head/guides/get-started/installation`,
+          to: nav.value.navFlat.find(l => l?.path === to) ? getPathWithFramework(to, f.slug) : `/docs/${f.slug}/head/guides/get-started/installation`,
         }
       })
     }),

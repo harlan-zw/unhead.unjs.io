@@ -64,15 +64,19 @@ const HighlightedVersion = defineComponent({
     <div class="gradient" />
     <section class="py-12 mb-14">
       <UContainer>
-        <h2 class="text-3xl font-bold mb-8 text-center">Release Notes</h2>
+        <h2 class="text-3xl font-bold mb-8 text-center">
+          Release Notes
+        </h2>
         <div class="text-center">
-        <div class="mt-3 dark:text-neutral-300 text-sm">
-          Last fetched:
-          {{ formatTimeAgo(new Date(stats.fetchedAt)) }}.
-        </div>
-        <div class="mt-1 text-[var(--ui-text-muted)] text-sm">
-          See <NuxtLink external href="https://github.com/unjs/unhead/releases" target="_blank">GitHub Releases</NuxtLink> for realtime updates.
-        </div>
+          <div class="mt-3 dark:text-neutral-300 text-sm">
+            Last fetched:
+            {{ formatTimeAgo(new Date(stats.fetchedAt)) }}.
+          </div>
+          <div class="mt-1 text-[var(--ui-text-muted)] text-sm">
+            See <NuxtLink external href="https://github.com/unjs/unhead/releases" target="_blank">
+              GitHub Releases
+            </NuxtLink> for realtime updates.
+          </div>
         </div>
         <TransitionGroup
           name="release-list"
@@ -101,8 +105,8 @@ const HighlightedVersion = defineComponent({
                   <h3 class="text-xl font-bold flex items-center gap-2">
                     <HighlightedVersion :version="release.name.slice(1)" class="font-mono" />
                     <UBadge v-if="key === 0" icon="i-carbon-star" variant="soft">
-                  Latest release
-                </UBadge>
+                      Latest release
+                    </UBadge>
                   </h3>
                 </NuxtLink>
               </div>

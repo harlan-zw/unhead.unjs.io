@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '../utils/content'
+import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier, stripHeaderAnchorLinks } from '../utils/content'
 
 const payload = {
   type: 'minimal',
@@ -7718,12 +7718,16 @@ describe('runtime content transforms', () => {
   it('should transform code blocks', () => {
     replaceImportSpecifier(
       payload.value,
-      '@unhead/vue',
-      '@unhead/react',
+      {
+        '@unhead/vue': '@unhead/react',
+      },
       false,
     )
     const payloadJson = JSON.stringify(payload.value)
     expect(payloadJson).not.toMatch(/@unhead\/vue/g)
+  })
+  it('should remove links', () => {
+    stripHeaderAnchorLinks(payload.value)
   })
   it('should fix links', () => {
     const links = modifyRelativeDocLinksWithFramework(payload.value, 'vue')

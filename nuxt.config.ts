@@ -7,7 +7,7 @@ logger.info(`🚀 Using Nuxt UI Pro License: ${!!process.env.NUXT_UI_PRO_LICENSE
 export default defineNuxtConfig({
   modules: [
     'nuxt-content-twoslash',
-    '@vueuse/motion/nuxt',
+    'motion-v/nuxt',
     '@nuxt/ui-pro',
     '@nuxtjs/seo',
     'radix-vue/nuxt',
@@ -150,6 +150,7 @@ export default defineNuxtConfig({
             'diff',
             'md',
             'dotenv',
+            'svelte',
           ],
         },
       },
@@ -220,6 +221,7 @@ export default defineNuxtConfig({
         'diff',
         'md',
         'dotenv',
+        'svelte',
       ],
     },
   },
@@ -237,7 +239,7 @@ export default defineNuxtConfig({
       '/api/stats.json': { prerender: true },
       '/api/github/sponsors.json': { prerender: true },
       '/api/_mdc/highlight': { cache: { group: 'mdc', name: 'highlight', maxAge: 60 * 60 } },
-      '/api/_content/query/**': { cache: { group: 'content', name: 'query', maxAge: 60 * 60 } },
+      '/__nuxt_content/**': { cache: { group: 'content', name: 'query', maxAge: 60 * 60 } },
       '/api/_nuxt_icon': { cache: { group: 'icon', name: 'icon', maxAge: 60 * 60 * 24 * 7 } },
     },
     scripts: {
@@ -261,7 +263,7 @@ export default defineNuxtConfig({
   ],
 
   ogImage: {
-    enabled: false,
+    enabled: true,
     zeroRuntime: true,
     fonts: [
       'Hubot+Sans:400',

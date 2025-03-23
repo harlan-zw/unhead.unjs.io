@@ -37,6 +37,18 @@ export function walk<T = any>(
   }
 }
 
+export function stripHeaderAnchorLinks(payload: any) {
+  // match header tag then see if a is inside to a #
+  walk(payload, (node) => {
+    return Array.isArray(node) && typeof node[0] === 'string' && node[0].startsWith('h')
+  }, (child) => {
+    if (child[1].id) {
+      // remove the id
+      delete child[1].id
+    }
+  })
+}
+
 export function modifyRelativeDocLinksWithFramework(
   payload: any,
   framework: string,
@@ -66,8 +78,7 @@ export function modifyRelativeDocLinksWithFramework(
 
 export function replaceImportSpecifier(
   payload: any,
-  oldImport: string,
-  newImport: string,
+  mapping: Record<string, string>,
   correctUseHeadForTypeScript: boolean,
 ): void {
   walk(
@@ -76,7 +87,9 @@ export function replaceImportSpecifier(
     (node) => {
       if (node[1].code) {
         // do a string replace of the "copy"
-        node[1].code = node[1].code.replaceAll(oldImport, newImport)
+        for (const [oldImport, newImport] of Object.entries(mapping)) {
+          node[1].code = node[1].code.replaceAll(oldImport, newImport)
+        }
       }
       if (!Array.isArray(node[2]))
         return
@@ -90,15 +103,17 @@ export function replaceImportSpecifier(
         for (let i = 0; i < line.length; i++) {
           const segment = line[i]
           if (Array.isArray(segment) && segment[0] === 'span' && typeof segment[2] === 'string') {
-            if (segment[2].includes(oldImport)) {
-              // Replace the string directly in the segment
-              segment[2] = segment[2].replace(oldImport, newImport)
-            }
-            else if (correctUseHeadForTypeScript && newImport === 'unhead' && ['useHead', 'useSeoMeta', 'useHeadSafe', 'useScript', 'useServerHead'].includes(segment[2])) {
-              // need to insert a span in two indexes ahead
-              // Insert the new segment at the correct index
-              line.splice(i + 2, 0, ['span', { style: 'color: var(--color-yellow-700)' }, 'unheadInstance'])
-              line.splice(i + 3, 0, ['span', { class: 'hljs-symbol' }, ', '])
+            for (const [oldImport, newImport] of Object.entries(mapping)) {
+              if (segment[2].includes(oldImport)) {
+                // Replace the string directly in the segment
+                segment[2] = segment[2].replace(oldImport, newImport)
+              }
+              else if (correctUseHeadForTypeScript && newImport === 'unhead' && ['useHead', 'useSeoMeta', 'useHeadSafe', 'useScript', 'useServerHead'].includes(segment[2])) {
+                // need to insert a span in two indexes ahead
+                // Insert the new segment at the correct index
+                line.splice(i + 2, 0, ['span', { style: 'color: var(--color-yellow-700)' }, 'unheadInstance'])
+                line.splice(i + 3, 0, ['span', { class: 'hljs-symbol' }, ', '])
+              }
             }
           }
         }

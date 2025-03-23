@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ShikiMagicMovePrecompiled } from 'shiki-magic-move/vue'
+import { stripHeaderAnchorLinks } from '~~/utils/content'
 import { useStats } from '~/composables/data'
 import { humanNumber } from '~/composables/format'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
@@ -17,7 +18,12 @@ definePageMeta({
 const { selectedFramework } = useFrameworkSelector()
 
 const snippets = await useAsyncData(`snippets`, async () => {
-  return await queryCollection('snippets').all()
+  return (await queryCollection('snippets').all()).map((snippet) => {
+    if (Array.isArray(snippet.body.value) && snippet.body.type === 'minimal') {
+      stripHeaderAnchorLinks(snippet.body.value)
+    }
+    return snippet
+  })
 })
 
 const stats = await useStats()
@@ -29,11 +35,6 @@ useSeoMeta({
 })
 
 const { data: sponsors } = await useFetch('/api/github/sponsors.json')
-
-// defineOgImageComponent('Home', {
-//   title: 'Nuxt SEO',
-//   version: useRuntimeConfig().public.version,
-// })
 
 if (import.meta.server) {
   useHead({
@@ -51,6 +52,8 @@ const mounted = ref(false)
 const toggleCapo = ref(false)
 
 const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
+
+const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82AAFF]">useHead</span><span class="text-[#24292E] dark:text-[#BABED8]">()</span></span>`
 </script>
 
 <template>
@@ -70,7 +73,10 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
               <div>
                 <h2 class="text-lg md:text-3xl text-balance text-neutral-700 dark:text-neutral-100 leading-tight font-bold mb-3 flex items-center gap-2">
                   <UIcon :name="section.icon" class="block md:hidden size-5" />
-                  {{ section.title }}
+                  <span v-if="section.htmlTitle" v-html="section.htmlTitle" />
+                  <span v-else>
+                    {{ section.title }}
+                  </span>
                 </h2>
                 <div class="text-balance dark:text-neutral-300/80 text-neutral-600 md:text-lg">
                   {{ section.description }}
@@ -98,6 +104,11 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
 
     <section class="xl:max-w-full max-w-3xl mx-auto py-5 sm:py-12 xl:py-20">
       <UContainer class="container mx-auto">
+        <NuxtLink to="/v2">
+          <UBadge variant="soft" color="info" icon="i-noto-party-popper">
+            Announcing Unhead v2
+          </UBadge>
+        </NuxtLink>
         <div class="xl:flex gap-10">
           <div class="flex flex-col justify-center">
             <h1 class="max-w-xl text-neutral-900/90 dark:text-neutral-100 text-4xl md:text-6xl leading-tight font-bold tracking-tight" style="line-height: 1.3;">
@@ -126,7 +137,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
       :section="{
         id: 4,
         icon: 'i-noto-waving-hand',
-        title: 'Hello useHead()',
+        htmlTitle: helloUnheadTitle,
         description: 'Unhead aims to provide bullet-proof primitives for a minimal yet powerful API surface.',
         bg: 'dark:bg-green-500/5 bg-green-500/15',
         border: 'border-green-500/10 border-green-500/50',
@@ -167,14 +178,12 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
           </div>
         </div>
         <div class=" h-full flex items-center justify-center flex-col">
-          <ProsePre class="prose shiki">
-            <ProseCode>
-              <ShikiMagicMovePrecompiled
-                animate
-                :steps="SideEffectTokens"
-                :step="Number(mounted)"
-              />
-            </ProseCode>
+          <ProsePre class="prose shiki overflow-visible">
+            <ShikiMagicMovePrecompiled
+              animate
+              :steps="SideEffectTokens"
+              :step="Number(mounted)"
+            />
           </ProsePre>
           <UBadge variant="outline" :color="mounted ? 'success' : 'gray'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
         </div>
@@ -201,7 +210,6 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
       </ReuseSectionTemplate>
     </div>
     <ReuseSectionTemplate
-      v-motion-fade-visible
       :section="{
         id: 2,
         icon: 'i-noto-rocket',
@@ -220,13 +228,11 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
             Unhead ships with a default head tag order that is optimized for SEO and performance.
           </ProseP>
           <ProsePre class="prose  shiki">
-            <ProseCode>
-              <ShikiMagicMovePrecompiled
-                animate
-                :steps="MagicMoveTokens"
-                :step="Number(toggleCapo)"
-              />
-            </ProseCode>
+            <ShikiMagicMovePrecompiled
+              animate
+              :steps="MagicMoveTokens"
+              :step="Number(toggleCapo)"
+            />
           </ProsePre>
           <USwitch
             unchecked-icon="i-lucide-x"
@@ -242,7 +248,7 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
         </div>
       </template>
     </ReuseSectionTemplate>
-    <section v-motion-slide-visible-once-left class="py-10 xl:py-20">
+    <section class="py-10 xl:py-20">
       <UContainer class="mb-10 container">
         <h2 class="font-bold mb-5 text-3xl">
           Unhead Principals
@@ -313,8 +319,8 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
     </section>
 
     <section class="pb-10 xl:pb-20">
-      <UContainer class="container">
-        <div class="xl:flex items-center justify-around my-14">
+      <UContainer class="container justify-around xl:flex gap-20">
+        <div class="xl:flex-col items-center justify-around my-14">
           <div class="xl:max-w-sm xl:mb-0 mb-10">
             <div class="font-bold mb-5 text-5xl">
               {{ humanNumber(stats.modules[0].averageDownloads90) }} downloads<br>
@@ -345,11 +351,9 @@ const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
             </div>
           </div>
         </div>
-        <UCard class="max-w-full overflow-hidden sm:max-w-[600px] mx-auto p-5">
-          <ClientOnly>
-            <LazyChartDownloads :hydrate-after="2000" :value="stats.modules[0].downloads" />
-          </ClientOnly>
-        </UCard>
+        <ClientOnly>
+          <UnheadDownloads class="rounded mx-auto max-w-[600px]  w-full h-full overflow-hidden" />
+        </ClientOnly>
       </UContainer>
     </section>
     <section class="mb-14">

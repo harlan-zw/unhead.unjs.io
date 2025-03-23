@@ -50,5 +50,20 @@ export default defineContentConfig({
         cwd: resolve('./snippets'),
       },
     }),
+    root: defineCollection(asSeoCollection({
+      type: 'page',
+      source: {
+        include: '**/*.md',
+        cwd: resolve('./docs'),
+      },
+      schema: z.object({
+        icon: z.string().optional(),
+        publishedAt: z.string().optional(),
+        updatedAt: z.string().optional(),
+        keywords: z.array(z.string()).optional(),
+        readTime: z.string(),
+        ogImageComponent: z.string().optional(),
+      }),
+    })),
   },
 })

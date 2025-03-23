@@ -1,5 +1,6 @@
-@import 'tailwindcss' theme(static);
+@import 'tailwindcss';
 @import "@nuxt/ui-pro";
+@source '../../docs/**';
 
 @theme {
   --font-sans: 'Hubot Sans', sans-serif;
@@ -16,6 +17,8 @@
   --color-green-800: #016538;
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
+
+  --ui-text-secondary: #82AAFF;
 }
 
 .dark {
@@ -132,28 +135,15 @@ pre {
   --scrollbar-thumb: #3b5178;
 }
 
-
-.page-enter-active,
-.page-leave-active {
-  transition: all 0.2s;
-}
-/* create a smooth beautifal fade in keyframe animation */
-.page-enter-from,
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(1rem);
-  filter: blur(0.2rem);
-}
-
 .gradient {
   position: fixed;
   top: 25vh;
   width: 90%;
   left: 5%;
   height: 30vh;
-  background: radial-gradient(50% 50% at 50% 50%, #f0db4f 0%, #f0db4fc2 100%);
+  background: radial-gradient(50% 50% at 50% 50%, #f0db4f 0%, #f0db4fc2 5%);
   filter: blur(180px);
-  opacity: 0.6;
+  opacity: 0.05;
   z-index: -1;
 }
 

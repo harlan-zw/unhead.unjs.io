@@ -30,5 +30,6 @@ const isDark = computed({
   >
     <UIcon v-if="isDark" name="i-ph-moon-stars-duotone" class="w-5 h-5" />
     <UIcon v-else name="i-ph-sun-dim-duotone" class="w-5 h-5" />
+    {{ isDark ? 'Light mode' : 'Dark mode' }}
   </UButton>
 </template>
