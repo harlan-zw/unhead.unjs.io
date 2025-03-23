@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     // maybe buggy
     'nuxt-rebundle',
-    'nuxt-build-cache',
+    // 'nuxt-build-cache',
     async (_, nuxt) => {
       // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
       nuxt.hooks.hook('nitro:init', (nitro) => {
