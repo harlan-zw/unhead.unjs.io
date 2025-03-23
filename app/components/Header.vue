@@ -16,11 +16,13 @@ const versions = computed(() => {
     return {
       label: version,
       value: version,
-      disabled: true,
     }
   })
 })
-const version = versions.value[0]
+const version = ref(versions.value[0])
+watch(version, () => {
+  window.open('https://v1.unhead.unjs.io/', '_blank')
+})
 
 const route = useRoute()
 
