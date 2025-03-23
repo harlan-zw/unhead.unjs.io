@@ -97,7 +97,7 @@ const transformedPage = computed(() => {
   const p = structuredClone(content.body) as any as { value: any }
   replaceImportSpecifier(p.value, {
     '@unhead/dynamic-import': selectedFramework.value.import,
-    '@unhead/schema-org/@framework': `@unhead/schema-org/${selectedFramework.value.slug}`,
+    '@unhead/schema-org/@framework': selectedFramework.value.slug !== 'nuxt' ? `@unhead/schema-org/${selectedFramework.value.slug}` : '#imports',
   }, !page.value.stem.includes('typescript/'))
   modifyRelativeDocLinksWithFramework(p.value, selectedFramework.value.slug)
   return p
