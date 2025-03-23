@@ -19,7 +19,7 @@ const route = useRoute()
                 </div>
               </div>
               <div class="mt-5">
-                <!--            <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-7" /> -->
+<!--                <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-7" /> -->
               </div>
             </div>
           </div>

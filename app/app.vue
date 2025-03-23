@@ -33,22 +33,9 @@ const searchNav = computed(() => {
   <UApp v-if="navigation" :toaster="appConfig.toaster">
     <NuxtLoadingIndicator color="#FFF" />
     <Header />
-    <div class="min-h-screen">
-      <AnimatePresence mode="wait">
-        <motion.div
-          :initial="{ opacity: 0, y: 16, filter: 'blur(0.2rem)' }"
-          :animate="{ opacity: 1, y: 0, filter: 'blur(0)' }"
-          :exit="{ opacity: 0, y: 16, filter: 'blur(0.2rem)' }"
-          :transition="{
-            duration: 0.2,
-          }"
-        >
-          <NuxtLayout>
-            <NuxtPage />
-          </NuxtLayout>
-        </motion.div>
-      </AnimatePresence>
-    </div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
     <Footer />
     <ClientOnly>
       <LazyUContentSearch

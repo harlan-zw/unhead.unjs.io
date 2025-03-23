@@ -61,8 +61,6 @@ const processedContent = computed(() => {
     if (!vnode.children)
       return vnode
 
-    console.log('slot', vnode)
-
     // Process the content recursively
     const processNode = (node) => {
       if (Array.isArray(node)) {

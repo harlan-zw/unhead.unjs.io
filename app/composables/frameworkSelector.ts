@@ -14,17 +14,12 @@ const fallbackFramework = ref()
 
 export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
   const route = useRoute()
+  let isSwitching = false
   const frameworkSlug = computed(() => {
     return getPathFramework(route.path) || fallbackFramework.value
   })
-  watch(() => route.path, (v) => {
-    if (getPathFramework(v)) {
-      frameworkSlug.value = getPathFramework(v)
-    }
-  }, {
-    immediate: true,
-  })
   function switchFramework(framework: typeof items[number]) {
+    isSwitching = true
     // if the current path contains the framework slug, then we swap to the new one, otherwise we don't
     fallbackFramework.value = framework.slug
   }
@@ -40,7 +35,9 @@ export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
       if (b.slug === selectedFramework.value.slug) {
         return 1
       }
-      return Math.random() - 0.5
+      if (import.meta.client && isSwitching) {
+        return Math.random() - 0.5
+      }
     })
   })
   return {
