@@ -44,6 +44,12 @@ useHead({
   link: [{ rel: 'canonical', href: content.path }],
 })
 
+defineOgImageComponent(page.value.ogImageComponent || 'NuxtSeo', {
+  title: page.value?.title || '',
+  description: page.value?.description,
+  colorMode: 'dark',
+})
+
 useHead({
   link: () => {
     const isFrameworkSpecific = content.path !== getPathWithoutFramework(content.path)
