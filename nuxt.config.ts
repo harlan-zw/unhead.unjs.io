@@ -264,7 +264,6 @@ export default defineNuxtConfig({
 
   ogImage: {
     enabled: true,
-    zeroRuntime: true,
     fonts: [
       'Hubot+Sans:400',
       'Hubot+Sans:700',

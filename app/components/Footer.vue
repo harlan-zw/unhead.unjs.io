@@ -18,11 +18,41 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
 </script>
 
 <template>
-  <footer class="relative z-10 antialiased font-sans dark:bg-[#82AAFF]/4 bg-neutral-50/50 text-sm text-neutral-700 dark:text-neutral-200">
-    <svg viewBox="0 0 1440 181" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-900/30 pointer-events-none absolute w-full top-[1px] transition-all text-(--ui-primary) flex-shrink-0 opacity-100 duration-[400ms] opacity-30 z-20"><mask id="path-1-inside-1_414_5526" fill="white"><path d="M0 0H1440V181H0V0Z" /></mask><path d="M0 0H1440V181H0V0Z" fill="url(#paint0_linear_414_5526)" fill-opacity="0.22" /><path d="M0 2H1440V-2H0V2Z" fill="url(#paint1_linear_414_5526)" mask="url(#path-1-inside-1_414_5526)" /><defs><linearGradient id="paint0_linear_414_5526" x1="720" y1="0" x2="720" y2="181" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient><linearGradient id="paint1_linear_414_5526" x1="0" y1="90.5" x2="1440" y2="90.5" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" stop-opacity="0" /><stop offset="0.395" stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient></defs></svg>
-    <div class="border-t border-neutral-200 dark:border-neutral-800">
-      <UContainer class="container py-10 ">
-        <div class="flex items-center justify-center gap-10 mb-5">
+<footer class="relative z-10 antialiased font-sans dark:bg-[#82AAFF]/4 bg-neutral-50/50 text-sm text-neutral-700 dark:text-neutral-200">
+  <svg viewBox="0 0 1440 181" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-900/30 pointer-events-none absolute w-full top-[1px] transition-all text-(--ui-primary) flex-shrink-0 opacity-100 duration-[400ms] opacity-30 z-20"><mask id="path-1-inside-1_414_5526" fill="white"><path d="M0 0H1440V181H0V0Z" /></mask><path d="M0 0H1440V181H0V0Z" fill="url(#paint0_linear_414_5526)" fill-opacity="0.22" /><path d="M0 2H1440V-2H0V2Z" fill="url(#paint1_linear_414_5526)" mask="url(#path-1-inside-1_414_5526)" /><defs><linearGradient id="paint0_linear_414_5526" x1="720" y1="0" x2="720" y2="181" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient><linearGradient id="paint1_linear_414_5526" x1="0" y1="90.5" x2="1440" y2="90.5" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" stop-opacity="0" /><stop offset="0.395" stop-color="currentColor" /><stop offset="1" stop-color="currentColor" stop-opacity="0" /></linearGradient></defs></svg>
+  <div class="border-t border-neutral-200 dark:border-neutral-800 ">
+    <UContainer class="container py-10">
+      <div class="flex lg:flex-row flex-col items-center justify-between gap-3 mb-10">
+        <div class="sm:flex items-center justify-between gap-3 ">
+        <UButton
+          aria-label="Unhead on GitHub"
+          to="https://github.com/unjs/unhead"
+          target="_blank"
+          color="neutral"
+          variant="ghost"
+          class="transition opacity-85"
+          icon="i-carbon-logo-github"
+        >
+          GitHub
+        </UButton>
+        <UButton
+          aria-label="Harlan's Discord"
+          to="https://discord.com/invite/275MBUBvgP"
+          target="_blank"
+          color="neutral"
+          variant="ghost"
+          class="transition opacity-85"
+          icon="i-carbon-logo-discord"
+        >
+          Discord
+        </UButton>
+        <ColorModeButton />
+        <ULink target="_blank" external href="/llms.txt" class="flex items-center gap-1 hover:underline transition">
+          <UIcon dynamic name="i-noto-sparkles" class="w-4 h-4" />
+          /llms.txt
+        </ULink>
+        </div>
+        <div class="flex items-center justify-center gap-10">
           <UButton target="_blank" variant="ghost" to="https://unjs.io/" class="flex gap-3 items-center">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_206_4645)">
@@ -46,89 +76,74 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
             </div>
           </UButton>
         </div>
-        <div class="flex items-center justify-center gap-3 mb-10">
-          <UButton
-            aria-label="Unhead on GitHub"
-            to="https://github.com/unjs/unhead"
-            target="_blank"
-            color="neutral"
-            variant="ghost"
-            class="hidden lg:inline-flex transition opacity-85"
-            icon="i-carbon-logo-github"
-          >
-            GitHub
-          </UButton>
-          <UButton
-            aria-label="Harlan's Discord"
-            to="https://discord.com/invite/275MBUBvgP"
-            target="_blank"
-            color="neutral"
-            variant="ghost"
-            class="hidden lg:inline-flex transition opacity-85"
-            icon="i-carbon-logo-discord"
-          >
-            Discord
-          </UButton>
-          <ColorModeButton />
-          <ULink target="_blank" external href="/llms.txt" class="flex items-center gap-1 hover:underline transition">
-            <UIcon dynamic name="i-noto-sparkles" class="w-4 h-4" />
-            /llms.txt
-          </ULink>
-        </div>
-        <div class="md:grid grid-cols-2">
-          <div>
-            <h3 class="font-medium mb-7 text-base flex items-center gap-1">
-              Head
-            </h3>
-            <div class="grid xl:grid-cols-2 gap-10 mb-12">
-              <div v-for="(category, cKey) in [...unheadGuides]" :key="cKey">
-                <div class="font-bold mb-3 text-xs flex items-center gap-1">
-                  {{ category.title }}
-                </div>
-                <nav>
-                  <ul class="grid gap-4">
-                    <li v-for="(link, key) in category.children" :key="key">
-                      <ULink :to="getPathWithFramework(link.path, selectedFramework.slug)" class="flex items-center gap-1 hover:underline transition">
-                        <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
-                        {{ link.title }}
-                      </ULink>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div>
-          <div>
-            <h3 class="font-medium mb-7 text-base flex items-center gap-1">
-              Schema.org
-            </h3>
-            <div class="grid xl:grid-cols-3 gap-10">
-              <div v-for="(category, cKey) in [...schemaOrgAndScriptGuides.flatMap(c => c.children)]" :key="cKey">
-                <div class="font-bold mb-3 text-xs flex items-center gap-1">
-                  {{ category.title }}
-                </div>
-                <nav>
-                  <ul class="grid gap-4">
-                    <li v-for="(link, key) in category.children" :key="key">
-                      <ULink :to="getPathWithFramework(link.path, selectedFramework.slug)" class="flex items-center gap-1 hover:underline transition">
-                        <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
-                        {{ link.title }}
-                      </ULink>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
+      </div>
+      <div class="md:grid flex flex-col gap-5 grid-cols-3 xl:grid-cols-5 mx-auto">
+        <div class="flex ">
+          <div class="inline">
+            <div v-for="(category, cKey) in [unheadGuides[0]]" :key="cKey">
+              <h3 class="font-bold mb-3 text-xs">
+                Articles
+              </h3>
+              <nav>
+                <ul class="grid gap-4">
+                  <li v-for="(link, key) in [{ title: 'Announcing Unhead v2', path: '/v2' }]" :key="key">
+                    <ULink :to="link.path" class="flex items-center gap-1 hover:underline transition">
+                      <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
+                      {{ link.title }}
+                    </ULink>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
-      </UContainer>
-    </div>
-    <div class="border-t border-neutral-200 dark:border-neutral-800">
-      <UContainer>
-        <div class="py-10">
-          Copyright © 2025-{{ new Date().getFullYear() }} Harlan Wilton - <a href="https://github.com/unjs/unhead/blob/main/LICENSE">MIT License</a>
+        <div class="flex ">
+          <div class="inline">
+            <div v-for="(category, cKey) in [unheadGuides[0]]" :key="cKey">
+              <h3 class="font-bold mb-3 text-xs">
+                Head
+              </h3>
+              <nav>
+                <ul class="grid gap-4">
+                  <li v-for="(link, key) in category.children" :key="key">
+                    <ULink :to="getPathWithFramework(link.path, selectedFramework.slug)" class="flex items-center gap-1 hover:underline transition">
+                      <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
+                      {{ link.title }}
+                    </ULink>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
         </div>
-      </UContainer>
-    </div>
-  </footer>
+        <div class="flex ">
+          <div class="inline">
+            <div v-for="(category, cKey) in [schemaOrgAndScriptGuides.flatMap(c => c.children)[0]]" :key="cKey">
+              <h3 class="font-bold mb-3 text-xs">
+                Schema.org
+              </h3>
+              <nav>
+                <ul class="grid gap-4">
+                  <li v-for="(link, key) in category.children" :key="key">
+                    <ULink :to="getPathWithFramework(link.path, selectedFramework.slug)" class="flex items-center gap-1 hover:underline transition">
+                      <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
+                      {{ link.title }}
+                    </ULink>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </UContainer>
+  </div>
+  <div class="border-t border-neutral-200 dark:border-neutral-800">
+    <UContainer>
+      <div class="py-10">
+        Copyright © 2025-{{ new Date().getFullYear() }} Harlan Wilton - <a href="https://github.com/unjs/unhead/blob/main/LICENSE">MIT License</a>
+      </div>
+    </UContainer>
+  </div>
+</footer>
 </template>
