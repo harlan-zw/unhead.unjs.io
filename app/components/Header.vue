@@ -23,10 +23,8 @@ const versions = computed(() => {
   ]
 })
 const version = ref(versions.value[0])
-watch(version, (v) => {
-  if (v.startsWith('v1')) {
-    window.open('https://v1.unhead.unjs.io/', '_blank')
-  }
+watch(version, () => {
+  window.open('https://v1.unhead.unjs.io/', '_blank')
 })
 
 const route = useRoute()
