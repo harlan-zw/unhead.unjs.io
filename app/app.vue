@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { queryCollectionNavigation, useAsyncData } from '#imports'
-import { motion } from 'motion-v'
 import { ref } from 'vue'
 import { modules } from '../const'
-
-const route = useRoute()
 
 const appConfig = useAppConfig()
 const { selectedFramework } = useFrameworkSelector()
