@@ -75,6 +75,10 @@ watch(selectedFramework, () => {
 
 const { open: openSearch } = useContentSearch()
 
+onKeyStroke('Divide', () => {
+  openSearch.value = true
+})
+
 const subSectionLinks = computed(() => {
   return docsNav.value?.firstSubSectionLinks?.map((n) => {
     const to = n.children?.[0]?.children?.[0]?.path
@@ -89,7 +93,7 @@ const subSectionLinks = computed(() => {
 </script>
 
 <template>
-  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 h-auto', container: 'max-w-[1450px] bg-gray-600/7 dark:bg-gray-900/10 mx-auto py-0 px-5 lg:px-3.5 rounded-lg' }">
+  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 h-auto', container: 'max-w-[1450px] bg-gray-600/3 border border-[var(--ui-border)] dark:bg-gray-900/10 mx-auto py-0 px-5 lg:px-3.5 rounded-lg' }">
     <template #left>
       <NuxtLink
         to="/"
@@ -110,7 +114,7 @@ const subSectionLinks = computed(() => {
         </div>
         <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[200px]" placeholder="Search..." @click="openSearch = true">
           <template #leading>
-            <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" />
+            <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" @click="openSearch = true" />
           </template>
         </UInput>
         <div v-if="route.path.startsWith('/docs')">
@@ -199,10 +203,10 @@ const subSectionLinks = computed(() => {
         </div>
         <UInput type="search" class="cursor-pointer hidden lg:block w-[70px]" shortcut="meta_k" @click="openSearch = true">
           <template #leading>
-            <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100" />
+            <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100"  @click="openSearch = true" />
           </template>
           <template #trailing>
-            <UKbd>/</UKbd>
+            <UKbd @click="openSearch = true">/</UKbd>
           </template>
         </UInput>
         <div class="flex items-center lg:gap-1.5">

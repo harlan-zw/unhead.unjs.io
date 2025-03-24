@@ -1,14 +1,27 @@
+<script lang="ts" setup>
+const route = useRoute()
+const key = ref(route.path)
+
+function attachRouteWatcher() {
+  watch(() => route.path, (newPath) => {
+    key.value = newPath
+  })
+}
+</script>
 <template>
   <div>
-    <ScriptCarbonAds
-      :key="$route.path"
-      format="cover"
-      serve="CW7DTKJI"
-      placement="unheadunjsio"
-      trigger="onNuxtReady"
-    >
-      <AdsFallback />
-    </ScriptCarbonAds>
+    <ClientOnly>
+      <ScriptCarbonAds
+        @ready="attachRouteWatcher"
+        :key="key"
+        format="cover"
+        serve="CW7DTKJI"
+        placement="unheadunjsio"
+        trigger="onNuxtReady"
+      >
+        <AdsFallback />
+      </ScriptCarbonAds>
+    </ClientOnly>
   </div>
 </template>
 

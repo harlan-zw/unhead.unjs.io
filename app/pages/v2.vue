@@ -12,6 +12,7 @@ if (!page.value)
 useSeoMeta({
   title: () => page.value?.title || '',
   description: () => page.value?.description,
+  titleTemplate: null,
 })
 
 defineOgImageComponent(page.value.ogImageComponent || 'Unhead', {
