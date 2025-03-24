@@ -4,7 +4,13 @@ import { useCurrentDocPage } from '~/composables/data'
 
 const route = useRoute()
 
-const { page } = await useCurrentDocPage()
+const page = ref()
+const { page: docPage } = await useCurrentDocPage()
+page.value = docPage.value
+watch(() => route.path, async () => {
+  const { page: docPage } = await useCurrentDocPage()
+  page.value = docPage.value
+})
 </script>
 
 <template>
