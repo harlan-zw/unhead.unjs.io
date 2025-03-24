@@ -34,6 +34,8 @@ useSeoMeta({
   titleTemplate: null,
 })
 
+defineOgImageComponent('Home')
+
 const { data: sponsors } = await useFetch('/api/github/sponsors.json')
 
 if (import.meta.server) {

@@ -14,10 +14,11 @@ useSeoMeta({
   description: () => page.value?.description,
 })
 
-defineOgImageComponent(page.value.ogImageComponent || 'NuxtSeo', {
+defineOgImageComponent(page.value.ogImageComponent || 'Unhead', {
   title: page.value?.title || '',
   description: page.value?.description,
   colorMode: 'dark',
+  ...page.value.ogImage,
 })
 
 // Technical SEO for an blog article

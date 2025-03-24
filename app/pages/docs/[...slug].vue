@@ -28,10 +28,11 @@ useHead({
   link: [{ rel: 'canonical', href: content.path }],
 })
 
-defineOgImageComponent(page.value.ogImageComponent || 'NuxtSeo', {
+defineOgImageComponent('Unhead', {
   title: page.value?.title || '',
   description: page.value?.description,
-  colorMode: 'dark',
+  frameworkIcon: selectedFramework.value.icon,
+  ...(page.value.ogImage || {}),
 })
 
 useHead({
@@ -80,8 +81,6 @@ const repoLinks = computed(() => [
 if (import.meta.server) {
   setHeader(useRequestEvent(), 'Cache-Control', 'public, max-age=3600, s-maxage=3600')
 }
-
-const isDev = import.meta.dev
 
 const transformedPage = computed(() => {
   const p = structuredClone(content.body) as any as { value: any }
