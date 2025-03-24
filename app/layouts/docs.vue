@@ -22,7 +22,7 @@ const { page } = await useCurrentDocPage()
                 </div>
               </div>
               <div class="my-5">
-                <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" />
+                <TableOfContents v-if="page?.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" />
               </div>
               <Ads />
             </div>

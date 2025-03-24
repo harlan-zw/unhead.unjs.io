@@ -22,6 +22,10 @@ export const StackblitzPlaygrounds = {
   typescript: {
     ssr: 'https://stackblitz.com/edit/github-hhxywsb5',
   },
+  angular: {
+    // this is an SPA
+    ssr: 'https://stackblitz.com/edit/stackblitz-starters-e4x42yaz',
+  },
 }
 
 export const modules = [
