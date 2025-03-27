@@ -3,6 +3,10 @@ defineOptions({
   inheritAttrs: false,
 })
 
+defineProps<{
+  verbose?: boolean
+}>()
+
 const colorMode = useColorMode()
 
 // Computed
@@ -31,7 +35,7 @@ const isDark = computed({
     <ClientOnly>
       <UIcon v-if="isDark" name="i-ph-moon-stars-duotone" class="w-5 h-5" />
       <UIcon v-else name="i-ph-sun-dim-duotone" class="w-5 h-5" />
-      {{ isDark ? 'Light mode' : 'Dark mode' }}
+      <span v-if="verbose">{{ isDark ? 'Light mode' : 'Dark mode' }}</span>
     </ClientOnly>
   </UButton>
 </template>

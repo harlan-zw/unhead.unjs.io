@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { setHeader } from 'h3'
 import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/utils/content'
-import { getPathSubSection, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
+import {
+  getLastPathSegment,
+  getPathSegments,
+  getPathWithFramework,
+  getPathWithoutFramework
+} from '~~/utils/urls'
 import { useCurrentDocPage } from '~/composables/data'
+import { titleCase } from 'scule'
 
 definePageMeta({
   layout: 'docs',
@@ -62,7 +68,7 @@ useHead({
   },
 })
 
-const headline = useDocsNav().value.navFlat.find(item => item.path === getPathSubSection(route.path))?.title
+const headline = computed(() => titleCase(getLastPathSegment(getPathSegments(route.path, route.path.split('/').length - 2))))
 
 const repoLinks = computed(() => [
   {
@@ -94,11 +100,12 @@ const transformedPage = computed(() => {
 </script>
 
 <template>
-  <div v-if="content" class="max-w-[66ch] ml-auto md:ml-0 md:mr-auto">
+  <div v-if="content" class="max-w-[66ch] mx-auto lg:ml-0 lg:mr-auto">
     <UPageHeader
-      :title="content.title" :headline="headline" class="text-balance pt-4" :links="['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
+      :title="content.title" :headline="headline" class="text-balance pt-4" :links="!['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
         { label: 'Copy for LLMs', to: repoLinks[1].to, icon: 'i-catppuccin-markdown', target: '_blank' },
       ] : []"
+
       :ui="{ title: 'leading-normal' }"
     />
 

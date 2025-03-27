@@ -46,7 +46,7 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
             >
               Discord
             </UButton>
-            <ColorModeButton />
+            <ColorModeButton verbose />
             <ULink target="_blank" external href="/llms.txt" class="flex items-center gap-1 hover:underline transition">
               <UIcon dynamic name="i-noto-sparkles" class="w-4 h-4" />
               /llms.txt

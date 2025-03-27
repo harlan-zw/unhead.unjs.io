@@ -93,7 +93,7 @@ const subSectionLinks = computed(() => {
 </script>
 
 <template>
-  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 h-auto', container: 'max-w-[1450px] bg-gray-600/3 border border-[var(--ui-border)] dark:bg-gray-900/10 mx-auto py-0 px-5 lg:px-3.5 rounded-lg' }">
+  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 px-5 h-auto', container: 'max-w-[1452px] lg:bg-gray-600/3 lg:border border-[var(--ui-border)] lg:dark:bg-gray-900/10 mx-auto py-0 px-0 lg:px-5 sm:px-0 rounded-lg' }">
     <template #left>
       <NuxtLink
         to="/"
@@ -201,7 +201,7 @@ const subSectionLinks = computed(() => {
         <div class="hidden lg:block">
           <UNavigationMenu :items="menu.slice(4)" :ui="{ viewport: 'min-w-[500px] -left-full' }" class="justify-center" />
         </div>
-        <UInput type="search" class="cursor-pointer hidden lg:block w-[70px]" shortcut="meta_k" @click="openSearch = true">
+        <UInput type="search" class="cursor-pointer hidden lg:block w-[70px]" shortcut="divide" @click="openSearch = true">
           <template #leading>
             <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100"  @click="openSearch = true" />
           </template>
@@ -210,6 +210,8 @@ const subSectionLinks = computed(() => {
           </template>
         </UInput>
         <div class="flex items-center lg:gap-1.5">
+          <ColorModeButton />
+
           <UButton
             aria-label="Unhead on GitHub"
             to="https://github.com/unjs/unhead"
@@ -224,8 +226,8 @@ const subSectionLinks = computed(() => {
     </template>
   </UHeader>
   <div v-if="route.path.startsWith('/docs')" class=" h-12">
-    <div class="relative max-w-[1400px] mx-auto grid grid-cols-10 h-full justify-center items-center w-full">
-      <div class="col-span-3 hidden lg:flex h-12">
+    <div class="relative max-w-[1452px] px-6 mx-auto flex lg:grid grid-cols-10 h-full justify-between lg:justify-center items-center w-full">
+      <div class="col-span-3 flex h-12">
         <div class="h-full flex text-sm space-x-6">
           <div v-for="item in subSectionLinks" :key="item.to">
             <NuxtLink
@@ -238,7 +240,7 @@ const subSectionLinks = computed(() => {
           </div>
         </div>
       </div>
-      <div class="flex items-center gap-2 pl-5 col-span-5">
+      <div class="flex items-center gap-2 lg:pl-3 col-span-5">
         <div class="z-10  flex gap-2 items-center dark:text-blue-200 group-hover:text-blue-500 transition-all">
           <div class="font-semibold">
             <motion.div
