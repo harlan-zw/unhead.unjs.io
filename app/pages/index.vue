@@ -308,7 +308,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
               <div>
                 <div class="font-light text-6xl mb-2">
                   <UIcon name="i-carbon-user-favorite-alt" />
-                  {{ humanNumber(stats.contributors.length) }}
+                  {{ humanNumber(stats.contributors?.length) }}
                 </div>
                 <div class="text-sm opacity-80">
                   Contributors

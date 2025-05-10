@@ -14,7 +14,7 @@ export async function useStats() {
   const { data: stats } = await useFetch('/api/stats.json', {
     key: 'stats',
   })
-  return stats
+  return stats || {}
 }
 
 export async function useCurrentDocPage() {
