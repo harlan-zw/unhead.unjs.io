@@ -19,7 +19,9 @@ function attachRouteWatcher() {
         placement="unheadunjsio"
         trigger="onNuxtReady"
       >
-        <AdsFallback />
+        <template #error>
+          <AdsFallback />
+        </template>
       </ScriptCarbonAds>
     </ClientOnly>
   </div>
