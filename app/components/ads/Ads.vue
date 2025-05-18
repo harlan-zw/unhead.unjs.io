@@ -8,16 +8,17 @@ function attachRouteWatcher() {
   })
 }
 </script>
+
 <template>
   <div>
     <ClientOnly>
       <ScriptCarbonAds
-        @ready="attachRouteWatcher"
         :key="key"
         format="cover"
         serve="CW7DTKJI"
         placement="unheadunjsio"
         trigger="onNuxtReady"
+        @ready="attachRouteWatcher"
       >
         <template #error>
           <AdsFallback />

@@ -203,10 +203,12 @@ const subSectionLinks = computed(() => {
         </div>
         <UInput type="search" class="cursor-pointer hidden lg:block w-[70px]" shortcut="divide" @click="openSearch = true">
           <template #leading>
-            <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100"  @click="openSearch = true" />
+            <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100" @click="openSearch = true" />
           </template>
           <template #trailing>
-            <UKbd @click="openSearch = true">/</UKbd>
+            <UKbd @click="openSearch = true">
+              /
+            </UKbd>
           </template>
         </UInput>
         <div class="flex items-center lg:gap-1.5">

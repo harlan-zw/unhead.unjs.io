@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { setHeader } from 'h3'
+import { titleCase } from 'scule'
 import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/utils/content'
 import {
   getLastPathSegment,
   getPathSegments,
   getPathWithFramework,
-  getPathWithoutFramework
+  getPathWithoutFramework,
 } from '~~/utils/urls'
 import { useCurrentDocPage } from '~/composables/data'
-import { titleCase } from 'scule'
 
 definePageMeta({
   layout: 'docs',
