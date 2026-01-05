@@ -106,9 +106,9 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
 
     <section class="xl:max-w-full max-w-3xl mx-auto py-5 sm:py-12 xl:py-20">
       <UContainer class="container mx-auto">
-        <NuxtLink to="/v2">
-          <UBadge variant="soft" color="info" icon="i-noto-party-popper">
-            Announcing Unhead v2
+        <NuxtLink target="_blank" to="https://github.com/unjs/unhead/pull/620" icon="i-noto-hammer">
+          <UBadge variant="soft" color="success">
+            Unhead v3 Coming
           </UBadge>
         </NuxtLink>
         <div class="xl:flex gap-10">

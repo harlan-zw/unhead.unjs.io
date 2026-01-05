@@ -1,7 +1,8 @@
 import { existsSync } from 'node:fs'
-import { defineCollection, defineContentConfig, z } from '@nuxt/content'
+import { defineCollection, defineContentConfig} from '@nuxt/content'
 import { asSeoCollection } from '@nuxtjs/seo/content'
 import { relative, resolve } from 'pathe'
+import { z } from 'zod'
 import { logger } from './logger'
 
 const schema = z.object({
