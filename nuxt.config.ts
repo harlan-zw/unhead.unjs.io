@@ -81,31 +81,6 @@ export default defineNuxtConfig({
       routes: ['/', '/404.html'],
     },
     cloudflare: {
-      deployConfig: true,
-      nodeCompat: true,
-      wrangler: {
-        vars: {
-          NUXT_GITHUB_ACCESS_TOKEN: process.env.NUXT_GITHUB_ACCESS_TOKEN || '',
-          NUXT_GITHUB_AUTH_TOKEN: process.env.NUXT_GITHUB_AUTH_TOKEN || '',
-          NUXT_GITHUB_AUTH_CLIENT_SECRET: process.env.NUXT_GITHUB_AUTH_CLIENT_SECRET || '',
-        },
-        d1_databases: [
-          {
-            binding: 'DB',
-            database_id: 'e40b8263-bd97-4ade-aad1-07c5c69ca02d',
-          },
-        ],
-        kv_namespaces: [
-          {
-            binding: 'KV',
-            id: '2758d25961e04bc49d117e91aa3eca68',
-          },
-          {
-            binding: 'CACHE',
-            id: '5d4d06c8dd814515aeeb5673d90c41fe',
-          },
-        ],
-      },
       pages: {
         routes: {
           exclude: [
