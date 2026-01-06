@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { defineCollection, defineContentConfig} from '@nuxt/content'
+import { defineCollection, defineContentConfig } from '@nuxt/content'
 import { asSeoCollection } from '@nuxtjs/seo/content'
 import { relative, resolve } from 'pathe'
 import { z } from 'zod'

@@ -10,6 +10,9 @@
     "lint:docs:fix": "markdownlint ./snippets --fix && case-police 'snippets/**/*.md' *.md --fix",
     "twoslash:verify": "nuxt-content-twoslash verify --content-dir snippets"
   },
+  "dependencies": {
+    "zod": "^4.3.5"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^6.7.3",
     "@iconify-json/carbon": "^1.2.15",
@@ -31,7 +34,6 @@
     "@nuxt/scripts": "^0.13.2",
     "@nuxt/ui-pro": "^3.3.7",
     "@nuxtjs/mdc": "0.19.2",
-    "nitro-cloudflare-dev": "^0.2.2",
     "@nuxtjs/seo": "^3.3.0",
     "@unovis/vue": "1.6.2",
     "@vueuse/core": "^14.1.0",
@@ -46,6 +48,7 @@
     "jsdom": "^27.4.0",
     "markdownlint-cli": "^0.47.0",
     "motion-v": "^1.7.5",
+    "nitro-cloudflare-dev": "^0.2.2",
     "nuxt": "4.2.2",
     "nuxt-build-cache": "^0.1.1",
     "nuxt-content-twoslash": "^0.1.2",
@@ -76,8 +79,5 @@
       "vue-demi",
       "workerd"
     ]
-  },
-  "dependencies": {
-    "zod": "^4.3.5"
   }
 }
