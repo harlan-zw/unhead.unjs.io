@@ -33,7 +33,10 @@ function getSubModuleCollection() {
   return defineCollection(asSeoCollection({
     type: 'page',
     source: {
-      repository: `https://github.com/unjs/unhead`,
+      repository: {
+        url: 'https://github.com/unjs/unhead',
+        branch: 'v3',
+      },
       include: 'docs/**/*.{md,yml}',
       prefix: `/docs`,
     },

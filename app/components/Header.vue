@@ -4,27 +4,22 @@ import { motion } from 'motion-v'
 import { ref } from 'vue'
 import { Unhead } from '~~/const'
 import { getPathSection, getPathSegments, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
-import { useStats } from '~/composables/data'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
 const docsNav = useDocsNav(true)
 const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNav)
 
-const stats = await useStats()
-const versions = computed(() => {
-  return [
-    ...(stats.value?.versions || []).map((version) => {
-      return {
-        label: version,
-        value: version,
-      }
-    }),
-    { label: 'v1.11.20', value: 'v1.11.20' },
-  ]
-})
-const version = ref(versions.value[0])
-watch(version, () => {
-  window.open('https://v1.unhead.unjs.io/', '_blank')
+const versions = [
+  { label: 'v3 (beta)', value: 'v3' },
+  { label: 'v2 (stable)', value: 'v2' },
+  { label: 'v1', value: 'v1' },
+]
+const version = ref(versions[0])
+watch(version, (v) => {
+  if (v.value === 'v2')
+    window.open('https://v2.unhead.unjs.io/', '_blank')
+  else if (v.value === 'v1')
+    window.open('https://v1.unhead.unjs.io/', '_blank')
 })
 
 const route = useRoute()

@@ -174,7 +174,7 @@ export default defineNuxtConfig({
     title: 'Unhead',
     description: 'Unhead is the any-framework document head manager built for performance and delightful developer experience.',
     notes: [
-      'The documentation only includes Unhead v2 docs.',
+      'The documentation is for Unhead v3 beta (install with unhead@beta).',
       'The content is automatically generated from the same source as the official documentation.',
     ],
     full: {
