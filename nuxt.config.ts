@@ -1,8 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
-import { logger } from './logger'
-
-logger.info(`🚀 Using Nuxt UI Pro License: ${!!process.env.NUXT_UI_PRO_LICENSE}`)
 
 export default defineNuxtConfig({
   modules: [
@@ -12,7 +9,7 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     'radix-vue/nuxt',
     '@vueuse/nuxt',
-    '@nuxthub/core',
+    'nitro-cloudflare-dev',
     '@nuxt/fonts',
     '@nuxt/content',
     'nuxt-llms',
@@ -46,13 +43,6 @@ export default defineNuxtConfig({
     ],
   },
 
-  // breaks build locally
-  hub: {
-    database: true,
-    cache: true,
-    kv: true,
-  },
-
   future: {
     compatibilityVersion: 5,
   },
@@ -84,12 +74,38 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    preset: 'cloudflare-pages',
     prerender: {
       failOnError: false,
       crawlLinks: true,
       routes: ['/', '/404.html'],
     },
     cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+      wrangler: {
+        vars: {
+          NUXT_GITHUB_ACCESS_TOKEN: process.env.NUXT_GITHUB_ACCESS_TOKEN || '',
+          NUXT_GITHUB_AUTH_TOKEN: process.env.NUXT_GITHUB_AUTH_TOKEN || '',
+          NUXT_GITHUB_AUTH_CLIENT_SECRET: process.env.NUXT_GITHUB_AUTH_CLIENT_SECRET || '',
+        },
+        d1_databases: [
+          {
+            binding: 'DB',
+            database_id: 'e40b8263-bd97-4ade-aad1-07c5c69ca02d',
+          },
+        ],
+        kv_namespaces: [
+          {
+            binding: 'KV',
+            id: '2758d25961e04bc49d117e91aa3eca68',
+          },
+          {
+            binding: 'CACHE',
+            id: '5d4d06c8dd814515aeeb5673d90c41fe',
+          },
+        ],
+      },
       pages: {
         routes: {
           exclude: [
@@ -101,6 +117,16 @@ export default defineNuxtConfig({
             '/llms.txt',
           ],
         },
+      },
+    },
+    storage: {
+      cache: {
+        driver: 'cloudflare-kv-binding',
+        binding: 'CACHE',
+      },
+      kv: {
+        driver: 'cloudflare-kv-binding',
+        binding: 'KV',
       },
     },
   },
@@ -157,10 +183,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // CI Not picking this up for some reason ?
-  uiPro: {
-    license: process.env.NUXT_UI_PRO_LICENSE,
-  },
 
   components: [
     {
