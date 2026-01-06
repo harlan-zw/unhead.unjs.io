@@ -4,19 +4,19 @@ const props = defineProps({
   name: { type: String, required: true },
 })
 
-const { data: packageManagers } = await useAsyncData(`module-install-${props.name}`, async () => {
-  return await Promise.all([
-    { name: 'pnpm', command: 'pnpm', install: 'add', run: '', x: 'pnpm dlx ' },
-    { name: 'bun', command: 'bun', install: 'i', run: 'run ', x: 'bunx ' },
-    { name: 'npm', command: 'npm', install: 'i', run: 'run ', x: 'npx ' },
-    { name: 'yarn', command: 'yarn', install: 'add', run: '', x: 'yarn dlx ' },
-  ].map(async pm => ({
-    filename: pm.name,
-    code: `<code class="language-bash shiki shiki-themes github-light github-light material-theme-palenight" language="bash"><span style="--shiki-light: #6F42C1; --shiki-default: #6F42C1; --shiki-dark: #FFCB6B;">${pm.command}</span><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #BABED8;"> ${pm.install} ${props.name}</span></code>`,
-    key: pm.name,
-    lang: 'bash',
-  })))
-})
+const packageManagersList = [
+  { name: 'pnpm', command: 'pnpm', install: 'add' },
+  { name: 'bun', command: 'bun', install: 'i' },
+  { name: 'npm', command: 'npm', install: 'i' },
+  { name: 'yarn', command: 'yarn', install: 'add' },
+]
+
+const packageManagers = computed(() => packageManagersList.map(p => ({
+  filename: p.name,
+  code: `<code class="language-bash shiki shiki-themes github-light github-light material-theme-palenight" language="bash"><span style="--shiki-light: #6F42C1; --shiki-default: #6F42C1; --shiki-dark: #FFCB6B;">${p.command}</span><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #BABED8;"> ${p.install} ${props.name}</span></code>`,
+  key: p.name,
+  lang: 'bash',
+})))
 </script>
 
 <template>

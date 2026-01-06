@@ -21,12 +21,11 @@ const { data: snippets } = await useAsyncData(`snippets`, async () => {
   const all = await queryCollection('snippets').all()
   if (!all?.length)
     return []
-  return all.map((snippet) => {
-    if (Array.isArray(snippet.body.value) && snippet.body.type === 'minimal') {
-      stripHeaderAnchorLinks(snippet.body.value)
-    }
-    return snippet
-  })
+  for (const s of all) {
+    if (globalThis.Array.isArray(s.body.value) && s.body.type === 'minimal')
+      stripHeaderAnchorLinks(s.body.value)
+  }
+  return all
 })
 
 const stats = await useStats()

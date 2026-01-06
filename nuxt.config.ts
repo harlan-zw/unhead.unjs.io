@@ -75,6 +75,9 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
+    unenv: {
+      external: ['node:process'],
+    },
     prerender: {
       failOnError: false,
       crawlLinks: true,
