@@ -17,8 +17,11 @@ definePageMeta({
 
 const { selectedFramework } = useFrameworkSelector()
 
-const snippets = await useAsyncData(`snippets`, async () => {
-  return (await queryCollection('snippets').all()).map((snippet) => {
+const { data: snippets } = await useAsyncData(`snippets`, async () => {
+  const all = await queryCollection('snippets').all()
+  if (!all?.length)
+    return []
+  return all.map((snippet) => {
     if (Array.isArray(snippet.body.value) && snippet.body.type === 'minimal') {
       stripHeaderAnchorLinks(snippet.body.value)
     }
@@ -146,11 +149,11 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
       }"
     >
       <template #a>
-        <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-Titles.md'))" />
-        <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-TagProps.md'))" />
+        <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useHead-Titles.md'))" />
+        <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useHead-TagProps.md'))" />
       </template>
       <template #b>
-        <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-Classes.md'))" />
+        <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useHead-Classes.md'))" />
       </template>
     </ReuseSectionTemplate>
     <div class="px-4 bg-neutral-200/50 dark:bg-neutral-900/50 py-10">
@@ -172,7 +175,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
       </div>
       <div class="max-w-5xl mx-auto md:grid grid-cols-2">
         <div>
-          <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('side-effects-a.md'))" />
+          <ContentRenderer :value="snippets?.find(d => d.id.endsWith('side-effects-a.md'))" />
           <div class="flex items-center gap-2 mt-2">
             <UButton color="info" size="sm" @click="mounted = !mounted">
               {{ mounted ? 'Unmount' : 'Mount' }}
@@ -201,12 +204,12 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
       >
         <template #a>
           <div>
-            <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useSeoMeta.md'))" />
+            <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useSeoMeta.md'))" />
           </div>
         </template>
         <template #b>
           <div>
-            <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useSchemaOrg.md'))" />
+            <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useSchemaOrg.md'))" />
           </div>
         </template>
       </ReuseSectionTemplate>
@@ -245,8 +248,8 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             :model-value="toggleCapo"
             @update:model-value="toggleCapo = !toggleCapo"
           />
-          <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useScript.md'))" />
-          <ContentRenderer :value="snippets.data.value.find(d => d.id.endsWith('useHead-TemplateParams.md'))" />
+          <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useScript.md'))" />
+          <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useHead-TemplateParams.md'))" />
         </div>
       </template>
     </ReuseSectionTemplate>
