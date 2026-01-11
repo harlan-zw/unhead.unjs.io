@@ -1,6 +1,5 @@
 import type { NavItem } from '@nuxt/content'
 import { titleCase } from 'scule'
-import { withoutTrailingSlash } from 'ufo'
 import {
   getLastPathSegment,
   getPathSection,
@@ -18,28 +17,38 @@ export async function useStats() {
 }
 
 export async function useCurrentDocPage() {
-  const route = useRoute()
-  const [{ data: page }, { data: surround }] = await Promise.all([
-    useAsyncData(`docs-${route.path}`, () => queryCollection('docsUnhead')
-      .where('path', 'IN', [withoutTrailingSlash(route.path), getPathWithoutFramework(route.path)])
-      .first()),
-    useAsyncData(`docs-${route.path}-surround`, () => queryCollectionItemSurroundings('docsUnhead', route.path, {
-      fields: ['title', 'description', 'path'],
-    }), {
-      transform(items) {
-        return items.map((m) => {
-          return {
-            ...m,
-            _path: m.path,
-          }
-        })
-      },
-    }),
-  ])
-  return {
-    page,
-    surround,
+  const nuxtApp = useNuxtApp()
+  const route = useRouter().currentRoute.value
+  if (nuxtApp.static.data.docsCurrent?.path === route.path) {
+    return await nuxtApp.static.data.docsCurrent.promise
   }
+
+  const contentPath = route.path
+  const fallbackPath = getPathWithoutFramework(route.path)
+
+  const p = queryCollection('docsUnhead').path(contentPath).first().then(pageData => pageData || queryCollection('docsUnhead').path(fallbackPath).first()).then(async (pageData) => {
+    if (!pageData?.body?.value) {
+      throw createError({ statusCode: 404, statusMessage: `Page not found: ${route.path}`, fatal: true })
+    }
+
+    const surroundData = await queryCollectionItemSurroundings('docsUnhead', pageData.path, {
+      fields: ['title', 'description', 'path'],
+    })
+
+    const page = ref(pageData)
+    const surround = ref(surroundData.filter(m => m).map(m => ({
+      ...m,
+      _path: m.path,
+    })))
+
+    return {
+      page,
+      surround,
+    }
+  })
+
+  nuxtApp.static.data.docsCurrent = { promise: p, path: toRaw(route.path) }
+  return p
 }
 
 function mapPath(data) {

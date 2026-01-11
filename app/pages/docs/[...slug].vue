@@ -17,22 +17,17 @@ definePageMeta({
 const route = useRoute()
 
 const { page, surround } = await useCurrentDocPage()
-
-const content = page.value
-if (!content)
+if (!page?.value?.id) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+}
 
 useSeoMeta({
-  title: () => content?.title,
-  description: () => content?.description,
+  title: () => page.value?.title,
+  description: () => page.value?.description,
   titleTemplate: '%s %separator %siteName',
 })
 
 const { selectedFramework, frameworks } = useFrameworkSelector()
-
-useHead({
-  link: [{ rel: 'canonical', href: content.path }],
-})
 
 defineOgImageComponent('Unhead', {
   title: page.value?.title || '',
@@ -43,14 +38,14 @@ defineOgImageComponent('Unhead', {
 
 useHead({
   link: () => {
-    const isFrameworkSpecific = content.path !== getPathWithoutFramework(content.path)
+    const isFrameworkSpecific = page.value.path !== getPathWithoutFramework(page.value.path)
     return [
-      { rel: 'canonical', href: `https://unhead.unjs.io${content.path}` },
+      { rel: 'canonical', href: `https://unhead.unjs.io${page.value.path}` },
       ...(isFrameworkSpecific
         ? frameworks.value.map((f) => {
             return {
               rel: 'alternate',
-              href: `https://unhead.unjs.io/${getPathWithFramework(content.path, f.slug)}`,
+              href: `https://unhead.unjs.io/${getPathWithFramework(page.value.path, f.slug)}`,
               title: f.label,
             }
           })
@@ -73,12 +68,12 @@ const headline = computed(() => titleCase(getLastPathSegment(getPathSegments(rou
 const repoLinks = computed(() => [
   {
     label: 'Edit this page',
-    to: `https://github.com/unjs/unhead/edit/main/docs/${content.id.split('/').slice(2).join('/')}`,
+    to: `https://github.com/unjs/unhead/edit/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
     target: '_blank',
   },
   {
     label: 'Markdown For LLMs',
-    to: `https://raw.githubusercontent.com/unjs/unhead/refs/heads/main/docs//${content.id.split('/').slice(2).join('/')}`,
+    to: `https://raw.githubusercontent.com/unjs/unhead/refs/heads/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
     target: '_blank',
   },
 ])
@@ -89,7 +84,7 @@ if (import.meta.server) {
 }
 
 const transformedPage = computed(() => {
-  const p = structuredClone(content.body) as any as { value: any }
+  const p = JSON.parse(JSON.stringify(page.value.body)) as any as { value: any }
   replaceImportSpecifier(p.value, {
     '@unhead/dynamic-import': selectedFramework.value.import,
     '@unhead/schema-org/@framework': selectedFramework.value.slug !== 'nuxt' ? `@unhead/schema-org/${selectedFramework.value.slug}` : '#imports',
@@ -100,9 +95,9 @@ const transformedPage = computed(() => {
 </script>
 
 <template>
-  <div v-if="content" class="max-w-[66ch] mx-auto lg:ml-0 lg:mr-auto">
+  <div v-if="page" class="max-w-[66ch] mx-auto lg:ml-0 lg:mr-auto">
     <UPageHeader
-      :title="content.title" :headline="headline" class="text-balance pt-4" :links="!['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
+      :title="page.title" :headline="headline" class="text-balance pt-4" :links="!['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
         { label: 'Copy for LLMs', to: repoLinks[1].to, icon: 'i-catppuccin-markdown', target: '_blank' },
       ] : []"
 
@@ -122,7 +117,7 @@ const transformedPage = computed(() => {
     </div>
 
     <UPageBody prose class="pb-0">
-      <ContentRenderer v-if="content.body" :value="transformedPage" />
+      <ContentRenderer v-if="page.body" :value="transformedPage" />
       <div class="justify-center flex items-center gap-5 font-semibold">
         <div class="flex items-center gap-2">
           <UIcon name="i-simple-icons-github" class="w-5 h-5" />
