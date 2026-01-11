@@ -55,7 +55,7 @@ export default defineAppConfig({
       note: 'i-carbon-information',
       prev: 'i-carbon-arrow-left',
       system: 'i-carbon-computer',
-      tip: 'i-carbon-lightbulb',
+      tip: 'i-carbon-idea',
       warning: 'i-carbon-warning',
       chevronDoubleLeft: 'i-carbon-chevron-double-left',
       chevronDoubleRight: 'i-carbon-chevron-double-right',

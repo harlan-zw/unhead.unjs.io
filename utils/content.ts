@@ -51,17 +51,19 @@ export function stripHeaderAnchorLinks(payload: any) {
 
 export function modifyRelativeDocLinksWithFramework(
   payload: any,
-  framework: string,
+  framework?: string,
 ): any[] {
   const links = []
-  // find a tags and check the href, if it's relative and contains docs and does not have a framework (getPathFramework)
-  // then we should add the framework getPathWithFramework
+  const frameworkPattern = /^\/docs\/(?:vue|typescript|react|svelte|solid-js|angular|nuxt)\//
+  // find a tags and check the href, if it's relative and contains docs and does not have a framework
+  // then we should add the framework
   walk(
     payload,
     node => Array.isArray(node) && node[0] === 'a' && typeof node[1].href === 'string',
     (node) => {
       const href = node[1].href
-      if (href.startsWith('/docs/') && !href.includes(`/docs/${framework}`)) {
+      // Only add framework if link starts with /docs/ and doesn't already have a framework
+      if (framework && href.startsWith('/docs/') && !frameworkPattern.test(href)) {
         // add the framework to the href
         node[1].href = href.replace('/docs/', `/docs/${framework}/`)
       }
