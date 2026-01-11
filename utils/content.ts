@@ -54,7 +54,10 @@ export function modifyRelativeDocLinksWithFramework(
   framework?: string,
 ): any[] {
   const links = []
+  // Matches paths that already have a framework
   const frameworkPattern = /^\/docs\/(?:vue|typescript|react|svelte|solid-js|angular|nuxt)\//
+  // Matches framework-agnostic paths that should NOT get a framework prefix
+  const agnosticPattern = /^\/docs\/(?:schema-org|head)\//
   // find a tags and check the href, if it's relative and contains docs and does not have a framework
   // then we should add the framework
   walk(
@@ -62,8 +65,9 @@ export function modifyRelativeDocLinksWithFramework(
     node => Array.isArray(node) && node[0] === 'a' && typeof node[1].href === 'string',
     (node) => {
       const href = node[1].href
-      // Only add framework if link starts with /docs/ and doesn't already have a framework
-      if (framework && href.startsWith('/docs/') && !frameworkPattern.test(href)) {
+      // Only add framework if link starts with /docs/, doesn't already have a framework,
+      // and is not a framework-agnostic path (schema-org, head)
+      if (framework && href.startsWith('/docs/') && !frameworkPattern.test(href) && !agnosticPattern.test(href)) {
         // add the framework to the href
         node[1].href = href.replace('/docs/', `/docs/${framework}/`)
       }
