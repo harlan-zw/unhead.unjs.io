@@ -1,16 +1,13 @@
 <script lang="ts">
-import type { AppConfig } from '@nuxt/schema'
-import _appConfig from '#build/app.config'
-import theme from '#build/ui-pro/prose/pre'
-import { tv } from '#ui-pro/utils/tv'
+import theme from '#build/ui/prose/pre'
 </script>
 
 <script setup lang="ts">
 import { useAppConfig } from '#imports'
-import CodeIcon from '#ui-pro/components/prose/CodeIcon.vue'
-import { useLocalePro } from '#ui-pro/composables/useLocalePro'
+import UCodeIcon from '#ui/components/prose/CodeIcon.vue'
+import { useLocale } from '#ui/composables/useLocale'
+import { tv } from '#ui/utils/tv'
 import { useClipboard } from '@vueuse/core'
-import { ref } from 'vue'
 
 const props = defineProps<{
   icon?: string
@@ -21,32 +18,15 @@ const props = defineProps<{
   hideHeader?: boolean
   meta?: string
   class?: any
-  ui?: Partial<typeof prosePre.slots>
+  ui?: Partial<typeof ui.value>
 }>()
-
-const appConfigProsePre = _appConfig as AppConfig & { uiPro: { prose: { pre: Partial<typeof theme> } } }
-
-const prosePre = tv({ extend: tv(theme), ...(appConfigProsePre.uiPro?.prose?.pre || {}) })
 
 const slots = useSlots()
 
-const ui = prosePre()
-
-const clipboard = useClipboard()
+const { t } = useLocale()
+const { copy, copied } = useClipboard()
 const appConfig = useAppConfig()
-const { t } = useLocalePro()
-
-const copied = ref(false)
-
-function copy() {
-  clipboard.copy(props.code || '')
-
-  copied.value = true
-
-  setTimeout(() => {
-    copied.value = false
-  }, 2000)
-}
+const ui = computed(() => tv({ extend: tv(theme), ...appConfig.ui?.prose?.pre || {} })())
 
 const { selectedFramework } = useFrameworkSelector()
 
@@ -87,7 +67,7 @@ const processedContent = computed(() => {
 <template>
   <div :class="ui.root({ class: [props.ui?.root], filename: !!filename })">
     <div v-if="filename && !hideHeader" :class="ui.header({ class: props.ui?.header })">
-      <CodeIcon :icon="icon" :filename="filename" :class="ui.icon({ class: props.ui?.icon })" />
+      <UCodeIcon :icon="icon" :filename="filename" :class="ui.icon({ class: props.ui?.icon })" />
 
       <span :class="ui.filename({ class: props.ui?.filename })">{{ filename }}</span>
     </div>
@@ -100,10 +80,10 @@ const processedContent = computed(() => {
       :aria-label="t('prose.pre.copy')"
       :class="ui.copy({ class: props.ui?.copy })"
       tabindex="-1"
-      @click="copy"
+      @click="copy(props.code || '')"
     />
 
-    <pre v-bind="$attrs" :key="selectedFramework.slug" :class="ui.base({ class: [props.class, props.ui?.base] })"><component :is="{ render: () => processedContent }" /></pre>
+    <pre v-bind="$attrs" :key="selectedFramework.slug" :class="ui.base({ class: [props.ui?.base, props.class] })"><component :is="{ render: () => processedContent }" /></pre>
   </div>
 </template>
 

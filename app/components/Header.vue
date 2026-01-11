@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useContentSearch } from '#ui-pro/composables/useContentSearch'
+import { useContentSearch } from '#ui/composables/useContentSearch'
 import { motion } from 'motion-v'
 import { ref } from 'vue'
 import { Unhead } from '~~/const'

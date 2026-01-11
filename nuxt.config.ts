@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-content-twoslash',
     'motion-v/nuxt',
-    '@nuxt/ui-pro',
+    '@nuxt/ui',
     '@nuxtjs/seo',
     'radix-vue/nuxt',
     '@vueuse/nuxt',

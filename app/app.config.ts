@@ -75,8 +75,6 @@ export default defineAppConfig({
       primary: 'amber',
       neutral: 'stone',
     },
-  },
-  uiPro: {
     contentNavigation: {
       slots: {
         list: 'space-y-2',
@@ -111,7 +109,6 @@ export default defineAppConfig({
       a: {
         base: [
           'relative border-none underline underline-offset-6 text-[var(--ui-text)] decoration-transition-all decoration-[0.1rem] decoration-[var(--ui-text-secondary)]',
-          // set a :after border under the link
           'transition-all',
           'hover:text-[var(--ui-text-secondary)] hover:underline-offset-4 hover:decoration-[0.25rem]',
         ],
