@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       nuxt-ai-ready:
-        specifier: ^0.9.0
-        version: 0.9.0(@nuxtjs/sitemap@7.5.2(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(better-sqlite3@12.6.0)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))
+        specifier: ^0.9.1
+        version: 0.9.1(@nuxtjs/sitemap@7.5.2(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(better-sqlite3@12.6.0)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))
       zod:
         specifier: ^4.3.5
         version: 4.3.5
@@ -5957,8 +5957,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-ai-ready@0.9.0:
-    resolution: {integrity: sha512-p2YKnwvWCaWxafostFnfM0wCdK8onIL1gNlkSPc30VwqgZ+LLN9tJkn/ILSDMUWWO61O6YDV5GzBxPCJbOp7nQ==}
+  nuxt-ai-ready@0.9.1:
+    resolution: {integrity: sha512-yoF3ZyrWePukZTwSzFIbudouCHlo0eUAYVzoAxsivkQHN9vhYNbJ7n7+Q8kOgRhnb+m1Nxp/niAufrqtwVgBfA==}
     hasBin: true
     peerDependencies:
       '@nuxtjs/sitemap': ^7.0.0
@@ -14786,7 +14786,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-ai-ready@0.9.0(@nuxtjs/sitemap@7.5.2(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(better-sqlite3@12.6.0)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3)):
+  nuxt-ai-ready@0.9.1(@nuxtjs/sitemap@7.5.2(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(better-sqlite3@12.6.0)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3)):
     dependencies:
       '@clack/prompts': 0.11.0
       '@nuxt/kit': 4.2.2(magicast@0.5.1)

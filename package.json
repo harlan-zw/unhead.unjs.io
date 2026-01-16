@@ -11,7 +11,7 @@
     "twoslash:verify": "nuxt-content-twoslash verify --content-dir snippets"
   },
   "dependencies": {
-    "nuxt-ai-ready": "^0.9.0",
+    "nuxt-ai-ready": "^0.9.1",
     "zod": "^4.3.5"
   },
   "devDependencies": {
