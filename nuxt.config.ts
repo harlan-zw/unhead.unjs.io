@@ -42,7 +42,7 @@ export default defineNuxtConfig({
     },
     cron: true,
     runtimeSync: true,
-    indexNowKey: '7b4feaf5586145768847913630e731c1',
+    indexNow: true,
   },
 
   sitemap: {

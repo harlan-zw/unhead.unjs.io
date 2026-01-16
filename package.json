@@ -11,7 +11,7 @@
     "twoslash:verify": "nuxt-content-twoslash verify --content-dir snippets"
   },
   "dependencies": {
-    "nuxt-ai-ready": "^0.8.2",
+    "nuxt-ai-ready": "^0.9.0",
     "zod": "^4.3.5"
   },
   "devDependencies": {
@@ -58,7 +58,7 @@
     "octokit": "^5.0.5",
     "ofetch": "^1.5.1",
     "radix-vue": "^1.9.17",
-    "shiki": "3.20.0",
+    "shiki": "3.21.0",
     "shiki-magic-move": "^1.2.1",
     "shiki-transformer-color-highlight": "^1.0.0",
     "sponsorkit": "^17.0.0",
