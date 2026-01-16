@@ -11,11 +11,12 @@
     "twoslash:verify": "nuxt-content-twoslash verify --content-dir snippets"
   },
   "dependencies": {
+    "nuxt-ai-ready": "^0.8.2",
     "zod": "^4.3.5"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.7.3",
-    "@iconify-json/carbon": "^1.2.16",
+    "@antfu/eslint-config": "^7.0.1",
+    "@iconify-json/carbon": "^1.2.18",
     "@iconify-json/heroicons": "^1.2.3",
     "@iconify-json/logos": "^1.2.10",
     "@iconify-json/material-symbols": "^1.2.51",
@@ -25,7 +26,7 @@
     "@iconify-json/simple-icons": "^1.2.66",
     "@iconify-json/uil": "^1.2.3",
     "@iconify-json/unjs": "^1.2.3",
-    "@iconify-json/vscode-icons": "^1.2.38",
+    "@iconify-json/vscode-icons": "^1.2.39",
     "@inspira-ui/plugins": "^0.0.1",
     "@nuxt/content": "3.10.0",
     "@nuxt/devtools": "3.1.1",
@@ -40,19 +41,18 @@
     "@vueuse/motion": "^3.0.3",
     "@vueuse/nuxt": "^14.1.0",
     "better-sqlite3": "^12.6.0",
-    "bumpp": "^10.3.2",
+    "bumpp": "^10.4.0",
     "case-police": "^2.1.1",
     "clsx": "^2.1.1",
     "consola": "^3.4.2",
     "eslint": "^9.39.2",
     "jsdom": "^27.4.0",
     "markdownlint-cli": "^0.47.0",
-    "motion-v": "^1.8.1",
+    "motion-v": "^1.9.0",
     "nitro-cloudflare-dev": "^0.2.2",
     "nuxt": "4.2.2",
     "nuxt-build-cache": "^0.1.1",
     "nuxt-content-twoslash": "^0.1.2",
-    "nuxt-llms": "^0.1.3",
     "nuxt-lodash": "^2.5.3",
     "nuxt-rebundle": "^0.0.2",
     "octokit": "^5.0.5",
@@ -65,8 +65,8 @@
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.9.3",
-    "vitest": "^4.0.16",
-    "wrangler": "^4.58.0"
+    "vitest": "^4.0.17",
+    "wrangler": "^4.59.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

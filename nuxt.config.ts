@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     'nitro-cloudflare-dev',
     '@nuxt/fonts',
     '@nuxt/content',
-    'nuxt-llms',
+    'nuxt-ai-ready',
     '@nuxt/scripts',
     '@nuxt/image',
     // maybe buggy
@@ -32,6 +32,17 @@ export default defineNuxtConfig({
     theme: {
       transitions: true,
     },
+  },
+
+  aiReady: {
+    debug: true,
+    database: {
+      type: 'd1',
+      bindingName: 'DB',
+    },
+    cron: true,
+    runtimeSync: true,
+    indexNowKey: '7b4feaf5586145768847913630e731c1',
   },
 
   sitemap: {
@@ -167,30 +178,6 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-
-  llms: {
-    domain: 'https://unhead.unjs.io/',
-    title: 'Unhead',
-    description: 'Unhead is the any-framework document head manager built for performance and delightful developer experience.',
-    notes: [
-      'The documentation is for Unhead v3 beta (install with unhead@beta).',
-      'The content is automatically generated from the same source as the official documentation.',
-    ],
-    full: {
-      title: 'Complete Documentation',
-      description: 'The complete documentation including all content',
-    },
-    sections: [
-      {
-        title: 'Documentation',
-        description: 'Technical documentation and guides',
-        contentCollection: 'docsUnhead',
-        contentFilters: [
-          { field: 'extension', operator: '=', value: 'md' },
-        ],
-      },
-    ],
-  },
 
   hooks: {
     'components:extend': function (components) {
