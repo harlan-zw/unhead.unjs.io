@@ -15,11 +15,11 @@ function customSortSemver(a, b) {
 export default defineCachedEventHandler(async (e) => {
   const promises = []
   const [stars, commitCount, issuesClosed, releases, contributors] = await Promise.all([
-    e.$fetch(`/api/github/unjs@unhead/stars`),
-    e.$fetch(`/api/github/unjs@unhead/commit-count`),
-    e.$fetch(`/api/github/unjs@unhead/issues-closed`),
-    e.$fetch(`/api/github/unjs@unhead/releases`),
-    e.$fetch(`/api/github/unjs@unhead/contributors`),
+    e.$fetch(`/api/github/unjs@unhead/stars`).catch(() => ({ stars: 0 })),
+    e.$fetch(`/api/github/unjs@unhead/commit-count`).catch(() => 0),
+    e.$fetch(`/api/github/unjs@unhead/issues-closed`).catch(() => 0),
+    e.$fetch(`/api/github/unjs@unhead/releases`).catch(() => []),
+    e.$fetch(`/api/github/unjs@unhead/contributors`).catch(() => []),
   ])
   // get all major versions from releases, need to map into major version groups then get first child
   const versionGroups = releases.map(r => r.name).reduce((group, v) => {
