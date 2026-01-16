@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/content',
     'nuxt-ai-ready',
+    'nuxt-skew-protection',
     '@nuxt/scripts',
     '@nuxt/image',
     // maybe buggy
@@ -32,6 +33,13 @@ export default defineNuxtConfig({
     theme: {
       transitions: true,
     },
+  },
+
+  skewProtection: {
+    debug: true,
+    connectionTracking: true,
+    routeTracking: true,
+    ipTracking: true,
   },
 
   aiReady: {

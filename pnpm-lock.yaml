@@ -12,8 +12,11 @@ importers:
   .:
     dependencies:
       nuxt-ai-ready:
-        specifier: ^0.9.1
-        version: 0.9.1(@nuxtjs/sitemap@7.5.2(magicast@0.5.1)(vite@8.0.0-beta.2(@types/node@25.0.9)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(better-sqlite3@12.6.0)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))
+        specifier: ^0.9.3
+        version: 0.9.3(@nuxtjs/sitemap@7.5.2(magicast@0.5.1)(vite@8.0.0-beta.2(@types/node@25.0.9)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(better-sqlite3@12.6.0)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))
+      nuxt-skew-protection:
+        specifier: ^0.7.4
+        version: 0.7.4(@nuxtjs/robots@5.6.7(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(db0@0.3.4(better-sqlite3@12.6.0))(ioredis@5.9.2)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))
       zod:
         specifier: ^4.3.5
         version: 4.3.5
@@ -6044,8 +6047,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-ai-ready@0.9.1:
-    resolution: {integrity: sha512-yoF3ZyrWePukZTwSzFIbudouCHlo0eUAYVzoAxsivkQHN9vhYNbJ7n7+Q8kOgRhnb+m1Nxp/niAufrqtwVgBfA==}
+  nuxt-ai-ready@0.9.3:
+    resolution: {integrity: sha512-7oNFnbGmB0OUWCn6KCPoM9HUB8lTeasIHbZtt+OdpV7nmaaxXZJ6KctNzt822Kmw2mbCJ6gWOVhLZq/Hssk46w==}
     hasBin: true
     peerDependencies:
       '@nuxtjs/sitemap': ^7.0.0
@@ -6107,6 +6110,18 @@ packages:
 
   nuxt-site-config@3.2.17:
     resolution: {integrity: sha512-gmQkBWesVsEt0r10Jo16awufLpQYV4Ql2sOcmDz6CPdk0msZG/pDN6mzFVtMMorEtqixjqPVSIcFK++AueTKFw==}
+
+  nuxt-skew-protection@0.7.4:
+    resolution: {integrity: sha512-XbzjHpq58JPMAXaloaqOY3IwavLnooSyYiDZAophRSjHVbvGU/B8jz5StLHF2SVl0GM/GW7uX+GqSgV+HVlP2w==}
+    peerDependencies:
+      '@nuxtjs/robots': '>=5.6.7'
+      ably: '>=2'
+      pusher-js: '>=8'
+    peerDependenciesMeta:
+      ably:
+        optional: true
+      pusher-js:
+        optional: true
 
   nuxt@4.2.2:
     resolution: {integrity: sha512-n6oYFikgLEb70J4+K19jAzfx4exZcRSRX7yZn09P5qlf2Z59VNOBqNmaZO5ObzvyGUZ308SZfL629/Q2v2FVjw==}
@@ -14924,7 +14939,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-ai-ready@0.9.1(@nuxtjs/sitemap@7.5.2(magicast@0.5.1)(vite@8.0.0-beta.2(@types/node@25.0.9)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(better-sqlite3@12.6.0)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3)):
+  nuxt-ai-ready@0.9.3(@nuxtjs/sitemap@7.5.2(magicast@0.5.1)(vite@8.0.0-beta.2(@types/node@25.0.9)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(better-sqlite3@12.6.0)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3)):
     dependencies:
       '@clack/prompts': 0.11.0
       '@nuxt/kit': 4.2.2(magicast@0.5.1)
@@ -15165,6 +15180,47 @@ snapshots:
       ufo: 1.6.3
     transitivePeerDependencies:
       - magicast
+      - vue
+
+  nuxt-skew-protection@0.7.4(@nuxtjs/robots@5.6.7(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))(zod@4.3.5))(db0@0.3.4(better-sqlite3@12.6.0))(ioredis@5.9.2)(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3)):
+    dependencies:
+      '@clack/prompts': 0.11.0
+      '@nuxt/kit': 4.2.2(magicast@0.5.1)
+      '@nuxtjs/robots': 5.6.7(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))(zod@4.3.5)
+      '@vueuse/core': 14.1.0(vue@3.5.26(typescript@5.9.3))
+      consola: 3.4.2
+      cookie-es: 2.0.0
+      defu: 6.1.4
+      nuxt-site-config: 3.2.17(magicast@0.5.1)(vue@3.5.26(typescript@5.9.3))
+      ofetch: 1.5.1
+      pathe: 2.0.3
+      pkg-types: 2.3.0
+      std-env: 3.10.0
+      tinyexec: 1.0.2
+      ufo: 1.6.3
+      unstorage: 1.17.4(db0@0.3.4(better-sqlite3@12.6.0))(ioredis@5.9.2)
+      zod: 4.3.5
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/functions'
+      - '@vercel/kv'
+      - aws4fetch
+      - db0
+      - idb-keyval
+      - ioredis
+      - magicast
+      - uploadthing
       - vue
 
   nuxt@4.2.2(@parcel/watcher@2.5.4)(@types/node@25.0.9)(@vue/compiler-sfc@3.5.26)(better-sqlite3@12.6.0)(cac@6.7.14)(db0@0.3.4(better-sqlite3@12.6.0))(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.2)(magicast@0.5.1)(optionator@0.9.4)(rolldown@1.0.0-beta.54)(rollup@4.55.1)(terser@5.46.0)(typescript@5.9.3)(vite@8.0.0-beta.2(@types/node@25.0.9)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))(yaml@2.8.2):
