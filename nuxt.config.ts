@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     'nuxt-ai-ready',
     '@nuxt/scripts',
     '@nuxt/image',
+    'nuxt-skew-protection',
     // maybe buggy
     'nuxt-rebundle',
     // 'nuxt-build-cache',
