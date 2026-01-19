@@ -14,6 +14,7 @@ const {
   state,
   frameworks,
   presets,
+  activePreset,
   hasAnyValue,
   titleLength,
   descriptionLength,
@@ -83,10 +84,7 @@ const previewUrl = computed(() => state.ogUrl || state.canonical || 'example.com
 const previewImage = computed(() => state.ogImage || '')
 const previewSiteName = computed(() => state.ogSiteName || getHostname(previewUrl.value))
 
-const codeMarkdown = computed(() => {
-  const lang = codeLanguage.value === 'html' ? 'html' : 'ts'
-  return `\`\`\`${lang}\n${generatedCode.value}\n\`\`\``
-})
+const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
 </script>
 
 <template>
@@ -110,22 +108,36 @@ const codeMarkdown = computed(() => {
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
         <button
-          v-for="(preset, index) in presets"
+          v-for="preset in presets"
           :key="preset.id"
           type="button"
-          class="group relative overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 backdrop-blur-sm p-3 sm:p-4 text-left transition-all duration-300 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5 hover:-translate-y-0.5"
+          class="group relative overflow-hidden rounded-xl border backdrop-blur-sm p-3 sm:p-4 text-left transition-all duration-300 cursor-pointer"
+          :class="[
+            activePreset === preset.id
+              ? 'border-amber-500/60 bg-amber-500/10 shadow-lg shadow-amber-500/10'
+              : 'border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5 hover:-translate-y-0.5',
+          ]"
           @click="applyPreset(preset)"
         >
           <!-- Hover gradient -->
-          <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-orange-500/5 transition-opacity duration-300"
+            :class="activePreset === preset.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
+          />
 
           <div class="relative">
             <div class="flex items-center gap-2 sm:gap-3 mb-2">
-              <div class="p-1.5 sm:p-2 rounded-lg bg-amber-500/10 group-hover:bg-amber-500/20 transition-colors">
+              <div
+                class="p-1.5 sm:p-2 rounded-lg transition-colors"
+                :class="activePreset === preset.id ? 'bg-amber-500/20' : 'bg-amber-500/10 group-hover:bg-amber-500/20'"
+              >
                 <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-amber-500" />
               </div>
             </div>
-            <span class="text-xs sm:text-sm font-semibold text-[var(--ui-text-highlighted)] group-hover:text-amber-500 transition-colors">{{ preset.label }}</span>
+            <span
+              class="text-xs sm:text-sm font-semibold transition-colors"
+              :class="activePreset === preset.id ? 'text-amber-500' : 'text-[var(--ui-text-highlighted)] group-hover:text-amber-500'"
+            >{{ preset.label }}</span>
             <p class="text-[10px] sm:text-xs text-[var(--ui-text-dimmed)] mt-1 line-clamp-2">
               {{ preset.description }}
             </p>
@@ -858,16 +870,18 @@ const codeMarkdown = computed(() => {
               <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Generated Code</span>
             </div>
           </div>
-          <UButton
-            :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
-            :color="copied ? 'success' : 'neutral'"
-            variant="soft"
-            size="xs"
-            class="transition-all"
-            @click="copy(generatedCode)"
-          >
-            <span class="hidden sm:inline">{{ copied ? 'Copied!' : 'Copy' }}</span>
-          </UButton>
+          <ClientOnly>
+            <UButton
+              :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
+              :color="copied ? 'success' : 'neutral'"
+              variant="soft"
+              size="xs"
+              class="transition-all"
+              @click="copy(generatedCode)"
+            >
+              <span class="hidden sm:inline">{{ copied ? 'Copied!' : 'Copy' }}</span>
+            </UButton>
+          </ClientOnly>
         </div>
 
         <!-- Code content -->
@@ -886,7 +900,7 @@ const codeMarkdown = computed(() => {
             />
           </div>
           <div class="max-w-none [&_pre]:!my-0 [&_pre]:!rounded-lg sm:[&_pre]:!rounded-xl">
-            <pre><MDC :value="codeMarkdown" /></pre>
+            <ToolCodeBlock :code="generatedCode" :lang="codeLang" />
           </div>
         </div>
       </div>

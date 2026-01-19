@@ -89,6 +89,10 @@ const presets: MetaTagPreset[] = [
       author: 'John Doe',
       canonical: 'https://example.com/blog/build-better-web-apps',
       robots: 'index, follow',
+      twitterLabel1: 'Reading time',
+      twitterData1: '5 min read',
+      twitterLabel2: 'Written by',
+      twitterData2: 'John Doe',
     },
   },
   {
@@ -152,6 +156,8 @@ const presets: MetaTagPreset[] = [
 ]
 
 export function useMetaTagGenerator() {
+  const activePreset = ref<string | null>('blog')
+
   const state = reactive<MetaTagState>({
     title: '',
     description: '',
@@ -495,7 +501,7 @@ export function useMetaTagGenerator() {
     return state.outputMode === 'html' ? 'html' : 'ts'
   })
 
-  function reset() {
+  function clearState() {
     state.title = ''
     state.description = ''
     state.ogTitle = ''
@@ -530,15 +536,32 @@ export function useMetaTagGenerator() {
     state.fbAppId = ''
   }
 
+  function reset() {
+    activePreset.value = null
+    clearState()
+  }
+
   function applyPreset(preset: MetaTagPreset) {
-    reset()
+    // Toggle off if same preset clicked
+    if (activePreset.value === preset.id) {
+      reset()
+      return
+    }
+    clearState()
+    activePreset.value = preset.id
     Object.assign(state, preset.values)
   }
+
+  // Initialize with blog preset
+  const blogPreset = presets.find(p => p.id === 'blog')
+  if (blogPreset)
+    Object.assign(state, blogPreset.values)
 
   return {
     state,
     frameworks,
     presets,
+    activePreset,
     selectedFramework,
     hasAnyValue,
     titleLength,

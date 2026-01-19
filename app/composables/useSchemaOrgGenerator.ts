@@ -59,15 +59,15 @@ const schemaTypes: SchemaTypeConfig[] = [
     icon: 'i-carbon-document',
     description: 'News, scholarly, or other article',
     fields: [
-      { key: 'headline', label: 'Headline', type: 'text', placeholder: 'Article headline', default: 'How to Get Started with Schema.org', required: true },
+      { key: 'headline', label: 'Headline', type: 'text', placeholder: 'Article headline', default: 'How to Get Started with Schema.org', required: true, help: 'Required. Max 110 characters for rich results.' },
       { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Brief description of the article', default: 'A comprehensive guide to implementing structured data for better SEO.' },
-      { key: 'image', label: 'Image URL', type: 'url', placeholder: 'https://example.com/image.jpg', default: 'https://example.com/article-image.jpg' },
-      { key: 'datePublished', label: 'Date Published', type: 'datetime' },
+      { key: 'image', label: 'Image URL', type: 'url', placeholder: 'https://example.com/image.jpg', default: 'https://example.com/article-image.jpg', required: true, help: 'Required for rich results.' },
+      { key: 'datePublished', label: 'Date Published', type: 'datetime', required: true, help: 'Required for rich results.' },
       { key: 'dateModified', label: 'Date Modified', type: 'datetime' },
-      { key: 'authorName', label: 'Author Name', type: 'text', placeholder: 'John Doe', default: 'John Doe' },
+      { key: 'authorName', label: 'Author Name', type: 'text', placeholder: 'John Doe', default: 'John Doe', required: true, help: 'Required for rich results.' },
       { key: 'authorUrl', label: 'Author URL', type: 'url', placeholder: 'https://example.com/author' },
-      { key: 'publisherName', label: 'Publisher Name', type: 'text', placeholder: 'Example Publisher', default: 'My Website' },
-      { key: 'publisherLogo', label: 'Publisher Logo', type: 'url', placeholder: 'https://example.com/logo.png' },
+      { key: 'publisherName', label: 'Publisher Name', type: 'text', placeholder: 'Example Publisher', default: 'My Website', required: true, help: 'Required for rich results.' },
+      { key: 'publisherLogo', label: 'Publisher Logo', type: 'url', placeholder: 'https://example.com/logo.png', help: 'Recommended. 60px height or 600px width max.' },
     ],
   },
   {
@@ -76,12 +76,12 @@ const schemaTypes: SchemaTypeConfig[] = [
     icon: 'i-carbon-blog',
     description: 'Blog post or article',
     fields: [
-      { key: 'headline', label: 'Headline', type: 'text', placeholder: 'Blog post title', default: '10 Tips for Better Web Performance', required: true },
+      { key: 'headline', label: 'Headline', type: 'text', placeholder: 'Blog post title', default: '10 Tips for Better Web Performance', required: true, help: 'Required. Max 110 characters for rich results.' },
       { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Brief description', default: 'Learn the essential techniques to optimize your website for speed and user experience.' },
-      { key: 'image', label: 'Image URL', type: 'url', placeholder: 'https://example.com/image.jpg', default: 'https://example.com/blog-image.jpg' },
-      { key: 'datePublished', label: 'Date Published', type: 'datetime' },
+      { key: 'image', label: 'Image URL', type: 'url', placeholder: 'https://example.com/image.jpg', default: 'https://example.com/blog-image.jpg', required: true, help: 'Required for rich results.' },
+      { key: 'datePublished', label: 'Date Published', type: 'datetime', required: true, help: 'Required for rich results.' },
       { key: 'dateModified', label: 'Date Modified', type: 'datetime' },
-      { key: 'authorName', label: 'Author Name', type: 'text', placeholder: 'Jane Smith', default: 'Jane Smith' },
+      { key: 'authorName', label: 'Author Name', type: 'text', placeholder: 'Jane Smith', default: 'Jane Smith', required: true, help: 'Required for rich results.' },
       { key: 'authorUrl', label: 'Author URL', type: 'url', placeholder: 'https://example.com/author' },
       { key: 'wordCount', label: 'Word Count', type: 'number', placeholder: '1500', default: '1500' },
       { key: 'articleSection', label: 'Section', type: 'text', placeholder: 'Technology', default: 'Technology' },
@@ -108,19 +108,22 @@ const schemaTypes: SchemaTypeConfig[] = [
     icon: 'i-carbon-shopping-cart',
     description: 'E-commerce product',
     fields: [
-      { key: 'name', label: 'Product Name', type: 'text', placeholder: 'Premium Headphones', default: 'Premium Wireless Headphones', required: true },
+      { key: 'name', label: 'Product Name', type: 'text', placeholder: 'Premium Headphones', default: 'Premium Wireless Headphones', required: true, help: 'Required for rich results.' },
       { key: 'description', label: 'Description', type: 'textarea', placeholder: 'High-quality wireless headphones...', default: 'Experience crystal-clear audio with 40-hour battery life and active noise cancellation.' },
-      { key: 'image', label: 'Image URL', type: 'url', placeholder: 'https://example.com/product.jpg', default: 'https://example.com/headphones.jpg' },
+      { key: 'image', label: 'Image URL', type: 'url', placeholder: 'https://example.com/product.jpg', default: 'https://example.com/headphones.jpg', required: true, help: 'Required for rich results.' },
       { key: 'sku', label: 'SKU', type: 'text', placeholder: 'SKU-12345', default: 'WH-1000XM5' },
       { key: 'brand', label: 'Brand', type: 'text', placeholder: 'Brand Name', default: 'AudioTech' },
-      { key: 'price', label: 'Price', type: 'number', placeholder: '99.99', default: '299.99' },
-      { key: 'priceCurrency', label: 'Currency', type: 'text', placeholder: 'USD', default: 'USD' },
-      { key: 'availability', label: 'Availability', type: 'select', options: [
+      { key: 'price', label: 'Price', type: 'number', placeholder: '99.99', default: '299.99', required: true, help: 'Required for rich results.' },
+      { key: 'priceCurrency', label: 'Currency', type: 'text', placeholder: 'USD', default: 'USD', required: true, help: 'Required for rich results.' },
+      { key: 'priceValidUntil', label: 'Price Valid Until', type: 'datetime', help: 'Recommended. Date when offer expires.' },
+      { key: 'availability', label: 'Availability', type: 'select', required: true, help: 'Required for rich results.', options: [
         { label: 'In Stock', value: 'https://schema.org/InStock' },
         { label: 'Out of Stock', value: 'https://schema.org/OutOfStock' },
         { label: 'Pre-Order', value: 'https://schema.org/PreOrder' },
+        { label: 'Back Order', value: 'https://schema.org/BackOrder' },
       ] },
-      { key: 'ratingValue', label: 'Rating (1-5)', type: 'number', placeholder: '4.5', default: '4.8' },
+      { key: 'offerUrl', label: 'Product Page URL', type: 'url', placeholder: 'https://example.com/product/headphones', help: 'Recommended. URL where product can be purchased.' },
+      { key: 'ratingValue', label: 'Rating (1-5)', type: 'number', placeholder: '4.5', default: '4.8', help: 'Requires reviewCount to be set.' },
       { key: 'reviewCount', label: 'Review Count', type: 'number', placeholder: '150', default: '256' },
     ],
   },
@@ -200,13 +203,13 @@ const schemaTypes: SchemaTypeConfig[] = [
     icon: 'i-carbon-video',
     description: 'Video content',
     fields: [
-      { key: 'name', label: 'Title', type: 'text', placeholder: 'Introduction to Vue.js', default: 'Getting Started with Vue.js 3', required: true },
-      { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Learn the basics...', default: 'Learn the fundamentals of Vue.js 3 in this comprehensive tutorial.' },
-      { key: 'thumbnailUrl', label: 'Thumbnail URL', type: 'url', placeholder: 'https://example.com/thumb.jpg', default: 'https://example.com/video-thumbnail.jpg' },
-      { key: 'contentUrl', label: 'Video URL', type: 'url', placeholder: 'https://example.com/video.mp4' },
-      { key: 'embedUrl', label: 'Embed URL', type: 'url', placeholder: 'https://youtube.com/embed/xxx' },
-      { key: 'uploadDate', label: 'Upload Date', type: 'datetime' },
-      { key: 'duration', label: 'Duration', type: 'text', placeholder: 'PT10M30S', default: 'PT12M30S', help: 'ISO 8601 duration' },
+      { key: 'name', label: 'Title', type: 'text', placeholder: 'Introduction to Vue.js', default: 'Getting Started with Vue.js 3', required: true, help: 'Required for rich results.' },
+      { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Learn the basics...', default: 'Learn the fundamentals of Vue.js 3 in this comprehensive tutorial.', required: true, help: 'Required for rich results.' },
+      { key: 'thumbnailUrl', label: 'Thumbnail URL', type: 'url', placeholder: 'https://example.com/thumb.jpg', default: 'https://example.com/video-thumbnail.jpg', required: true, help: 'Required for rich results.' },
+      { key: 'contentUrl', label: 'Video URL', type: 'url', placeholder: 'https://example.com/video.mp4', help: 'Required: provide contentUrl or embedUrl.' },
+      { key: 'embedUrl', label: 'Embed URL', type: 'url', placeholder: 'https://youtube.com/embed/xxx', help: 'Required: provide contentUrl or embedUrl.' },
+      { key: 'uploadDate', label: 'Upload Date', type: 'datetime', required: true, help: 'Required for rich results.' },
+      { key: 'duration', label: 'Duration', type: 'text', placeholder: 'PT10M30S', default: 'PT12M30S', help: 'Recommended. ISO 8601 duration (e.g., PT10M30S)' },
     ],
   },
   {
@@ -215,26 +218,37 @@ const schemaTypes: SchemaTypeConfig[] = [
     icon: 'i-carbon-calendar',
     description: 'Event or happening',
     fields: [
-      { key: 'name', label: 'Event Name', type: 'text', placeholder: 'Vue.js Conference 2025', default: 'Vue.js Conference 2025', required: true },
+      { key: 'name', label: 'Event Name', type: 'text', placeholder: 'Vue.js Conference 2025', default: 'Vue.js Conference 2025', required: true, help: 'Required for rich results.' },
       { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Annual conference for...', default: 'The premier conference for Vue.js developers featuring talks, workshops, and networking.' },
-      { key: 'image', label: 'Image URL', type: 'url', placeholder: 'https://example.com/event.jpg', default: 'https://example.com/conference.jpg' },
-      { key: 'startDate', label: 'Start Date', type: 'datetime' },
-      { key: 'endDate', label: 'End Date', type: 'datetime' },
-      { key: 'locationName', label: 'Venue Name', type: 'text', placeholder: 'Convention Center', default: 'Tech Convention Center' },
-      { key: 'locationAddress', label: 'Venue Address', type: 'text', placeholder: '123 Event St, City', default: '123 Tech Boulevard, San Francisco, CA' },
-      { key: 'organizerName', label: 'Organizer', type: 'text', placeholder: 'Vue.js Foundation', default: 'Vue.js Foundation' },
+      { key: 'image', label: 'Image URL', type: 'url', placeholder: 'https://example.com/event.jpg', default: 'https://example.com/conference.jpg', help: 'Recommended for rich results.' },
+      { key: 'startDate', label: 'Start Date', type: 'datetime', required: true, help: 'Required for rich results.' },
+      { key: 'endDate', label: 'End Date', type: 'datetime', help: 'Recommended for rich results.' },
+      { key: 'eventAttendanceMode', label: 'Attendance Mode', type: 'select', required: true, help: 'Required for rich results.', options: [
+        { label: 'Offline (In-Person)', value: 'https://schema.org/OfflineEventAttendanceMode' },
+        { label: 'Online', value: 'https://schema.org/OnlineEventAttendanceMode' },
+        { label: 'Mixed (Hybrid)', value: 'https://schema.org/MixedEventAttendanceMode' },
+      ] },
+      { key: 'locationName', label: 'Venue Name', type: 'text', placeholder: 'Convention Center', default: 'Tech Convention Center', help: 'Required for offline/mixed events.' },
+      { key: 'locationAddress', label: 'Venue Address', type: 'text', placeholder: '123 Event St, City', default: '123 Tech Boulevard, San Francisco, CA', help: 'Required for offline/mixed events.' },
+      { key: 'onlineUrl', label: 'Online Event URL', type: 'url', placeholder: 'https://example.com/event-stream', help: 'Required for online/mixed events.' },
+      { key: 'organizerName', label: 'Organizer', type: 'text', placeholder: 'Vue.js Foundation', default: 'Vue.js Foundation', help: 'Recommended for rich results.' },
       { key: 'organizerUrl', label: 'Organizer URL', type: 'url', placeholder: 'https://vuejs.org' },
       { key: 'eventStatus', label: 'Status', type: 'select', options: [
         { label: 'Scheduled', value: 'https://schema.org/EventScheduled' },
         { label: 'Cancelled', value: 'https://schema.org/EventCancelled' },
         { label: 'Postponed', value: 'https://schema.org/EventPostponed' },
         { label: 'Moved Online', value: 'https://schema.org/EventMovedOnline' },
+        { label: 'Rescheduled', value: 'https://schema.org/EventRescheduled' },
       ] },
-      { key: 'eventAttendanceMode', label: 'Attendance Mode', type: 'select', options: [
-        { label: 'Offline', value: 'https://schema.org/OfflineEventAttendanceMode' },
-        { label: 'Online', value: 'https://schema.org/OnlineEventAttendanceMode' },
-        { label: 'Mixed', value: 'https://schema.org/MixedEventAttendanceMode' },
+      { key: 'offerPrice', label: 'Ticket Price', type: 'number', placeholder: '99', help: 'Recommended. Use 0 for free events.' },
+      { key: 'offerCurrency', label: 'Ticket Currency', type: 'text', placeholder: 'USD', default: 'USD' },
+      { key: 'offerUrl', label: 'Ticket URL', type: 'url', placeholder: 'https://example.com/tickets', help: 'Recommended. Where to purchase tickets.' },
+      { key: 'offerAvailability', label: 'Ticket Availability', type: 'select', options: [
+        { label: 'In Stock', value: 'https://schema.org/InStock' },
+        { label: 'Sold Out', value: 'https://schema.org/SoldOut' },
+        { label: 'Pre-Sale', value: 'https://schema.org/PreSale' },
       ] },
+      { key: 'offerValidFrom', label: 'Tickets Available From', type: 'datetime', help: 'When tickets become available.' },
     ],
   },
 ]
@@ -422,6 +436,8 @@ export function useSchemaOrgGenerator() {
             ...(fields.price && { price: fields.price }),
             ...(fields.priceCurrency && { priceCurrency: fields.priceCurrency }),
             ...(fields.availability && { availability: fields.availability }),
+            ...(fields.priceValidUntil && { priceValidUntil: fields.priceValidUntil }),
+            ...(fields.offerUrl && { url: fields.offerUrl }),
           }
         }
         if (fields.ratingValue) {
@@ -555,7 +571,34 @@ export function useSchemaOrgGenerator() {
           schema.eventStatus = fields.eventStatus
         if (fields.eventAttendanceMode)
           schema.eventAttendanceMode = fields.eventAttendanceMode
-        if (fields.locationName || fields.locationAddress) {
+        // Handle location based on attendance mode
+        const isOnline = fields.eventAttendanceMode === 'https://schema.org/OnlineEventAttendanceMode'
+        const isMixed = fields.eventAttendanceMode === 'https://schema.org/MixedEventAttendanceMode'
+        if (isOnline && fields.onlineUrl) {
+          schema.location = {
+            '@type': 'VirtualLocation',
+            'url': fields.onlineUrl,
+          }
+        }
+        else if (isMixed) {
+          const locations: unknown[] = []
+          if (fields.locationName || fields.locationAddress) {
+            locations.push({
+              '@type': 'Place',
+              ...(fields.locationName && { name: fields.locationName }),
+              ...(fields.locationAddress && { address: fields.locationAddress }),
+            })
+          }
+          if (fields.onlineUrl) {
+            locations.push({
+              '@type': 'VirtualLocation',
+              'url': fields.onlineUrl,
+            })
+          }
+          if (locations.length > 0)
+            schema.location = locations
+        }
+        else if (fields.locationName || fields.locationAddress) {
           schema.location = {
             '@type': 'Place',
             ...(fields.locationName && { name: fields.locationName }),
@@ -567,6 +610,17 @@ export function useSchemaOrgGenerator() {
             '@type': 'Organization',
             'name': fields.organizerName,
             ...(fields.organizerUrl && { url: fields.organizerUrl }),
+          }
+        }
+        // Add offers for tickets
+        if (fields.offerPrice !== undefined || fields.offerUrl || fields.offerAvailability) {
+          schema.offers = {
+            '@type': 'Offer',
+            ...(fields.offerPrice && { price: fields.offerPrice }),
+            ...(fields.offerCurrency && { priceCurrency: fields.offerCurrency }),
+            ...(fields.offerUrl && { url: fields.offerUrl }),
+            ...(fields.offerAvailability && { availability: fields.offerAvailability }),
+            ...(fields.offerValidFrom && { validFrom: fields.offerValidFrom }),
           }
         }
         break
@@ -667,6 +721,10 @@ export function useSchemaOrgGenerator() {
             lines.push(`    priceCurrency: '${fields.priceCurrency}',`)
           if (fields.availability)
             lines.push(`    availability: '${fields.availability}',`)
+          if (fields.priceValidUntil)
+            lines.push(`    priceValidUntil: '${fields.priceValidUntil}',`)
+          if (fields.offerUrl)
+            lines.push(`    url: '${escapeString(fields.offerUrl)}',`)
           lines.push(`  },`)
         }
         if (fields.ratingValue) {
@@ -812,7 +870,35 @@ export function useSchemaOrgGenerator() {
           lines.push(`  eventStatus: '${fields.eventStatus}',`)
         if (fields.eventAttendanceMode)
           lines.push(`  eventAttendanceMode: '${fields.eventAttendanceMode}',`)
-        if (fields.locationName || fields.locationAddress) {
+        // Handle location based on attendance mode
+        const isOnlineEvent = fields.eventAttendanceMode === 'https://schema.org/OnlineEventAttendanceMode'
+        const isMixedEvent = fields.eventAttendanceMode === 'https://schema.org/MixedEventAttendanceMode'
+        if (isOnlineEvent && fields.onlineUrl) {
+          lines.push(`  location: {`)
+          lines.push(`    '@type': 'VirtualLocation',`)
+          lines.push(`    url: '${escapeString(fields.onlineUrl)}',`)
+          lines.push(`  },`)
+        }
+        else if (isMixedEvent && (fields.locationName || fields.locationAddress || fields.onlineUrl)) {
+          lines.push(`  location: [`)
+          if (fields.locationName || fields.locationAddress) {
+            lines.push(`    {`)
+            lines.push(`      '@type': 'Place',`)
+            if (fields.locationName)
+              lines.push(`      name: '${escapeString(fields.locationName)}',`)
+            if (fields.locationAddress)
+              lines.push(`      address: '${escapeString(fields.locationAddress)}',`)
+            lines.push(`    },`)
+          }
+          if (fields.onlineUrl) {
+            lines.push(`    {`)
+            lines.push(`      '@type': 'VirtualLocation',`)
+            lines.push(`      url: '${escapeString(fields.onlineUrl)}',`)
+            lines.push(`    },`)
+          }
+          lines.push(`  ],`)
+        }
+        else if (fields.locationName || fields.locationAddress) {
           lines.push(`  location: {`)
           if (fields.locationName)
             lines.push(`    name: '${escapeString(fields.locationName)}',`)
@@ -827,6 +913,21 @@ export function useSchemaOrgGenerator() {
             lines.push(`    url: '${escapeString(fields.organizerUrl)}',`)
           lines.push(`  },`)
         }
+        // Add offers for tickets
+        if (fields.offerPrice !== undefined || fields.offerUrl || fields.offerAvailability) {
+          lines.push(`  offers: {`)
+          if (fields.offerPrice)
+            lines.push(`    price: ${fields.offerPrice},`)
+          if (fields.offerCurrency)
+            lines.push(`    priceCurrency: '${fields.offerCurrency}',`)
+          if (fields.offerUrl)
+            lines.push(`    url: '${escapeString(fields.offerUrl)}',`)
+          if (fields.offerAvailability)
+            lines.push(`    availability: '${fields.offerAvailability}',`)
+          if (fields.offerValidFrom)
+            lines.push(`    validFrom: '${fields.offerValidFrom}',`)
+          lines.push(`  },`)
+        }
         break
     }
 
@@ -837,7 +938,8 @@ export function useSchemaOrgGenerator() {
       ? ''
       : `import { useSchemaOrg, ${method} } from '${selectedFramework.value.import}'\n\n`
 
-    return `${importStatement}useSchemaOrg([\n  ${method}({\n${lines.join('\n')}\n  }),\n])`
+    const indentedLines = lines.map(line => `  ${line}`).join('\n')
+    return `${importStatement}useSchemaOrg([\n  ${method}({\n${indentedLines}\n  }),\n])`
   }
 
   const generatedCode = computed(() => {

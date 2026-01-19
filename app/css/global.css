@@ -48,7 +48,7 @@ h1, h2, h3, h4, h5, h6 {
   isolation: isolate;
 }
 
-html .light .shiki span {
+html .light .shiki:not(.tool-code-block .shiki) span {
   color: var(--shiki-light);
   background: var(--shiki-light-bg);
   font-style: var(--shiki-light-font-style);
@@ -56,7 +56,7 @@ html .light .shiki span {
   text-decoration: var(--shiki-light-text-decoration);
 }
 
-html.light .shiki span {
+html.light .shiki:not(.tool-code-block .shiki) span {
   color: var(--shiki-light);
   background: var(--shiki-light-bg);
   font-style: var(--shiki-light-font-style);
@@ -64,7 +64,7 @@ html.light .shiki span {
   text-decoration: var(--shiki-light-text-decoration);
 }
 
-html .default .shiki span {
+html .default .shiki:not(.tool-code-block .shiki) span {
   color: var(--shiki-default);
   background: var(--shiki-default-bg);
   font-style: var(--shiki-default-font-style);
@@ -72,7 +72,7 @@ html .default .shiki span {
   text-decoration: var(--shiki-default-text-decoration);
 }
 
-html .shiki span {
+html .shiki:not(.tool-code-block .shiki) span {
   color: var(--shiki-default);
   background: var(--shiki-default-bg);
   font-style: var(--shiki-default-font-style);
@@ -80,7 +80,7 @@ html .shiki span {
   text-decoration: var(--shiki-default-text-decoration);
 }
 
-html .dark .shiki span {
+html .dark .shiki:not(.tool-code-block .shiki) span {
   color: var(--shiki-dark);
   background: var(--shiki-dark-bg);
   font-style: var(--shiki-dark-font-style);
@@ -88,7 +88,7 @@ html .dark .shiki span {
   text-decoration: var(--shiki-dark-text-decoration);
 }
 
-html.dark .shiki span {
+html.dark .shiki:not(.tool-code-block .shiki) span {
   color: var(--shiki-dark) !important;
   background: var(--shiki-dark-bg);
   font-style: var(--shiki-dark-font-style);

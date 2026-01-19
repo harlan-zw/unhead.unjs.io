@@ -24,6 +24,14 @@ const {
   setSchemaType,
 } = useSchemaOrgGenerator()
 
+// Sync framework selector with code generator
+const docsNav = useDocsNav()
+const { selectedFramework } = useFrameworkSelector(docsNav)
+watch(selectedFramework, (fw) => {
+  if (fw?.slug)
+    state.framework = fw.slug as typeof state.framework
+}, { immediate: true })
+
 const { copy, copied } = useClipboard()
 
 const inputFocused = ref(false)
@@ -34,14 +42,7 @@ const outputModes = [
   { label: 'JSON-LD', value: 'jsonld' },
 ]
 
-const codeMarkdown = computed(() => {
-  const lang = codeLanguage.value === 'json' ? 'json' : 'ts'
-  return `\`\`\`${lang}\n${generatedCode.value}\n\`\`\``
-})
-
-const jsonPreviewMarkdown = computed(() => {
-  return `\`\`\`json\n${jsonLdPreview.value}\n\`\`\``
-})
+const codeLang = computed(() => codeLanguage.value === 'json' ? 'json' : 'ts')
 
 function handleTypeSelect(type: SchemaType) {
   setSchemaType(type)
@@ -72,7 +73,7 @@ function handleTypeSelect(type: SchemaType) {
           v-for="preset in presets"
           :key="preset.id"
           type="button"
-          class="group relative overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 backdrop-blur-sm p-3 sm:p-4 text-left transition-all duration-300 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/5 hover:-translate-y-0.5"
+          class="group relative overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 backdrop-blur-sm p-3 sm:p-4 text-left transition-all duration-300 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/5 hover:-translate-y-0.5 cursor-pointer"
           @click="applyPreset(preset)"
         >
           <!-- Hover gradient -->
@@ -236,13 +237,15 @@ function handleTypeSelect(type: SchemaType) {
                 </h3>
               </div>
               <div class="flex items-center gap-2">
-                <UButton
-                  :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
-                  :color="copied ? 'success' : 'neutral'"
-                  variant="ghost"
-                  size="xs"
-                  @click.stop="copy(jsonLdPreview)"
-                />
+                <ClientOnly>
+                  <UButton
+                    :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
+                    :color="copied ? 'success' : 'neutral'"
+                    variant="ghost"
+                    size="xs"
+                    @click.stop="copy(jsonLdPreview)"
+                  />
+                </ClientOnly>
                 <UIcon
                   name="i-carbon-chevron-down"
                   class="w-4 h-4 text-[var(--ui-text-muted)] transition-transform lg:hidden"
@@ -267,7 +270,7 @@ function handleTypeSelect(type: SchemaType) {
               <!-- JSON preview -->
               <div class="p-4 max-h-[300px] sm:max-h-[400px] overflow-auto">
                 <div class="max-w-none [&_pre]:!my-0 [&_pre]:!rounded-lg [&_pre]:!text-xs">
-                  <pre><MDC :value="jsonPreviewMarkdown" /></pre>
+                  <ToolCodeBlock :code="jsonLdPreview" lang="json" />
                 </div>
               </div>
             </div>
@@ -301,16 +304,18 @@ function handleTypeSelect(type: SchemaType) {
               <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Generated Code</span>
             </div>
           </div>
-          <UButton
-            :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
-            :color="copied ? 'success' : 'neutral'"
-            variant="soft"
-            size="xs"
-            class="transition-all"
-            @click="copy(generatedCode)"
-          >
-            <span class="hidden sm:inline">{{ copied ? 'Copied!' : 'Copy' }}</span>
-          </UButton>
+          <ClientOnly>
+            <UButton
+              :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
+              :color="copied ? 'success' : 'neutral'"
+              variant="soft"
+              size="xs"
+              class="transition-all"
+              @click="copy(generatedCode)"
+            >
+              <span class="hidden sm:inline">{{ copied ? 'Copied!' : 'Copy' }}</span>
+            </UButton>
+          </ClientOnly>
         </div>
 
         <!-- Code content -->
@@ -329,7 +334,7 @@ function handleTypeSelect(type: SchemaType) {
             />
           </div>
           <div class="max-w-none [&_pre]:!my-0 [&_pre]:!rounded-lg sm:[&_pre]:!rounded-xl">
-            <pre><MDC :value="codeMarkdown" /></pre>
+            <ToolCodeBlock :code="generatedCode" :lang="codeLang" />
           </div>
         </div>
       </div>
