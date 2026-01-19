@@ -38,8 +38,8 @@ export default defineNuxtConfig({
 
   mdc: {
     components: {
-      prose: true
-    }
+      prose: true,
+    },
   },
 
   aiReady: {
