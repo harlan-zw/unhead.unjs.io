@@ -34,7 +34,7 @@ const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(
           :title="`Switch to ${framework.label}`" :aria-label="framework.label" type="button"
           class="cursor-pointer transition-all "
           :to="!ignoreRedirect ? framework.to : undefined"
-          :class="[framework.slug === selectedFramework.slug ? [] : ['hover:brightness-100 hover:sepia-[10%] brightness-120 sepia-[90%]']]"
+          :class="[framework.slug === selectedFramework.slug ? [] : ['opacity-40 hover:opacity-100 dark:opacity-50 dark:hover:opacity-100']]"
           variant="ghost" @click="switchFramework(framework)"
         >
           <UIcon dynamic :name="framework.icon" :class="!size ? 'size-10' : size === 'small' ? 'size-6' : 'size-14'" />

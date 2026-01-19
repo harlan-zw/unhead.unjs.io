@@ -29,11 +29,18 @@ export default defineNuxtConfig({
   ],
 
   ui: {
+    mdc: true,
+    content: true,
     theme: {
       transitions: true,
     },
   },
 
+  mdc: {
+    components: {
+      prose: true
+    }
+  },
 
   aiReady: {
     debug: true,

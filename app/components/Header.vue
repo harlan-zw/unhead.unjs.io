@@ -24,6 +24,17 @@ watch(version, (v) => {
 
 const route = useRoute()
 
+const tools = [
+  { label: 'Meta Tag Generator', icon: 'i-carbon-code', to: '/tools/meta-tag-generator' },
+  { label: 'Schema.org Generator', icon: 'i-carbon-data-structured', to: '/tools/schema-generator' },
+]
+
+const toolsNavItem = computed(() => ({
+  label: 'Tools',
+  icon: 'i-carbon-tool-box',
+  children: tools,
+}))
+
 const menu = computed(() => {
   return [
     {
@@ -99,6 +110,18 @@ const subSectionLinks = computed(() => {
       </NuxtLink>
       <div class="hidden lg:flex items-center gap-2">
         <UNavigationMenu highlight :items="menu.slice(0, 4)" class="justify-center" />
+        <UNavigationMenu :ui="{ viewport: 'min-w-[250px]' }" :items="[toolsNavItem]" class="justify-center">
+          <template #item-content="{ item }">
+            <ul class="p-2 space-y-1">
+              <li v-for="tool in item.children" :key="tool.to">
+                <UButton variant="ghost" :to="tool.to" class="w-full justify-start">
+                  <UIcon :name="tool.icon" class="w-4 h-4 mr-2 opacity-70" />
+                  {{ tool.label }}
+                </UButton>
+              </li>
+            </ul>
+          </template>
+        </UNavigationMenu>
       </div>
     </template>
 

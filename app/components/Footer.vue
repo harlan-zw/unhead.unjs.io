@@ -15,6 +15,11 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
     .find(c => c.path.endsWith('/guides'))
     .children,
 }))
+
+const tools = [
+  { title: 'Meta Tag Generator', path: '/tools/meta-tag-generator', icon: 'i-carbon-code' },
+  { title: 'Schema.org Generator', path: '/tools/schema-generator', icon: 'i-carbon-data-structured' },
+]
 </script>
 
 <template>
@@ -77,7 +82,7 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
             </UButton>
           </div>
         </div>
-        <div class="md:grid flex flex-col gap-5 grid-cols-3 xl:grid-cols-5 mx-auto">
+        <div class="md:grid flex flex-col gap-5 grid-cols-4 xl:grid-cols-5 mx-auto">
           <div class="flex ">
             <div class="inline">
               <div v-for="(category, cKey) in [unheadGuides[0]]" :key="cKey">
@@ -95,6 +100,23 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
                   </ul>
                 </nav>
               </div>
+            </div>
+          </div>
+          <div class="flex ">
+            <div class="inline">
+              <h3 class="font-bold mb-3 text-xs">
+                Tools
+              </h3>
+              <nav>
+                <ul class="grid gap-4">
+                  <li v-for="(tool, key) in tools" :key="key">
+                    <ULink :to="tool.path" class="flex items-center gap-1 hover:underline transition">
+                      <UIcon v-if="tool.icon" dynamic :name="tool.icon" class="w-4 h-4 text-amber-500 dark:text-amber-300" />
+                      {{ tool.title }}
+                    </ULink>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
           <div class="flex ">
