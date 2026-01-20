@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { trackToolLookup, trackToolUsage } from '~~/server/utils/analytics'
+import { getAnalyticsEngine, trackToolLookup, trackToolUsage } from '~~/server/utils/analytics'
 
 const schema = z.object({
   tool: z.enum(['meta-tag-generator', 'schema-generator']),
@@ -16,6 +16,15 @@ export default defineEventHandler(async (event) => {
   }
 
   const { tool, action, label } = parsed.data
+
+  // Check Analytics Engine binding exists
+  const analytics = getAnalyticsEngine(event)
+  if (!analytics) {
+    throw createError({
+      statusCode: 500,
+      message: 'TOOL_ANALYTICS binding not configured',
+    })
+  }
 
   // Set session cookie if not exists
   if (!getCookie(event, 'analytics-session')) {
