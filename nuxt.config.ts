@@ -92,7 +92,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     oauth: {
       github: {
-        clientId: 'Ov23liwc3qSWsTLWaWik', // NUXT_OAUTH_GITHUB_CLIENT_ID
+        clientId: '', // NUXT_OAUTH_GITHUB_CLIENT_ID
         clientSecret: '', // NUXT_OAUTH_GITHUB_CLIENT_SECRET
       },
     },
@@ -161,6 +161,7 @@ export default defineNuxtConfig({
         ],
         vars: {
           NUXT_SESSION_PASSWORD: process.env.NUXT_SESSION_PASSWORD || '',
+          NUXT_OAUTH_GITHUB_CLIENT_ID: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID || '',
           NUXT_OAUTH_GITHUB_CLIENT_SECRET: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || '',
           NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN: process.env.NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN || '',
           NUXT_CLOUDFLARE_ACCOUNT_ID: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID || '',
