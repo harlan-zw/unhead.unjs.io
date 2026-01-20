@@ -10,6 +10,7 @@ export interface ThumbsFeedbackResponse {
 
 export const ThumbsFeedbackSchema = z.object({
   thumbs: z.enum(['up', 'down']),
+  toolId: z.string().optional(),
 })
 
 export const CommentFeedbackSchema = z.object({

@@ -3,6 +3,9 @@ import type { SchemaType } from '~/composables/useSchemaOrgGenerator'
 import { useClipboard } from '@vueuse/core'
 import { Motion } from 'motion-v'
 
+const { track, trackView } = useToolAnalytics('schema-generator')
+onMounted(trackView)
+
 useSeoMeta({
   title: 'Schema.org Generator - Generate useSchemaOrg Code',
   description: 'Free Schema.org markup generator for Vue, React, Nuxt, and more. Generate useSchemaOrg() code with JSON-LD preview.',
@@ -74,7 +77,7 @@ function handleTypeSelect(type: SchemaType) {
           :key="preset.id"
           type="button"
           class="group relative overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 backdrop-blur-sm p-3 sm:p-4 text-left transition-all duration-300 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/5 hover:-translate-y-0.5 cursor-pointer"
-          @click="applyPreset(preset)"
+          @click="() => { applyPreset(preset); track('preset', preset.id) }"
         >
           <!-- Hover gradient -->
           <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -243,7 +246,7 @@ function handleTypeSelect(type: SchemaType) {
                     :color="copied ? 'success' : 'neutral'"
                     variant="ghost"
                     size="xs"
-                    @click.stop="copy(jsonLdPreview)"
+                    @click.stop="() => { copy(jsonLdPreview); track('copy', 'jsonld') }"
                   />
                 </ClientOnly>
                 <UIcon
@@ -311,7 +314,7 @@ function handleTypeSelect(type: SchemaType) {
               variant="soft"
               size="xs"
               class="transition-all"
-              @click="copy(generatedCode)"
+              @click="() => { copy(generatedCode); track('copy') }"
             >
               <span class="hidden sm:inline">{{ copied ? 'Copied!' : 'Copy' }}</span>
             </UButton>
@@ -340,7 +343,7 @@ function handleTypeSelect(type: SchemaType) {
       </div>
 
       <div class="flex justify-end mt-4">
-        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="opacity-60 hover:opacity-100 transition-opacity" @click="reset">
+        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="opacity-60 hover:opacity-100 transition-opacity" @click="() => { reset(); track('reset') }">
           Reset All
         </UButton>
       </div>
@@ -460,6 +463,8 @@ function handleTypeSelect(type: SchemaType) {
           </UButton>
         </div>
       </section>
+
+      <ToolFeedback tool-id="schema-generator" />
     </div>
   </ToolPageLayout>
 </template>

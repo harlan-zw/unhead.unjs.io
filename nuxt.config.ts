@@ -2,6 +2,8 @@ import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
 
 export default defineNuxtConfig({
+  extends: ['./layers/admin'],
+
   modules: [
     'nuxt-content-twoslash',
     'motion-v/nuxt',
@@ -17,6 +19,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     'nuxt-skew-protection',
     'nuxt-rebundle',
+    'nuxt-auth-utils',
     // 'nuxt-build-cache',
     async (_, nuxt) => {
       // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
@@ -39,6 +42,26 @@ export default defineNuxtConfig({
   mdc: {
     components: {
       prose: true,
+    },
+    highlight: {
+      theme: {
+        light: 'github-light',
+        default: 'github-light',
+        dark: 'material-theme-palenight',
+      },
+      langs: [
+        'ts',
+        'tsx',
+        'vue',
+        'json',
+        'html',
+        'bash',
+        'xml',
+        'diff',
+        'md',
+        'dotenv',
+        'svelte',
+      ],
     },
   },
 
@@ -67,10 +90,23 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    oauth: {
+      github: {
+        clientId: 'Ov23liwc3qSWsTLWaWik', // NUXT_OAUTH_GITHUB_CLIENT_ID
+        clientSecret: '', // NUXT_OAUTH_GITHUB_CLIENT_SECRET
+      },
+    },
+    session: {
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      password: '', // NUXT_SESSION_PASSWORD
+      cookie: {
+        sameSite: 'lax',
+        secure: true,
+      },
+    },
     githubAccessToken: '', // NUXT_GITHUB_ACCESS_TOKEN
-    githubAuthToken: '', // NUXT_GITHUB_AUTH_TOKEN
-    githubAuthClientId: 'cabace556bd9519d9299', // NUXT_GITHUB_AUTH_CLIENT_ID
-    githubAuthClientSecret: '', // NUXT_GITHUB_AUTH_SECRET_ID
+    cloudflareAccountId: '', // NUXT_CLOUDFLARE_ACCOUNT_ID
+    cloudflareAnalyticsApiToken: '', // NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN
   },
 
   twoslash: {
@@ -101,6 +137,7 @@ export default defineNuxtConfig({
       failOnError: false,
       crawlLinks: true,
       routes: ['/', '/404.html'],
+      ignore: ['/auth/github', '/admin/'],
     },
     cloudflare: {
       pages: {
@@ -113,6 +150,20 @@ export default defineNuxtConfig({
             '/usage/*',
             '/llms.txt',
           ],
+        },
+      },
+      wrangler: {
+        analytics_engine_datasets: [
+          {
+            binding: 'TOOL_ANALYTICS',
+            dataset: 'unhead_tool_usage',
+          },
+        ],
+        vars: {
+          NUXT_SESSION_PASSWORD: process.env.NUXT_SESSION_PASSWORD || '',
+          NUXT_OAUTH_GITHUB_CLIENT_SECRET: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || '',
+          NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN: process.env.NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN || '',
+          NUXT_CLOUDFLARE_ACCOUNT_ID: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID || '',
         },
       },
     },
@@ -197,29 +248,6 @@ export default defineNuxtConfig({
     },
   },
 
-  mdc: {
-    highlight: {
-      theme: {
-        light: 'github-light',
-        default: 'github-light',
-        dark: 'material-theme-palenight',
-      },
-      langs: [
-        'ts',
-        'tsx',
-        'vue',
-        'json',
-        'html',
-        'bash',
-        'xml',
-        'diff',
-        'md',
-        'dotenv',
-        'svelte',
-      ],
-    },
-  },
-
   schemaOrg: {
     identity: {
       type: 'Organization',
@@ -246,6 +274,11 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    // auth endpoints must not be cached (cookies need to be set fresh)
+    '/auth/**': { prerender: false, cache: false, headers: { 'cache-control': 'no-store' } },
+    '/admin/**': { prerender: false },
+    '/api/admin/**': { prerender: false, cache: false },
+    '/api/tools/**': { prerender: false, cache: false },
     '/usage/composables/use-head': { redirect: { to: '/api/use-head', statusCode: 301 } },
     '/usage/composables/use-seo-meta': { redirect: { to: '/api/use-seo-meta', statusCode: 301 } },
     '/usage/composables/use-head-safe': { redirect: { to: '/api/use-head-safe', statusCode: 301 } },

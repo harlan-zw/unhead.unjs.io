@@ -3,6 +3,9 @@ import { useClipboard } from '@vueuse/core'
 import { Motion } from 'motion-v'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
+const { track, trackView } = useToolAnalytics('meta-tag-generator')
+onMounted(trackView)
+
 useSeoMeta({
   title: 'Meta Tag Generator - Generate useSeoMeta Code',
   description: 'Free meta tag generator for Vue, React, Nuxt, and more. Generate useSeoMeta() code with live SERP and social card preview.',
@@ -117,7 +120,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               ? 'border-amber-500/60 bg-amber-500/10 shadow-lg shadow-amber-500/10'
               : 'border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5 hover:-translate-y-0.5',
           ]"
-          @click="applyPreset(preset)"
+          @click="() => { applyPreset(preset); track('preset', preset.id) }"
         >
           <!-- Hover gradient -->
           <div
@@ -877,7 +880,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               variant="soft"
               size="xs"
               class="transition-all"
-              @click="copy(generatedCode)"
+              @click="() => { copy(generatedCode); track('copy') }"
             >
               <span class="hidden sm:inline">{{ copied ? 'Copied!' : 'Copy' }}</span>
             </UButton>
@@ -906,7 +909,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
       </div>
 
       <div class="flex justify-end mt-4">
-        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="opacity-60 hover:opacity-100 transition-opacity" @click="reset">
+        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="opacity-60 hover:opacity-100 transition-opacity" @click="() => { reset(); track('reset') }">
           Reset All
         </UButton>
       </div>
@@ -1088,6 +1091,8 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           </NuxtLink>
         </div>
       </section>
+
+      <ToolFeedback tool-id="meta-tag-generator" />
     </div>
   </ToolPageLayout>
 </template>
