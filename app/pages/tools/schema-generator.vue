@@ -6,6 +6,16 @@ import { Motion } from 'motion-v'
 const { track, trackView } = useToolAnalytics('schema-generator')
 onMounted(trackView)
 
+// Track "use" when code output scrolls into view
+const codeOutputRef = ref<HTMLElement | null>(null)
+const hasTrackedUse = ref(false)
+useIntersectionObserver(codeOutputRef, ([{ isIntersecting }]) => {
+  if (isIntersecting && !hasTrackedUse.value) {
+    hasTrackedUse.value = true
+    track('use')
+  }
+}, { threshold: 0.5 })
+
 useSeoMeta({
   title: 'Schema.org Generator - Generate useSchemaOrg Code',
   description: 'Free Schema.org markup generator for Vue, React, Nuxt, and more. Generate useSchemaOrg() code with JSON-LD preview.',
@@ -288,6 +298,7 @@ function handleTypeSelect(type: SchemaType) {
     <!-- Code Output -->
     <Motion
       v-if="hasAnyValue"
+      ref="codeOutputRef"
       :initial="{ opacity: 0, y: 20 }"
       :animate="{ opacity: 1, y: 0 }"
       :transition="{ duration: 0.5, delay: 0.1 }"

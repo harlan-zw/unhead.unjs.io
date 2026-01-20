@@ -6,6 +6,16 @@ import { useFrameworkSelector } from '~/composables/frameworkSelector'
 const { track, trackView } = useToolAnalytics('meta-tag-generator')
 onMounted(trackView)
 
+// Track "use" when code output scrolls into view
+const codeOutputRef = ref<HTMLElement | null>(null)
+const hasTrackedUse = ref(false)
+useIntersectionObserver(codeOutputRef, ([{ isIntersecting }]) => {
+  if (isIntersecting && !hasTrackedUse.value) {
+    hasTrackedUse.value = true
+    track('use')
+  }
+}, { threshold: 0.5 })
+
 useSeoMeta({
   title: 'Meta Tag Generator - Generate useSeoMeta Code',
   description: 'Free meta tag generator for Vue, React, Nuxt, and more. Generate useSeoMeta() code with live SERP and social card preview.',
@@ -854,6 +864,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
     <!-- Code Output -->
     <Motion
       v-if="hasAnyValue"
+      ref="codeOutputRef"
       :initial="{ opacity: 0, y: 20 }"
       :animate="{ opacity: 1, y: 0 }"
       :transition="{ duration: 0.5, delay: 0.1 }"
