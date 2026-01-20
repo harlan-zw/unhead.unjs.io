@@ -18,6 +18,7 @@ const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/
 
 const tools = [
   { title: 'Meta Tag Generator', path: '/tools/meta-tag-generator', icon: 'i-carbon-code' },
+  { title: 'OG Image Generator', path: '/tools/og-image-generator', icon: 'i-carbon-image' },
   { title: 'Schema.org Generator', path: '/tools/schema-generator', icon: 'i-carbon-data-structured' },
 ]
 </script>

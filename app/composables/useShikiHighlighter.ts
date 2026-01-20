@@ -22,6 +22,8 @@ async function initHighlighter() {
       langJson,
       langHtml,
       langVue,
+      langTsx,
+      langJsx,
     ] = await Promise.all([
       import('shiki/themes/github-light.mjs'),
       import('shiki/themes/material-theme-palenight.mjs'),
@@ -29,11 +31,13 @@ async function initHighlighter() {
       import('shiki/langs/json.mjs'),
       import('shiki/langs/html.mjs'),
       import('shiki/langs/vue.mjs'),
+      import('shiki/langs/tsx.mjs'),
+      import('shiki/langs/jsx.mjs'),
     ])
 
     highlighter.value = await createHighlighterCore({
       themes: [githubLight.default, materialPalenight.default],
-      langs: [langTs.default, langJson.default, langHtml.default, langVue.default],
+      langs: [langTs.default, langJson.default, langHtml.default, langVue.default, langTsx.default, langJsx.default],
       engine: createJavaScriptRegexEngine(),
     })
     isLoading.value = false
@@ -48,16 +52,29 @@ async function initHighlighter() {
 export function useShikiHighlighter() {
   const colorMode = useColorMode()
 
-  const highlight = async (code: string, lang: string) => {
+  const highlight = async (code: string, lang: string): Promise<string> => {
     await initHighlighter()
     if (!highlighter.value)
-      return code
+      return `<pre><code>${code}</code></pre>`
 
     const theme = colorMode.value === 'dark' ? 'material-theme-palenight' : 'github-light'
-    return highlighter.value.codeToHtml(code, {
-      lang: lang === 'ts' ? 'typescript' : lang,
-      theme,
-    })
+    // Map short names to full names
+    const langMap: Record<string, string> = {
+      ts: 'typescript',
+      tsx: 'tsx',
+      js: 'javascript',
+      jsx: 'jsx',
+    }
+    const resolvedLang = langMap[lang] || lang
+    try {
+      return highlighter.value.codeToHtml(code, {
+        lang: resolvedLang,
+        theme,
+      })
+    }
+    catch {
+      return `<pre><code>${code}</code></pre>`
+    }
   }
 
   return {

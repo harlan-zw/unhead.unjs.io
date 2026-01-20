@@ -1103,6 +1103,8 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
         </div>
       </section>
 
+      <RelatedTools />
+
       <ToolFeedback tool-id="meta-tag-generator" />
     </div>
   </ToolPageLayout>

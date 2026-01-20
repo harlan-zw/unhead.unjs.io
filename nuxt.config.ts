@@ -137,7 +137,7 @@ export default defineNuxtConfig({
       failOnError: false,
       crawlLinks: true,
       routes: ['/', '/404.html'],
-      ignore: ['/auth/github', '/admin/', '/api/debug/'],
+      ignore: ['/auth/github', '/admin/'],
     },
     cloudflare: {
       pages: {
@@ -281,6 +281,7 @@ export default defineNuxtConfig({
     '/api/admin/**': { prerender: false, cache: false },
     '/api/tools/**': { prerender: false, cache: false },
     '/api/debug/**': { prerender: false, cache: false },
+    '/tools/og-image-generator': { prerender: false },
     '/usage/composables/use-head': { redirect: { to: '/api/use-head', statusCode: 301 } },
     '/usage/composables/use-seo-meta': { redirect: { to: '/api/use-seo-meta', statusCode: 301 } },
     '/usage/composables/use-head-safe': { redirect: { to: '/api/use-head-safe', statusCode: 301 } },

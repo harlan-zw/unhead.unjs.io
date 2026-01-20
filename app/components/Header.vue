@@ -26,6 +26,7 @@ const route = useRoute()
 
 const tools = [
   { label: 'Meta Tag Generator', icon: 'i-carbon-code', to: '/tools/meta-tag-generator' },
+  { label: 'OG Image Generator', icon: 'i-carbon-image', to: '/tools/og-image-generator' },
   { label: 'Schema.org Generator', icon: 'i-carbon-data-structured', to: '/tools/schema-generator' },
 ]
 
@@ -52,15 +53,6 @@ const menu = computed(() => {
     {
       label: 'Scripts',
       // icon: 'i-carbon-script',
-      to: '/',
-      disabled: true,
-      badge: 'Soon',
-      active: route.path.split('/')[2] === 'scripts',
-      class: 'hidden 2xl:flex',
-    },
-    {
-      label: 'OG Image',
-      // icon: 'i-carbon-image',
       to: '/',
       disabled: true,
       badge: 'Soon',

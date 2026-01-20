@@ -21,14 +21,10 @@ export default defineEventHandler(async (event): Promise<ToolAnalyticsSummary> =
   const apiToken = config.cloudflareAnalyticsApiToken
 
   if (!accountId || !apiToken) {
-    // Return empty data if not configured
-    return {
-      totalEvents: 0,
-      uniqueSessions: 0,
-      topTools: [],
-      topActions: [],
-      errorRate: 0,
-    }
+    throw createError({
+      statusCode: 500,
+      message: `Missing config: ${!accountId ? 'cloudflareAccountId' : ''} ${!apiToken ? 'cloudflareAnalyticsApiToken' : ''}`.trim(),
+    })
   }
 
   const sql = `
@@ -44,14 +40,18 @@ export default defineEventHandler(async (event): Promise<ToolAnalyticsSummary> =
     GROUP BY tool, action, session_id, status
   `
 
-  const response = await $fetch<{ data: { tool: string, action: string, session_id: string, status: string, count: number }[] }>(`https://api.cloudflare.com/client/v4/accounts/${accountId}/analytics_engine/sql`, {
+  const response = await $fetch<{ data: { tool: string, action: string, session_id: string, status: string, count: number }[], errors?: { message: string }[] }>(`https://api.cloudflare.com/client/v4/accounts/${accountId}/analytics_engine/sql`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiToken}`,
       'Content-Type': 'text/plain',
     },
     body: sql,
-  }).catch(() => ({ data: [] }))
+    timeout: 10000, // 10s timeout
+  }).catch((err) => {
+    console.error('[tool-analytics] CF API error:', err.data || err.message)
+    return { data: [], error: err.data?.errors?.[0]?.message || err.message }
+  }) as { data: { tool: string, action: string, session_id: string, status: string, count: number }[], error?: string }
 
   const rows = response.data || []
 

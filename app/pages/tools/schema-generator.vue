@@ -475,6 +475,8 @@ function handleTypeSelect(type: SchemaType) {
         </div>
       </section>
 
+      <RelatedTools />
+
       <ToolFeedback tool-id="schema-generator" />
     </div>
   </ToolPageLayout>
