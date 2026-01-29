@@ -10,35 +10,43 @@ const schema = z.object({
   deprecated: z.boolean().optional(),
 })
 
-function getSubModuleCollection() {
-  const localDirPaths = new Set([
-    resolve(__dirname, '..', 'unhead', 'docs'),
-  ])
-  for (const localDirPath of localDirPaths) {
-    if (existsSync(localDirPath)) {
-      logger.info(`🔗 Docs source using local fs: ${relative(process.cwd(), localDirPath)}`)
-      return defineCollection(asSeoCollection({
-        type: 'page',
-        source: {
-          include: '**/*.{md,yml}',
-          cwd: localDirPath,
-          prefix: '/docs',
-        },
-        schema,
-      }))
+function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
+  const isV2 = version === 'v2'
+  const prefix = isV2 ? '/docs/v2' : '/docs'
+
+  // Only check local for v3 (main development)
+  if (!isV2) {
+    const localDirPaths = new Set([
+      resolve(__dirname, '..', 'unhead', 'docs'),
+    ])
+    for (const localDirPath of localDirPaths) {
+      if (existsSync(localDirPath)) {
+        logger.info(`🔗 Docs source using local fs: ${relative(process.cwd(), localDirPath)}`)
+        return defineCollection(asSeoCollection({
+          type: 'page',
+          source: {
+            include: '**/*.{md,yml}',
+            cwd: localDirPath,
+            prefix,
+          },
+          schema,
+        }))
+      }
     }
   }
+
   // use github source
-  logger.info(`🔗 Docs source using GitHub`)
+  const repoConfig = isV2
+    ? { url: 'https://github.com/unjs/unhead', tag: 'v2.1.2' }
+    : { url: 'https://github.com/unjs/unhead', branch: 'v3' }
+
+  logger.info(`🔗 Docs ${version} source using GitHub (${isV2 ? 'tag: v2.1.2' : 'branch: v3'})`)
   return defineCollection(asSeoCollection({
     type: 'page',
     source: {
-      repository: {
-        url: 'https://github.com/unjs/unhead',
-        branch: 'v3',
-      },
+      repository: repoConfig,
       include: 'docs/**/*.{md,yml}',
-      prefix: `/docs`,
+      prefix,
     },
     schema,
   }))
@@ -46,7 +54,8 @@ function getSubModuleCollection() {
 
 export default defineContentConfig({
   collections: {
-    docsUnhead: getSubModuleCollection(),
+    docsUnhead: getSubModuleCollection('v3'),
+    docsUnheadV2: getSubModuleCollection('v2'),
     snippets: defineCollection({
       type: 'page', // partial
       source: {

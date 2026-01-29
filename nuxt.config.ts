@@ -79,6 +79,7 @@ export default defineNuxtConfig({
   sitemap: {
     exclude: [
       '**/.navigation',
+      '/docs/v2/**',
     ],
     xslColumns: [
       { label: 'URL', width: '100%' },
