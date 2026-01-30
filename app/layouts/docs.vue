@@ -5,16 +5,28 @@ import { useCurrentDocPage } from '~/composables/data'
 const route = useRoute()
 
 const page = ref()
-const { page: docPage } = await useCurrentDocPage()
+const isV2 = ref(false)
+const { page: docPage, isV2: docIsV2 } = await useCurrentDocPage()
 page.value = docPage.value
+isV2.value = docIsV2
 watch(() => route.path, async () => {
-  const { page: docPage } = await useCurrentDocPage()
+  const { page: docPage, isV2: docIsV2 } = await useCurrentDocPage()
   page.value = docPage.value
+  isV2.value = docIsV2
 })
 </script>
 
 <template>
-  <div class="bg-amber-500/10 border-b border-amber-500/20 text-amber-600 dark:text-amber-400 text-sm py-2 px-4 text-center">
+  <!-- V2 Banner -->
+  <div v-if="isV2" class="bg-amber-500/10 border-b border-amber-500/20 text-amber-600 dark:text-amber-400 text-sm py-2 px-4 text-center">
+    <UIcon name="i-carbon-warning" class="size-4 mr-1 inline-block align-text-bottom" />
+    You're viewing <strong>Unhead v2</strong> documentation.
+    <NuxtLink to="/docs/typescript/head/guides/get-started/overview" class="underline ml-1">
+      View latest (v3) docs →
+    </NuxtLink>
+  </div>
+  <!-- V3 Banner -->
+  <div v-else class="bg-amber-500/10 border-b border-amber-500/20 text-amber-600 dark:text-amber-400 text-sm py-2 px-4 text-center">
     <UIcon name="i-carbon-warning" class="size-4 mr-1 inline-block align-text-bottom" />
     You're viewing <strong>Unhead v3 beta</strong> documentation.
   </div>

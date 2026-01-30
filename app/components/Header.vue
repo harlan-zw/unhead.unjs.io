@@ -5,24 +5,34 @@ import { ref } from 'vue'
 import { Unhead } from '~~/const'
 import { getPathSection, getPathSegments, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
+import { useVersionSelector } from '~/composables/versionSelector'
 
 const docsNav = useDocsNav(true)
 const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNav)
-
-const versions = [
-  { label: 'v3 (beta)', value: 'v3' },
-  { label: 'v2 (stable)', value: 'v2' },
-  { label: 'v1', value: 'v1' },
-]
-const version = ref(versions[0])
-watch(version, (v) => {
-  if (v.value === 'v2')
-    window.open('https://v2.unhead.unjs.io/', '_blank')
-  else if (v.value === 'v1')
-    window.open('https://v1.unhead.unjs.io/', '_blank')
-})
+const { versions, selectedVersion, getVersionedPath } = useVersionSelector()
 
 const route = useRoute()
+const versionItems = computed(() => versions.map(v => ({
+  label: v.label,
+  value: v.slug,
+})))
+const version = ref(versionItems.value.find(v => v.value === selectedVersion.value.slug) || versionItems.value[0])
+
+// Sync version when route changes
+watch(() => selectedVersion.value.slug, (slug) => {
+  version.value = versionItems.value.find(v => v.value === slug) || versionItems.value[0]
+})
+
+function onVersionChange(v: { label: string, value: string }) {
+  // Force page reload to reinitialize navigation state
+  if (v.value === 'v2') {
+    window.location.href = '/docs/v2/head/guides/get-started/overview'
+  }
+  else {
+    const targetPath = getVersionedPath(route.path, 'v3')
+    window.location.href = targetPath
+  }
+}
 
 const tools = [
   { label: 'Meta Tag Generator', icon: 'i-carbon-code', to: '/tools/meta-tag-generator' },
@@ -36,18 +46,20 @@ const toolsNavItem = computed(() => ({
   children: tools,
 }))
 
+const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
+
 const menu = computed(() => {
   return [
     {
       label: Unhead.label,
       // icon: Unhead.icon,
-      to: `/docs/${selectedFramework.value.slug}/head/guides/get-started/overview`,
+      to: `${versionPrefix.value}/${selectedFramework.value.slug}/head/guides/get-started/overview`,
       active: getPathSection(getPathWithoutFramework(route.path)) === '/docs/head',
     },
     {
       label: 'Schema.org',
       // icon: 'i-carbon-chart-relationship',
-      to: `/docs/${selectedFramework.value.slug}/schema-org/guides/get-started/overview`,
+      to: `${versionPrefix.value}/${selectedFramework.value.slug}/schema-org/guides/get-started/overview`,
       active: getPathSection(getPathWithoutFramework(route.path)) === '/docs/schema-org',
     },
     {
@@ -80,13 +92,20 @@ onKeyStroke('Divide', () => {
 const subSectionLinks = computed(() => {
   return docsNav.value?.firstSubSectionLinks?.map((n) => {
     const to = n.children?.[0]?.children?.[0]?.path
+    if (!to)
+      return null
     const segments = getPathSegments(getPathWithoutFramework(to), 3)
+    // Apply version prefix to the framework path
+    let targetPath = getPathWithFramework(to, selectedFramework.value.slug)
+    if (selectedVersion.value.slug === 'v2') {
+      targetPath = targetPath.replace('/docs/', '/docs/v2/')
+    }
     return {
       label: n.title,
-      to: getPathWithFramework(to, selectedFramework.value.slug),
+      to: targetPath,
       active: getPathWithoutFramework(route.path).startsWith(segments),
     }
-  })
+  }).filter(Boolean)
 })
 </script>
 
@@ -297,7 +316,7 @@ const subSectionLinks = computed(() => {
         </ul>
       </div>
       <div class="col-span-2 flex justify-end">
-        <USelectMenu v-model="version" :search-input="false" size="sm" :items="versions" class="w-[120px]" />
+        <USelectMenu v-model="version" :search-input="false" size="sm" :items="versionItems" class="w-[120px]" @update:model-value="onVersionChange" />
       </div>
     </div>
   </div>

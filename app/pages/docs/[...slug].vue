@@ -16,32 +16,42 @@ definePageMeta({
 
 const route = useRoute()
 
-const { page, surround } = await useCurrentDocPage()
+const { page, surround, isV2 } = await useCurrentDocPage()
 if (!page?.value?.id) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
 
+const { selectedFramework, frameworks } = useFrameworkSelector()
+
 useSeoMeta({
   title: () => page.value?.title,
   description: () => page.value?.description,
-  titleTemplate: '%s %separator %siteName',
+  titleTemplate: isV2 ? '%s %separator v2 %separator %siteName' : '%s %separator %siteName',
 })
 
-const { selectedFramework, frameworks } = useFrameworkSelector()
+// V2: noindex and exclude from sitemap
+if (isV2) {
+  useRobotsRule(false)
+  defineOgImage(false)
+}
+else {
+  defineOgImageComponent('Unhead', {
+    title: page.value?.title || '',
+    description: page.value?.description,
+    frameworkIcon: selectedFramework.value.icon,
+    ...(page.value.ogImage || {}),
+  })
+}
 
-defineOgImageComponent('Unhead', {
-  title: page.value?.title || '',
-  description: page.value?.description,
-  frameworkIcon: selectedFramework.value.icon,
-  ...(page.value.ogImage || {}),
-})
+// V2: canonical points to v3 equivalent
+const canonicalPath = isV2 ? page.value.path.replace('/docs/v2', '/docs') : page.value.path
 
 useHead({
   link: () => {
     const isFrameworkSpecific = page.value.path !== getPathWithoutFramework(page.value.path)
     return [
-      { rel: 'canonical', href: `https://unhead.unjs.io${page.value.path}` },
-      ...(isFrameworkSpecific
+      { rel: 'canonical', href: `https://unhead.unjs.io${canonicalPath}` },
+      ...(!isV2 && isFrameworkSpecific
         ? frameworks.value.map((f) => {
             return {
               rel: 'alternate',
@@ -65,17 +75,20 @@ useHead({
 
 const headline = computed(() => titleCase(getLastPathSegment(getPathSegments(route.path, route.path.split('/').length - 2))))
 
+const gitBranch = isV2 ? 'v2.1.2' : 'main'
 const repoLinks = computed(() => [
   {
     label: 'Edit this page',
-    to: `https://github.com/unjs/unhead/edit/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
+    to: `https://github.com/unjs/unhead/edit/${gitBranch}/docs/${page.value.id.split('/').slice(2).join('/')}`,
     target: '_blank',
   },
-  {
-    label: 'Markdown For LLMs',
-    to: `https://raw.githubusercontent.com/unjs/unhead/refs/heads/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
-    target: '_blank',
-  },
+  ...(!isV2
+    ? [{
+        label: 'Markdown For LLMs',
+        to: `https://raw.githubusercontent.com/unjs/unhead/refs/heads/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
+        target: '_blank',
+      }]
+    : []),
 ])
 
 // allow pages to be cached for an hour
@@ -97,8 +110,8 @@ const transformedPage = computed(() => {
 <template>
   <div v-if="page" class="max-w-[66ch] mx-auto lg:ml-0 lg:mr-auto">
     <UPageHeader
-      :title="page.title" :headline="headline" class="text-balance pt-4" :links="!['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
-        { label: 'Copy for LLMs', to: repoLinks[1].to, icon: 'i-catppuccin-markdown', target: '_blank' },
+      :title="page.title" :headline="headline" class="text-balance pt-4" :links="!isV2 && !['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
+        { label: 'Copy for LLMs', to: repoLinks[1]?.to, icon: 'i-catppuccin-markdown', target: '_blank' },
       ] : []"
 
       :ui="{ title: 'leading-normal' }"
@@ -125,7 +138,7 @@ const transformedPage = computed(() => {
             {{ repoLinks[0].label }}
           </NuxtLink>
         </div>
-        <div class="flex items-center gap-2">
+        <div v-if="repoLinks[1]" class="flex items-center gap-2">
           <UIcon name="i-simple-icons-markdown" class="w-5 h-5" />
           <NuxtLink v-bind="repoLinks[1]" class="hover:underline">
             {{ repoLinks[1].label }}

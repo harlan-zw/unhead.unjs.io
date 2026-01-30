@@ -1,4 +1,5 @@
 import { getPathFramework, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
+import { useVersionSelector } from '~/composables/versionSelector'
 
 const items = [
   { icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript', import: 'unhead', schemaImport: '@unhead/schema-org' },
@@ -14,7 +15,11 @@ const fallbackFramework = ref()
 
 export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
   const route = useRoute()
+  const { currentVersion } = useVersionSelector()
   let isSwitching = false
+
+  const versionPrefix = computed(() => currentVersion.value === 'v2' ? '/docs/v2' : '/docs')
+
   const frameworkSlug = computed(() => {
     return getPathFramework(route.path) || fallbackFramework.value
   })
@@ -45,13 +50,18 @@ export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
     selectedFramework,
     frameworks: computed(() => {
       if (!nav?.value) {
-        return items
+        return items.map(f => ({
+          ...f,
+          to: `${versionPrefix.value}/${f.slug}/head/guides/get-started/installation`,
+        }))
       }
       return orderedFrameworks.value.map((f) => {
         const to = getPathWithoutFramework(route.path)
+        const fallbackPath = `${versionPrefix.value}/${f.slug}/head/guides/get-started/installation`
+        const matchedPath = nav.value.navFlat.find(l => l?.path === to)
         return {
           ...f,
-          to: nav.value.navFlat.find(l => l?.path === to) ? getPathWithFramework(to, f.slug) : `/docs/${f.slug}/head/guides/get-started/installation`,
+          to: matchedPath ? getPathWithFramework(to, f.slug) : fallbackPath,
         }
       })
     }),

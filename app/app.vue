@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { queryCollectionNavigation, useAsyncData } from '#imports'
 import { ref } from 'vue'
+import { useVersionSelector } from '~/composables/versionSelector'
 import { modules } from '../const'
 
 const appConfig = useAppConfig()
 const { selectedFramework } = useFrameworkSelector()
+const { currentVersion } = useVersionSelector()
+
+const isV2 = currentVersion.value === 'v2'
+const collection = isV2 ? 'docsUnheadV2' : 'docsUnhead'
 
 const { data: search } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'))
-const { data: navigation } = await useAsyncData(`navigation`, () => queryCollectionNavigation('docsUnhead', ['new', 'deprecated']), {
+const { data: navigation } = await useAsyncData(`navigation-${collection}`, () => queryCollectionNavigation(collection, ['new', 'deprecated']), {
   transform(val) {
-    return val[0].children
+    return val[0]?.children || []
   },
 })
 

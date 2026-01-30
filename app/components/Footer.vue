@@ -2,19 +2,32 @@
 import { Unhead } from '~~/const'
 import { getPathWithFramework } from '~~/utils/urls'
 import { enhanceTitlesAndIcons } from '~/composables/data'
+import { useVersionSelector } from '~/composables/versionSelector'
 
 const { selectedFramework } = useFrameworkSelector()
 
-const nav = inject('navigation')
-const unheadGuides = nav.value.find(c => c.path.startsWith('/docs/head')).children[0].children.map(enhanceTitlesAndIcons).map(c => ({ ...c, icon: Unhead.icon }))
-const schemaOrgAndScriptGuides = nav.value.filter(c => c.path.startsWith('/docs/schema-org')).map(enhanceTitlesAndIcons).map(c => ({
-  ...c,
-  title: c.path.includes('schema-org') ? 'Schema.org' : 'Scripts',
-  icon: c.path.includes('schema-org') ? 'i-carbon-chart-relationship' : 'i-carbon-script',
-  children: c.children.map(enhanceTitlesAndIcons)
-    .find(c => c.path.endsWith('/guides'))
-    .children,
-}))
+// Always use v3 navigation for footer links
+const navInject = inject<Ref<any[]>>('navigation')
+const nav = computed(() => {
+  // For v2 pages, navV3 might contain v2 navigation, so we need to handle missing structure
+  return navInject?.value || []
+})
+
+const unheadGuides = computed(() => {
+  const headSection = nav.value.find(c => c.path?.startsWith('/docs/head'))
+  return headSection?.children?.[0]?.children?.map(enhanceTitlesAndIcons).map(c => ({ ...c, icon: Unhead.icon })) || []
+})
+
+const schemaOrgAndScriptGuides = computed(() => {
+  return nav.value.filter(c => c.path?.startsWith('/docs/schema-org')).map(enhanceTitlesAndIcons).map(c => ({
+    ...c,
+    title: c.path?.includes('schema-org') ? 'Schema.org' : 'Scripts',
+    icon: c.path?.includes('schema-org') ? 'i-carbon-chart-relationship' : 'i-carbon-script',
+    children: c.children?.map(enhanceTitlesAndIcons)
+      ?.find(c => c.path?.endsWith('/guides'))
+      ?.children || [],
+  }))
+})
 
 const tools = [
   { title: 'Meta Tag Generator', path: '/tools/meta-tag-generator', icon: 'i-carbon-code' },
@@ -86,7 +99,7 @@ const tools = [
         <div class="md:grid flex flex-col gap-5 grid-cols-4 xl:grid-cols-5 mx-auto">
           <div class="flex ">
             <div class="inline">
-              <div v-for="(category, cKey) in [unheadGuides[0]]" :key="cKey">
+              <div v-for="(category, cKey) in [unheadGuides?.[0]].filter(Boolean)" :key="cKey">
                 <h3 class="font-bold mb-3 text-xs">
                   Articles
                 </h3>
@@ -122,7 +135,7 @@ const tools = [
           </div>
           <div class="flex ">
             <div class="inline">
-              <div v-for="(category, cKey) in [unheadGuides[0]]" :key="cKey">
+              <div v-for="(category, cKey) in [unheadGuides?.[0]].filter(Boolean)" :key="cKey">
                 <h3 class="font-bold mb-3 text-xs">
                   Head
                 </h3>
@@ -141,7 +154,7 @@ const tools = [
           </div>
           <div class="flex ">
             <div class="inline">
-              <div v-for="(category, cKey) in [schemaOrgAndScriptGuides.flatMap(c => c.children)[0]]" :key="cKey">
+              <div v-for="(category, cKey) in [schemaOrgAndScriptGuides?.flatMap(c => c.children)?.[0]].filter(Boolean)" :key="cKey">
                 <h3 class="font-bold mb-3 text-xs">
                   Schema.org
                 </h3>

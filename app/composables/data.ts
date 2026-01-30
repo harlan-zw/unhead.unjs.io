@@ -25,13 +25,15 @@ export async function useCurrentDocPage() {
 
   const contentPath = route.path
   const fallbackPath = getPathWithoutFramework(route.path)
+  const isV2 = route.path.startsWith('/docs/v2')
+  const collection = isV2 ? 'docsUnheadV2' : 'docsUnhead'
 
-  const p = queryCollection('docsUnhead').path(contentPath).first().then(pageData => pageData || queryCollection('docsUnhead').path(fallbackPath).first()).then(async (pageData) => {
+  const p = queryCollection(collection).path(contentPath).first().then(pageData => pageData || queryCollection(collection).path(fallbackPath).first()).then(async (pageData) => {
     if (!pageData?.body?.value) {
       throw createError({ statusCode: 404, statusMessage: `Page not found: ${route.path}`, fatal: true })
     }
 
-    const surroundData = await queryCollectionItemSurroundings('docsUnhead', pageData.path, {
+    const surroundData = await queryCollectionItemSurroundings(collection, pageData.path, {
       fields: ['title', 'description', 'path'],
     })
 
@@ -44,6 +46,7 @@ export async function useCurrentDocPage() {
     return {
       page,
       surround,
+      isV2,
     }
   })
 
@@ -92,7 +95,15 @@ export function useDocsNav(all: boolean = false) {
     const framework = selectedFramework.value.slug
     const nav = mapPath(_nav)
 
-    const sectionDocs = nav.find(n => n.path.startsWith(getPathSection(getPathWithoutFramework(route.path))))
+    // For section matching, use the actual path (with v2 prefix if on v2)
+    const pathWithoutFramework = getPathWithoutFramework(route.path)
+    const isV2 = route.path.startsWith('/docs/v2')
+    // v2 needs 3 segments (/docs/v2/head), v3 needs 2 (/docs/head)
+    const sectionPath = isV2 ? getPathSegments(pathWithoutFramework, 3) : getPathSection(pathWithoutFramework)
+    // For v2, nav is nested under /docs/v2 parent, so look in children
+    const sectionDocs = isV2
+      ? nav.find(n => n.path === '/docs/v2')?.children?.find(c => c.path?.startsWith(sectionPath))
+      : nav.find(n => n.path?.startsWith(sectionPath))
     const frameworkDocs = nav.find(n => n.path.startsWith(`/docs/${framework}`))?.children?.find(n => n.path.startsWith(getPathSection(route.path)))?.children?.find(n => n.path === (getPathSegments(route.path, 4)))?.children.map((c) => {
       return {
         ...c,
@@ -100,9 +111,14 @@ export function useDocsNav(all: boolean = false) {
       }
     })
 
-    const subSectionDocs = sectionDocs?.children.find(n => n.path === (getPathSubSection(getPathWithoutFramework(route.path))))?.children
+    const subSectionDocs = sectionDocs?.children?.find(n => n.path === (isV2 ? getPathSegments(pathWithoutFramework, 4) : getPathSubSection(pathWithoutFramework)))?.children
 
-    const bottom = (all ? [...nav.filter(n => n.path.startsWith('/docs/head') || n.path.startsWith('/docs/schema-org'))] : [...(subSectionDocs || [])])
+    const versionPrefix = isV2 ? '/docs/v2' : '/docs'
+    // For v2, sections are nested under /docs/v2 parent
+    const allSections = isV2
+      ? (nav.find(n => n.path === '/docs/v2')?.children || []).filter(n => n.path?.startsWith(`${versionPrefix}/head`) || n.path?.startsWith(`${versionPrefix}/schema-org`))
+      : nav.filter(n => n.path?.startsWith(`${versionPrefix}/head`) || n.path?.startsWith(`${versionPrefix}/schema-org`))
+    const bottom = (all ? [...allSections] : [...(subSectionDocs || [])])
       .map((section) => {
         return {
           ...section,
@@ -124,9 +140,13 @@ export function useDocsNav(all: boolean = false) {
       .map((n) => {
         n.children = n.children?.map((c) => {
           let path = c.path
-          if (!path.startsWith(`/docs/${framework}`)) {
-            const subPath = path.split('/').slice(2).join('/')
-            path = `/docs/${framework}/${subPath}`
+          const frameworkPrefix = isV2 ? `/docs/v2/${framework}` : `/docs/${framework}`
+          if (!path.startsWith(frameworkPrefix)) {
+            // For v2: /docs/v2/head/... → slice(3) to get head/...
+            // For v3: /docs/head/... → slice(2) to get head/...
+            const sliceIndex = isV2 ? 3 : 2
+            const subPath = path.split('/').slice(sliceIndex).join('/')
+            path = `${frameworkPrefix}/${subPath}`
           }
           return {
             ...c,
@@ -146,6 +166,11 @@ export function useDocsNav(all: boolean = false) {
       }
       return n
     })
-    return { navFlat, bottom, firstSubSectionLinks: sectionDocs?.children || [] }
+    // Filter firstSubSectionLinks to only show sections (head, schema-org), not frameworks
+    const firstSubSectionLinks = (sectionDocs?.children || []).filter(n =>
+      n.path?.includes('/head/') || n.path?.includes('/schema-org/')
+      || n.path?.endsWith('/head') || n.path?.endsWith('/schema-org'),
+    )
+    return { navFlat, bottom, firstSubSectionLinks }
   })
 }
