@@ -2,7 +2,6 @@
 import { Unhead } from '~~/const'
 import { getPathWithFramework } from '~~/utils/urls'
 import { enhanceTitlesAndIcons } from '~/composables/data'
-import { useVersionSelector } from '~/composables/versionSelector'
 
 const { selectedFramework } = useFrameworkSelector()
 
