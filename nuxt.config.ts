@@ -135,6 +135,7 @@ export default defineNuxtConfig({
       external: ['node:process'],
     },
     prerender: {
+      autoSubfolderIndex: false,
       failOnError: false,
       crawlLinks: true,
       routes: ['/', '/404.html'],
