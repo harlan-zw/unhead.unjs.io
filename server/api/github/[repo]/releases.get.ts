@@ -15,6 +15,6 @@ export default defineCachedEventHandler(async (e) => {
     body: release.body,
   }))
 }, {
-  // last for 1 hour
   maxAge: 60 * 60,
+  swr: true,
 })

@@ -22,7 +22,7 @@ export default defineCachedEventHandler(async (e) => {
   }
   return Number.parseInt(lastPage[1], 10)
 }, {
-  // last for 1 week
   name: 'commit-count-v2',
   maxAge: 60 * 60 * 24 * 7,
+  swr: true,
 })

@@ -40,6 +40,6 @@ export default defineCachedEventHandler(async (e) => {
     percentageChange,
   }
 }, {
-  // 1 day
   maxAge: 60 * 60 * 24,
+  swr: true,
 })

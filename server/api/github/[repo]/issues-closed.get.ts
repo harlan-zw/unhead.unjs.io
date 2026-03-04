@@ -20,6 +20,6 @@ export default defineCachedEventHandler(async (e) => {
   })
   return Number.parseInt(res.repository.closed.totalCount, 10)
 }, {
-  // last for 1 week
   maxAge: 60 * 60 * 24 * 7,
+  swr: true,
 })

@@ -37,4 +37,7 @@ export default defineCachedEventHandler(async (event) => {
   if (result.text)
     return result
   else return sendError(event, new Error('something wrong'))
+}, {
+  maxAge: 60 * 60 * 24,
+  swr: true,
 })
