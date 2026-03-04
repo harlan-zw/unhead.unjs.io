@@ -14,7 +14,6 @@
     "twoslash:verify": "nuxt-content-twoslash verify --content-dir snippets"
   },
   "devDependencies": {
-    "zod": "catalog:",
     "@antfu/eslint-config": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@codemirror/lang-javascript": "catalog:",
@@ -78,6 +77,7 @@
     "tailwindcss-animate": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
-    "wrangler": "catalog:"
+    "wrangler": "catalog:",
+    "zod": "catalog:"
   }
 }

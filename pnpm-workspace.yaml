@@ -43,7 +43,7 @@ catalog:
   consola: ^3.4.2
   drizzle-orm: ^0.45.1
   eslint: ^10.0.2
-  eslint-plugin-harlanzw: ^0.2.6
+  eslint-plugin-harlanzw: ^0.3.0
   jsdom: ^28.1.0
   markdownlint-cli: ^0.48.0
   motion-v: ^2.0.0

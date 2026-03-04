@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { type Slot, ref } from 'vue'
 import { ShikiMagicMovePrecompiled } from 'shiki-magic-move/vue'
+import { ref } from 'vue'
 import { stripHeaderAnchorLinks } from '~~/utils/content'
 import { useStats } from '~/composables/data'
 import { humanNumber } from '~/composables/format'

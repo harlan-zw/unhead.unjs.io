@@ -386,7 +386,6 @@ export default function ProductCardTemplate() {
 
   const selectedTemplate = ref<keyof typeof templates>('simple')
 
-  // eslint-disable-next-line harlanzw/vue-no-nested-reactivity -- intentional: reading refs for snapshot when template switches
   watch(selectedTemplate, (newVal, oldVal) => {
     if (newVal === 'code' && oldVal && oldVal !== 'code') {
       const tmpl = templates[oldVal]
