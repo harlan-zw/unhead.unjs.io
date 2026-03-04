@@ -78,3 +78,6 @@ ignoredBuiltDependencies:
   - sharp
   - vue-demi
   - workerd
+
+onlyBuiltDependencies:
+  - better-sqlite3
