@@ -132,11 +132,11 @@ export default defineNuxtConfig({
       pages: {
         routes: {
           exclude: [
-            '/guides/*',
-            '/schema-org/*',
-            '/docs/*',
-            '/plugins/*',
-            '/usage/*',
+            // '/guides/*',
+            // '/schema-org/*',
+            // '/docs/*',
+            // '/plugins/*',
+            // '/usage/*',
             '/llms.txt',
           ],
         },
