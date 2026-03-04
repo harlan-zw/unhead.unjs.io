@@ -159,9 +159,7 @@ const subSectionLinks = computed(() => {
                   :class="link.deprecated ? 'opacity-50' : ''"
                 >
                   <div class="flex items-center gap-2">
-                    <div :class="link.children?.length ? 'text-sm font-bold' : ''">
-                      {{ link.title }}
-                    </div>
+                    <div :class="link.children?.length ? 'text-sm font-bold' : ''" v-text="link.title" />
                   </div>
                   <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
                 </div>
@@ -194,9 +192,7 @@ const subSectionLinks = computed(() => {
                   :class="link.deprecated ? 'opacity-50' : ''"
                 >
                   <div class="flex items-center gap-2">
-                    <div :class="link.children?.length ? 'text-sm font-bold' : ''">
-                      {{ link.title }}
-                    </div>
+                    <div :class="link.children?.length ? 'text-sm font-bold' : ''" v-text="link.title" />
                   </div>
                   <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
                 </div>
@@ -266,7 +262,7 @@ const subSectionLinks = computed(() => {
               :to="item.to"
               :aria-label="item.label"
             >
-              {{ item.label }}
+              <span v-text="item.label" />
               <div :class="item.active ? 'absolute bottom-0 h-[1.5px] w-full bg-[var(--ui-primary)] dark:bg-primary-light' : 'absolute bottom-0 h-[1.5px] w-full group-hover:bg-gray-200 dark:group-hover:bg-gray-700'" />
             </NuxtLink>
           </div>
