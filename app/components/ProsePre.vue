@@ -8,6 +8,7 @@ import UCodeIcon from '#ui/components/prose/CodeIcon.vue'
 import { useLocale } from '#ui/composables/useLocale'
 import { tv } from '#ui/utils/tv'
 import { useClipboard } from '@vueuse/core'
+import { cloneVNode } from 'vue'
 
 const props = defineProps<{
   icon?: string
@@ -18,7 +19,7 @@ const props = defineProps<{
   hideHeader?: boolean
   meta?: string
   class?: any
-  ui?: Partial<typeof ui.value>
+  ui?: any
 }>()
 
 const slots = useSlots()
@@ -26,7 +27,21 @@ const slots = useSlots()
 const { t } = useLocale()
 const { copy, copied } = useClipboard()
 const appConfig = useAppConfig()
-const ui = computed(() => tv({ extend: tv(theme), ...appConfig.ui?.prose?.pre || {} })())
+const ui = computed(() => {
+  const tvResult = tv({
+    extend: tv(theme),
+    slots: {
+      root: '',
+      header: '',
+      icon: '',
+      filename: '',
+      copy: '',
+      base: '',
+    },
+    ...appConfig.ui?.prose?.pre || {},
+  })()
+  return tvResult as Record<string, any>
+})
 
 const { selectedFramework } = useFrameworkSelector()
 
@@ -42,7 +57,7 @@ const processedContent = computed(() => {
       return vnode
 
     // Process the content recursively
-    const processNode = (node) => {
+    const processNode = (node: any): any => {
       if (Array.isArray(node)) {
         // Process arrays of children
         return node.map(processNode)
@@ -52,14 +67,17 @@ const processedContent = computed(() => {
           .replace('@unhead/dynamic-import', `@unhead/${selectedFramework.value.slug}`)
           .replace('@FRAMEWORK_NAME@', selectedFramework.value.label)
       }
-      else if (typeof node === 'object') {
-        node.children = processNode(node.children)
+      else if (typeof node === 'object' && node !== null) {
+        return {
+          ...node,
+          children: processNode(node.children),
+        }
       }
       return node
     }
 
     // Return a cloned node with processed content
-    return h(vnode.type, vnode.props, processNode(vnode.children))
+    return cloneVNode(vnode, { children: processNode(vnode.children) })
   })
 })
 </script>

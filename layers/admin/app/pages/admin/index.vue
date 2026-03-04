@@ -186,6 +186,7 @@ const statCards = computed(() => [
         <div class="flex items-center gap-4">
           <NuxtLink
             to="/"
+            aria-label="Back to home"
             class="w-9 h-9 rounded-lg bg-[var(--ui-bg)] border border-[var(--ui-border)] flex items-center justify-center text-[var(--ui-text-muted)] hover:text-[var(--ui-text-highlighted)] hover:border-[var(--ui-border-accented)] transition-all"
           >
             <UIcon name="i-carbon-arrow-left" class="w-4 h-4" />

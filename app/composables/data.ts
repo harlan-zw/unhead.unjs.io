@@ -1,4 +1,4 @@
-import type { NavItem } from '@nuxt/content'
+import type { ContentNavigationItem } from '@nuxt/content'
 import { titleCase } from 'scule'
 import {
   getLastPathSegment,
@@ -9,11 +9,31 @@ import {
 } from '~~/utils/urls'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
+export interface NavItem extends ContentNavigationItem {
+  html?: boolean
+  deprecated?: boolean
+  tag?: string
+  icon?: string
+  new?: boolean
+  children?: NavItem[]
+}
+
+export interface Stats {
+  fetchedAt: number
+  modules: any[]
+  versions: string[]
+  stars: { stars: number }
+  commitCount: number
+  issuesClosed: number
+  releases: any[]
+  contributors: any[]
+}
+
 export async function useStats() {
-  const { data: stats } = await useFetch('/api/stats.json', {
+  const { data: stats } = await useFetch<Stats>('/api/stats.json', {
     key: 'stats',
   })
-  return stats || {}
+  return stats
 }
 
 export async function useCurrentDocPage() {
@@ -28,7 +48,13 @@ export async function useCurrentDocPage() {
   const isV2 = route.path.startsWith('/docs/v2')
   const collection = isV2 ? 'docsUnheadV2' : 'docsUnhead'
 
-  const p = queryCollection(collection).path(contentPath).first().then(pageData => pageData || queryCollection(collection).path(fallbackPath).first()).then(async (pageData) => {
+  const q = queryCollection(collection).path(contentPath).first()
+  const p = (async () => {
+    let pageData = await q
+    if (!pageData) {
+      pageData = await queryCollection(collection).path(fallbackPath).first()
+    }
+
     if (!pageData?.body?.value) {
       throw createError({ statusCode: 404, statusMessage: `Page not found: ${route.path}`, fatal: true })
     }
@@ -48,7 +74,7 @@ export async function useCurrentDocPage() {
       surround,
       isV2,
     }
-  })
+  })()
 
   nuxtApp.static.data.docsCurrent = { promise: p, path: toRaw(route.path) }
   return p
@@ -89,9 +115,9 @@ export function enhanceTitlesAndIcons(n: NavItem) {
 export function useDocsNav(all: boolean = false) {
   const { selectedFramework } = useFrameworkSelector()
   const route = useRoute()
-  const navigation = inject('navigation')
+  const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
   return computed(() => {
-    const _nav = Array.from(toValue(navigation))
+    const _nav = toValue(navigation)
     const framework = selectedFramework.value.slug
     const nav = mapPath(_nav)
 

@@ -14,7 +14,7 @@ export default defineEventHandler(async (e) => {
   const { githubAuthClientId, githubAuthClientSecret } = useRuntimeConfig(e)
 
   // Exchange the authorization code for an access token
-  const tokenResponse = await $fetch('https://github.com/login/oauth/access_token', {
+  const tokenResponse = await $fetch<{ access_token: string }>('https://github.com/login/oauth/access_token', {
     method: 'POST',
     headers: {
       Accept: 'application/json',

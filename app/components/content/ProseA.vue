@@ -25,6 +25,7 @@ const resolvedHref = computed(() => {
 </script>
 
 <template>
+  <!-- eslint-disable-next-line harlanzw/link-require-descriptive-text -- text provided via slot -->
   <NuxtLink
     :href="resolvedHref"
     :target="target"

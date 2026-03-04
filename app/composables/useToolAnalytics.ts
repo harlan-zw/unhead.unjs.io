@@ -1,5 +1,5 @@
-type ToolName = 'meta-tag-generator' | 'schema-generator'
-type ToolAction = 'view' | 'use' | 'copy' | 'reset' | 'preset'
+type ToolName = 'meta-tag-generator' | 'schema-generator' | 'og-image-generator'
+type ToolAction = 'view' | 'use' | 'copy' | 'reset' | 'preset' | 'download'
 
 export function useToolAnalytics(tool: ToolName) {
   const tracked = ref(false)

@@ -4,7 +4,7 @@ import { getHeader } from 'h3'
 import { parseURL } from 'ufo'
 import { ThumbsFeedbackSchema } from '~~/types/schemas'
 import { feedback } from '../database/schema'
-import { useDB } from '../utils/db'
+import { getDB } from '../utils/db'
 
 export default defineEventHandler<Promise<ThumbsFeedbackResponse>>(async (e) => {
   const body = await readValidatedBody(e, ThumbsFeedbackSchema.safeParse)
@@ -16,7 +16,7 @@ export default defineEventHandler<Promise<ThumbsFeedbackResponse>>(async (e) => 
   const referrer = parseURL(getHeader(e, 'Referer') || '').pathname
   const path = toolId ? `/tools/${toolId}` : referrer.replace(/^\/+/, '')
 
-  const db = useDB(e)
+  const db = getDB(e)
   await db.insert(feedback).values({ path, thumb: thumbs })
 
   const stats = await db

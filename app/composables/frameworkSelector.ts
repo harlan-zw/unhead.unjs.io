@@ -1,3 +1,4 @@
+import type { ComputedRef, Ref } from 'vue'
 import { getPathFramework, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
 import { useVersionSelector } from '~/composables/versionSelector'
 
@@ -13,7 +14,11 @@ const items = [
 
 const fallbackFramework = ref()
 
-export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
+export interface FrameworkNav {
+  navFlat: { path: string }[]
+}
+
+export function useFrameworkSelector(nav?: Ref<FrameworkNav | undefined> | ComputedRef<FrameworkNav | undefined>) {
   const route = useRoute()
   const { currentVersion } = useVersionSelector()
   let isSwitching = false
@@ -43,6 +48,7 @@ export function useFrameworkSelector(nav?: ReturnType<typeof useDocsNav>) {
       if (import.meta.client && isSwitching) {
         return Math.random() - 0.5
       }
+      return 0
     })
   })
   return {

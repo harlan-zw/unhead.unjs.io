@@ -101,7 +101,7 @@ const HighlightedVersion = defineComponent({
               class="overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow duration-300"
             >
               <div class="flex items-center gap-3 pb-4 mb-4 border-b border-gray-100 dark:border-gray-800">
-                <NuxtLink target="_blank" :to="`https://github.com/unjs/unhead/releases/tag/${release.name}`">
+                <NuxtLink target="_blank" :to="`https://github.com/unjs/unhead/releases/tag/${release.name}`" :aria-label="`Release ${release.name}`">
                   <h3 class="text-xl font-bold flex items-center gap-2">
                     <HighlightedVersion :version="release.name.slice(1)" class="font-mono" />
                     <UBadge v-if="key === 0" icon="i-carbon-star" variant="soft">
@@ -121,7 +121,7 @@ const HighlightedVersion = defineComponent({
                   target="_blank"
                   variant="ghost"
                   size="sm"
-                  color="gray"
+                  color="neutral"
                   class="text-xs font-medium"
                   trailing-icon="i-heroicons-arrow-top-right-on-square"
                 >

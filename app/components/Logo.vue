@@ -12,7 +12,7 @@ const draw = {
         pathLength: { delay, type: 'spring', duration: 1.5, bounce: 0 },
         opacity: { delay, duration: 0.01 },
       },
-    }
+    } as const
   },
 }
 
@@ -21,13 +21,12 @@ const shape = {
   strokeLinejoin: 'round',
   strokeWidth: 3,
   fill: 'transparent',
-}
+} as const
 </script>
 
 <template>
   <div class="flex items-center">
     <motion.svg
-      xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
       viewBox="0 0 24 24"
@@ -60,6 +59,7 @@ const shape = {
     </motion.svg>
     <motion.span
       v-for="(l, i) in 'Unhead'"
+      :key="i"
       :initial="{ opacity: 0, x: -5 + 1 * i }"
       :animate="{ opacity: 1, x: 0 + 1 }"
       :transition="{ delay: 0.8, duration: 0.3 + i * 0.1 }"

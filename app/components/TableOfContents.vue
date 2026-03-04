@@ -31,11 +31,9 @@ const config = {
   depth: 'ml-3',
 }
 
-const router = useRouter()
-
-function scrollToHeading(id: string) {
+async function scrollToHeading(id: string) {
   const encodedId = encodeURIComponent(id)
-  router.push(`#${encodedId}`)
+  await navigateTo(`#${encodedId}`)
   emit('move', id)
 }
 </script>
@@ -45,6 +43,7 @@ function scrollToHeading(id: string) {
     <li v-for="link in links" :key="link.text" :class="[config.wrapper, link.depth === 3 && config.depth]">
       <a
         :href="`#${link.id}`"
+        :aria-label="link.text"
         :class="[config.base, config.inactive]"
         class="text-sm"
         @click.prevent="scrollToHeading(link.id)"

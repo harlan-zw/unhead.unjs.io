@@ -64,7 +64,7 @@ const searchNav = computed(() => {
               Update available
             </div>
             <UButton color="primary" size="xs" label="Refresh" @click="reload" />
-            <UButton color="gray" variant="ghost" size="xs" icon="i-heroicons-x-mark-20-solid" @click="dismiss" />
+            <UButton color="neutral" variant="ghost" size="xs" icon="i-heroicons-x-mark-20-solid" @click="dismiss" />
           </div>
         </div>
       </Transition>

@@ -1,7 +1,7 @@
 /// <reference types="@cloudflare/workers-types" />
 import type { H3Event } from 'h3'
 import { toolLookups } from '../database/schema'
-import { useDB } from './db'
+import { getDB } from './db'
 
 type ToolName = 'meta-tag-generator' | 'schema-generator'
 type ToolAction = 'view' | 'use' | 'copy' | 'reset' | 'preset'
@@ -69,7 +69,7 @@ export async function trackToolLookup(
   action: ToolAction,
   label?: string,
 ) {
-  const db = useDB(event)
+  const db = getDB(event)
   const sessionId = getCookie(event, 'analytics-session')
 
   await db.insert(toolLookups).values({

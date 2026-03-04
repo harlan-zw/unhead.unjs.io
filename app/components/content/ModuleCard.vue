@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { modules } from '../../../src/const'
+import type { modules } from '../../../const'
 import { toRefs } from 'vue'
 import { useStats } from '~/composables/data'
 import { humanNumber } from '~/composables/format'

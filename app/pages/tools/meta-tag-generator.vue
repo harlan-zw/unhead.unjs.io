@@ -25,7 +25,6 @@ useSeoMeta({
 
 const {
   state,
-  frameworks,
   presets,
   activePreset,
   hasAnyValue,
@@ -1085,17 +1084,17 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
       <section>
         <ToolSectionHeader title="Learn More" icon="i-carbon-book" color="purple" />
         <div class="flex flex-wrap gap-2 sm:gap-3">
-          <NuxtLink to="/docs/head/guides/get-started/installation" class="group">
+          <NuxtLink to="/docs/head/guides/get-started/installation" aria-label="Installation Guide" class="group">
             <UButton variant="soft" color="primary" trailing-icon="i-carbon-arrow-right" size="sm" class="group-hover:shadow-lg group-hover:shadow-primary/20 transition-all">
               Installation Guide
             </UButton>
           </NuxtLink>
-          <NuxtLink to="/docs/head/api/composables/use-seo-meta" class="group">
+          <NuxtLink to="/docs/head/api/composables/use-seo-meta" aria-label="useSeoMeta API" class="group">
             <UButton variant="soft" color="neutral" trailing-icon="i-carbon-arrow-right" size="sm" class="group-hover:shadow-lg transition-all">
               useSeoMeta API
             </UButton>
           </NuxtLink>
-          <NuxtLink to="/docs/head/api/composables/use-head" class="group">
+          <NuxtLink to="/docs/head/api/composables/use-head" aria-label="useHead API" class="group">
             <UButton variant="soft" color="neutral" trailing-icon="i-carbon-arrow-right" size="sm" class="group-hover:shadow-lg transition-all">
               useHead API
             </UButton>

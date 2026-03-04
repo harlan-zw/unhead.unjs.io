@@ -1,3 +1,7 @@
+interface Tweet {
+  text: string
+}
+
 export default defineCachedEventHandler(async (event) => {
   const tweetId = event.context.params?.tweetId
 

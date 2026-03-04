@@ -5,7 +5,7 @@ export default defineCachedEventHandler(async (e) => {
   if (!import.meta.prerender && !import.meta.dev) {
     return
   }
-  const token = await appStorage().get<string>('github:token') || useRuntimeConfig(e).githubAuthToken
+  const token = (await appStorage().get<string>('github:token') || useRuntimeConfig(e).githubAuthToken) as string
   if (!token) {
     return []
   }

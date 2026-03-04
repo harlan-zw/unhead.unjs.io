@@ -4,7 +4,7 @@ const shape = {
   strokeLinejoin: 'round',
   strokeWidth: 3,
   fill: 'transparent',
-}
+} as const
 </script>
 
 <template>

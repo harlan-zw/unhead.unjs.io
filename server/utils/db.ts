@@ -5,7 +5,7 @@ import * as schema from '../database/schema'
 
 export { schema }
 
-export function useDB(event: H3Event) {
+export function getDB(event: H3Event) {
   const db = (event.context.cloudflare?.env as { DB?: D1Database } | undefined)?.DB
 
   if (!db) {

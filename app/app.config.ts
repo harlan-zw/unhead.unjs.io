@@ -1,4 +1,4 @@
-export default defineAppConfig({
+export default ({
   toaster: {
     position: 'bottom-right' as const,
     expand: true,
@@ -103,6 +103,7 @@ export default defineAppConfig({
       ],
     },
     prose: {
+      pre: {},
       codeIcon: {
         'robots.txt': 'vscode-icons:file-type-robots',
       },

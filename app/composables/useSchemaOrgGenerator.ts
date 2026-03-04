@@ -400,7 +400,7 @@ export function useSchemaOrgGenerator() {
         }
         break
 
-      case 'FAQPage':
+      case 'FAQPage': {
         const mainEntity: unknown[] = []
         for (let i = 1; i <= 10; i++) {
           const q = fields[`question${i}`]
@@ -419,6 +419,7 @@ export function useSchemaOrgGenerator() {
         if (mainEntity.length > 0)
           schema.mainEntity = mainEntity
         break
+      }
 
       case 'Product':
         if (fields.name)
@@ -524,20 +525,22 @@ export function useSchemaOrgGenerator() {
           schema.image = fields.image
         if (fields.totalTime)
           schema.totalTime = fields.totalTime
-        const steps: unknown[] = []
-        for (let i = 1; i <= 10; i++) {
-          const name = fields[`step${i}Name`]
-          const text = fields[`step${i}Text`]
-          if (name || text) {
-            steps.push({
-              '@type': 'HowToStep',
-              ...(name && { name }),
-              ...(text && { text }),
-            })
+        {
+          const steps: unknown[] = []
+          for (let i = 1; i <= 10; i++) {
+            const name = fields[`step${i}Name`]
+            const text = fields[`step${i}Text`]
+            if (name || text) {
+              steps.push({
+                '@type': 'HowToStep',
+                ...(name && { name }),
+                ...(text && { text }),
+              })
+            }
           }
+          if (steps.length > 0)
+            schema.step = steps
         }
-        if (steps.length > 0)
-          schema.step = steps
         break
 
       case 'Video':
@@ -557,7 +560,7 @@ export function useSchemaOrgGenerator() {
           schema.duration = fields.duration
         break
 
-      case 'Event':
+      case 'Event': {
         if (fields.name)
           schema.name = fields.name
         if (fields.description)
@@ -625,6 +628,7 @@ export function useSchemaOrgGenerator() {
           }
         }
         break
+      }
     }
 
     return schema
@@ -684,7 +688,7 @@ export function useSchemaOrgGenerator() {
         }
         break
 
-      case 'FAQPage':
+      case 'FAQPage': {
         const questions: string[] = []
         for (let i = 1; i <= 10; i++) {
           const q = fields[`question${i}`]
@@ -702,6 +706,7 @@ export function useSchemaOrgGenerator() {
           lines.push(`  ],`)
         }
         break
+      }
 
       case 'Product':
         if (fields.name)
@@ -819,23 +824,25 @@ export function useSchemaOrgGenerator() {
           lines.push(`  image: '${escapeString(fields.image)}',`)
         if (fields.totalTime)
           lines.push(`  totalTime: '${fields.totalTime}',`)
-        const stepsCode: string[] = []
-        for (let i = 1; i <= 10; i++) {
-          const name = fields[`step${i}Name`]
-          const text = fields[`step${i}Text`]
-          if (name || text) {
-            stepsCode.push(`    {`)
-            if (name)
-              stepsCode.push(`      name: '${escapeString(name)}',`)
-            if (text)
-              stepsCode.push(`      text: '${escapeString(text)}',`)
-            stepsCode.push(`    },`)
+        {
+          const stepsCode: string[] = []
+          for (let i = 1; i <= 10; i++) {
+            const name = fields[`step${i}Name`]
+            const text = fields[`step${i}Text`]
+            if (name || text) {
+              stepsCode.push(`    {`)
+              if (name)
+                stepsCode.push(`      name: '${escapeString(name)}',`)
+              if (text)
+                stepsCode.push(`      text: '${escapeString(text)}',`)
+              stepsCode.push(`    },`)
+            }
           }
-        }
-        if (stepsCode.length > 0) {
-          lines.push(`  step: [`)
-          lines.push(...stepsCode)
-          lines.push(`  ],`)
+          if (stepsCode.length > 0) {
+            lines.push(`  step: [`)
+            lines.push(...stepsCode)
+            lines.push(`  ],`)
+          }
         }
         break
 
@@ -856,7 +863,7 @@ export function useSchemaOrgGenerator() {
           lines.push(`  duration: '${fields.duration}',`)
         break
 
-      case 'Event':
+      case 'Event': {
         if (fields.name)
           lines.push(`  name: '${escapeString(fields.name)}',`)
         if (fields.description)
@@ -930,6 +937,7 @@ export function useSchemaOrgGenerator() {
           lines.push(`  },`)
         }
         break
+      }
     }
 
     if (lines.length === 0)

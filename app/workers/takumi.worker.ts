@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals, no-console, no-new-func, ts/ban-ts-comment */
 import init, { Renderer } from '@takumi-rs/wasm'
 import { transform } from 'sucrase'
 // @ts-ignore

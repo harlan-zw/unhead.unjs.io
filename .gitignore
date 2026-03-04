@@ -17,3 +17,6 @@ docs/.nuxt
 .nuxt
 
 .wrangler
+.DS_Store
+.env.*
+!.env.example

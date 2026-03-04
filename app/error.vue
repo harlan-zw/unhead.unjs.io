@@ -148,7 +148,7 @@ const { open: openSearch } = useContentSearch()
                 <NuxtLink
                   to="/"
                   class="text-indigo-600 font-medium hover:text-indigo-500 transition-colors duration-300 underline"
-                  @click="clearError"
+                  @click="() => clearError()"
                 >
                   home
                 </NuxtLink>
@@ -187,6 +187,7 @@ const { open: openSearch } = useContentSearch()
                   >
                     <NuxtLink
                       :to="getPathWithFramework(getPathWithoutFramework(link.item.path), selectedFramework.slug)"
+                      :aria-label="link.item.title"
                       class="p-4 text-[var(--ui-text)] hover:text-[var(--ui-text-inverse)] block"
                     >
                       <div class="text-sm text-[var(--ui-text-dimmed)] mb-1">

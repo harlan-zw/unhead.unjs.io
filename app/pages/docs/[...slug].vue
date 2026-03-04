@@ -134,13 +134,13 @@ const transformedPage = computed(() => {
       <div class="justify-center flex items-center gap-5 font-semibold">
         <div class="flex items-center gap-2">
           <UIcon name="i-simple-icons-github" class="w-5 h-5" />
-          <NuxtLink v-bind="repoLinks[0]" class="hover:underline">
+          <NuxtLink :to="repoLinks[0].to" :target="repoLinks[0].target" :aria-label="repoLinks[0].label" class="hover:underline">
             {{ repoLinks[0].label }}
           </NuxtLink>
         </div>
         <div v-if="repoLinks[1]" class="flex items-center gap-2">
           <UIcon name="i-simple-icons-markdown" class="w-5 h-5" />
-          <NuxtLink v-bind="repoLinks[1]" class="hover:underline">
+          <NuxtLink :to="repoLinks[1].to" :target="repoLinks[1].target" :aria-label="repoLinks[1].label" class="hover:underline">
             {{ repoLinks[1].label }}
           </NuxtLink>
         </div>

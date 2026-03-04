@@ -386,14 +386,11 @@ export default function ProductCardTemplate() {
 
   const selectedTemplate = ref<keyof typeof templates>('simple')
 
+  // eslint-disable-next-line harlanzw/vue-no-nested-reactivity -- intentional: reading refs for snapshot when template switches
   watch(selectedTemplate, (newVal, oldVal) => {
     if (newVal === 'code' && oldVal && oldVal !== 'code') {
       const tmpl = templates[oldVal]
-      // Select correct image based on template
-      let img = logo.value
-      if (oldVal === 'product') {
-        img = productImage.value
-      }
+      const img = oldVal === 'product' ? productImage.value : logo.value
 
       customCode.value = tmpl(title.value, description.value, backgroundColor.value, textColor.value, {
         siteName: siteName.value,
@@ -455,7 +452,7 @@ useSeoMeta({
     price,
     brand,
     selectedTemplate,
-    templateOptions: Object.keys(templates),
+    templateOptions: Object.keys(templates) as (keyof typeof templates)[],
     code,
     customCode,
     usageCode,

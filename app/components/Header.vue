@@ -152,7 +152,7 @@ const subSectionLinks = computed(() => {
         </div>
         <UTabs v-else :items="[{ label: 'Head', slot: 'head' }, { label: 'Schema.org', slot: 'schema-org' }]" color="neutral">
           <template #head>
-            <UContentNavigation v-for="idx in [0, 1]" :key="idx" :navigation="docsNav.bottom[0].children[idx].children.map(c => ({ ...c, title: `${docsNav.bottom[0].children[idx].title} - ${c.title}` }))" class="my-5">
+            <UContentNavigation v-for="idx in [0, 1]" :key="idx" :navigation="(docsNav.bottom[0].children[idx].children.map(c => ({ ...c, title: `${docsNav.bottom[0].children[idx].title} - ${c.title}` })) as any)" class="my-5">
               <template #link="{ link }">
                 <div
                   v-if="!link.html" class="flex items-center justify-between gap-2 w-full"
@@ -163,7 +163,7 @@ const subSectionLinks = computed(() => {
                       {{ link.title }}
                     </div>
                   </div>
-                  <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamclic ass="w-4 h-4" />
+                  <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
                 </div>
                 <div v-else :class="link.deprecated ? 'opacity-50' : ''">
                   <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-400 dark:text-sky-200" />
@@ -187,7 +187,7 @@ const subSectionLinks = computed(() => {
             </UContentNavigation>
           </template>
           <template #schema-org>
-            <UContentNavigation v-for="idx in [0, 1]" :key="idx" :navigation="docsNav.bottom[1].children[idx].children.map(c => ({ ...c, title: `${docsNav.bottom[1].children[idx].title} - ${c.title}` }))" class="my-5">
+            <UContentNavigation v-for="idx in [0, 1]" :key="idx" :navigation="(docsNav.bottom[1].children[idx].children.map(c => ({ ...c, title: `${docsNav.bottom[1].children[idx].title} - ${c.title}` })) as any)" class="my-5">
               <template #link="{ link }">
                 <div
                   v-if="!link.html" class="flex items-center justify-between gap-2 w-full"
@@ -198,7 +198,7 @@ const subSectionLinks = computed(() => {
                       {{ link.title }}
                     </div>
                   </div>
-                  <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamclic ass="w-4 h-4" />
+                  <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
                 </div>
                 <div v-else :class="link.deprecated ? 'opacity-50' : ''">
                   <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-400 dark:text-sky-200" />
@@ -264,6 +264,7 @@ const subSectionLinks = computed(() => {
             <NuxtLink
               :class="item.active ? 'group relative h-full flex items-center text-gray-800 dark:text-gray-200 font-semibold' : 'group relative h-full flex items-center font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-300'"
               :to="item.to"
+              :aria-label="item.label"
             >
               {{ item.label }}
               <div :class="item.active ? 'absolute bottom-0 h-[1.5px] w-full bg-[var(--ui-primary)] dark:bg-primary-light' : 'absolute bottom-0 h-[1.5px] w-full group-hover:bg-gray-200 dark:group-hover:bg-gray-700'" />

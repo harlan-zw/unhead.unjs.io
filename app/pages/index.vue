@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { type Slot, ref } from 'vue'
 import { ShikiMagicMovePrecompiled } from 'shiki-magic-move/vue'
 import { stripHeaderAnchorLinks } from '~~/utils/content'
 import { useStats } from '~/composables/data'
@@ -22,7 +23,7 @@ const { data: snippets } = await useAsyncData(`snippets`, async () => {
   if (!all?.length)
     return []
   for (const s of all) {
-    if (globalThis.Array.isArray(s.body.value) && s.body.type === 'minimal')
+    if (globalThis.Array.isArray(s.body.value) && s.body.type === 'minimark')
       stripHeaderAnchorLinks(s.body.value)
   }
   return all
@@ -55,7 +56,21 @@ const mounted = ref(false)
 
 const toggleCapo = ref(false)
 
-const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate()
+const [DefineSectionTemplate, ReuseSectionTemplate] = createReusableTemplate<{
+  section: {
+    id?: number
+    icon: string
+    title?: string
+    htmlTitle?: string
+    description: string
+    bg?: string
+    border?: string
+  }
+}, {
+  wrap?: (props: any) => any
+  a?: (props: any) => any
+  b?: (props: any) => any
+}>()
 
 const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82AAFF]">useHead</span><span class="text-[#24292E] dark:text-[#BABED8]">()</span></span>`
 </script>
@@ -89,13 +104,13 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </div>
           </div>
           <div class="col-span-3 py-5 md:py-10 2xl:px-14 xl:pl-5">
-            <component :is="$slots.wrap || 'div'">
+            <component :is="($slots as any).wrap || 'div'">
               <div class="xl:grid flex flex-col grid-cols-2 2xl:px-5 2xl:gap-10 gap-5">
                 <div>
-                  <component :is="$slots.a" />
+                  <component :is="($slots as any).a" />
                 </div>
                 <div>
-                  <component :is="$slots.b" />
+                  <component :is="($slots as any).b" />
                 </div>
               </div>
             </component>
@@ -108,7 +123,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
 
     <section class="xl:max-w-full max-w-3xl mx-auto py-5 sm:py-12 xl:py-20">
       <UContainer class="container mx-auto">
-        <NuxtLink target="_blank" to="https://github.com/unjs/unhead/pull/620" icon="i-noto-hammer">
+        <NuxtLink target="_blank" to="https://github.com/unjs/unhead/pull/620" aria-label="Unhead v3 Coming">
           <UBadge variant="soft" color="success">
             Unhead v3 Coming
           </UBadge>
@@ -189,7 +204,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
               :step="Number(mounted)"
             />
           </ProsePre>
-          <UBadge variant="outline" :color="mounted ? 'success' : 'gray'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
+          <UBadge variant="outline" :color="mounted ? 'success' : 'neutral'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
         </div>
       </div>
     </div>
@@ -383,7 +398,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </div>
             <div class="sm:grid space-y-5 md:space-y-0 grid-cols-3 gap-5 mb-10">
               <div v-for="(entry, key) in sponsors.$50" :key="key">
-                <NuxtLink :to="entry.sponsor.websiteUrl" class="flex items-center gap-2">
+                <NuxtLink :to="entry.sponsor.websiteUrl" :aria-label="entry.sponsor.name" class="flex items-center gap-2">
                   <NuxtImg loading="lazy" :alt="entry.sponsor.name" width="56" height="56" :src="entry.sponsor.avatarUrl" class="w-14 h-14 rounded-full" />
                   <div>
                     <div class="font-bold text-xl whitespace-nowrap">
@@ -401,7 +416,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </div>
             <div class="sm:grid space-y-5 md:space-y-0 grid-cols-3 gap-5 mb-10">
               <div v-for="(entry, key) in sponsors.$25" :key="key">
-                <NuxtLink :to="entry.sponsor.websiteUrl" class="flex items-center gap-2">
+                <NuxtLink :to="entry.sponsor.websiteUrl" :aria-label="entry.sponsor.name || entry.sponsor.login" class="flex items-center gap-2">
                   <NuxtImg loading="lazy" :alt="entry.sponsor.name || entry.sponsor.login" width="48" height="48" :src="entry.sponsor.avatarUrl" class="w-12 h-12 rounded-full" />
                   <div>
                     <div class="font-bold text-sm whitespace-nowrap">
@@ -420,7 +435,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             <div class="grid grid-cols-6 sm:grid-cols-10 gap-3 mb-10">
               <div v-for="(entry, key) in sponsors.others" :key="key">
                 <UTooltip :text="entry.sponsor.name || entry.sponsor.login">
-                  <NuxtLink :to="(entry.monthlyDollars > 5 ? entry.sponsor.websiteUrl : entry.sponsor.linkUrl) || entry.sponsor.linkUrl" class="flex items-center gap-2">
+                  <NuxtLink :to="(entry.monthlyDollars > 5 ? entry.sponsor.websiteUrl : entry.sponsor.linkUrl) || entry.sponsor.linkUrl" :aria-label="entry.sponsor.name || entry.sponsor.login" class="flex items-center gap-2">
                     <NuxtImg loading="lazy" :alt="entry.sponsor.name || entry.sponsor.login" width="48" height="48" :src="entry.sponsor.avatarUrl" class="w-12 h-12 rounded-full" :class="entry.monthlyDollars > 5 ? ['ring-green-500 ring-2'] : []" />
                   </NuxtLink>
                 </UTooltip>

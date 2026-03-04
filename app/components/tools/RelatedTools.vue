@@ -53,6 +53,7 @@ const colorMap = {
         v-for="tool in filteredTools"
         :key="tool.id"
         :to="tool.to"
+        :aria-label="tool.title"
         class="group p-5 rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         :class="colorMap[tool.color as keyof typeof colorMap]"
       >

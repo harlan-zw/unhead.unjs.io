@@ -104,7 +104,7 @@ const tools = [
                 </h3>
                 <nav>
                   <ul class="grid gap-4">
-                    <li v-for="(link, key) in [{ title: 'Announcing Unhead v2', path: '/v2' }]" :key="key">
+                    <li v-for="(link, key) in [{ title: 'Announcing Unhead v2', path: '/v2', icon: undefined }]" :key="key">
                       <ULink :to="link.path" class="flex items-center gap-1 hover:underline transition">
                         <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
                         {{ link.title }}
@@ -176,7 +176,7 @@ const tools = [
     <div class="border-t border-neutral-200 dark:border-neutral-800">
       <UContainer>
         <div class="py-10">
-          Copyright © 2025-{{ new Date().getFullYear() }} Harlan Wilton - <a href="https://github.com/unjs/unhead/blob/main/LICENSE">MIT License</a>
+          Copyright © 2025-{{ new Date().getFullYear() }} Harlan Wilton - <a href="https://github.com/unjs/unhead/blob/main/license">MIT License</a>
         </div>
       </UContainer>
     </div>
