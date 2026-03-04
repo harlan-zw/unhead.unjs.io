@@ -15,7 +15,6 @@ export default defineNuxtConfig({
     '@nuxt/content',
     'nuxt-ai-ready',
     '@nuxt/scripts',
-    '@nuxt/image',
     'nuxt-skew-protection',
     'nuxt-auth-utils',
   ],

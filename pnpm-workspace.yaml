@@ -2,9 +2,9 @@ shellEmulator: true
 trustPolicy: no-downgrade
 
 overrides:
-  vite: npm:vite@8.0.0-beta.16
   nuxt-og-image: npm:nuxt-og-image@6.0.0-beta.46
 
+  vite: npm:vite@8.0.0-beta.16
 catalog:
   '@antfu/eslint-config': ^7.6.1
   '@cloudflare/workers-types': ^4.20260301.1
@@ -25,11 +25,11 @@ catalog:
   '@nuxt/content': 3.12.0
   '@nuxt/devtools': 3.2.2
   '@nuxt/fonts': ^0.14.0
-  '@nuxt/image': ^2.0.0
   '@nuxt/scripts': ^0.13.2
   '@nuxt/ui': ^4.5.1
   '@nuxtjs/mdc': 0.20.1
   '@nuxtjs/seo': ^3.4.0
+  '@takumi-rs/core': ^0.70.3
   '@takumi-rs/helpers': ^0.70.3
   '@takumi-rs/wasm': ^0.70.3
   '@unovis/vue': 1.6.4
@@ -52,10 +52,6 @@ catalog:
   nuxt: 4.3.1
   nuxt-ai-ready: ^0.12.0
   nuxt-auth-utils: ^0.5.29
-  nuxt-build-cache: ^0.1.1
-  nuxt-content-twoslash: ^0.3.0
-  nuxt-lodash: ^2.5.3
-  nuxt-rebundle: ^0.0.2
   nuxt-skew-protection: ^0.7.6
   octokit: ^5.0.5
   ofetch: ^1.5.1

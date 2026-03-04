@@ -32,11 +32,11 @@
     "@nuxt/content": "catalog:",
     "@nuxt/devtools": "catalog:",
     "@nuxt/fonts": "catalog:",
-    "@nuxt/image": "catalog:",
     "@nuxt/scripts": "catalog:",
     "@nuxt/ui": "catalog:",
     "@nuxtjs/mdc": "catalog:",
     "@nuxtjs/seo": "catalog:",
+    "@takumi-rs/core": "catalog:",
     "@takumi-rs/helpers": "catalog:",
     "@takumi-rs/wasm": "catalog:",
     "@unovis/vue": "catalog:",
@@ -74,8 +74,5 @@
     "vitest": "catalog:",
     "wrangler": "catalog:",
     "zod": "catalog:"
-  },
-  "dependencies": {
-    "@takumi-rs/core": "^0.70.3"
   }
 }

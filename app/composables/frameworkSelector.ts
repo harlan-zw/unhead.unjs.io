@@ -12,13 +12,12 @@ const items = [
   { icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt', import: '#imports', schemaImport: '#imports' },
 ] as const
 
-const fallbackFramework = ref()
-
 export interface FrameworkNav {
   navFlat: { path: string }[]
 }
 
 export function useFrameworkSelector(nav?: Ref<FrameworkNav | undefined> | ComputedRef<FrameworkNav | undefined>) {
+  const fallbackFramework = useState<string | undefined>('fallback-framework', () => undefined)
   const route = useRoute()
   const { currentVersion } = useVersionSelector()
   let isSwitching = false

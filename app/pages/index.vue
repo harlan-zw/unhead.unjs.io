@@ -293,7 +293,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
               </p>
               <div class="gap-2 mx-auto text-center grid grid-cols-12">
                 <span v-for="(c, index) in stats.contributors || []" :key="index" class="inline-flex items-center justify-center shrink-0 select-none overflow-hidden rounded-full align-middle bg-[--ui-bg-elevated] size-8 text-base">
-                  <NuxtImg class="h-full w-full rounded-[inherit] object-cover" :alt="`GitHub User ${c.login}`" size="xl" height="45" width="45" loading="lazy" :src="c.avatar_url" />
+                  <img class="h-full w-full rounded-[inherit] object-cover" :alt="`GitHub User ${c.login}`" height="45" width="45" loading="lazy" :src="c.avatar_url">
                 </span>
               </div>
             </div>
@@ -399,7 +399,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             <div class="sm:grid space-y-5 md:space-y-0 grid-cols-3 gap-5 mb-10">
               <div v-for="(entry, key) in sponsors.$50" :key="key">
                 <NuxtLink :to="entry.sponsor.websiteUrl" :aria-label="entry.sponsor.name" class="flex items-center gap-2">
-                  <NuxtImg loading="lazy" :alt="entry.sponsor.name" width="56" height="56" :src="entry.sponsor.avatarUrl" class="w-14 h-14 rounded-full" />
+                  <img loading="lazy" :alt="entry.sponsor.name" width="56" height="56" :src="entry.sponsor.avatarUrl" class="w-14 h-14 rounded-full">
                   <div>
                     <div class="font-bold text-xl whitespace-nowrap">
                       {{ entry.sponsor.name }}
@@ -417,7 +417,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             <div class="sm:grid space-y-5 md:space-y-0 grid-cols-3 gap-5 mb-10">
               <div v-for="(entry, key) in sponsors.$25" :key="key">
                 <NuxtLink :to="entry.sponsor.websiteUrl" :aria-label="entry.sponsor.name || entry.sponsor.login" class="flex items-center gap-2">
-                  <NuxtImg loading="lazy" :alt="entry.sponsor.name || entry.sponsor.login" width="48" height="48" :src="entry.sponsor.avatarUrl" class="w-12 h-12 rounded-full" />
+                  <img loading="lazy" :alt="entry.sponsor.name || entry.sponsor.login" width="48" height="48" :src="entry.sponsor.avatarUrl" class="w-12 h-12 rounded-full">
                   <div>
                     <div class="font-bold text-sm whitespace-nowrap">
                       {{ entry.sponsor.name || entry.sponsor.login }}
@@ -436,7 +436,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
               <div v-for="(entry, key) in sponsors.others" :key="key">
                 <UTooltip :text="entry.sponsor.name || entry.sponsor.login">
                   <NuxtLink :to="(entry.monthlyDollars > 5 ? entry.sponsor.websiteUrl : entry.sponsor.linkUrl) || entry.sponsor.linkUrl" :aria-label="entry.sponsor.name || entry.sponsor.login" class="flex items-center gap-2">
-                    <NuxtImg loading="lazy" :alt="entry.sponsor.name || entry.sponsor.login" width="48" height="48" :src="entry.sponsor.avatarUrl" class="w-12 h-12 rounded-full" :class="entry.monthlyDollars > 5 ? ['ring-green-500 ring-2'] : []" />
+                    <img loading="lazy" :alt="entry.sponsor.name || entry.sponsor.login" width="48" height="48" :src="entry.sponsor.avatarUrl" class="w-12 h-12 rounded-full" :class="entry.monthlyDollars > 5 ? ['ring-green-500 ring-2'] : []">
                   </NuxtLink>
                 </UTooltip>
               </div>
