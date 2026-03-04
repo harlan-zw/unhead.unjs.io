@@ -17,6 +17,15 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     'nuxt-skew-protection',
     'nuxt-auth-utils',
+    // 'nuxt-build-cache',
+    async (_, nuxt) => {
+      // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
+      nuxt.hooks.hook('nitro:init', (nitro) => {
+        // from sponsorkit
+        nitro.options.alias.sharp = 'unenv/mock/empty'
+        nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
+      })
+    },
   ],
 
   ui: {
@@ -115,9 +124,9 @@ export default defineNuxtConfig({
     prerender: {
       autoSubfolderIndex: false,
       failOnError: false,
-      crawlLinks: true,
+      crawlLinks: false,
       routes: ['/', '/404.html'],
-      ignore: ['/auth/github', '/admin/'],
+      ignore: ['/auth/github', '/admin/**'],
     },
     cloudflare: {
       pages: {

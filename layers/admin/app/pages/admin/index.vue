@@ -23,6 +23,7 @@ const timeRanges = [
 const { data: analytics, refresh, status } = useFetch('/api/admin/tool-analytics', {
   query: { range: timeRange },
   watch: [timeRange],
+  server: false,
 })
 
 const toolMetadata: Record<string, { name: string, icon: string, color: string }> = {
@@ -58,7 +59,9 @@ interface LookupResponse {
   total: number
 }
 
-const { data: lookupData, status: lookupStatus } = useFetch<LookupResponse>('/api/admin/tool-lookups')
+const { data: lookupData, status: lookupStatus } = useFetch<LookupResponse>('/api/admin/tool-lookups', {
+  server: false,
+})
 
 const lookupTools = [
   { value: 'all', label: 'All', icon: 'i-carbon-grid' },
