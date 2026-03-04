@@ -1084,7 +1084,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
       <section>
         <ToolSectionHeader title="Learn More" icon="i-carbon-book" color="purple" />
         <div class="flex flex-wrap gap-2 sm:gap-3">
-          <NuxtLink to="/docs/head/guides/get-started/installation" aria-label="Installation Guide" class="group">
+          <NuxtLink to="/docs/typescript/head/guides/get-started/installation" aria-label="Installation Guide" class="group">
             <UButton variant="soft" color="primary" trailing-icon="i-carbon-arrow-right" size="sm" class="group-hover:shadow-lg group-hover:shadow-primary/20 transition-all">
               Installation Guide
             </UButton>

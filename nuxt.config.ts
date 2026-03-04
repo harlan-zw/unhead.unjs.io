@@ -5,7 +5,6 @@ export default defineNuxtConfig({
   extends: ['./layers/admin'],
 
   modules: [
-    'nuxt-content-twoslash',
     'motion-v/nuxt',
     '@nuxt/ui',
     '@nuxtjs/seo',
@@ -18,17 +17,7 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     '@nuxt/image',
     'nuxt-skew-protection',
-    'nuxt-rebundle',
     'nuxt-auth-utils',
-    // 'nuxt-build-cache',
-    async (_, nuxt) => {
-      // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
-      nuxt.hooks.hook('nitro:init', (nitro) => {
-        // from sponsorkit
-        nitro.options.alias.sharp = 'unenv/mock/empty'
-        nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
-      })
-    },
   ],
 
   ui: {
@@ -108,16 +97,6 @@ export default defineNuxtConfig({
     githubAccessToken: '', // NUXT_GITHUB_ACCESS_TOKEN
     cloudflareAccountId: '', // NUXT_CLOUDFLARE_ACCOUNT_ID
     cloudflareAnalyticsApiToken: '', // NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN
-  },
-
-  twoslash: {
-    floatingVueOptions: {
-      classMarkdown: 'prose prose-primary dark:prose-invert bg-blue-500',
-    },
-    // Skip Twoslash in dev to improve performance. Turn this on when you want to explictly test twoslash in dev.
-    enableInDev: true,
-    // Do not throw when twoslash fails, the typecheck should be down in github.com/nuxt/nuxt's CI
-    throws: true,
   },
 
   fonts: {
@@ -297,13 +276,7 @@ export default defineNuxtConfig({
   ogImage: {
     enabled: true,
     zeroRuntime: true,
-    defaults: {
-      component: 'Unhead',
-    },
-    fonts: [
-      'Hubot+Sans:400',
-      'Hubot+Sans:700',
-    ],
+    buildCache: true,
   },
 
   icon: {
@@ -349,5 +322,5 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2024-07-12',
+  compatibilityDate: '2026-03-01',
 })

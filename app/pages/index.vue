@@ -37,7 +37,7 @@ useSeoMeta({
   titleTemplate: null,
 })
 
-defineOgImageComponent('Home')
+defineOgImage('Home')
 
 const { data: sponsors } = await useFetch('/api/github/sponsors.json')
 

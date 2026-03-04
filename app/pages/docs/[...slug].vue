@@ -35,7 +35,7 @@ if (isV2) {
   defineOgImage(false)
 }
 else {
-  defineOgImageComponent('Unhead', {
+  defineOgImage('Unhead', {
     title: page.value?.title || '',
     description: page.value?.description,
     frameworkIcon: selectedFramework.value.icon,
