@@ -3,6 +3,8 @@ import { motion } from 'motion-v'
 import { useCurrentDocPage } from '~/composables/data'
 
 const route = useRoute()
+const initialPath = route.path
+const hasNavigated = computed(() => route.path !== initialPath)
 
 const page = ref()
 const isV2 = ref(false)
@@ -58,7 +60,7 @@ watch(() => route.path, async () => {
         <AnimatePresence mode="wait">
           <motion.div
             :key="route.path"
-            :initial="{ opacity: 0, y: 16, filter: 'blur(0.2rem)' }"
+            :initial="hasNavigated ? { opacity: 0, y: 16, filter: 'blur(0.2rem)' } : false"
             :animate="{ opacity: 1, y: 0, filter: 'blur(0)' }"
             :exit="{ opacity: 0, y: 16, filter: 'blur(0.2rem)' }"
             :transition="{
