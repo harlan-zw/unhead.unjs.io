@@ -69,9 +69,14 @@ export async function useCurrentDocPage() {
       _path: m.path,
     })))
 
+    const filePath = pageData.id.split('/').slice(2).join('/')
+    const lastCommitData = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`).catch(() => null)
+    const lastCommit = ref(lastCommitData)
+
     return {
       page,
       surround,
+      lastCommit,
       isV2,
     }
   })()

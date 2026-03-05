@@ -7,7 +7,8 @@ export function initOctokitRequestHandler(e: H3Event) {
     throw new Error('Missing githubAccessToken')
   }
   const repo = (getRouterParam(e, 'repo') || '').replace('@', '/')
-  if (repo !== 'unjs/unhead') {
+  const allowedRepos = ['unjs/unhead', 'harlan-zw/unhead.unjs.io']
+  if (!allowedRepos.includes(repo)) {
     throw new Error(`Invalid repo ${repo}`)
   }
   return {

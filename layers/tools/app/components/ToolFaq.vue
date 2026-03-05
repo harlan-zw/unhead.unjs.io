@@ -1,0 +1,113 @@
+<script setup lang="ts">
+import type { ToolColor } from '../utils/tool-colors'
+
+interface FAQ {
+  question: string
+  answer: string
+}
+
+const props = withDefaults(defineProps<{
+  faqs: FAQ[]
+  color?: ToolColor
+}>(), {
+  color: 'emerald',
+})
+
+const headerColorClasses = computed(() => {
+  const map: Record<string, { bg: string, icon: string }> = {
+    violet: { bg: 'from-violet-500/20 to-purple-500/10', icon: 'text-violet-500' },
+    blue: { bg: 'from-blue-500/20 to-cyan-500/10', icon: 'text-blue-500' },
+    green: { bg: 'from-green-500/20 to-emerald-500/10', icon: 'text-green-500' },
+    purple: { bg: 'from-purple-500/20 to-violet-500/10', icon: 'text-purple-500' },
+    cyan: { bg: 'from-cyan-500/20 to-teal-500/10', icon: 'text-cyan-500' },
+    emerald: { bg: 'from-emerald-500/20 to-green-500/10', icon: 'text-emerald-500' },
+    orange: { bg: 'from-orange-500/20 to-amber-500/10', icon: 'text-orange-500' },
+    amber: { bg: 'from-amber-500/20 to-orange-500/10', icon: 'text-amber-500' },
+    sky: { bg: 'from-sky-500/20 to-cyan-500/10', icon: 'text-sky-500' },
+    teal: { bg: 'from-teal-500/20 to-green-500/10', icon: 'text-teal-500' },
+    indigo: { bg: 'from-indigo-500/20 to-blue-500/10', icon: 'text-indigo-500' },
+  }
+  return map[props.color] || map.emerald
+})
+
+const colorClasses = computed(() => {
+  const map: Record<string, { accent: string, bg: string, border: string, glow: string, number: string }> = {
+    emerald: { accent: 'text-emerald-500', bg: 'from-emerald-500/8 to-green-500/4', border: 'border-emerald-500/20 group-open:border-emerald-500/40', glow: 'group-hover:shadow-emerald-500/5', number: 'bg-emerald-500/10 text-emerald-500' },
+    blue: { accent: 'text-blue-500', bg: 'from-blue-500/8 to-cyan-500/4', border: 'border-blue-500/20 group-open:border-blue-500/40', glow: 'group-hover:shadow-blue-500/5', number: 'bg-blue-500/10 text-blue-500' },
+    green: { accent: 'text-green-500', bg: 'from-green-500/8 to-emerald-500/4', border: 'border-green-500/20 group-open:border-green-500/40', glow: 'group-hover:shadow-green-500/5', number: 'bg-green-500/10 text-green-500' },
+    purple: { accent: 'text-purple-500', bg: 'from-purple-500/8 to-violet-500/4', border: 'border-purple-500/20 group-open:border-purple-500/40', glow: 'group-hover:shadow-purple-500/5', number: 'bg-purple-500/10 text-purple-500' },
+    cyan: { accent: 'text-cyan-500', bg: 'from-cyan-500/8 to-teal-500/4', border: 'border-cyan-500/20 group-open:border-cyan-500/40', glow: 'group-hover:shadow-cyan-500/5', number: 'bg-cyan-500/10 text-cyan-500' },
+    amber: { accent: 'text-amber-500', bg: 'from-amber-500/8 to-orange-500/4', border: 'border-amber-500/20 group-open:border-amber-500/40', glow: 'group-hover:shadow-amber-500/5', number: 'bg-amber-500/10 text-amber-500' },
+    orange: { accent: 'text-orange-500', bg: 'from-orange-500/8 to-amber-500/4', border: 'border-orange-500/20 group-open:border-orange-500/40', glow: 'group-hover:shadow-orange-500/5', number: 'bg-orange-500/10 text-orange-500' },
+    violet: { accent: 'text-violet-500', bg: 'from-violet-500/8 to-purple-500/4', border: 'border-violet-500/20 group-open:border-violet-500/40', glow: 'group-hover:shadow-violet-500/5', number: 'bg-violet-500/10 text-violet-500' },
+    sky: { accent: 'text-sky-500', bg: 'from-sky-500/8 to-cyan-500/4', border: 'border-sky-500/20 group-open:border-sky-500/40', glow: 'group-hover:shadow-sky-500/5', number: 'bg-sky-500/10 text-sky-500' },
+    teal: { accent: 'text-teal-500', bg: 'from-teal-500/8 to-green-500/4', border: 'border-teal-500/20 group-open:border-teal-500/40', glow: 'group-hover:shadow-teal-500/5', number: 'bg-teal-500/10 text-teal-500' },
+    indigo: { accent: 'text-indigo-500', bg: 'from-indigo-500/8 to-blue-500/4', border: 'border-indigo-500/20 group-open:border-indigo-500/40', glow: 'group-hover:shadow-indigo-500/5', number: 'bg-indigo-500/10 text-indigo-500' },
+  }
+  return map[props.color] || map.emerald
+})
+</script>
+
+<template>
+  <section class="mt-16">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="p-2 rounded-lg bg-gradient-to-br" :class="headerColorClasses.bg">
+        <UIcon name="i-carbon-help" class="w-6 h-6" :class="headerColorClasses.icon" />
+      </div>
+      <h2 class="text-2xl font-semibold text-[var(--ui-text-highlighted)]">
+        Frequently Asked Questions
+      </h2>
+    </div>
+
+    <div class="space-y-3">
+      <details
+        v-for="(faq, index) in faqs"
+        :key="index"
+        :open="index === 0"
+        class="group rounded-xl border overflow-hidden transition-all duration-300 shadow-lg shadow-black/[0.02] dark:shadow-black/10"
+        :class="[colorClasses.border, colorClasses.glow]"
+      >
+        <summary
+          class="flex items-center gap-4 p-5 cursor-pointer select-none transition-colors duration-200 bg-gradient-to-r"
+          :class="colorClasses.bg"
+        >
+          <span
+            class="flex items-center justify-center w-7 h-7 rounded-lg text-xs font-semibold shrink-0 transition-transform duration-300 group-open:scale-110"
+            :class="colorClasses.number"
+          >
+            {{ String(index + 1).padStart(2, '0') }}
+          </span>
+
+          <h3 class="flex-1 font-medium text-[var(--ui-text-highlighted)] leading-snug pr-2 text-base">
+            {{ faq.question }}
+          </h3>
+
+          <span class="relative w-6 h-6 shrink-0">
+            <UIcon
+              name="i-carbon-add"
+              class="absolute inset-0 w-6 h-6 transition-all duration-300 group-open:rotate-45 group-open:opacity-0"
+              :class="colorClasses.accent"
+            />
+            <UIcon
+              name="i-carbon-subtract"
+              class="absolute inset-0 w-6 h-6 transition-all duration-300 opacity-0 group-open:opacity-100"
+              :class="colorClasses.accent"
+            />
+          </span>
+        </summary>
+
+        <div class="relative">
+          <div
+            class="absolute left-0 top-0 bottom-0 w-0.5 opacity-60"
+            :class="colorClasses.accent.replace('text-', 'bg-')"
+          />
+          <div class="pl-16 pr-6 pb-5 pt-1">
+            <p class="text-[var(--ui-text-muted)] text-sm leading-relaxed">
+              {{ faq.answer }}
+            </p>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+</template>

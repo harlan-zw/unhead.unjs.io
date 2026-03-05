@@ -54,7 +54,7 @@ export default ({
       next: 'i-carbon-arrow-right',
       note: 'i-carbon-information',
       prev: 'i-carbon-arrow-left',
-      system: 'i-carbon-computer',
+      system: 'i-carbon-screen',
       tip: 'i-carbon-idea',
       warning: 'i-carbon-warning',
       chevronDoubleLeft: 'i-carbon-chevron-double-left',

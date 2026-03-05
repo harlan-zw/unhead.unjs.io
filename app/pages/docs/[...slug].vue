@@ -16,7 +16,7 @@ definePageMeta({
 
 const route = useRoute()
 
-const { page, surround, isV2 } = await useCurrentDocPage()
+const { page, surround, lastCommit, isV2 } = await useCurrentDocPage()
 if (!page?.value?.id) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
@@ -108,46 +108,74 @@ const transformedPage = computed(() => {
 </script>
 
 <template>
-  <div v-if="page" class="max-w-[66ch] mx-auto lg:ml-0 lg:mr-auto">
-    <UPageHeader
-      :title="page.title" :headline="headline" class="text-balance pt-4" :links="!isV2 && !['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
-        { label: 'Copy for LLMs', to: repoLinks[1]?.to, icon: 'i-catppuccin-markdown', target: '_blank' },
-      ] : []"
+  <div v-if="page" class="flex justify-between w-full">
+    <div class="xl:mx-auto w-full max-w-[66ch]">
+      <UPageHeader
+        :title="page.title" :headline="headline" class="text-balance pt-4" :links="!isV2 && !['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
+          { label: 'Copy for LLMs', to: repoLinks[1]?.to, icon: 'i-catppuccin-markdown', target: '_blank' },
+        ] : []"
+        :ui="{ title: 'leading-normal' }"
+      >
+        <div v-if="lastCommit" class="mt-3">
+          <DocsCommitMeta
+            :date="lastCommit.date"
+            :date-human="lastCommit.dateHuman"
+            :author-name="lastCommit.author.name"
+            :author-username="lastCommit.author.committer"
+            :commit-message="lastCommit.message"
+            :commit-url="lastCommit.url"
+          />
+        </div>
+      </UPageHeader>
 
-      :ui="{ title: 'leading-normal' }"
-    />
-
-    <div class="block lg:hidden">
-      <div class="mt-5 flex items-center gap-2  text-[var(--ui-text-accented)]">
-        <UIcon name="i-tabler-align-left-2" class="size-4 " />
-        <div class="text-xs  font-medium">
-          On this page
+      <div class="block xl:hidden">
+        <div class="mt-5 flex items-center gap-2 text-[var(--ui-text-accented)]">
+          <UIcon name="i-tabler-align-left-2" class="size-4" />
+          <div class="text-xs font-medium">
+            On this page
+          </div>
+        </div>
+        <div class="mt-5">
+          <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-5" />
         </div>
       </div>
-      <div class="mt-5">
-        <TableOfContents v-if="page.body?.toc?.links?.length > 1" :links="page.body?.toc?.links" class="mt-5" />
-      </div>
+
+      <UPageBody prose class="pb-0">
+        <ContentRenderer v-if="page.body" :value="transformedPage" />
+        <div class="justify-center flex items-center gap-5 font-semibold">
+          <div class="flex items-center gap-2">
+            <UIcon name="i-simple-icons-github" class="w-5 h-5" />
+            <NuxtLink :to="repoLinks[0].to" :target="repoLinks[0].target" :aria-label="repoLinks[0].label" class="hover:underline">
+              {{ repoLinks[0].label }}
+            </NuxtLink>
+          </div>
+          <div v-if="repoLinks[1]" class="flex items-center gap-2">
+            <UIcon name="i-simple-icons-markdown" class="w-5 h-5" />
+            <NuxtLink :to="repoLinks[1].to" :target="repoLinks[1].target" :aria-label="repoLinks[1].label" class="hover:underline">
+              {{ repoLinks[1].label }}
+            </NuxtLink>
+          </div>
+        </div>
+        <FeedbackButtons :edit-link="repoLinks[0].to" />
+        <USeparator v-if="surround?.length" class="my-8" />
+        <UContentSurround :surround="surround" />
+      </UPageBody>
     </div>
 
-    <UPageBody prose class="pb-0">
-      <ContentRenderer v-if="page.body" :value="transformedPage" />
-      <div class="justify-center flex items-center gap-5 font-semibold">
-        <div class="flex items-center gap-2">
-          <UIcon name="i-simple-icons-github" class="w-5 h-5" />
-          <NuxtLink :to="repoLinks[0].to" :target="repoLinks[0].target" :aria-label="repoLinks[0].label" class="hover:underline">
-            {{ repoLinks[0].label }}
-          </NuxtLink>
-        </div>
-        <div v-if="repoLinks[1]" class="flex items-center gap-2">
-          <UIcon name="i-simple-icons-markdown" class="w-5 h-5" />
-          <NuxtLink :to="repoLinks[1].to" :target="repoLinks[1].target" :aria-label="repoLinks[1].label" class="hover:underline">
-            {{ repoLinks[1].label }}
-          </NuxtLink>
+    <div class="hidden xl:block max-w-75 w-full">
+      <div class="pt-11 pl-10 gap-5 flex flex-col">
+        <div v-if="page?.body?.toc?.links?.length > 1">
+          <div class="flex items-center gap-2 text-[var(--ui-text-accented)]">
+            <UIcon name="i-tabler-align-left-2" class="size-4" />
+            <div class="text-xs font-medium">
+              On this page
+            </div>
+          </div>
+          <div class="my-5">
+            <TableOfContents :links="page.body.toc.links" />
+          </div>
         </div>
       </div>
-      <FeedbackButtons :edit-link="repoLinks[0].to" />
-      <USeparator v-if="surround?.length" class="my-8" />
-      <UContentSurround :surround="surround" />
-    </UPageBody>
+    </div>
   </div>
 </template>

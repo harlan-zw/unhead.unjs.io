@@ -74,8 +74,8 @@ catalogs:
       specifier: ^4.5.1
       version: 4.5.1
     '@nuxtjs/mdc':
-      specifier: 0.20.1
-      version: 0.20.1
+      specifier: 0.20.2
+      version: 0.20.2
     '@nuxtjs/seo':
       specifier: ^3.4.0
       version: 3.4.0
@@ -128,8 +128,8 @@ catalogs:
       specifier: ^10.0.2
       version: 10.0.2
     eslint-plugin-harlanzw:
-      specifier: ^0.4.1
-      version: 0.4.1
+      specifier: ^0.5.7
+      version: 0.5.8
     jsdom:
       specifier: ^28.1.0
       version: 28.1.0
@@ -276,7 +276,7 @@ importers:
         version: 4.5.1(@nuxt/content@3.12.0(better-sqlite3@12.6.2)(drizzle-orm@0.45.1(@cloudflare/workers-types@4.20260305.1)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(better-sqlite3@12.6.2))(magicast@0.5.2)(valibot@1.2.0(typescript@5.9.3)))(@tiptap/extensions@3.20.0(@tiptap/core@3.20.0(@tiptap/pm@3.20.0))(@tiptap/pm@3.20.0))(@tiptap/y-tiptap@3.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6)(y-protocols@1.0.7(yjs@13.6.29))(yjs@13.6.29))(change-case@5.4.4)(db0@0.3.4(better-sqlite3@12.6.2)(drizzle-orm@0.45.1(@cloudflare/workers-types@4.20260305.1)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(better-sqlite3@12.6.2)))(embla-carousel@8.6.0)(ioredis@5.10.0)(magicast@0.5.2)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(vite@8.0.0-beta.16(@types/node@25.3.3)(esbuild@0.27.3)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.29(typescript@5.9.3)))(vue@3.5.29(typescript@5.9.3))(yjs@13.6.29)(zod@4.3.6)
       '@nuxtjs/mdc':
         specifier: 'catalog:'
-        version: 0.20.1(magicast@0.5.2)
+        version: 0.20.2(magicast@0.5.2)
       '@nuxtjs/seo':
         specifier: 'catalog:'
         version: 3.4.0(0896e97923f487700d7efae52544bb01)
@@ -327,7 +327,7 @@ importers:
         version: 10.0.2(jiti@2.6.1)
       eslint-plugin-harlanzw:
         specifier: 'catalog:'
-        version: 0.4.1(eslint@10.0.2(jiti@2.6.1))
+        version: 0.5.8(eslint@10.0.2(jiti@2.6.1))
       jsdom:
         specifier: 'catalog:'
         version: 28.1.0
@@ -1586,8 +1586,8 @@ packages:
   '@nuxtjs/color-mode@3.5.2':
     resolution: {integrity: sha512-cC6RfgZh3guHBMLLjrBB2Uti5eUoGM9KyauOaYS9ETmxNWBMTvpgjvSiSJp1OFljIXPIqVTJ3xtJpSNZiO3ZaA==}
 
-  '@nuxtjs/mdc@0.20.1':
-    resolution: {integrity: sha512-fGmtLDQAmmDHF5Z37Apfc3k806rb2XWDOQFhb5xlDSL7+HiiUjyFy3ctx3qWdlC08dRzfAetmsGOYbfDqYsB/w==}
+  '@nuxtjs/mdc@0.20.2':
+    resolution: {integrity: sha512-afAJKnXKdvDtoNOGARQMpZoGprL1T3OGnj+K9edJjX+WdhCwvVabBijhi8BAlpx+YzA/DpcZx8bDFZk/aoSJmA==}
 
   '@nuxtjs/robots@5.7.1':
     resolution: {integrity: sha512-1y1pW8Dh2gqJGFpXwkTin1KokBofYAG91C1gqxR4XbI7Xkl7DAXQ+BropHF2AeCV/uCxs6qz28ONp0+60TSw1Q==}
@@ -5181,8 +5181,8 @@ packages:
     peerDependencies:
       eslint: '>=8'
 
-  eslint-plugin-harlanzw@0.4.1:
-    resolution: {integrity: sha512-YtUH46rwMxAfsfP7Z+DDtetaVB5MHYmVuck6rjh0Wkc5NbuxUIDVZCcANyHtckJyFWsVn9hIKIMKC/wp2x3RhQ==}
+  eslint-plugin-harlanzw@0.5.8:
+    resolution: {integrity: sha512-gjxtxSFPod1SwqFr2XdD7GIaLEx5MIuaA8hLHCYw7DwSjUzMkNc0GGJaDDvESAp9HxEICPzYvmRGSaHZj0YvCQ==}
     peerDependencies:
       eslint: '>=9.0.0'
 
@@ -9929,7 +9929,7 @@ snapshots:
   '@nuxt/content@3.12.0(better-sqlite3@12.6.2)(drizzle-orm@0.45.1(@cloudflare/workers-types@4.20260305.1)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(better-sqlite3@12.6.2))(magicast@0.5.2)(valibot@1.2.0(typescript@5.9.3))':
     dependencies:
       '@nuxt/kit': 4.3.1(magicast@0.5.2)
-      '@nuxtjs/mdc': 0.20.1(magicast@0.5.2)
+      '@nuxtjs/mdc': 0.20.2(magicast@0.5.2)
       '@shikijs/langs': 3.23.0
       '@sqlite.org/sqlite-wasm': 3.50.4-build1
       '@standard-schema/spec': 1.1.0
@@ -10469,7 +10469,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@nuxtjs/mdc@0.20.1(magicast@0.5.2)':
+  '@nuxtjs/mdc@0.20.2(magicast@0.5.2)':
     dependencies:
       '@nuxt/kit': 4.3.1(magicast@0.5.2)
       '@shikijs/core': 3.23.0
@@ -14043,7 +14043,7 @@ snapshots:
       eslint: 10.0.2(jiti@2.6.1)
       eslint-compat-utils: 0.5.1(eslint@10.0.2(jiti@2.6.1))
 
-  eslint-plugin-harlanzw@0.4.1(eslint@10.0.2(jiti@2.6.1)):
+  eslint-plugin-harlanzw@0.5.8(eslint@10.0.2(jiti@2.6.1)):
     dependencies:
       '@eslint/plugin-kit': 0.6.0
       eslint: 10.0.2(jiti@2.6.1)

@@ -1,12 +1,7 @@
-shellEmulator: true
-trustPolicy: no-downgrade
-
 packages:
   - .
   - test/capo-benchmarks
-overrides:
-  nuxt-og-image: npm:nuxt-og-image@6.0.0-beta.47
-  vite: npm:vite@8.0.0-beta.16
+
 catalog:
   '@antfu/eslint-config': ^7.6.1
   '@cloudflare/workers-types': ^4.20260305.1
@@ -29,7 +24,7 @@ catalog:
   '@nuxt/fonts': ^0.14.0
   '@nuxt/scripts': ^0.13.2
   '@nuxt/ui': ^4.5.1
-  '@nuxtjs/mdc': 0.20.1
+  '@nuxtjs/mdc': 0.20.2
   '@nuxtjs/seo': ^3.4.0
   '@takumi-rs/core': ^0.70.4
   '@takumi-rs/helpers': ^0.70.4
@@ -47,7 +42,7 @@ catalog:
   consola: ^3.4.2
   drizzle-orm: ^0.45.1
   eslint: ^10.0.2
-  eslint-plugin-harlanzw: ^0.4.1
+  eslint-plugin-harlanzw: ^0.5.7
   jsdom: ^28.1.0
   lighthouse: ^13.0.3
   markdownlint-cli: ^0.48.0
@@ -73,6 +68,7 @@ catalog:
   vitest: ^4.0.18
   wrangler: ^4.70.0
   zod: ^4.3.6
+
 catalogs:
   conflicts_conflicts_tsx_h4_19_0_h4_0_0:
     tsx: ^4.21.0
@@ -82,6 +78,7 @@ catalogs:
     puppeteer: ^24.38.0
   conflicts_tsx_h4_19_0:
     tsx: ^4.21.0
+
 ignoredBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'
@@ -93,3 +90,11 @@ ignoredBuiltDependencies:
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp
+
+overrides:
+  nuxt-og-image: npm:nuxt-og-image@6.0.0-beta.47
+  vite: npm:vite@8.0.0-beta.16
+
+shellEmulator: true
+
+trustPolicy: no-downgrade

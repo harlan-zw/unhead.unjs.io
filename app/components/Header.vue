@@ -2,8 +2,7 @@
 import { useContentSearch } from '#ui/composables/useContentSearch'
 import { motion } from 'motion-v'
 import { ref } from 'vue'
-import { Unhead } from '~~/const'
-import { getPathSection, getPathSegments, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
+import { getPathSegments, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 import { useVersionSelector } from '~/composables/versionSelector'
 
@@ -53,7 +52,7 @@ const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/doc
 const learnNavItem = computed(() => ({
   label: 'Learn',
   icon: 'i-heroicons-academic-cap',
-  to: '/learn/what-is-capo',
+  to: '/learn/guides/what-is-capo',
   children: [{}],
 }))
 
@@ -128,7 +127,7 @@ const subSectionLinks = computed(() => {
           <ToolMenu />
         </template>
       </UNavigationMenu>
-      <UNavigationMenu :ui="{ viewport: 'min-w-[560px]' }" :items="[learnNavItem]" class="hidden lg:flex justify-center">
+      <UNavigationMenu :ui="{ viewport: 'min-w-[660px]' }" :items="[learnNavItem]" class="hidden lg:flex justify-center">
         <template #item-content>
           <LearnMenu />
         </template>
