@@ -17,10 +17,10 @@ useIntersectionObserver(codeOutputRef, ([{ isIntersecting }]) => {
 }, { threshold: 0.5 })
 
 useSeoMeta({
-  title: 'Schema.org Generator - Generate useSchemaOrg Code',
-  description: 'Free Schema.org markup generator for Vue, React, Nuxt, and more. Generate useSchemaOrg() code with JSON-LD preview.',
+  title: 'Schema.org Generator - Free Structured Data Markup Tool',
+  description: 'Free Schema.org JSON-LD generator. Build LocalBusiness, Article, HowTo, FAQ, and Product structured data visually. Export as useSchemaOrg() or raw JSON-LD.',
   ogTitle: 'Schema.org Generator | Unhead',
-  ogDescription: 'Generate Schema.org structured data as useSchemaOrg() composable code. Preview JSON-LD output.',
+  ogDescription: 'Generate Schema.org structured data visually. Export as JSON-LD or useSchemaOrg() composable code.',
 })
 
 const {

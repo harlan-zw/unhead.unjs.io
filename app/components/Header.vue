@@ -34,16 +34,18 @@ function onVersionChange(v: { label: string, value: string }) {
   }
 }
 
-const tools = [
-  { label: 'Meta Tag Generator', icon: 'i-carbon-code', to: '/tools/meta-tag-generator' },
-  { label: 'OG Image Generator', icon: 'i-carbon-image', to: '/tools/og-image-generator' },
-  { label: 'Schema.org Generator', icon: 'i-carbon-data-structured', to: '/tools/schema-generator' },
-]
+const docsNavItem = computed(() => ({
+  label: 'Docs',
+  icon: 'i-heroicons-book-open',
+  to: `${versionPrefix.value}/${selectedFramework.value.slug}/head/guides/get-started/overview`,
+  children: [{}],
+}))
 
 const toolsNavItem = computed(() => ({
   label: 'Tools',
-  icon: 'i-carbon-tool-box',
-  children: tools,
+  icon: 'i-heroicons-wrench-screwdriver',
+  to: '/tools',
+  children: [{}],
 }))
 
 const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
@@ -119,21 +121,20 @@ const subSectionLinks = computed(() => {
       >
         <Logo />
       </NuxtLink>
-      <div class="hidden lg:flex items-center gap-2">
-        <UNavigationMenu highlight :items="menu.slice(0, 4)" class="justify-center" />
-        <UNavigationMenu :ui="{ viewport: 'min-w-[250px]' }" :items="[toolsNavItem]" class="justify-center">
-          <template #item-content="{ item }">
-            <ul class="p-2 space-y-1">
-              <li v-for="tool in item.children" :key="tool.to">
-                <UButton variant="ghost" :to="tool.to" class="w-full justify-start">
-                  <UIcon :name="tool.icon" class="w-4 h-4 mr-2 opacity-70" />
-                  {{ tool.label }}
-                </UButton>
-              </li>
-            </ul>
-          </template>
-        </UNavigationMenu>
-      </div>
+    </template>
+
+    <template #default>
+      <UNavigationMenu highlight :items="menu.slice(0, 4)" class="hidden lg:flex justify-center" />
+      <UNavigationMenu :ui="{ viewport: 'min-w-[620px]' }" :items="[docsNavItem]" class="hidden lg:flex justify-center">
+        <template #item-content>
+          <DocsMenu />
+        </template>
+      </UNavigationMenu>
+      <UNavigationMenu :ui="{ viewport: 'min-w-[320px]' }" :items="[toolsNavItem]" class="hidden lg:flex justify-center">
+        <template #item-content>
+          <ToolsMenu />
+        </template>
+      </UNavigationMenu>
     </template>
 
     <template #body>
@@ -223,9 +224,6 @@ const subSectionLinks = computed(() => {
 
     <template #right>
       <div class="flex items-center justify-end lg:-mr-1.5 gap-3">
-        <div class="hidden lg:block">
-          <UNavigationMenu :items="menu.slice(4)" :ui="{ viewport: 'min-w-[500px] -left-full' }" class="justify-center" />
-        </div>
         <UInput type="search" class="cursor-pointer hidden lg:block w-[70px]" shortcut="divide" @click="openSearch = true">
           <template #leading>
             <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100" @click="openSearch = true" />
