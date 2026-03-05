@@ -63,6 +63,21 @@ export default defineContentConfig({
         cwd: resolve('./snippets'),
       },
     }),
+    learn: defineCollection(asSeoCollection({
+      type: 'page',
+      source: {
+        include: '**/*.md',
+        cwd: resolve('./content/learn'),
+        prefix: '/learn',
+      },
+      schema: z.object({
+        icon: z.string().optional(),
+        publishedAt: z.string().optional(),
+        updatedAt: z.string().optional(),
+        keywords: z.array(z.string()).optional(),
+        readTime: z.string(),
+      }),
+    })),
     root: defineCollection(asSeoCollection({
       type: 'page',
       source: {

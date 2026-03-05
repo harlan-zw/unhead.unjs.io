@@ -3,8 +3,8 @@ import type { H3Event } from 'h3'
 import { toolLookups } from '../database/schema'
 import { getDB } from './db'
 
-type ToolName = 'meta-tag-generator' | 'schema-generator'
-type ToolAction = 'view' | 'use' | 'copy' | 'reset' | 'preset'
+type ToolName = 'meta-tag-generator' | 'schema-generator' | 'og-image-generator' | 'capo-analyzer'
+type ToolAction = 'view' | 'use' | 'copy' | 'reset' | 'preset' | 'download'
 
 export interface AnalyticsDataPoint {
   blobs: string[]

@@ -50,29 +50,23 @@ const toolsNavItem = computed(() => ({
 
 const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
 
+const learnNavItem = computed(() => ({
+  label: 'Learn',
+  icon: 'i-heroicons-academic-cap',
+  to: '/learn/what-is-capo',
+  children: [{}],
+}))
+
 const menu = computed(() => {
   return [
-    {
-      label: Unhead.label,
-      // icon: Unhead.icon,
-      to: `${versionPrefix.value}/${selectedFramework.value.slug}/head/guides/get-started/overview`,
-      active: getPathSection(getPathWithoutFramework(route.path)) === '/docs/head',
-    },
-    {
-      label: 'Schema.org',
-      // icon: 'i-carbon-chart-relationship',
-      to: `${versionPrefix.value}/${selectedFramework.value.slug}/schema-org/guides/get-started/overview`,
-      active: getPathSection(getPathWithoutFramework(route.path)) === '/docs/schema-org',
-    },
-    {
-      label: 'Scripts',
-      // icon: 'i-carbon-script',
-      to: '/',
-      disabled: true,
-      badge: 'Soon',
-      active: route.path.split('/')[2] === 'scripts',
-      class: 'hidden 2xl:flex',
-    },
+    // {
+    //   label: 'Scripts',
+    //   to: '/',
+    //   disabled: true,
+    //   badge: 'Soon',
+    //   active: route.path.split('/')[2] === 'scripts',
+    //   class: 'hidden 2xl:flex',
+    // },
     {
       label: 'Releases',
       to: '/releases',
@@ -124,7 +118,6 @@ const subSectionLinks = computed(() => {
     </template>
 
     <template #default>
-      <UNavigationMenu highlight :items="menu.slice(0, 4)" class="hidden lg:flex justify-center" />
       <UNavigationMenu :ui="{ viewport: 'min-w-[620px]' }" :items="[docsNavItem]" class="hidden lg:flex justify-center">
         <template #item-content>
           <DocsMenu />
@@ -132,9 +125,15 @@ const subSectionLinks = computed(() => {
       </UNavigationMenu>
       <UNavigationMenu :ui="{ viewport: 'min-w-[320px]' }" :items="[toolsNavItem]" class="hidden lg:flex justify-center">
         <template #item-content>
-          <ToolsMenu />
+          <ToolMenu />
         </template>
       </UNavigationMenu>
+      <UNavigationMenu :ui="{ viewport: 'min-w-[560px]' }" :items="[learnNavItem]" class="hidden lg:flex justify-center">
+        <template #item-content>
+          <LearnMenu />
+        </template>
+      </UNavigationMenu>
+      <UNavigationMenu highlight :items="menu" class="hidden lg:flex justify-center" />
     </template>
 
     <template #body>

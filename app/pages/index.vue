@@ -262,6 +262,18 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             :model-value="toggleCapo"
             @update:model-value="toggleCapo = !toggleCapo"
           />
+          <div class="flex flex-wrap gap-2 mt-4 mb-6">
+            <NuxtLink to="/learn/what-is-capo" aria-label="Learn about Capo.js">
+              <UButton variant="soft" color="primary" trailing-icon="i-carbon-arrow-right" size="sm">
+                What is Capo.js?
+              </UButton>
+            </NuxtLink>
+            <NuxtLink to="/tools/capo-analyzer" aria-label="Try the Capo.js Analyzer">
+              <UButton variant="soft" color="neutral" trailing-icon="i-carbon-arrow-right" size="sm">
+                Try the Analyzer
+              </UButton>
+            </NuxtLink>
+          </div>
           <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useScript.md'))" />
           <ContentRenderer :value="snippets?.find(d => d.id.endsWith('useHead-TemplateParams.md'))" />
         </div>

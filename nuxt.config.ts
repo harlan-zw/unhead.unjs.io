@@ -2,7 +2,7 @@ import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
 
 export default defineNuxtConfig({
-  extends: ['./layers/admin'],
+  extends: ['./layers/admin', './layers/tools'],
 
   modules: [
     'motion-v/nuxt',
@@ -112,7 +112,8 @@ export default defineNuxtConfig({
       processCSSVariables: true,
     },
     families: [
-      { name: 'Hubot Sans', provider: 'local', weight: [200, 900], stretch: '75% 125%' },
+      { name: 'Hubot Sans', stretch: '75% 125%', global: true },
+      { name: 'Nunito Sans' },
     ],
   },
 
@@ -231,7 +232,7 @@ export default defineNuxtConfig({
   hooks: {
     'components:extend': function (components) {
       for (const component of components) {
-        if (component.pascalName === 'UAlert') {
+        if (component.pascalName === 'UAlert' || component.pascalName.startsWith('Prose')) {
           component.global = true
         }
       }

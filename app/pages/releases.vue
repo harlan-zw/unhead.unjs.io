@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { TabsItem } from '@nuxt/ui'
 import { formatTimeAgo } from '@vueuse/core'
 import { useStats } from '~/composables/data'
 
@@ -10,6 +11,26 @@ definePageMeta({
 })
 
 const stats = await useStats()
+
+const filterItems: TabsItem[] = [
+  { label: 'Stable', value: 'stable', icon: 'i-carbon-checkmark-filled' },
+  { label: 'Pre-releases', value: 'prerelease', icon: 'i-carbon-chemistry' },
+  { label: 'All', value: 'all', icon: 'i-carbon-list' },
+]
+
+const activeFilter = ref('stable')
+
+const releases = computed(() => stats.value?.releases || [])
+
+const filteredReleases = computed(() => {
+  if (activeFilter.value === 'all')
+    return releases.value
+  if (activeFilter.value === 'prerelease')
+    return releases.value.filter(r => r.prerelease)
+  return releases.value.filter(r => !r.prerelease)
+})
+
+const prereleaseCount = computed(() => releases.value.filter(r => r.prerelease).length)
 
 // credits https://github.com/antfu/releases.antfu.me/blob/main/app/components/TheItem.vue
 const HighlightedVersion = defineComponent({
@@ -78,33 +99,54 @@ const HighlightedVersion = defineComponent({
             </NuxtLink> for realtime updates.
           </div>
         </div>
+
+        <div class="flex justify-center mt-8 mb-10">
+          <UTabs
+            v-model="activeFilter"
+            :items="filterItems"
+            :content="false"
+            variant="pill"
+            color="neutral"
+            size="sm"
+          />
+        </div>
+
+        <p v-if="activeFilter === 'prerelease' && prereleaseCount === 0" class="text-center text-[var(--ui-text-dimmed)] text-sm py-8">
+          No pre-releases found.
+        </p>
+
         <TransitionGroup
           name="release-list"
           tag="ul"
           class="space-y-6 max-w-3xl mx-auto"
         >
           <li
-            v-for="(release, key) in stats.releases"
-            :key="key"
+            v-for="(release, key) in filteredReleases"
+            :key="release.name"
             class="transform transition-all duration-300 hover:translate-y-[-2px]"
           >
-            <div class="flex items-center mb-3">
+            <div class="flex items-center mb-3 gap-2">
               <UBadge variant="soft" color="neutral">
                 <UIcon name="i-carbon-calendar" class="w-3.5 h-3.5" />
                 <time :datetime="new Date(release.publishedAt).toString()">
                   {{ formatTimeAgo(new Date(release.publishedAt)) }}
                 </time>
               </UBadge>
+              <UBadge v-if="release.prerelease" variant="subtle" color="warning" size="sm">
+                <UIcon name="i-carbon-chemistry" class="w-3 h-3" />
+                Pre-release
+              </UBadge>
             </div>
 
             <UCard
               class="overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow duration-300"
+              :class="release.prerelease && 'border-l-2 border-l-[var(--ui-warning)]'"
             >
               <div class="flex items-center gap-3 pb-4 mb-4 border-b border-gray-100 dark:border-gray-800">
                 <NuxtLink target="_blank" :to="`https://github.com/unjs/unhead/releases/tag/${release.name}`" :aria-label="`Release ${release.name}`">
                   <h3 class="text-xl font-bold flex items-center gap-2">
                     <HighlightedVersion :version="release.name.slice(1)" class="font-mono" />
-                    <UBadge v-if="key === 0" icon="i-carbon-star" variant="soft">
+                    <UBadge v-if="key === 0 && activeFilter !== 'prerelease'" icon="i-carbon-star" variant="soft">
                       Latest release
                     </UBadge>
                   </h3>

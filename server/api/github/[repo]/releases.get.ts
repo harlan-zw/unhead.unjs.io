@@ -13,6 +13,7 @@ export default defineCachedEventHandler(async (e) => {
     name: release.tag_name,
     publishedAt: release.published_at,
     body: release.body,
+    prerelease: release.prerelease,
   }))
 }, {
   maxAge: 60 * 60,

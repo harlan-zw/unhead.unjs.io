@@ -21,7 +21,7 @@ const categories = computed(() => [
       { label: 'useHead', icon: 'i-heroicons-code-bracket', to: docPath('/head/api/composables/use-head') },
       { label: 'useSeoMeta', icon: 'i-heroicons-magnifying-glass', to: docPath('/head/api/composables/use-seo-meta') },
       { label: 'useHeadSafe', icon: 'i-heroicons-shield-check', to: docPath('/head/api/composables/use-head-safe') },
-      { label: 'useServerHead', icon: 'i-heroicons-server', to: docPath('/head/api/composables/use-server-head') },
+      { label: 'useScript', icon: 'i-heroicons-play-circle', to: docPath('/head/api/composables/use-script') },
     ],
   },
   {
@@ -41,8 +41,7 @@ const categories = computed(() => [
     color: 'amber' as const,
     items: [
       { label: 'Titles', icon: 'i-heroicons-document-text', to: docPath('/head/guides/core-concepts/titles') },
-      { label: 'Loading Scripts', icon: 'i-heroicons-play-circle', to: docPath('/head/guides/core-concepts/loading-scripts') },
-      { label: 'Handling Duplicates', icon: 'i-heroicons-document-duplicate', to: docPath('/head/guides/core-concepts/handling-duplicates') },
+      { label: 'Streaming SSR', icon: 'i-heroicons-bolt', to: docPath('/head/guides/core-concepts/streaming') },
       { label: 'DOM Events', icon: 'i-heroicons-cursor-arrow-rays', to: docPath('/head/guides/core-concepts/dom-event-handling') },
       { label: 'Plugins', icon: 'i-heroicons-puzzle-piece', to: docPath('/head/guides/plugins/template-params') },
     ],
