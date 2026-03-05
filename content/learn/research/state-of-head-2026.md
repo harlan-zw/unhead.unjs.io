@@ -127,11 +127,11 @@ The framework is fine, but CMS integration doesn't populate all fields. WordPres
 
 ## Streaming Is Growing
 
-Over **65% of new framework-based projects** in 2026 enable streaming by default. But with this shift comes a new set of errors: **~12% of projects** now ship invalid `<head>` tags that appear in the body due to late-streamed injection.
+Over **65% of new framework-based projects** in 2026 enable streaming by default. But with this shift comes a new set of errors: **~12% of projects** now ship invalid `<head>`{lang="html"} tags that appear in the body due to late-streamed injection.
 
 Only 2.8% of Next.js pages in our initial sample used chunked transfer encoding, but adoption is accelerating. Next.js 16 defaults to Partial Pre-Rendering (PPR), and React Server Components push toward streaming by design.
 
-As streaming grows, head completeness will get worse before it gets better. Frameworks that have solved it—Nuxt 4's delayed `</head>`{lang="html"}, Next.js's bot detection, and the new **Interop 2026 `<link rel="expect">`** standard—will separate from those that haven't.
+As streaming grows, head completeness will get worse before it gets better. Frameworks that have solved it, Nuxt 4's delayed `</head>`{lang="html"}, Next.js's bot detection, and the new **Interop 2026 `<link rel="expect">`{lang="html"}** standard, will separate from those that haven't.
 
 ## How Unhead Addresses This
 
@@ -139,7 +139,7 @@ Unhead is the head manager used by [Nuxt](https://nuxt.com), available standalon
 
 **Client-side heads:** `useHead()`{lang="ts"} runs on server and client. Tags are always in the initial HTML.
 
-**Async gaps:** `useHead()`{lang="ts"} supports async resolution. Unhead holds `</head>`{lang="html"} open until all pending entries resolve. Unhead v3 (beta) also includes native awareness of Vue 3.5+ `Suspense` and experimental support for **`<link rel="expect">`** injection.
+**Async gaps:** `useHead()`{lang="ts"} supports async resolution. Unhead holds `</head>`{lang="html"} open until all pending entries resolve. Unhead v3 (beta) also includes native awareness of Vue 3.5+ `Suspense` and experimental support for **`<link rel="expect">`{lang="html"}** injection.
 
 **First-flush loss:** `createStreamableHead()`{lang="ts"} delays head completion without blocking the body. Critical tags flush immediately via [Capo.js ordering](/learn/guides/what-is-capo), SEO tags wait for data.
 

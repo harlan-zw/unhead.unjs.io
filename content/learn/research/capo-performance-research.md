@@ -36,7 +36,7 @@ Each ordering was tested at three complexity levels - minimal (8 tags), medium (
 We used **Chrome DevTools Protocol (CDP) network throttling** (not Lighthouse simulated throttling) at two profiles: fast-4g (1.44 Mbps, 150ms RTT) and slow-3g (400 Kbps, 400ms RTT). Each configuration ran 5 times in headless Chromium via Puppeteer - 120 page loads total.
 
 ::Callout{icon="i-ph-info-duotone" title="Why not Lighthouse?"}
-Lighthouse's default "simulated" throttling does not model byte-level HTML parsing. It loads the document instantly from localhost and applies a mathematical model to the results *after* the fact. Because the preload scanner "sees" all tags instantly in this model, tag ordering has zero effect on simulated scores. CDP throttling forces the browser to actually wait for bytes to arrive over the wire, triggering the real-world behavior of the preload scanner and resource scheduler.
+Lighthouse's default "simulated" throttling does not model byte-level HTML parsing. It loads the document instantly from localhost and applies a mathematical model to the results *after* the fact. Because the preload scanner "sees" all tags instantly in this model, tag ordering has zero effect on simulated scores. CDP throttling forces the browser to wait for bytes to arrive over the wire, triggering the real-world behavior of the preload scanner and resource scheduler.
 ::
 
 ## Results
@@ -119,18 +119,18 @@ Benchmarks show ordering matters under specific conditions. CrUX data (Jan 2026,
 ::ChartTheNuxtParadox
 ::
 
-The **Nuxt Paradox** is the strongest evidence that head ordering alone is not a dominant performance factor at population scale. Nuxt implements the "gold standard" of automatic head ordering, yet it lags behind platforms like Shopify that perform no such optimization. The gap is driven by **TTFB** and **hydration cost**—Shopify's edge network and server-rendered architecture provide a baseline performance that head ordering cannot overcome.
+The **Nuxt Paradox** is the strongest evidence that head ordering alone is not a dominant performance factor at population scale. Nuxt implements the "gold standard" of automatic head ordering, yet it lags behind platforms like Shopify that perform no such optimization. The gap is driven by **TTFB** and **hydration cost**: Shopify's edge network and server-rendered architecture provide a baseline performance that head ordering cannot overcome.
 
 ### 8-Month Trend
 
-All three major frameworks were essentially flat over the last 8 months. No framework-level optimization—including head ordering—has moved LCP at population scale. TTFB, image optimization, and JS payload size continue to dominate.
+All three major frameworks were flat over the last 8 months. No framework-level optimization, including head ordering, has moved LCP at population scale. TTFB, image optimization, and JS payload size continue to dominate.
 
 ::ChartLCPTrend
 ::
 
 ## When It Matters
 
-While head ordering isn't a silver bullet, it is a critical optimization for specific scenarios. 
+While head ordering isn't a silver bullet, it is a critical optimization for specific scenarios.
 
 ::ProsConsTable
 ::

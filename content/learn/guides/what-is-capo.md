@@ -223,4 +223,4 @@ useHead({
 Paste HTML or enter a URL to get instant feedback on your head tag ordering, with specific suggestions for improvement.
 ::
 
-For the measured performance impact of head tag ordering—including the **"Nuxt Paradox"** where automatic ordering isn't enough to fix slow LCP—see [Does Head Tag Order Affect Performance?](/learn/research/capo-performance-research). For how streaming SSR interacts with head management, see [Streaming SSR SEO](/learn/research/streaming-head-performance).
+For the measured performance impact of head tag ordering, including the **"Nuxt Paradox"** where automatic ordering isn't enough to fix slow LCP, see [Does Head Tag Order Affect Performance?](/learn/research/capo-performance-research). For how streaming SSR interacts with head management, see [Streaming SSR SEO](/learn/research/streaming-head-performance).

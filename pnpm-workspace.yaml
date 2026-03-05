@@ -1,7 +1,13 @@
+shellEmulator: true
+
+trustPolicy: no-downgrade
 packages:
   - .
   - test/capo-benchmarks
 
+overrides:
+  nuxt-og-image: npm:nuxt-og-image@6.0.0-beta.47
+  vite: npm:vite@8.0.0-beta.16
 catalog:
   '@antfu/eslint-config': ^7.6.1
   '@cloudflare/workers-types': ^4.20260305.1
@@ -90,11 +96,3 @@ ignoredBuiltDependencies:
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp
-
-overrides:
-  nuxt-og-image: npm:nuxt-og-image@6.0.0-beta.47
-  vite: npm:vite@8.0.0-beta.16
-
-shellEmulator: true
-
-trustPolicy: no-downgrade

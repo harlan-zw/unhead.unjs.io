@@ -45,42 +45,42 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
-  <div class="my-8 rounded-lg border border-[var(--ui-border-muted)] bg-[var(--ui-bg-elevated)] p-4 sm:p-6">
-    <div class="flex items-baseline justify-between mb-4">
-      <h4 class="text-sm font-semibold text-[var(--ui-text)] tracking-tight">
-        LCP Trend: 8 Months
-      </h4>
-      <span class="text-xs text-[var(--ui-text-dimmed)]">CrUX mobile, p75 avg</span>
+    <div class="my-8 rounded-lg border border-[var(--ui-border-muted)] bg-[var(--ui-bg-elevated)] p-4 sm:p-6">
+      <div class="flex items-baseline justify-between mb-4">
+        <h4 class="text-sm font-semibold text-[var(--ui-text)] tracking-tight">
+          LCP Trend: 8 Months
+        </h4>
+        <span class="text-xs text-[var(--ui-text-dimmed)]">CrUX mobile, p75 avg</span>
+      </div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-4 text-xs text-[var(--ui-text-muted)]">
+        <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full inline-block" :style="{ backgroundColor: item.color }" />
+          {{ item.label }}
+        </span>
+      </div>
+      <VisXYContainer :data="data" :height="280" class="w-full">
+        <template v-for="(fn, idx) in yFns" :key="`line-${idx}`">
+          <VisLine
+            :x="x"
+            :y="fn"
+            :color="colors[idx]"
+            curve-type="linear"
+            :line-width="2"
+          />
+          <VisScatter
+            :x="x"
+            :y="fn"
+            :color="colors[idx]"
+            :size="4"
+          />
+        </template>
+        <VisAxis type="x" :tick-format="tickFormat" :grid-line="false" :domain-line="false" :tick-line="false" :num-ticks="8" />
+        <VisAxis type="y" :tick-format="(v: number) => `${(v / 1000).toFixed(1)}s`" :grid-line="false" :domain-line="false" />
+        <VisTooltip :triggers="{ [VisScatter]: tooltipTemplate }" />
+      </VisXYContainer>
+      <p class="text-xs text-[var(--ui-text-dimmed)] mt-3 leading-relaxed">
+        All three frameworks essentially flat. No framework-level optimization has moved the needle at population scale.
+      </p>
     </div>
-    <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-4 text-xs text-[var(--ui-text-muted)]">
-      <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
-        <span class="w-2.5 h-2.5 rounded-full inline-block" :style="{ backgroundColor: item.color }" />
-        {{ item.label }}
-      </span>
-    </div>
-    <VisXYContainer :data="data" :height="280" class="w-full">
-      <template v-for="(fn, idx) in yFns" :key="`line-${idx}`">
-        <VisLine
-          :x="x"
-          :y="fn"
-          :color="colors[idx]"
-          curve-type="linear"
-          :line-width="2"
-        />
-        <VisScatter
-          :x="x"
-          :y="fn"
-          :color="colors[idx]"
-          :size="4"
-        />
-      </template>
-      <VisAxis type="x" :tick-format="tickFormat" :grid-line="false" :domain-line="false" :tick-line="false" :num-ticks="8" />
-      <VisAxis type="y" :tick-format="(v: number) => `${(v / 1000).toFixed(1)}s`" :grid-line="false" :domain-line="false" />
-      <VisTooltip :triggers="{ [VisScatter]: tooltipTemplate }" />
-    </VisXYContainer>
-    <p class="text-xs text-[var(--ui-text-dimmed)] mt-3 leading-relaxed">
-      All three frameworks essentially flat. No framework-level optimization has moved the needle at population scale.
-    </p>
-  </div>
   </ClientOnly>
 </template>
