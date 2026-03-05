@@ -1,8 +1,8 @@
-/* eslint-disable no-restricted-globals, no-console, no-new-func, ts/ban-ts-comment */
+/* eslint-disable no-restricted-globals, no-console, no-new-func */
 import init, { Renderer } from '@takumi-rs/wasm'
+// @ts-expect-error vite ?url import
+import wasmUrl from '@takumi-rs/wasm/takumi_wasm_bg.wasm?url'
 import { transform } from 'sucrase'
-// @ts-ignore
-import wasmUrl from '~/assets/wasm/takumi.wasm?url'
 
 let wasmInitialized = false
 let renderer: Renderer | null = null
@@ -38,7 +38,7 @@ self.onmessage = async (event) => {
 
       try {
         // Fetch and load font
-        const fontRes = await fetch('/fonts/HubotSans-Regular.woff2')
+        const fontRes = await fetch('/fonts/HubotSans-Regular.ttf')
         if (fontRes.ok) {
           const fontData = await fontRes.arrayBuffer()
           renderer.loadFont(new Uint8Array(fontData))

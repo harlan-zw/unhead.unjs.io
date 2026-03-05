@@ -23,7 +23,7 @@ const tools = [
     description: 'Generate useSeoMeta() code with live Google SERP preview and social card previews for Twitter, Facebook, LinkedIn, and more.',
     icon: 'i-carbon-code',
     to: '/tools/meta-tag-generator',
-    color: 'amber',
+    color: 'emerald',
     tags: ['SEO', 'Meta Tags', 'SERP Preview'],
   },
   {
@@ -76,7 +76,7 @@ const tools = [
             :to="tool.to"
             class="group relative p-6 rounded-2xl bg-[var(--ui-bg)] border border-[var(--ui-border)] transition-all hover:shadow-lg"
             :class="{
-              'hover:border-amber-300 dark:hover:border-amber-700': tool.color === 'amber',
+              'hover:border-emerald-300 dark:hover:border-emerald-700': tool.color === 'emerald',
               'hover:border-purple-300 dark:hover:border-purple-700': tool.color === 'purple',
               'hover:border-blue-300 dark:hover:border-blue-700': tool.color === 'blue',
               'hover:border-cyan-300 dark:hover:border-cyan-700': tool.color === 'cyan',
@@ -86,7 +86,7 @@ const tools = [
               <div
                 class="p-3 rounded-xl"
                 :class="{
-                  'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400': tool.color === 'amber',
+                  'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400': tool.color === 'emerald',
                   'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400': tool.color === 'purple',
                   'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400': tool.color === 'blue',
                   'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400': tool.color === 'cyan',
@@ -98,7 +98,7 @@ const tools = [
                 <h2
                   class="text-xl font-semibold mb-2 transition-colors"
                   :class="{
-                    'group-hover:text-amber-600 dark:group-hover:text-amber-400': tool.color === 'amber',
+                    'group-hover:text-emerald-600 dark:group-hover:text-emerald-400': tool.color === 'emerald',
                     'group-hover:text-purple-600 dark:group-hover:text-purple-400': tool.color === 'purple',
                     'group-hover:text-blue-600 dark:group-hover:text-blue-400': tool.color === 'blue',
                     'group-hover:text-cyan-600 dark:group-hover:text-cyan-400': tool.color === 'cyan',
@@ -123,7 +123,7 @@ const tools = [
                 name="i-heroicons-arrow-right"
                 class="w-5 h-5 text-[var(--ui-text-dimmed)] group-hover:translate-x-1 transition-all"
                 :class="{
-                  'group-hover:text-amber-500': tool.color === 'amber',
+                  'group-hover:text-emerald-500': tool.color === 'emerald',
                   'group-hover:text-purple-500': tool.color === 'purple',
                   'group-hover:text-blue-500': tool.color === 'blue',
                   'group-hover:text-cyan-500': tool.color === 'cyan',

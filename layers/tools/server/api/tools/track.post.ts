@@ -20,10 +20,7 @@ export default defineEventHandler(async (event) => {
   // Check Analytics Engine binding exists
   const analytics = getAnalyticsEngine(event)
   if (!analytics) {
-    throw createError({
-      statusCode: 500,
-      message: 'TOOL_ANALYTICS binding not configured',
-    })
+    return { ok: true, skipped: true }
   }
 
   // Set session cookie if not exists

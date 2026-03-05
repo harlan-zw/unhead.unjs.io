@@ -15,8 +15,6 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
     "@cloudflare/workers-types": "catalog:",
-    "@codemirror/lang-javascript": "catalog:",
-    "@codemirror/theme-one-dark": "catalog:",
     "@iconify-json/carbon": "catalog:",
     "@iconify-json/heroicons": "catalog:",
     "@iconify-json/logos": "catalog:",
@@ -47,7 +45,6 @@
     "bumpp": "catalog:",
     "case-police": "catalog:",
     "clsx": "catalog:",
-    "codemirror": "catalog:",
     "consola": "catalog:",
     "drizzle-orm": "catalog:",
     "eslint": "catalog:",

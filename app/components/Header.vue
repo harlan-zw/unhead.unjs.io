@@ -168,7 +168,7 @@ const subSectionLinks = computed(() => {
                 </div>
                 <UIcon
                   v-if="link.icon" :name="link.icon"
-                  class="w-4 h-4 transition-all hover:brightness-50 brightness-120 sepia-[50%]"
+                  class="w-4 h-4 transition-all grayscale opacity-70 hover:grayscale-0 hover:opacity-100"
                 />
                 <div v-if="link.new">
                   <UBadge size="sm" variant="subtle" color="success">
@@ -201,7 +201,7 @@ const subSectionLinks = computed(() => {
                 </div>
                 <UIcon
                   v-if="link.icon" :name="link.icon"
-                  class="w-4 h-4 transition-all hover:brightness-50 brightness-120 sepia-[50%]"
+                  class="w-4 h-4 transition-all grayscale opacity-70 hover:grayscale-0 hover:opacity-100"
                 />
                 <div v-if="link.new">
                   <UBadge size="sm" variant="subtle" color="success">
@@ -300,7 +300,7 @@ const subSectionLinks = computed(() => {
               :title="`Switch to ${framework.label}`" :aria-label="framework.label" type="button"
               class="cursor-pointer transition-all "
               :to="framework.to"
-              :class="[framework.slug === selectedFramework.slug ? [] : ['hover:brightness-100 hover:sepia-[10%] brightness-120 sepia-[90%]']]"
+              :class="[framework.slug === selectedFramework.slug ? [] : ['grayscale opacity-60 hover:grayscale-0 hover:opacity-100']]"
               variant="ghost" @click="switchFramework(framework)"
             >
               <UIcon dynamic :name="framework.icon" class="w-5 h-5" />

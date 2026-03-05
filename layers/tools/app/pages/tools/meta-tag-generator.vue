@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core'
-import { Motion } from 'motion-v'
 
 const { track, trackUse } = useToolTracking('meta-tag-generator')
 
@@ -43,7 +42,6 @@ watch(selectedFramework, (fw) => {
 
 const { copy, copied } = useClipboard()
 
-const inputFocused = ref(false)
 const activePlatform = ref('twitter')
 const activeFormTab = ref('basic')
 
@@ -95,55 +93,43 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
 </script>
 
 <template>
-  <ToolPageLayout color-scheme="amber">
+  <ToolPageLayout>
     <ToolHero
       title="Meta Tag Generator"
       description="Generate useSeoMeta() code for Vue, React, Nuxt, and more. Preview how your page will look in search results and social shares."
-      color-scheme="amber"
     />
 
     <!-- Quick Start Presets -->
-    <Motion
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.4 }"
-      class="mb-12 max-w-6xl"
-    >
+    <div class="mb-12 max-w-6xl">
       <div class="flex items-center gap-4 mb-5">
         <span class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Quick Start</span>
-        <div class="h-px flex-1 bg-gradient-to-r from-[var(--ui-border)] to-transparent" />
+        <div class="h-px flex-1 bg-[var(--ui-border)]" />
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
         <button
           v-for="preset in presets"
           :key="preset.id"
           type="button"
-          class="group relative overflow-hidden rounded-xl border backdrop-blur-sm p-3 sm:p-4 text-left transition-all duration-300 cursor-pointer"
+          class="group relative overflow-hidden rounded-xl border p-3 sm:p-4 text-left transition-all duration-300 cursor-pointer"
           :class="[
             activePreset === preset.id
-              ? 'border-amber-500/60 bg-amber-500/10 shadow-lg shadow-amber-500/10'
-              : 'border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5 hover:-translate-y-0.5',
+              ? 'border-emerald-500/60 bg-emerald-500/10 shadow-lg shadow-emerald-500/10'
+              : 'border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 hover:border-emerald-500/40',
           ]"
           @click="() => { applyPreset(preset); track('preset', preset.id) }"
         >
-          <!-- Hover gradient -->
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-orange-500/5 transition-opacity duration-300"
-            :class="activePreset === preset.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
-          />
-
           <div class="relative">
             <div class="flex items-center gap-2 sm:gap-3 mb-2">
               <div
                 class="p-1.5 sm:p-2 rounded-lg transition-colors"
-                :class="activePreset === preset.id ? 'bg-amber-500/20' : 'bg-amber-500/10 group-hover:bg-amber-500/20'"
+                :class="activePreset === preset.id ? 'bg-emerald-500/20' : 'bg-emerald-500/10 group-hover:bg-emerald-500/20'"
               >
-                <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-amber-500" />
+                <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-emerald-500" />
               </div>
             </div>
             <span
               class="text-xs sm:text-sm font-semibold transition-colors"
-              :class="activePreset === preset.id ? 'text-amber-500' : 'text-[var(--ui-text-highlighted)] group-hover:text-amber-500'"
+              :class="activePreset === preset.id ? 'text-emerald-500' : 'text-[var(--ui-text-highlighted)] group-hover:text-emerald-500'"
             >{{ preset.label }}</span>
             <p class="text-[10px] sm:text-xs text-[var(--ui-text-dimmed)] mt-1 line-clamp-2">
               {{ preset.description }}
@@ -151,20 +137,15 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           </div>
         </button>
       </div>
-    </Motion>
+    </div>
 
     <!-- Basic Form + Google Preview -->
-    <Motion
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.5 }"
-      class="grid lg:grid-cols-2 gap-6 sm:gap-8 max-w-6xl"
-    >
+    <div class="grid lg:grid-cols-2 gap-6 sm:gap-8 max-w-6xl">
       <!-- Left Column: Form -->
       <div>
-        <ToolInputGlow :focused="inputFocused" color-scheme="amber">
+        <ToolInputGlow>
           <!-- Form Tabs -->
-          <div class="flex gap-1 mb-6 p-1.5 bg-[var(--ui-bg-accented)]/30 backdrop-blur-sm rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto">
+          <div class="flex gap-1 mb-6 p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto">
             <button
               v-for="tab in [
                 { value: 'basic', label: 'Basic', icon: 'i-carbon-text-short-paragraph' },
@@ -184,13 +165,13 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               <UIcon
                 :name="tab.icon"
                 class="w-4 h-4 transition-colors duration-300 shrink-0"
-                :class="activeFormTab === tab.value ? 'text-amber-500' : ''"
+                :class="activeFormTab === tab.value ? 'text-emerald-500' : ''"
               />
               <span class="hidden sm:inline truncate">{{ tab.label }}</span>
               <!-- Active indicator dot -->
               <span
                 v-if="activeFormTab === tab.value"
-                class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500"
+                class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500"
               />
             </button>
           </div>
@@ -203,11 +184,9 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 placeholder="My Awesome Page"
                 size="lg"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
               <template v-if="titleWarning" #help>
-                <span class="text-amber-500">{{ titleWarning }}</span>
+                <span class="text-emerald-500">{{ titleWarning }}</span>
               </template>
             </UFormField>
 
@@ -217,11 +196,9 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 placeholder="A brief description of your page content..."
                 :rows="3"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
               <template v-if="descriptionWarning" #help>
-                <span class="text-amber-500">{{ descriptionWarning }}</span>
+                <span class="text-emerald-500">{{ descriptionWarning }}</span>
               </template>
             </UFormField>
           </div>
@@ -234,8 +211,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.ogSiteName"
                   placeholder="My Website"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
               <UFormField label="Locale">
@@ -243,8 +218,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.ogLocale"
                   placeholder="en_US"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
             </div>
@@ -254,8 +227,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 v-model="state.ogTitle"
                 :placeholder="state.title || 'Uses page title'"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
             </UFormField>
 
@@ -265,8 +236,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 :placeholder="state.description || 'Uses page description'"
                 :rows="2"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
             </UFormField>
 
@@ -275,8 +244,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 v-model="state.ogImage"
                 placeholder="https://example.com/og-image.png"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
               <template #help>
                 <span class="text-[var(--ui-text-dimmed)]">Recommended: 1200x630px</span>
@@ -289,8 +256,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.ogImageAlt"
                   placeholder="Image description"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
               <UFormField label="Width">
@@ -299,8 +264,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   placeholder="1200"
                   type="number"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
               <UFormField label="Height">
@@ -309,8 +272,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   placeholder="630"
                   type="number"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
             </div>
@@ -324,8 +285,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.ogUrl"
                   :placeholder="state.canonical || 'https://...'"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
             </div>
@@ -333,9 +292,9 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
 
           <!-- Article Tab (only visible when ogType is 'article') -->
           <div v-show="activeFormTab === 'article'" class="space-y-4">
-            <div class="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-4">
+            <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-4">
               <div class="flex items-start gap-2">
-                <UIcon name="i-carbon-information" class="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                <UIcon name="i-carbon-information" class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
                 <p class="text-xs text-[var(--ui-text-muted)]">
                   Article metadata helps search engines and social platforms understand your content better.
                 </p>
@@ -348,8 +307,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.articlePublishedTime"
                   type="datetime-local"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
               <UFormField label="Modified Date">
@@ -357,8 +314,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.articleModifiedTime"
                   type="datetime-local"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
             </div>
@@ -368,8 +323,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 v-model="state.articleAuthor"
                 placeholder="John Doe or https://example.com/authors/john"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
             </UFormField>
 
@@ -379,8 +332,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.articleSection"
                   placeholder="Technology"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
               <UFormField label="Tags" help="Comma-separated keywords">
@@ -388,8 +339,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.articleTag"
                   placeholder="javascript, vue, nuxt"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
             </div>
@@ -402,8 +351,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 v-model="state.author"
                 placeholder="John Doe"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
             </UFormField>
 
@@ -412,8 +359,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 v-model="state.canonical"
                 placeholder="https://example.com/canonical-page"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
             </UFormField>
 
@@ -422,8 +367,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 v-model="state.robots"
                 placeholder="index, follow"
                 class="w-full"
-                @focus="inputFocused = true"
-                @blur="inputFocused = false"
               />
             </UFormField>
 
@@ -433,8 +376,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.themeColor"
                   placeholder="#ffffff"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
               <UFormField label="Color Scheme">
@@ -458,8 +399,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.applicationName"
                   placeholder="My App"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
               <UFormField label="Facebook App ID">
@@ -467,8 +406,6 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   v-model="state.fbAppId"
                   placeholder="123456789"
                   class="w-full"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
             </div>
@@ -481,7 +418,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
         <div class="relative group">
           <!-- Google branding header -->
           <div class="flex items-center gap-3 mb-3 sm:mb-4">
-            <div class="p-2 rounded-lg bg-gradient-to-br from-blue-500/10 to-red-500/10">
+            <div class="p-2 rounded-lg bg-blue-500/10">
               <UIcon name="i-carbon-search" class="w-5 h-5 text-blue-500" />
             </div>
             <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
@@ -518,24 +455,15 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           </div>
         </div>
       </div>
-    </Motion>
+    </div>
 
     <!-- Social Card Preview - Full Width -->
-    <Motion
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.6 }"
-      class="max-w-6xl mt-10"
-    >
-      <div class="relative bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-[var(--ui-border)] shadow-xl shadow-black/5">
-        <!-- Decorative corner accents -->
-        <div class="absolute top-0 left-0 w-12 sm:w-16 h-12 sm:h-16 border-l-2 border-t-2 border-amber-500/20 rounded-tl-2xl" />
-        <div class="absolute bottom-0 right-0 w-12 sm:w-16 h-12 sm:h-16 border-r-2 border-b-2 border-amber-500/20 rounded-br-2xl" />
-
+    <div class="max-w-6xl mt-10">
+      <div class="relative bg-[var(--ui-bg-elevated)] rounded-2xl p-4 sm:p-6 border border-[var(--ui-border)]">
         <!-- Header -->
         <div class="flex items-center gap-3 mb-4 sm:mb-6">
-          <div class="p-2 rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10">
-            <UIcon name="i-carbon-share" class="w-5 h-5 text-amber-500" />
+          <div class="p-2 rounded-lg bg-emerald-500/10">
+            <UIcon name="i-carbon-share" class="w-5 h-5 text-emerald-500" />
           </div>
           <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
             Social Card Preview
@@ -543,7 +471,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
         </div>
 
         <!-- Platform tabs -->
-        <div class="flex gap-1 sm:gap-1.5 mb-4 sm:mb-6 p-1 sm:p-1.5 bg-[var(--ui-bg-accented)]/30 backdrop-blur-sm rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto -mx-1 px-1">
+        <div class="flex gap-1 sm:gap-1.5 mb-4 sm:mb-6 p-1 sm:p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto -mx-1 px-1">
           <button
             v-for="tab in platformTabs"
             :key="tab.value"
@@ -568,12 +496,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           <!-- Preview Column -->
           <div class="min-w-0">
             <!-- Twitter Preview -->
-            <Motion
-              v-if="activePlatform === 'twitter'"
-              :initial="{ opacity: 0, scale: 0.98 }"
-              :animate="{ opacity: 1, scale: 1 }"
-              :transition="{ duration: 0.2 }"
-            >
+            <div v-if="activePlatform === 'twitter'">
               <div
                 class="rounded-2xl overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-white dark:bg-neutral-900 shadow-lg"
                 :class="state.twitterCard === 'summary_large_image' ? '' : 'flex'"
@@ -601,15 +524,10 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   </p>
                 </div>
               </div>
-            </Motion>
+            </div>
 
             <!-- Facebook Preview -->
-            <Motion
-              v-if="activePlatform === 'facebook'"
-              :initial="{ opacity: 0, scale: 0.98 }"
-              :animate="{ opacity: 1, scale: 1 }"
-              :transition="{ duration: 0.2 }"
-            >
+            <div v-if="activePlatform === 'facebook'">
               <div class="rounded overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-[#F0F2F5] dark:bg-[#242526] shadow-lg">
                 <div v-if="previewImage" class="aspect-[1.91/1] w-full bg-neutral-200 dark:bg-neutral-700 relative overflow-hidden">
                   <img :src="previewImage" :alt="previewTitle" class="w-full h-full object-cover">
@@ -629,15 +547,10 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   </p>
                 </div>
               </div>
-            </Motion>
+            </div>
 
             <!-- LinkedIn Preview -->
-            <Motion
-              v-if="activePlatform === 'linkedin'"
-              :initial="{ opacity: 0, scale: 0.98 }"
-              :animate="{ opacity: 1, scale: 1 }"
-              :transition="{ duration: 0.2 }"
-            >
+            <div v-if="activePlatform === 'linkedin'">
               <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-white dark:bg-[#1B1F23] shadow-lg">
                 <div v-if="previewImage" class="aspect-[1.91/1] w-full bg-neutral-200 dark:bg-neutral-700 relative overflow-hidden">
                   <img :src="previewImage" :alt="previewTitle" class="w-full h-full object-cover">
@@ -654,16 +567,10 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   </p>
                 </div>
               </div>
-            </Motion>
+            </div>
 
             <!-- WhatsApp Preview -->
-            <Motion
-              v-if="activePlatform === 'whatsapp'"
-              :initial="{ opacity: 0, scale: 0.98 }"
-              :animate="{ opacity: 1, scale: 1 }"
-              :transition="{ duration: 0.2 }"
-              class="grid grid-cols-1 sm:grid-cols-2 gap-4"
-            >
+            <div v-if="activePlatform === 'whatsapp'" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
                 <p class="text-xs text-[var(--ui-text-dimmed)]">
                   Inline
@@ -710,15 +617,10 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   </div>
                 </div>
               </div>
-            </Motion>
+            </div>
 
             <!-- Slack Preview -->
-            <Motion
-              v-if="activePlatform === 'slack'"
-              :initial="{ opacity: 0, scale: 0.98 }"
-              :animate="{ opacity: 1, scale: 1 }"
-              :transition="{ duration: 0.2 }"
-            >
+            <div v-if="activePlatform === 'slack'">
               <div class="border-l-4 border-purple-500 pl-4 py-2 bg-white dark:bg-[#1A1D21] rounded-r-lg">
                 <p class="text-sm font-semibold text-neutral-900 dark:text-white">
                   {{ previewSiteName }}
@@ -744,15 +646,10 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   <img :src="previewImage" :alt="previewTitle" class="w-full h-auto max-h-40 object-cover">
                 </div>
               </div>
-            </Motion>
+            </div>
 
             <!-- Discord Preview -->
-            <Motion
-              v-if="activePlatform === 'discord'"
-              :initial="{ opacity: 0, scale: 0.98 }"
-              :animate="{ opacity: 1, scale: 1 }"
-              :transition="{ duration: 0.2 }"
-            >
+            <div v-if="activePlatform === 'discord'">
               <div class="rounded border-l-4 border-[#5865F2] bg-[#F2F3F5] dark:bg-[#2F3136] p-4 shadow-lg">
                 <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
                   {{ previewSiteName }}
@@ -767,19 +664,13 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   <img :src="previewImage" :alt="previewTitle" class="max-w-full max-h-60 rounded object-cover">
                 </div>
               </div>
-            </Motion>
+            </div>
           </div>
 
           <!-- Inputs Column -->
           <div>
             <!-- Twitter Inputs -->
-            <Motion
-              v-if="activePlatform === 'twitter'"
-              :initial="{ opacity: 0, y: 10 }"
-              :animate="{ opacity: 1, y: 0 }"
-              :transition="{ duration: 0.2 }"
-              class="space-y-4"
-            >
+            <div v-if="activePlatform === 'twitter'" class="space-y-4">
               <p class="text-xs text-[var(--ui-text-dimmed)]">
                 Twitter/X uses Open Graph tags as fallback. Configure Twitter-specific overrides below.
               </p>
@@ -797,16 +688,10 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   <UInput v-model="state.twitterCreator" placeholder="@author" size="sm" class="w-full" />
                 </UFormField>
               </div>
-            </Motion>
+            </div>
 
             <!-- Slack Inputs -->
-            <Motion
-              v-if="activePlatform === 'slack'"
-              :initial="{ opacity: 0, y: 10 }"
-              :animate="{ opacity: 1, y: 0 }"
-              :transition="{ duration: 0.2 }"
-              class="space-y-4"
-            >
+            <div v-if="activePlatform === 'slack'" class="space-y-4">
               <p class="text-xs text-[var(--ui-text-dimmed)]">
                 Slack reads Open Graph tags and supports additional label/data fields for extra context.
               </p>
@@ -826,16 +711,10 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   <UInput v-model="state.twitterData2" placeholder="John Doe" size="sm" class="w-full" />
                 </UFormField>
               </div>
-            </Motion>
+            </div>
 
             <!-- Other Platforms Info -->
-            <Motion
-              v-if="['facebook', 'linkedin', 'whatsapp', 'discord'].includes(activePlatform)"
-              :initial="{ opacity: 0, y: 10 }"
-              :animate="{ opacity: 1, y: 0 }"
-              :transition="{ duration: 0.2 }"
-              class="space-y-4"
-            >
+            <div v-if="['facebook', 'linkedin', 'whatsapp', 'discord'].includes(activePlatform)" class="space-y-4">
               <div class="p-4 rounded-lg bg-[var(--ui-bg-accented)]/30 border border-[var(--ui-border)]">
                 <div class="flex items-start gap-3">
                   <UIcon name="i-carbon-information" class="w-5 h-5 text-[var(--ui-text-muted)] mt-0.5 shrink-0" />
@@ -849,32 +728,24 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   </div>
                 </div>
               </div>
-            </Motion>
+            </div>
           </div>
         </div>
       </div>
-    </Motion>
+    </div>
 
     <!-- Code Output -->
-    <Motion
+    <div
       v-if="hasAnyValue"
       ref="codeOutputRef"
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.1 }"
       class="max-w-6xl mt-10"
     >
-      <div class="relative bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm rounded-2xl border border-[var(--ui-border)] shadow-xl shadow-black/5 overflow-hidden">
+      <div class="relative bg-[var(--ui-bg-elevated)] rounded-2xl border border-[var(--ui-border)] overflow-hidden">
         <!-- Terminal-style header -->
-        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)] bg-gradient-to-r from-gray-900/5 to-transparent dark:from-gray-100/5">
+        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)]">
           <div class="flex items-center gap-3">
-            <div class="flex gap-1.5">
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/80" />
-            </div>
             <div class="flex items-center gap-2">
-              <UIcon name="i-carbon-code" class="w-4 h-4 text-amber-500" />
+              <UIcon name="i-carbon-code" class="w-4 h-4 text-emerald-500" />
               <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Generated Code</span>
             </div>
           </div>
@@ -918,19 +789,14 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           Reset All
         </UButton>
       </div>
-    </Motion>
+    </div>
 
     <!-- Educational Content -->
     <div class="max-w-4xl space-y-10 sm:space-y-16 mt-16 sm:mt-24">
-      <!-- Divider with gradient -->
-      <div class="flex items-center gap-4">
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--ui-border)] to-transparent" />
-        <span class="text-xs font-medium text-[var(--ui-text-dimmed)] uppercase tracking-widest">Learn</span>
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--ui-border)] to-transparent" />
-      </div>
+      <div class="h-px bg-[var(--ui-border)] my-16" />
 
       <section>
-        <ToolSectionHeader title="Why Use useSeoMeta?" icon="i-carbon-flash" color="amber" />
+        <ToolSectionHeader title="Why Use useSeoMeta?" icon="i-carbon-flash" color="emerald" />
         <p class="text-[var(--ui-text-muted)] mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
           The useSeoMeta composable provides a type-safe, flat API for setting meta tags. Unlike manually writing meta tags, it handles all the complexity for you.
         </p>
@@ -985,24 +851,24 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
       <section>
         <ToolSectionHeader title="Meta Tag Best Practices" icon="i-carbon-idea" color="green" />
         <div class="grid md:grid-cols-2 gap-3 sm:gap-4">
-          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-amber-500/30 transition-all duration-300 overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-emerald-500/30 transition-all duration-300 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div class="relative">
               <div class="flex items-center gap-2 mb-2 sm:mb-3">
-                <UIcon name="i-carbon-text-short-paragraph" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
+                <UIcon name="i-carbon-text-short-paragraph" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
                 <h3 class="font-semibold text-sm sm:text-base text-[var(--ui-text-highlighted)]">
                   Title Tag
                 </h3>
               </div>
               <ul class="text-xs sm:text-sm text-[var(--ui-text-muted)] space-y-1.5 sm:space-y-2">
                 <li class="flex items-center gap-2">
-                  <span class="w-1 h-1 rounded-full bg-amber-500 shrink-0" />Keep under 60 characters
+                  <span class="w-1 h-1 rounded-full bg-emerald-500 shrink-0" />Keep under 60 characters
                 </li>
                 <li class="flex items-center gap-2">
-                  <span class="w-1 h-1 rounded-full bg-amber-500 shrink-0" />Front-load important keywords
+                  <span class="w-1 h-1 rounded-full bg-emerald-500 shrink-0" />Front-load important keywords
                 </li>
                 <li class="flex items-center gap-2">
-                  <span class="w-1 h-1 rounded-full bg-amber-500 shrink-0" />Make each page title unique
+                  <span class="w-1 h-1 rounded-full bg-emerald-500 shrink-0" />Make each page title unique
                 </li>
               </ul>
             </div>

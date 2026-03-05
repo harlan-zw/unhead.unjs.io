@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core'
-import { Motion } from 'motion-v'
 
 const { track, trackUse } = useToolTracking('capo-analyzer')
 
@@ -46,7 +45,6 @@ watch(selectedFramework, (fw) => {
 const { copy, copied } = useClipboard()
 
 const inputTab = ref('paste')
-const inputFocused = ref(false)
 
 const scoreColor = computed(() => {
   if (score.value >= 80)
@@ -171,23 +169,17 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
 </script>
 
 <template>
-  <ToolPageLayout color-scheme="cyan">
+  <ToolPageLayout>
     <ToolHero
       title="Capo.js Head Analyzer"
       description="Analyze your HTML head tag order for optimal page load performance. Get a score, identify issues, and generate optimized code."
-      color-scheme="cyan"
     />
 
     <!-- Input Section -->
-    <Motion
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.4 }"
-      class="mb-12 max-w-6xl"
-    >
+    <div class="mb-12 max-w-6xl">
       <!-- Tab switcher -->
       <div class="flex items-center gap-4 mb-5">
-        <div class="flex gap-1 p-1 rounded-lg bg-[var(--ui-bg-elevated)]/80 border border-[var(--ui-border)]">
+        <div class="flex gap-1 p-1 rounded-lg bg-[var(--ui-bg-elevated)] border border-[var(--ui-border)]">
           <button
             type="button"
             class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
@@ -224,12 +216,12 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           <UIcon name="i-carbon-play-filled" class="size-3" />
           Try sample
         </button>
-        <div class="h-px flex-1 bg-gradient-to-r from-[var(--ui-border)] to-transparent" />
+        <div class="h-px flex-1 bg-[var(--ui-border)]" />
       </div>
 
       <!-- Paste mode -->
       <div v-if="inputTab === 'paste'">
-        <ToolInputGlow :focused="inputFocused" color-scheme="cyan">
+        <ToolInputGlow>
           <div class="flex items-center gap-3 mb-4">
             <UIcon name="i-carbon-code" class="w-5 h-5 text-cyan-500" />
             <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
@@ -239,15 +231,13 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           <ToolCodeEditor
             v-model="input"
             lang="html"
-            @focus="inputFocused = true"
-            @blur="inputFocused = false"
           />
         </ToolInputGlow>
       </div>
 
       <!-- URL mode -->
       <div v-else>
-        <ToolInputGlow :focused="inputFocused" color-scheme="cyan">
+        <ToolInputGlow>
           <div class="flex items-center gap-3 mb-4">
             <UIcon name="i-carbon-earth" class="w-5 h-5 text-cyan-500" />
             <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
@@ -260,8 +250,6 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
               placeholder="https://example.com"
               class="flex-1"
               size="lg"
-              @focus="inputFocused = true"
-              @blur="inputFocused = false"
               @keydown.enter="handleAnalyzeUrl"
             >
               <template #leading>
@@ -285,20 +273,17 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           </p>
         </ToolInputGlow>
       </div>
-    </Motion>
+    </div>
 
     <!-- Results Section -->
-    <Motion
+    <div
       v-if="hasAnyValue"
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.1 }"
       class="max-w-6xl"
     >
       <!-- Score + Issues Grid -->
       <div class="grid lg:grid-cols-3 gap-6 mb-10">
         <!-- Score Card with Ring -->
-        <div class="relative overflow-hidden rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm p-8">
+        <div class="relative overflow-hidden rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-8">
           <div class="absolute inset-0 bg-gradient-to-br opacity-30" :class="scoreBg" />
           <div class="relative flex flex-col items-center">
             <!-- Score Ring -->
@@ -338,7 +323,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         </div>
 
         <!-- Issues Panel -->
-        <div class="lg:col-span-2 rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm p-6">
+        <div class="lg:col-span-2 rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-6">
           <div class="flex items-center gap-3 mb-4">
             <div class="p-1.5 rounded-lg" :class="issues.length ? 'bg-yellow-500/10' : 'bg-green-500/10'">
               <UIcon
@@ -379,8 +364,8 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       <!-- Tag List: Current vs Optimal -->
       <div class="grid lg:grid-cols-2 gap-6 mb-10">
         <!-- Current Order -->
-        <div class="rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm overflow-hidden">
-          <div class="flex items-center justify-between gap-3 px-5 py-3 border-b border-[var(--ui-border)] bg-gradient-to-r from-gray-900/5 to-transparent dark:from-gray-100/5">
+        <div class="rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] overflow-hidden">
+          <div class="flex items-center justify-between gap-3 px-5 py-3 border-b border-[var(--ui-border)]">
             <div class="flex items-center gap-2">
               <UIcon name="i-carbon-list" class="w-4 h-4 text-[var(--ui-text-muted)]" />
               <span class="text-xs font-semibold text-[var(--ui-text-muted)] uppercase tracking-wider">Current Order</span>
@@ -422,7 +407,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         </div>
 
         <!-- Optimal Order -->
-        <div class="rounded-2xl border border-cyan-500/20 bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm overflow-hidden">
+        <div class="rounded-2xl border border-cyan-500/20 bg-[var(--ui-bg-elevated)] overflow-hidden">
           <div class="flex items-center justify-between gap-3 px-5 py-3 border-b border-cyan-500/10 bg-gradient-to-r from-cyan-500/8 to-transparent">
             <div class="flex items-center gap-2">
               <UIcon name="i-carbon-checkmark-outline" class="w-4 h-4 text-cyan-500" />
@@ -457,20 +442,13 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       <!-- Code Output -->
       <div
         ref="codeOutputRef"
-        class="relative bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm rounded-2xl border border-[var(--ui-border)] shadow-xl shadow-black/5 overflow-hidden"
+        class="relative bg-[var(--ui-bg-elevated)] rounded-2xl border border-[var(--ui-border)] overflow-hidden"
       >
         <!-- Terminal-style header -->
-        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)] bg-gradient-to-r from-gray-900/5 to-transparent dark:from-gray-100/5">
-          <div class="flex items-center gap-3">
-            <div class="flex gap-1.5">
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/80" />
-            </div>
-            <div class="flex items-center gap-2">
-              <UIcon name="i-carbon-code" class="w-4 h-4 text-cyan-500" />
-              <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Optimized Code</span>
-            </div>
+        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)]">
+          <div class="flex items-center gap-2">
+            <UIcon name="i-carbon-code" class="w-4 h-4 text-cyan-500" />
+            <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Optimized Code</span>
           </div>
           <ClientOnly>
             <UButton
@@ -502,15 +480,11 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           Reset All
         </UButton>
       </div>
-    </Motion>
+    </div>
 
     <!-- Educational Content -->
     <div class="max-w-4xl space-y-10 sm:space-y-16 mt-16 sm:mt-24">
-      <div class="flex items-center gap-4">
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--ui-border)] to-transparent" />
-        <span class="text-xs font-medium text-[var(--ui-text-dimmed)] uppercase tracking-widest">Learn</span>
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--ui-border)] to-transparent" />
-      </div>
+      <div class="h-px bg-[var(--ui-border)]" />
 
       <section>
         <ToolSectionHeader title="Why Head Tag Order Matters" icon="i-carbon-lightning" color="cyan" />

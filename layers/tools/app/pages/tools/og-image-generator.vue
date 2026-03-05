@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core'
-import { Motion } from 'motion-v'
 
 const { track } = useToolTracking('og-image-generator')
 
@@ -58,8 +57,6 @@ watch(isReady, (ready) => {
 
 const { copy, copied } = useClipboard()
 
-const inputFocused = ref(false)
-
 function downloadImage() {
   if (!result.value)
     return
@@ -93,24 +90,20 @@ const previewImage = result
 </script>
 
 <template>
-  <ToolPageLayout color-scheme="purple">
+  <ToolPageLayout>
     <ToolHero
       title="OG Image Generator"
       description="Design and generate Open Graph images for your website. Live preview and export as PNG."
-      color-scheme="purple"
     />
 
     <ClientOnly>
-      <Motion
-        :initial="{ opacity: 0, y: 20 }"
-        :animate="{ opacity: 1, y: 0 }"
-        :transition="{ duration: 0.5, delay: 0.2 }"
+      <div
         class="grid gap-8 lg:gap-10 max-w-7xl transition-all duration-300"
         :class="selectedTemplate === 'code' ? 'lg:grid-cols-2' : 'lg:grid-cols-[minmax(320px,400px)_1fr]'"
       >
         <!-- Left Column: Controls -->
         <div class="order-2 lg:order-1">
-          <ToolInputGlow :focused="inputFocused" color-scheme="purple">
+          <ToolInputGlow>
             <div class="space-y-6">
               <UFormField label="Template">
                 <div class="flex flex-wrap gap-2">
@@ -131,8 +124,6 @@ const previewImage = result
                 <ToolCodeEditor
                   v-model="customCode"
                   placeholder="export default function OgImage() { ... }"
-                  @focus="inputFocused = true"
-                  @blur="inputFocused = false"
                 />
               </UFormField>
 
@@ -144,8 +135,6 @@ const previewImage = result
                     placeholder="Title"
                     size="lg"
                     class="w-full"
-                    @focus="inputFocused = true"
-                    @blur="inputFocused = false"
                   />
                 </UFormField>
 
@@ -155,39 +144,37 @@ const previewImage = result
                     placeholder="Description"
                     :rows="3"
                     class="w-full"
-                    @focus="inputFocused = true"
-                    @blur="inputFocused = false"
                   />
                 </UFormField>
 
                 <!-- Template Specific Fields -->
                 <div v-if="['blog', 'docs'].includes(selectedTemplate)" class="grid grid-cols-2 gap-4">
                   <UFormField :label="selectedTemplate === 'blog' ? 'Category' : 'Site Name'">
-                    <UInput v-model="siteName" class="w-full" @focus="inputFocused = true" @blur="inputFocused = false" />
+                    <UInput v-model="siteName" class="w-full" />
                   </UFormField>
                   <UFormField v-if="selectedTemplate === 'blog'" label="Author">
-                    <UInput v-model="author" class="w-full" @focus="inputFocused = true" @blur="inputFocused = false" />
+                    <UInput v-model="author" class="w-full" />
                   </UFormField>
                 </div>
 
                 <div v-if="selectedTemplate === 'product'" class="grid grid-cols-2 gap-4">
                   <UFormField label="Brand">
-                    <UInput v-model="brand" class="w-full" @focus="inputFocused = true" @blur="inputFocused = false" />
+                    <UInput v-model="brand" class="w-full" />
                   </UFormField>
                   <UFormField label="Price">
-                    <UInput v-model="price" class="w-full" @focus="inputFocused = true" @blur="inputFocused = false" />
+                    <UInput v-model="price" class="w-full" />
                   </UFormField>
                 </div>
 
                 <div v-if="['blog', 'docs'].includes(selectedTemplate)">
                   <UFormField :label="selectedTemplate === 'blog' ? 'Avatar URL' : 'Icon URL'">
-                    <UInput v-model="logo" class="w-full" @focus="inputFocused = true" @blur="inputFocused = false" />
+                    <UInput v-model="logo" class="w-full" />
                   </UFormField>
                 </div>
 
                 <div v-if="selectedTemplate === 'product'">
                   <UFormField label="Product Image URL">
-                    <UInput v-model="productImage" class="w-full" @focus="inputFocused = true" @blur="inputFocused = false" />
+                    <UInput v-model="productImage" class="w-full" />
                   </UFormField>
                 </div>
 
@@ -245,16 +232,16 @@ const previewImage = result
 
         <!-- Right Column: Preview -->
         <div class="space-y-6 order-1 lg:order-2">
-          <div class="relative bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm rounded-2xl p-5 sm:p-8 border border-[var(--ui-border)] shadow-xl shadow-black/5">
+          <div class="relative bg-[var(--ui-bg-elevated)] rounded-2xl p-5 sm:p-8 border border-[var(--ui-border)]">
             <div class="flex items-center justify-between mb-6">
               <div class="flex items-center gap-3">
-                <div class="p-2.5 rounded-xl bg-gradient-to-br from-purple-500/15 to-blue-500/15 ring-1 ring-purple-500/20">
-                  <UIcon name="i-carbon-share" class="w-5 h-5 text-purple-500" />
+                <div class="p-2.5 rounded-xl bg-[var(--ui-bg-accented)]">
+                  <UIcon name="i-carbon-share" class="w-5 h-5 text-[var(--ui-text-muted)]" />
                 </div>
                 <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
                   Social Card Preview
                 </h3>
-                <UIcon v-show="isRendering" name="i-carbon-circle-dash" class="w-4 h-4 text-purple-500 animate-spin" />
+                <UIcon v-show="isRendering" name="i-carbon-circle-dash" class="w-4 h-4 text-[var(--ui-text-muted)] animate-spin" />
               </div>
               <UButton
                 v-if="result"
@@ -269,7 +256,7 @@ const previewImage = result
             </div>
 
             <!-- Platform tabs -->
-            <div class="flex gap-1.5 mb-6 p-1.5 bg-[var(--ui-bg-accented)]/30 backdrop-blur-sm rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto">
+            <div class="flex gap-1.5 mb-6 p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto">
               <button
                 v-for="tab in platformTabs"
                 :key="tab.value"
@@ -293,11 +280,8 @@ const previewImage = result
             <!-- Preview Container -->
             <div class="min-w-0 flex justify-center">
               <!-- Twitter Preview -->
-              <Motion
+              <div
                 v-if="activePlatform === 'twitter'"
-                :initial="{ opacity: 0, scale: 0.98 }"
-                :animate="{ opacity: 1, scale: 1 }"
-                :transition="{ duration: 0.2 }"
                 class="w-full max-w-lg"
               >
                 <div class="rounded-2xl overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-white dark:bg-neutral-900 shadow-lg">
@@ -326,14 +310,11 @@ const previewImage = result
                     </p>
                   </div>
                 </div>
-              </Motion>
+              </div>
 
               <!-- Facebook Preview -->
-              <Motion
+              <div
                 v-if="activePlatform === 'facebook'"
-                :initial="{ opacity: 0, scale: 0.98 }"
-                :animate="{ opacity: 1, scale: 1 }"
-                :transition="{ duration: 0.2 }"
                 class="w-full max-w-lg"
               >
                 <div class="rounded overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-[#F0F2F5] dark:bg-[#242526] shadow-lg">
@@ -361,14 +342,11 @@ const previewImage = result
                     </p>
                   </div>
                 </div>
-              </Motion>
+              </div>
 
               <!-- LinkedIn Preview -->
-              <Motion
+              <div
                 v-if="activePlatform === 'linkedin'"
-                :initial="{ opacity: 0, scale: 0.98 }"
-                :animate="{ opacity: 1, scale: 1 }"
-                :transition="{ duration: 0.2 }"
                 class="w-full max-w-lg"
               >
                 <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-white dark:bg-[#1B1F23] shadow-lg">
@@ -393,14 +371,11 @@ const previewImage = result
                     </p>
                   </div>
                 </div>
-              </Motion>
+              </div>
 
               <!-- WhatsApp Preview -->
-              <Motion
+              <div
                 v-if="activePlatform === 'whatsapp'"
-                :initial="{ opacity: 0, scale: 0.98 }"
-                :animate="{ opacity: 1, scale: 1 }"
-                :transition="{ duration: 0.2 }"
                 class="w-full max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-6"
               >
                 <div class="space-y-2">
@@ -455,14 +430,11 @@ const previewImage = result
                     </div>
                   </div>
                 </div>
-              </Motion>
+              </div>
 
               <!-- Slack Preview -->
-              <Motion
+              <div
                 v-if="activePlatform === 'slack'"
-                :initial="{ opacity: 0, scale: 0.98 }"
-                :animate="{ opacity: 1, scale: 1 }"
-                :transition="{ duration: 0.2 }"
                 class="w-full max-w-lg"
               >
                 <div class="border-l-4 border-purple-500 pl-4 py-3 bg-white dark:bg-[#1A1D21] rounded-r-lg">
@@ -485,14 +457,11 @@ const previewImage = result
                     </div>
                   </div>
                 </div>
-              </Motion>
+              </div>
 
               <!-- Discord Preview -->
-              <Motion
+              <div
                 v-if="activePlatform === 'discord'"
-                :initial="{ opacity: 0, scale: 0.98 }"
-                :animate="{ opacity: 1, scale: 1 }"
-                :transition="{ duration: 0.2 }"
                 class="w-full max-w-lg"
               >
                 <div class="rounded border-l-4 border-[#5865F2] bg-[#F2F3F5] dark:bg-[#2F3136] p-4 shadow-lg">
@@ -515,7 +484,7 @@ const previewImage = result
                     </div>
                   </div>
                 </div>
-              </Motion>
+              </div>
             </div>
 
             <div class="flex justify-end mt-4">
@@ -527,7 +496,7 @@ const previewImage = result
           </div>
 
           <!-- Code Snippet -->
-          <div class="bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm rounded-xl border border-[var(--ui-border)] overflow-hidden">
+          <div class="bg-[var(--ui-bg-elevated)] rounded-xl border border-[var(--ui-border)] overflow-hidden">
             <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--ui-border)] bg-[var(--ui-bg-accented)]/10">
               <span class="text-xs font-medium text-[var(--ui-text-muted)]">Unhead Usage</span>
               <UButton
@@ -545,7 +514,7 @@ const previewImage = result
             </div>
           </div>
         </div>
-      </Motion>
+      </div>
     </ClientOnly>
 
     <div class="mt-16">

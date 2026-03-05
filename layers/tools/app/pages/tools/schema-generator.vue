@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core'
-import { Motion } from 'motion-v'
 
 const { track, trackUse } = useToolTracking('schema-generator')
 
@@ -42,7 +41,6 @@ watch(selectedFramework, (fw) => {
 
 const { copy, copied } = useClipboard()
 
-const inputFocused = ref(false)
 const showJsonPreview = ref(true)
 
 const outputModes = [
@@ -58,36 +56,29 @@ function handleTypeSelect(type: SchemaType) {
 </script>
 
 <template>
-  <ToolPageLayout color-scheme="purple">
+  <ToolPageLayout>
     <ToolHero
       title="Schema.org Generator"
       description="Generate useSchemaOrg() code for rich search results. Build structured data for articles, products, FAQs, and more."
-      color-scheme="purple"
     />
 
     <!-- Quick Start Presets -->
-    <Motion
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.4 }"
+    <div
       class="mb-12 max-w-6xl"
     >
       <div class="flex items-center gap-4 mb-5">
         <span class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Quick Start</span>
-        <div class="h-px flex-1 bg-gradient-to-r from-[var(--ui-border)] to-transparent" />
+        <div class="h-px flex-1 bg-[var(--ui-border)]" />
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
         <button
           v-for="preset in presets"
           :key="preset.id"
           type="button"
-          class="group relative overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 backdrop-blur-sm p-3 sm:p-4 text-left transition-all duration-300 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/5 hover:-translate-y-0.5 cursor-pointer"
+          class="group relative overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 p-3 sm:p-4 text-left transition-all duration-300 hover:border-purple-500/40 cursor-pointer"
           @click="() => { applyPreset(preset); track('preset', preset.id) }"
         >
-          <!-- Hover gradient -->
-          <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-          <div class="relative">
+          <div>
             <div class="flex items-center gap-2 sm:gap-3 mb-2">
               <div class="p-1.5 sm:p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
                 <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-purple-500" />
@@ -100,13 +91,10 @@ function handleTypeSelect(type: SchemaType) {
           </div>
         </button>
       </div>
-    </Motion>
+    </div>
 
     <!-- Main Content: Type Selector + Form + Preview -->
-    <Motion
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.5 }"
+    <div
       class="max-w-6xl"
     >
       <!-- Schema Type Selector -->
@@ -154,11 +142,6 @@ function handleTypeSelect(type: SchemaType) {
                 </p>
               </div>
             </div>
-            <!-- Active indicator -->
-            <div
-              v-if="state.schemaType === schemaType.type"
-              class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-purple-500 animate-pulse"
-            />
           </button>
         </div>
       </div>
@@ -167,7 +150,7 @@ function handleTypeSelect(type: SchemaType) {
       <div class="grid lg:grid-cols-2 gap-6 sm:gap-8">
         <!-- Left Column: Form Fields -->
         <div>
-          <ToolInputGlow :focused="inputFocused" color-scheme="purple">
+          <ToolInputGlow>
             <div class="flex items-center gap-3 mb-6">
               <UIcon :name="currentSchemaConfig.icon" class="w-5 h-5 text-purple-500" />
               <div>
@@ -189,8 +172,6 @@ function handleTypeSelect(type: SchemaType) {
                       :placeholder="field.placeholder"
                       :rows="2"
                       class="w-full"
-                      @focus="inputFocused = true"
-                      @blur="inputFocused = false"
                     />
                   </template>
                   <template v-else-if="field.type === 'select'">
@@ -207,8 +188,6 @@ function handleTypeSelect(type: SchemaType) {
                       v-model="state.fields[field.key]"
                       type="datetime-local"
                       class="w-full"
-                      @focus="inputFocused = true"
-                      @blur="inputFocused = false"
                     />
                   </template>
                   <template v-else>
@@ -217,8 +196,6 @@ function handleTypeSelect(type: SchemaType) {
                       :placeholder="field.placeholder"
                       :type="field.type === 'number' ? 'number' : 'text'"
                       class="w-full"
-                      @focus="inputFocused = true"
-                      @blur="inputFocused = false"
                     />
                   </template>
                 </UFormField>
@@ -264,11 +241,11 @@ function handleTypeSelect(type: SchemaType) {
 
             <!-- Preview card with structured data visualization -->
             <div
-              class="bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm rounded-xl border border-[var(--ui-border)] shadow-xl shadow-black/5 overflow-hidden transition-all duration-300"
+              class="bg-[var(--ui-bg-elevated)] rounded-xl border border-[var(--ui-border)] overflow-hidden transition-all duration-300"
               :class="showJsonPreview ? 'opacity-100' : 'hidden lg:block opacity-100'"
             >
               <!-- Schema type badge -->
-              <div class="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--ui-border)] bg-gradient-to-r from-purple-500/5 to-transparent">
+              <div class="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--ui-border)]">
                 <span class="text-[10px] font-mono uppercase tracking-wider text-purple-500">@type</span>
                 <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-500 border border-purple-500/20">
                   {{ state.schemaType }}
@@ -282,36 +259,23 @@ function handleTypeSelect(type: SchemaType) {
                 </div>
               </div>
             </div>
-
-            <!-- Decorative elements -->
-            <div class="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full blur-2xl pointer-events-none" />
           </div>
         </div>
       </div>
-    </Motion>
+    </div>
 
     <!-- Code Output -->
-    <Motion
+    <div
       v-if="hasAnyValue"
       ref="codeOutputRef"
-      :initial="{ opacity: 0, y: 20 }"
-      :animate="{ opacity: 1, y: 0 }"
-      :transition="{ duration: 0.5, delay: 0.1 }"
       class="max-w-6xl mt-10"
     >
-      <div class="relative bg-[var(--ui-bg-elevated)]/80 backdrop-blur-sm rounded-2xl border border-[var(--ui-border)] shadow-xl shadow-black/5 overflow-hidden">
+      <div class="relative bg-[var(--ui-bg-elevated)] rounded-2xl border border-[var(--ui-border)] overflow-hidden">
         <!-- Terminal-style header -->
-        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)] bg-gradient-to-r from-gray-900/5 to-transparent dark:from-gray-100/5">
-          <div class="flex items-center gap-3">
-            <div class="flex gap-1.5">
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
-              <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/80" />
-            </div>
-            <div class="flex items-center gap-2">
-              <UIcon name="i-carbon-code" class="w-4 h-4 text-purple-500" />
-              <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Generated Code</span>
-            </div>
+        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)]">
+          <div class="flex items-center gap-2">
+            <UIcon name="i-carbon-code" class="w-4 h-4 text-purple-500" />
+            <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Generated Code</span>
           </div>
           <ClientOnly>
             <UButton
@@ -353,16 +317,11 @@ function handleTypeSelect(type: SchemaType) {
           Reset All
         </UButton>
       </div>
-    </Motion>
+    </div>
 
     <!-- Educational Content -->
     <div class="max-w-4xl space-y-10 sm:space-y-16 mt-16 sm:mt-24">
-      <!-- Divider with gradient -->
-      <div class="flex items-center gap-4">
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--ui-border)] to-transparent" />
-        <span class="text-xs font-medium text-[var(--ui-text-dimmed)] uppercase tracking-widest">Learn</span>
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--ui-border)] to-transparent" />
-      </div>
+      <div class="h-px bg-[var(--ui-border)] my-16" />
 
       <section>
         <ToolSectionHeader title="What is Schema.org?" icon="i-carbon-data-structured" color="purple" />
