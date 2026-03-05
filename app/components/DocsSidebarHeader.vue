@@ -36,7 +36,7 @@ const topLinks = computed(() => [
             <div
               class="rounded-md p-1 inline-flex ring-inset ring-1 bg-neutral-100/10 dark:bg-neutral-800/50 ring-neutral-200 dark:ring-neutral-700 group-hover:bg-primary group-hover:ring-primary group-hover:text-background"
             >
-              <UIcon :name="link.icon" class="w-4 h-4 text-[var(--ui-text-dimmed)] brightness-120 sepia" />
+              <UIcon :name="link.icon" class="w-4 h-4 text-[var(--ui-text-dimmed)] group-hover:text-[var(--ui-bg-inverted)]" />
             </div>
             <span class="truncate">{{ link.title }}</span>
           </NuxtLink>
@@ -54,6 +54,12 @@ const topLinks = computed(() => [
           >
             <div class="flex items-center gap-2">
               <div :class="link.children?.length ? 'text-sm font-bold' : ''" v-text="link.title" />
+              <UBadge v-if="link.new" size="sm" variant="subtle" color="success">
+                New
+              </UBadge>
+              <UBadge v-else-if="link.deprecated" size="sm" variant="subtle" color="neutral" class="opacity-50">
+                Deprecated
+              </UBadge>
             </div>
             <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamclic ass="w-4 h-4" />
           </div>
@@ -63,19 +69,9 @@ const topLinks = computed(() => [
           </div>
           <UIcon
             v-if="link.icon" :name="link.icon"
-            class="w-4 h-4 transition-all hover:brightness-50 brightness-120"
-            :class="active ? 'sepia-[0%] brightness-100' : ' sepia-[50%]'"
+            class="w-4 h-4 shrink-0 transition-opacity"
+            :class="active ? 'opacity-100' : 'opacity-40'"
           />
-          <div v-if="link.new">
-            <UBadge size="sm" variant="subtle" color="success">
-              New
-            </UBadge>
-          </div>
-          <div v-else-if="link.deprecated" class="opacity-50">
-            <UBadge size="sm" variant="subtle" color="neutral">
-              Deprecated
-            </UBadge>
-          </div>
         </template>
       </ContentNavigation>
     </nav>

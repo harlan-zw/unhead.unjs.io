@@ -137,6 +137,18 @@ const { data: lastCommit } = await useAsyncData(`learn-commit-${route.path}`, ()
         </div>
       </UPageHeader>
 
+      <div v-if="page.image" class="relative mt-8 mb-2 group">
+        <div class="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[var(--ui-border-accented)] to-transparent opacity-60" />
+        <img
+          :src="page.image"
+          :alt="page.title"
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
+          class="relative w-full rounded-xl object-cover shadow-lg ring-1 ring-[var(--ui-border)] max-h-[380px]"
+        >
+      </div>
+
       <div class="block xl:hidden">
         <div class="mt-5 flex items-center gap-2 text-[var(--ui-text-accented)]">
           <UIcon name="i-tabler-align-left-2" class="size-4" />

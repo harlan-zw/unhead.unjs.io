@@ -44,6 +44,7 @@ function tooltipTemplate(d: D) {
 </script>
 
 <template>
+  <ClientOnly>
   <div class="my-8 rounded-lg border border-[var(--ui-border-muted)] bg-[var(--ui-bg-elevated)] p-4 sm:p-6">
     <div class="flex items-baseline justify-between mb-4">
       <h4 class="text-sm font-semibold text-[var(--ui-text)] tracking-tight">
@@ -53,7 +54,7 @@ function tooltipTemplate(d: D) {
     </div>
     <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-4 text-xs text-[var(--ui-text-muted)]">
       <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
-        <span class="w-2.5 h-2.5 rounded-[3px] inline-block" :style="{ backgroundColor: item.color }" />
+        <span class="w-2.5 h-2.5 rounded-full inline-block" :style="{ backgroundColor: item.color }" />
         {{ item.label }}
       </span>
     </div>
@@ -81,4 +82,5 @@ function tooltipTemplate(d: D) {
       All three frameworks essentially flat. No framework-level optimization has moved the needle at population scale.
     </p>
   </div>
+  </ClientOnly>
 </template>

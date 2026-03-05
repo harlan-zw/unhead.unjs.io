@@ -72,6 +72,7 @@ export default defineContentConfig({
       },
       schema: z.object({
         icon: z.string().optional(),
+        image: z.string().optional(),
         publishedAt: z.string().optional(),
         updatedAt: z.string().optional(),
         keywords: z.array(z.string()).optional(),

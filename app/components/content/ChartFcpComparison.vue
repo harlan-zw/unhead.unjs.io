@@ -53,35 +53,37 @@ function tooltipTemplate(d: D) {
 </script>
 
 <template>
-  <div class="my-8 rounded-lg border border-[var(--ui-border-muted)] bg-[var(--ui-bg-elevated)] p-4 sm:p-6">
-    <div class="flex items-baseline justify-between mb-4">
-      <h4 class="text-sm font-semibold text-[var(--ui-text)] tracking-tight">
-        FCP by Head Ordering
-      </h4>
-      <span class="text-xs text-[var(--ui-text-dimmed)]">median, 5 runs each</span>
+  <ClientOnly>
+    <div class="my-8 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-5 not-prose">
+      <div class="flex items-baseline justify-between mb-4">
+        <h4 class="text-sm font-semibold text-[var(--ui-text)] tracking-tight">
+          FCP by Head Ordering
+        </h4>
+        <span class="text-xs text-[var(--ui-text-dimmed)]">median, 5 runs each</span>
+      </div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-4 text-xs text-[var(--ui-text-muted)]">
+        <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full inline-block" :style="{ backgroundColor: item.color }" />
+          {{ item.label }}
+        </span>
+      </div>
+      <VisXYContainer :data="data" :height="340" class="w-full">
+        <VisGroupedBar
+          :x="x"
+          :y="y"
+          :color="colors"
+          :rounded-corners="3"
+          :bar-padding="0.08"
+          :group-padding="0.2"
+        />
+        <VisAnnotations :items="annotations" />
+        <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
+        <VisAxis type="y" :tick-format="(v: number) => `${v}ms`" :grid-line="false" :domain-line="false" />
+        <VisTooltip :triggers="{ [VisGroupedBar]: tooltipTemplate }" />
+      </VisXYContainer>
+      <p class="text-xs text-[var(--ui-text-dimmed)] mt-3 leading-relaxed">
+        Heavy page on slow-3g shows the only meaningful delta. Minimal and medium pages are within noise.
+      </p>
     </div>
-    <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-4 text-xs text-[var(--ui-text-muted)]">
-      <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
-        <span class="w-2.5 h-2.5 rounded-[3px] inline-block" :style="{ backgroundColor: item.color }" />
-        {{ item.label }}
-      </span>
-    </div>
-    <VisXYContainer :data="data" :height="340" class="w-full">
-      <VisGroupedBar
-        :x="x"
-        :y="y"
-        :color="colors"
-        :rounded-corners="3"
-        :bar-padding="0.08"
-        :group-padding="0.2"
-      />
-      <VisAnnotations :items="annotations" />
-      <VisAxis type="x" :tick-format="tickFormat" :grid-line="false" :domain-line="false" :tick-line="false" />
-      <VisAxis type="y" :tick-format="(v: number) => `${v}ms`" :grid-line="false" :domain-line="false" />
-      <VisTooltip :triggers="{ [VisGroupedBar]: tooltipTemplate }" />
-    </VisXYContainer>
-    <p class="text-xs text-[var(--ui-text-dimmed)] mt-3 leading-relaxed">
-      Heavy page on slow-3g shows the only meaningful delta. Minimal and medium pages are within noise.
-    </p>
-  </div>
+  </ClientOnly>
 </template>

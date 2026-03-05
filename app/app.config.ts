@@ -77,30 +77,23 @@ export default ({
     },
     contentNavigation: {
       slots: {
-        list: 'space-y-2',
+        list: 'space-y-1',
         listWithChildren: 'border-none transform mb-5',
       },
       variants: {
         active: {
           true: {
-            link: 'text-[var(--ui-text-toned)] after:-left-[1px] font-semibold rounded-[10px] after:rounded-[10px] after:w-full after:h-full after:absolute after:bottom-0 after:block after:bg-[var(--ui-bg-elevated)]/50 after:shadow-xs',
+            link: [
+              'text-[var(--ui-text-highlighted)] font-medium',
+              'before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:rounded-full before:bg-[var(--ui-primary)]',
+            ],
           },
           false: {
-            link: 'text-[var(--ui-text-toned)]',
+            link: 'text-[var(--ui-text-muted)] hover:text-[var(--ui-text-highlighted)] transition-colors',
             linkLeadingIcon: 'text-[var(--ui-text-dimmed)]',
           },
         },
       },
-      compoundVariants: [
-        {
-          color: 'primary',
-          variant: 'pill',
-          active: true,
-          class: {
-            link: 'text-[var(--ui-text-highlighted)] ',
-          },
-        },
-      ],
     },
     prose: {
       pre: {},

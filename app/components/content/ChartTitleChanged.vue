@@ -35,31 +35,33 @@ const legend = [
 </script>
 
 <template>
-  <figure class="chart-container my-8 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-5 not-prose">
-    <div class="flex items-center justify-between mb-4">
-      <figcaption class="text-sm font-medium text-[var(--ui-text)]">
-        % Title Changed on Render
-      </figcaption>
-      <div class="flex flex-wrap gap-3 text-xs text-[var(--ui-text-muted)]">
-        <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
-          <span class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: item.color }" />
-          {{ item.label }}
+  <ClientOnly>
+    <figure class="chart-container my-8 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-5 not-prose">
+      <figcaption class="flex items-center justify-between mb-4">
+        <span class="text-sm font-medium text-[var(--ui-text)]">
+          % Title Changed on Render
         </span>
-      </div>
-    </div>
-    <VisXYContainer :data="data" height="280" class="w-full">
-      <VisStackedBar
-        orientation="horizontal"
-        :x="x"
-        :y="y"
-        :color="color"
-        :rounded-corners="3"
-        :bar-padding="0.2"
-      />
-      <VisAxis type="y" :tick-format="tickFormat" :grid-line="false" :domain-line="false" :tick-line="false" />
-      <VisAxis type="x" :tick-format="(v: number) => `${v}%`" :grid-line="false" :domain-line="false" :tick-line="false" />
-    </VisXYContainer>
-  </figure>
+        <span class="flex flex-wrap gap-3 text-xs text-[var(--ui-text-muted)]">
+          <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: item.color }" />
+            {{ item.label }}
+          </span>
+        </span>
+      </figcaption>
+      <VisXYContainer :data="data" height="280" class="w-full">
+        <VisStackedBar
+          orientation="horizontal"
+          :x="x"
+          :y="y"
+          :color="color"
+          :rounded-corners="3"
+          :bar-padding="0.2"
+        />
+        <VisAxis type="y" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
+        <VisAxis type="x" :tick-format="(v: number) => `${v}%`" :grid-line="false" :domain-line="false" :tick-line="false" />
+      </VisXYContainer>
+    </figure>
+  </ClientOnly>
 </template>
 
 <style scoped>

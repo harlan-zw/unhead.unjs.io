@@ -164,7 +164,13 @@ export function useDocsNav(all: boolean = false) {
               }
             }),
             // sort by stem
-          ].toSorted((a, b) => getLastPathSegment(a.stem).localeCompare(getLastPathSegment(b.stem))),
+          ].toSorted((a, b) => {
+            const aIsFramework = a.icon ? 1 : 0
+            const bIsFramework = b.icon ? 1 : 0
+            if (aIsFramework !== bIsFramework)
+              return aIsFramework - bIsFramework
+            return getLastPathSegment(a.stem).localeCompare(getLastPathSegment(b.stem))
+          }),
         }
       })
       .map(enhanceTitlesAndIcons)

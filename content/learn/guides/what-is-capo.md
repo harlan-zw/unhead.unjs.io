@@ -12,12 +12,12 @@ keywords: ["capo.js", "head tag order", "html head performance", "critical reque
 
 ## What is Capo.js?
 
-[Capo.js](https://github.com/nickvdh/capo.js) is a set of rules by [Rick Viscomi](https://rviscomi.dev/) (Chrome DevRel) defining the optimal order of HTML `<head>`{lang="html"} tags for page load performance. Named after the guitar capo — it tunes your `<head>`{lang="html"} by putting every tag in the right position.
+[Capo.js](https://github.com/nickvdh/capo.js) is a set of rules by [Rick Viscomi](https://rviscomi.dev/) (Chrome DevRel) defining the optimal order of HTML `<head>`{lang="html"} tags for page load performance. Named after the guitar capo - it tunes your `<head>`{lang="html"} by putting every tag in the right position.
 
 Browsers parse `<head>`{lang="html"} top-to-bottom. Wrong order means delayed rendering, unnecessary re-parsing, and slower LCP.
 
 ::Callout{icon="i-ph-rocket-launch-duotone"}
-**Unhead implements Capo.js sorting automatically.** Every tag from `useHead()`{lang="ts"} is placed in optimal position — zero config.
+**Unhead implements Capo.js sorting automatically.** Every tag from `useHead()`{lang="ts"} is placed in optimal position - zero config.
 ::
 
 ## Why order matters
@@ -63,7 +63,7 @@ Unhead implements all 14 Capo.js weight levels. Lower weight = placed first in `
 
 | Priority | Weight | Tag | Why |
 |----------|--------|-----|-----|
-| 1 | -30 | `<meta http-equiv="Content-Security-Policy">`{lang="html"} | Must be first for security enforcement |
+| 1 | -30 | `<meta http-equiv="Content-Security-Policy">`{lang="html"} | **The Preload Scanner Stall:** Must be first. Late CSP tags can [disable the Chromium preload scanner](https://issues.chromium.org/issues/40273969), forcing resources to load sequentially. |
 | 2 | -20 | `<meta charset>`{lang="html"} | Encoding must be in first 1024 bytes |
 | 3 | -15 | `<meta name="viewport">`{lang="html"} | Prevents mobile layout shifts |
 | 4 | -10 | `<base>`{lang="html"} | Affects all relative URLs after it |
@@ -80,7 +80,7 @@ Unhead implements all 14 Capo.js weight levels. Lower weight = placed first in `
 
 ### Weight groups
 
-**-30 to -10 (critical metadata)** must appear first — `<meta charset>`{lang="html"} after 1024 bytes forces re-parsing, late viewport causes mobile layout shifts.
+**-30 to -10 (critical metadata)** must appear first - `<meta charset>`{lang="html"} after 1024 bytes forces re-parsing, late viewport causes mobile layout shifts.
 
 **10-20 (content & connections):** `<title>`{lang="html"} for the browser tab, `<link rel="preconnect">`{lang="html"} to establish connections before they're needed.
 
@@ -89,6 +89,15 @@ Unhead implements all 14 Capo.js weight levels. Lower weight = placed first in `
 **70-100 (deferred & hints):** `<link rel="preload">`{lang="html"}, `<script defer>`{lang="html"}, `<link rel="prefetch">`{lang="html"}, and everything else. These don't affect initial rendering.
 
 ## Common Mistakes
+
+### The "Head-Breaker"
+
+A common mistake is placing an invalid tag (like `<img>`{lang="html"} or `<iframe>`{lang="html"}) inside the `<head>`{lang="html"}. The browser's DOM builder implicitly closes the `<head>`{lang="html"} and moves everything after the invalid tag to the `<body>`{lang="html"}.
+
+::ChartHeadBreakerImpact
+::
+
+According to the **Web Almanac 2025**, invalid head markup remains a significant issue for **22% of all mobile pages**. This "breaks" SEO and performance because critical meta tags and styles are discovered too late by the parser.
 
 ### Charset after the title
 
@@ -128,7 +137,7 @@ The [HTML spec](https://html.spec.whatwg.org/multipage/semantics.html#charset) r
 <script src="/analytics.js"></script>
 ```
 
-Better — make analytics async:
+Better - make analytics async:
 
 ```html
 <script async src="/analytics.js"></script>
@@ -190,10 +199,10 @@ useHead({
 ```
 
 Priority aliases (applied as offsets to the tag's calculated weight):
-- `'critical'`{lang="ts"} — subtracts 8 from weight
-- `'high'`{lang="ts"} — subtracts 1
-- `'low'`{lang="ts"} — adds 2
-- Any number — exact weight override
+- `'critical'`{lang="ts"} - subtracts 8 from weight
+- `'high'`{lang="ts"} - subtracts 1
+- `'low'`{lang="ts"} - adds 2
+- Any number - exact weight override
 
 Relative positioning with `before:`{lang="ts"} and `after:`{lang="ts"} prefixes:
 
@@ -214,4 +223,4 @@ useHead({
 Paste HTML or enter a URL to get instant feedback on your head tag ordering, with specific suggestions for improvement.
 ::
 
-For the measured performance impact of head tag ordering, see [Does Head Tag Order Actually Affect Performance?](/learn/research/capo-performance-research). For how streaming SSR interacts with head management, see [Streaming SSR SEO](/learn/research/streaming-head-performance).
+For the measured performance impact of head tag ordering—including the **"Nuxt Paradox"** where automatic ordering isn't enough to fix slow LCP—see [Does Head Tag Order Affect Performance?](/learn/research/capo-performance-research). For how streaming SSR interacts with head management, see [Streaming SSR SEO](/learn/research/streaming-head-performance).
