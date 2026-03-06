@@ -18,7 +18,7 @@ keywords:
   - critical rendering path
 ---
 
-[Nuxt](https://nuxt.com) auto-sorts `<head>`{lang="html"} tags via [Capo.js weights](/learn/guides/what-is-capo) and scores 44% good LCP across 88K CrUX origins. [Shopify](https://www.shopify.com) does zero head optimization and scores 87%. The framework doing the most work on head ordering has the worst LCP. That gap isn't explained by ordering - it's TTFB, JavaScript payload, hydration cost.
+[Nuxt](https://nuxt.com) auto-sorts `<head>`{lang="html"} tags via [Capo.js weights](/learn/guides/what-is-capo) and scores [44% good LCP across 88K CrUX origins](/learn/research/state-of-head-2026#does-any-of-this-affect-performance). [Shopify](https://www.shopify.com) does zero head optimization and scores 87%. The framework doing the most work on head ordering has the worst LCP. That gap isn't explained by ordering - it's TTFB, JavaScript payload, hydration cost.
 
 So does head tag ordering matter? We ran 120 controlled benchmarks to find out.
 
@@ -170,3 +170,11 @@ Check your site's current head tag ordering with instant feedback and suggestion
 Benchmark test pages and Puppeteer scripts are in [`test/capo-benchmarks`](https://github.com/unjs/unhead.unjs.io/tree/main/test/capo-benchmarks). Each test page uses identical external resources - only `<head>`{lang="html"} tag order changes. Network throttling via CDP (`Network.emulateNetworkConditions`{lang="ts"}), not Lighthouse simulation.
 
 CrUX data queried from BigQuery's public `chrome-ux-report` dataset, filtered by framework technology detection. All benchmark results are median values across 5 runs per configuration.
+
+::Callout{icon="i-ph-arrow-right" to="/learn/research/state-of-head-2026" title="The State of <head> in 2026"}
+Head tag health across 660,000 sites - including the social sharing gap, head-breakers, and third-party pollution.
+::
+
+::Callout{icon="i-ph-arrow-right" to="/learn/research/streaming-head-performance" title="Streaming SSR & SEO"}
+How streaming SSR drops JSON-LD, canonicals, and OG tags - and the strategies each framework uses to prevent it.
+::

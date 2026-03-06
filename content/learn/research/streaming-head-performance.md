@@ -49,6 +49,8 @@ The table below tracks two things. **Streams?** means the framework can send HTM
 
 For regular users, [`generateMetadata()`{lang="ts"}](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) is non-blocking - late metadata is injected via `<script>`{lang="html"} tags appended to `<body>`{lang="html"}, which the client runtime moves to `<head>`{lang="html"}. For bots (detected via User-Agent), [Next.js](https://nextjs.org) falls back to blocking behavior and serves complete `<head>`{lang="html"} tags in the initial response. The default [`htmlLimitedBots`{lang="ts"}](https://nextjs.org/docs/app/api-reference/config/next-config-js/htmlLimitedBots) list covers Googlebot, Bingbot, social crawlers (Twitter, Facebook, LinkedIn, Slack, Discord), and others.
 
+Under the hood, this uses React's native metadata hoisting. [React 19+](https://react.dev) lets components render `<title>`{lang="html"} and `<meta>`{lang="html"} anywhere in the tree - they're automatically hoisted to `<head>`{lang="html"}. During streaming (`renderToPipeableStream`), late tags are emitted via internal stream instructions that the client runtime executes. Next.js layers bot detection on top of this primitive.
+
 ```tsx
 // app/products/[id]/page.tsx
 export async function generateMetadata({ params }) {
@@ -61,13 +63,6 @@ export async function generateMetadata({ params }) {
 }
 // Users see the page instantly; bots wait for this to resolve
 ```
-
-### React 19/20 - Native Hoisting
-
-::StreamingGrade{streams="Yes" headSafe="With discipline"}
-::
-
-[React](https://react.dev) now provides native support for document metadata. Components like `<title>`{lang="html"} and `<meta>`{lang="html"} can be rendered anywhere in the tree and are automatically hoisted to the `<head>`{lang="html"}. During streaming (`renderToPipeableStream`), React emits late tags via the stream using internal instructions that the client-side runtime executes. The [React Foundation](https://linuxfoundation.org/press/react-foundation) (announced Feb 2026) continues to steward these standards.
 
 ### Nuxt 4 - Full Page Block
 
@@ -95,7 +90,7 @@ useHead({
 ::StreamingGrade{streams="Yes" headSafe="Yes"}
 ::
 
-[Remix](https://remix.run)'s [`meta()`{lang="ts"}](HTTPS://reactrouter.com/start/framework/route-module#meta) export is synchronous. It receives data from the loader, but only the awaited portion - deferred data is an unresolved `Promise`{lang="ts"}. This forces developers to `await`{lang="ts"} SEO-critical data in the loader.
+[Remix](https://remix.run)'s [`meta()`{lang="ts"}](https://reactrouter.com/start/framework/route-module#meta) export is synchronous. It receives data from the loader, but only the awaited portion - deferred data is an unresolved `Promise`{lang="ts"}. This forces developers to `await`{lang="ts"} SEO-critical data in the loader.
 
 ```ts
 // app/routes/products.$id.tsx
@@ -182,18 +177,7 @@ View Source shows the fallback title. The browser tab shows the correct one (aft
 ::StreamingGrade{streams="No" headSafe="Yes"}
 ::
 
-[Qwik](https://qwik.dev)'s [`useDocumentHead()`{lang="ts"}](HTTPS://qwik.dev/docs/API/#usedocumenthead) depends on [`routeLoader$()`{lang="ts"}](HTTPS://qwik.dev/docs/route-loader/). If the loader is async, the server waits until the head resolves. No streaming head.
-
-## The Future: Interop 2026 and `<link rel="expect">`{lang="html"}
-
-The biggest evolution in streaming SEO is [Interop 2026](https://web.dev/interop-2026/), which introduces the `<link rel="expect">`{lang="html"} attribute. This provides a native browser API to synchronize streaming content and head tags without framework-specific JavaScript "patching" hacks.
-
-```html
-<!-- Native rendering hint -->
-<link rel="expect" href="#product-meta" blocking="render">
-```
-
-It tells the browser: "I'm streaming a shell, but do not paint or reveal the page until the element with `#product-meta` has been parsed." This effectively eliminates the FOUC (Flash of Unstyled Content) and the "zombie head" state for all browsers that support it (Chrome/Edge stable since v124, Safari/Firefox in development).
+[Qwik](https://qwik.dev)'s [`useDocumentHead()`{lang="ts"}](https://qwik.dev/docs/API/#usedocumenthead) depends on [`routeLoader$()`{lang="ts"}](https://qwik.dev/docs/route-loader/). If the loader is async, the server waits until the head resolves. No streaming head.
 
 ## Strategy Comparison
 
@@ -208,45 +192,43 @@ It tells the browser: "I'm streaming a shell, but do not paint or reveal the pag
 **Social crawlers:** No. Twitter/X, Facebook, Slack, and [LinkedIn](https://linkedin.com) bots read the first chunk looking for Open Graph tags and disconnect. Patched heads = broken social cards.
 
 ::Callout{icon="i-ph-warning-duotone" title="Social cards and streaming"}
-If your framework patches `<head>`{lang="html"} via late-streamed JS, social preview cards will be broken. Twitter/X, Facebook, Slack, and LinkedIn bots don't execute JS. Next 15 added bot detection specifically for this.
+If your framework patches `<head>`{lang="html"} via late-streamed JS, social preview cards will be broken. Twitter/X, Facebook, Slack, and LinkedIn bots don't execute JS. Next.js added bot detection in v15 specifically for this.
 ::
 
 ## Production Breakage
 
-Five documented cases from production apps:
+Five documented cases where streaming defaults broke SEO in production:
 
-### Next 15: Social cards break after upgrade
+### Next.js 15: Social cards break after upgrade
 
-[`generateMetadata()`{lang="ts"}](HTTPS://Next.org/docs/app/API-reference/functions/generate-metadata) became non-blocking by default. OG and Twitter card previews stopped rendering on Slack, Twitter, and Facebook - social scrapers drop the connection after reading `<head>`{lang="html"}, missing late-streamed tags.
+After upgrading to Next.js 15, [`generateMetadata()`{lang="ts"}](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) became non-blocking by default. Teams discovered broken social previews on Slack, Twitter, and Facebook - crawlers were dropping the connection before late-streamed OG tags arrived.
 
-**Fix:** Configure [`htmlLimitedBots`{lang="ts"}](HTTPS://Next.org/docs/app/API-reference/config/next-config-js/htmlLimitedBots) with missing User-Agent patterns.
+**Fix:** Configure [`htmlLimitedBots`{lang="ts"}](https://nextjs.org/docs/app/api-reference/config/next-config-js/htmlLimitedBots) with missing User-Agent patterns. Next.js 16's default list now covers most bots by default.
 
 ### SvelteKit: SEO tags disappear from GSC
 
-Pages lost `<title>`{lang="html"} and `<meta name="description">`{lang="html"} in Google Search Console after moving data fetching to streamed promises. `<svelte:head>`{lang="svelte"} inside `{#await}`{lang="svelte"} only contains the fallback state in SSR.
+Pages lost rankings after a refactor moved product data from awaited `load()`{lang="ts"} to streamed promises for faster page loads. Google Search Console showed missing `<title>`{lang="html"} and `<meta name="description">`{lang="html"} - the SSR HTML only contained the `{#await}`{lang="svelte"} fallback state.
 
-**Fix:** Never defer SEO-critical data.
+**Fix:** Never defer data that feeds `<svelte:head>`{lang="svelte"}. Keep SEO-critical fetches in the awaited path.
 
 ### Remix: `meta()`{lang="ts"} can't see deferred data
 
-The `meta()`{lang="ts"} export is synchronous - deferred loader data is an unresolved `Promise`{lang="ts"}. Requires splitting loaders: `await`{lang="ts"} the title, `defer`{lang="ts"} the comments. With [React Router 7](HTTPS://reactrouter.com), `<title>`{lang="html"} inside `<Await>`{lang="tsx"} works but requires JS.
+Teams trying to show review counts in `<title>`{lang="html"} found that deferred loader data is an unresolved `Promise`{lang="ts"} inside `meta()`{lang="ts"}. The fix requires splitting loaders: `await`{lang="ts"} the title data, `defer`{lang="ts"} everything else. With [React Router 7](https://reactrouter.com), `<title>`{lang="html"} inside `<Await>`{lang="tsx"} works but requires JS to render.
 
 ### Angular: View Source shows wrong title
 
-Dynamic `<title>`{lang="html"} fetched via `HttpClient`{lang="ts"} in `ngOnInit`{lang="ts"} appears in the browser tab but View Source shows the fallback. Angular's non-streaming SSR serialized the HTML before the async call resolved.
+Dynamic `<title>`{lang="html"} set via `HttpClient`{lang="ts"} in `ngOnInit`{lang="ts"} appeared correct in the browser tab but View Source showed the fallback. Angular serialized the HTML before the async subscription resolved - a non-streaming framework with a streaming-like timing bug.
 
-**Fix:** `PendingTasks`{lang="ts"} API (Angular 19+) to delay SSR serialization until async operations complete.
+**Fix:** Use the `PendingTasks`{lang="ts"} API (Angular 19+) to delay SSR serialization until async operations complete.
 
 ### Astro: Islands can't touch the head
 
-Setting `<head>`{lang="html"} content from a nested island component fails silently. Once HTML starts streaming, the head is locked. All head data must be in page-level frontmatter.
+Setting `<head>`{lang="html"} content from a nested island component fails silently. Once frontmatter resolves and streaming begins, the head is locked. All head data must live in page-level frontmatter - there's no workaround from within an island.
 
 ## Rules of Thumb
 
 ::StreamingChecklist
 ::
-
-### Never defer SEO tags
 
 ```ts
 // Good: await SEO data, defer everything else
@@ -264,7 +246,18 @@ No framework gets streaming `<head>`{lang="html"} perfect by default. But the ap
 
 **Safe with discipline: SvelteKit and Angular.** Both can produce complete heads - SvelteKit if you `await`{lang="ts"} SEO data instead of streaming it, Angular if you use `PendingTasks`{lang="ts"} to delay serialization. The difference is that these frameworks don't enforce this by default. A developer can accidentally stream title data or set it in an async callback, and the framework won't warn them. The workarounds are well-documented and straightforward, but the default path has a trap.
 
-The future - `<link rel="expect">`{lang="html"} via Interop 2026 - will eventually let browsers handle streaming head synchronization natively. Until then, the safest approach is to keep `<head>`{lang="html"} data out of the streaming path entirely, or use bot-aware rendering like Next.js.
+The future will eventually let browsers handle streaming head synchronization natively. Until then, the safest approach is to keep `<head>`{lang="html"} data out of the streaming path entirely, or use bot-aware rendering like Next.js.
+
+## The Future: Interop 2026 and `<link rel="expect">`{lang="html"}
+
+The biggest evolution in streaming SEO is [Interop 2026](https://web.dev/interop-2026/), which introduces the `<link rel="expect">`{lang="html"} attribute. This provides a native browser API to synchronize streaming content and head tags without framework-specific JavaScript "patching" hacks.
+
+```html
+<!-- Native rendering hint -->
+<link rel="expect" href="#product-meta" blocking="render">
+```
+
+It tells the browser: "I'm streaming a shell, but do not paint or reveal the page until the element with `#product-meta` has been parsed." This effectively eliminates the FOUC (Flash of Unstyled Content) and the "zombie head" state for all browsers that support it (Chrome/Edge stable since v124, Safari/Firefox in development).
 
 ## How Unhead Approaches This
 
