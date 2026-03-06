@@ -317,6 +317,7 @@ export default defineNuxtConfig({
   },
 
   app: {
+    layoutTransition: false,
     pageTransition: {
       name: 'page',
       mode: 'out-in',
