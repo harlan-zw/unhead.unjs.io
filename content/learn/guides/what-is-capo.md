@@ -97,7 +97,7 @@ A common mistake is placing an invalid tag (like `<img>`{lang="html"} or `<ifram
 ::ChartHeadBreakerImpact
 ::
 
-According to the **Web Almanac 2025**, invalid head markup remains a significant issue for **22% of all mobile pages**. This "breaks" SEO and performance because critical meta tags and styles are discovered too late by the parser.
+According to the **Web Almanac 2025**, invalid head markup remains a significant issue for **22% of all mobile pages**. This "breaks" SEO and performance because the parser discovers critical meta tags and styles too late.
 
 ### Charset after the title
 
@@ -177,7 +177,7 @@ useHead({
 })
 ```
 
-Output is sorted by weight regardless of input order.
+Unhead sorts the output by weight regardless of input order.
 
 ### Custom priority
 

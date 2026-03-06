@@ -91,7 +91,7 @@ The actual mechanism is **sync script bandwidth contention**:
 </head>
 ```
 
-The preload scanner finds `<script defer>`{lang="html"} tags first and starts downloading them. On a throttled connection, they consume bandwidth. When the parser-blocking sync scripts are finally discovered, they compete for the same constrained pipe.
+The preload scanner finds `<script defer>`{lang="html"} tags first and starts downloading them. On a throttled connection, they consume bandwidth. When the parser finally discovers the parser-blocking sync scripts, they compete for the same constrained pipe.
 
 Resource timing (heavy page, slow-3g):
 

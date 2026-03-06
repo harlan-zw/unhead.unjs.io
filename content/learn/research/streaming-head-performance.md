@@ -35,7 +35,7 @@ Every major framework handles this differently. Some block. Some flush and forge
 
 ## How Each Framework Handles It
 
-The table below tracks two things. **Streams?** means the framework can send HTML to the browser incrementally - the body starts arriving before the server finishes rendering. **Complete Head** means the initial server HTML contains all SEO-critical tags (`<title>`{lang="html"}, `<meta name="description">`{lang="html"}, Open Graph) without needing client-side JavaScript. "With discipline" means it's possible but requires structuring your code to avoid a default pitfall. "With config" means a framework setting (like bot detection) must be enabled.
+The table below tracks two things. **Streams?** means the framework can send HTML to the browser incrementally - the body starts arriving before the server finishes rendering. **Complete Head** means the initial server HTML contains all SEO-critical tags (`<title>`{lang="html"}, `<meta name="description">`{lang="html"}, Open Graph) without needing client-side JavaScript. "With discipline" means it's possible but requires structuring your code to avoid a default pitfall. "With config" means you must enable a framework setting (like bot detection).
 
 ::StreamingScorecard
 ::
@@ -47,9 +47,9 @@ The table below tracks two things. **Streams?** means the framework can send HTM
 
 [Next.js 16](https://nextjs.org/blog/next-16) stabilizes **Partial Pre-Rendering (PPR)** and takes the most sophisticated approach to the streaming-vs-SEO tradeoff: it **blocks for bots and streams for users**.
 
-For regular users, [`generateMetadata()`{lang="ts"}](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) is non-blocking - late metadata is injected via `<script>`{lang="html"} tags appended to `<body>`{lang="html"}, which the client runtime moves to `<head>`{lang="html"}. For bots (detected via User-Agent), [Next.js](https://nextjs.org) falls back to blocking behavior and serves complete `<head>`{lang="html"} tags in the initial response. The default [`htmlLimitedBots`{lang="ts"}](https://nextjs.org/docs/app/api-reference/config/next-config-js/htmlLimitedBots) list covers Googlebot, Bingbot, social crawlers (Twitter, Facebook, LinkedIn, Slack, Discord), and others.
+For regular users, [`generateMetadata()`{lang="ts"}](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) is non-blocking - Next.js injects late metadata via `<script>`{lang="html"} tags appended to `<body>`{lang="html"}, which the client runtime moves to `<head>`{lang="html"}. For bots (detected via User-Agent), [Next.js](https://nextjs.org) falls back to blocking behavior and serves complete `<head>`{lang="html"} tags in the initial response. The default [`htmlLimitedBots`{lang="ts"}](https://nextjs.org/docs/app/api-reference/config/next-config-js/htmlLimitedBots) list covers Googlebot, Bingbot, social crawlers (Twitter, Facebook, LinkedIn, Slack, Discord), and others.
 
-Under the hood, this uses React's native metadata hoisting. [React 19+](https://react.dev) lets components render `<title>`{lang="html"} and `<meta>`{lang="html"} anywhere in the tree - they're automatically hoisted to `<head>`{lang="html"}. During streaming (`renderToPipeableStream`), late tags are emitted via internal stream instructions that the client runtime executes. Next.js layers bot detection on top of this primitive.
+Under the hood, this uses React's native metadata hoisting. [React 19+](https://react.dev) lets components render `<title>`{lang="html"} and `<meta>`{lang="html"} anywhere in the tree - they're automatically hoisted to `<head>`{lang="html"}. During streaming (`renderToPipeableStream`), React emits late tags via internal stream instructions that the client runtime executes. Next.js layers bot detection on top of this primitive.
 
 ```tsx
 // app/products/[id]/page.tsx
@@ -69,7 +69,7 @@ export async function generateMetadata({ params }) {
 ::StreamingGrade{streams="No" headSafe="Yes"}
 ::
 
-[Nuxt 4](https://nuxt.com/blog/v4-release) does not support streaming SSR. The entire response - `<head>`{lang="html"} and `<body>`{lang="html"} - is rendered and buffered before any bytes leave the server. This means head tags are always complete, but there is no streaming performance benefit.
+[Nuxt 4](https://nuxt.com/blog/v4-release) does not support streaming SSR. Nuxt renders and buffers the entire response - `<head>`{lang="html"} and `<body>`{lang="html"} - before any bytes leave the server. This means head tags are always complete, but there is no streaming performance benefit.
 
 Nuxt's `useAsyncData()`{lang="ts"} composable `await`{lang="ts"}s in the component setup, blocking the render. `useHead()`{lang="ts"} runs after data resolves, so the head is always populated with the correct values.
 
@@ -133,14 +133,14 @@ export function meta({ data }) {
 {/await}
 ```
 
-**The workaround** is straightforward: `await`{lang="ts"} SEO-critical data in your `load()`{lang="ts"} function instead of streaming it. Head tags from awaited data work fine. Only defer non-SEO content like reviews or comments. Most [SvelteKit](https://svelte.dev/docs/kit) developers already do this - the risk only materializes when streaming is used for data that feeds `<svelte:head>`{lang="svelte"}.
+**The workaround** is straightforward: `await`{lang="ts"} SEO-critical data in your `load()`{lang="ts"} function instead of streaming it. Head tags from awaited data work fine. Only defer non-SEO content like reviews or comments. Most [SvelteKit](https://svelte.dev/docs/kit) developers already do this - the risk only materializes when you use streaming for data that feeds `<svelte:head>`{lang="svelte"}.
 
 ### Solid Start - Optional Streaming
 
 ::StreamingGrade{streams="Opt-in" headSafe="Yes"}
 ::
 
-[Solid Start](https://start.solidjs.com) supports streaming SSR as an opt-in mode, not the default. When streaming is enabled, it uses out-of-order streaming for body content - placeholder elements are replaced as async data resolves without extra client JS. However, `<head>`{lang="html"} tags managed by [`@solidjs/meta`](https://github.com/solidjs/solid-meta) cannot be updated after the stream begins, and the head is not hydrated on the client.
+[Solid Start](https://start.solidjs.com) supports streaming SSR as an opt-in mode, not the default. When you enable streaming, Solid Start uses out-of-order streaming for body content - placeholder elements replace async data as it resolves without extra client JS. However, you cannot update `<head>`{lang="html"} tags managed by [`@solidjs/meta`](https://github.com/solidjs/solid-meta) after the stream begins, and the client does not hydrate the head.
 
 ### Angular - Non-Streaming SSR with Async Gaps
 
@@ -257,7 +257,7 @@ The biggest evolution in streaming SEO is [Interop 2026](https://web.dev/interop
 <link rel="expect" href="#product-meta" blocking="render">
 ```
 
-It tells the browser: "I'm streaming a shell, but do not paint or reveal the page until the element with `#product-meta` has been parsed." This effectively eliminates the FOUC (Flash of Unstyled Content) and the "zombie head" state for all browsers that support it (Chrome/Edge stable since v124, Safari/Firefox in development).
+It tells the browser: "I'm streaming a shell, but do not paint or reveal the page until the browser has parsed the element with `#product-meta`." This effectively eliminates the FOUC (Flash of Unstyled Content) and the "zombie head" state for all browsers that support it (Chrome/Edge stable since v124, Safari/Firefox in development).
 
 ## How Unhead Approaches This
 

@@ -100,7 +100,7 @@ Beyond missing tags, there are tags that are *present but displaced*. A "head-br
 ::ChartHeadBreakerImpact
 ::
 
-When a head-breaker fires, every tag after it is parsed as body content. The browser still applies stylesheets found after the break, but Chromium downgrades their network priority from `Highest` to `High`. On throttled connections, this delay is measurable: moving a critical `<link>`{lang="html"} above a head-breaking `<img>`{lang="html"} can [cost up to ~200ms of FCP on throttled connections](/learn/research/capo-performance-research).
+When a head-breaker fires, the browser parses every tag after it as body content. The browser still applies stylesheets found after the break, but Chromium downgrades their network priority from `Highest` to `High`. On throttled connections, this delay is measurable: moving a critical `<link>`{lang="html"} above a head-breaking `<img>`{lang="html"} can [cost up to ~200ms of FCP on throttled connections](/learn/research/capo-performance-research).
 
 The top offenders from HTTP Archive:
 
