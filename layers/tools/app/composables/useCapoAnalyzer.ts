@@ -86,7 +86,7 @@ function computeScore(tags: AnalyzedTag[]): number {
   if (tags.length <= 1)
     return 100
 
-  const optimal = [...tags].sort((a, b) => a.weight - b.weight)
+  const optimal = tags.toSorted((a, b) => a.weight - b.weight)
   let inversions = 0
   const total = tags.length * (tags.length - 1) / 2
 
@@ -104,7 +104,7 @@ function computeScore(tags: AnalyzedTag[]): number {
 
 function findIssues(tags: AnalyzedTag[]): Issue[] {
   const issues: Issue[] = []
-  const optimal = [...tags].sort((a, b) => a.weight - b.weight)
+  const optimal = tags.toSorted((a, b) => a.weight - b.weight)
 
   for (let i = 0; i < tags.length; i++) {
     const tag = tags[i]
@@ -149,7 +149,7 @@ function formatTagName(tag: AnalyzedTag): string {
 }
 
 function generateUseHeadCode(tags: AnalyzedTag[], framework: string): string {
-  const sorted = [...tags].sort((a, b) => a.weight - b.weight)
+  const sorted = tags.toSorted((a, b) => a.weight - b.weight)
   const importName = framework === 'nuxt' ? '#imports' : framework === 'vue' ? '@unhead/vue' : 'unhead'
 
   const meta: string[] = []
@@ -215,7 +215,7 @@ export function useCapoAnalyzer() {
 
   const parsedTags = computed(() => parseHeadTags(input.value))
   const analyzedTags = computed(() => parsedTags.value.map(classifyTag))
-  const optimalTags = computed(() => [...analyzedTags.value].sort((a, b) => a.weight - b.weight))
+  const optimalTags = computed(() => analyzedTags.value.toSorted((a, b) => a.weight - b.weight))
   const score = computed(() => computeScore(analyzedTags.value))
   const issues = computed(() => findIssues(analyzedTags.value))
   const hasAnyValue = computed(() => analyzedTags.value.length > 0)

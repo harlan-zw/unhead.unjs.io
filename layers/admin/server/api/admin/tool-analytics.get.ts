@@ -78,11 +78,9 @@ export default defineEventHandler(async (event): Promise<ToolAnalyticsSummary> =
   return {
     totalEvents,
     uniqueSessions: sessions.size,
-    topTools: Array.from(toolCounts.entries())
-      .map(([tool, count]) => ({ tool, count }))
+    topTools: Array.from(toolCounts.entries(), ([tool, count]) => ({ tool, count }))
       .sort((a, b) => b.count - a.count),
-    topActions: Array.from(actionCounts.entries())
-      .map(([action, count]) => ({ action, count }))
+    topActions: Array.from(actionCounts.entries(), ([action, count]) => ({ action, count }))
       .sort((a, b) => b.count - a.count),
     errorRate: totalEvents > 0 ? (errorCount / totalEvents) * 100 : 0,
   }

@@ -9,19 +9,19 @@ overrides:
   nuxt-og-image: npm:nuxt-og-image@6.0.0-beta.47
   vite: npm:vite@8.0.0-beta.16
 catalog:
-  '@antfu/eslint-config': ^7.6.1
-  '@cloudflare/workers-types': ^4.20260305.1
+  '@antfu/eslint-config': ^7.7.0
+  '@cloudflare/workers-types': ^4.20260310.1
   '@iconify-json/carbon': ^1.2.19
   '@iconify-json/heroicons': ^1.2.3
   '@iconify-json/logos': ^1.2.10
-  '@iconify-json/material-symbols': ^1.2.60
+  '@iconify-json/material-symbols': ^1.2.61
   '@iconify-json/noto': ^1.2.7
   '@iconify-json/ph': ^1.2.2
   '@iconify-json/radix-icons': ^1.2.6
-  '@iconify-json/simple-icons': ^1.2.72
+  '@iconify-json/simple-icons': ^1.2.73
   '@iconify-json/uil': ^1.2.3
   '@iconify-json/unjs': ^1.2.3
-  '@iconify-json/vscode-icons': ^1.2.44
+  '@iconify-json/vscode-icons': ^1.2.45
   '@inspira-ui/plugins': ^0.0.2
   '@nuxt/content': 3.12.0
   '@nuxt/devtools': 3.2.2
@@ -30,9 +30,9 @@ catalog:
   '@nuxt/ui': ^4.5.1
   '@nuxtjs/mdc': 0.20.2
   '@nuxtjs/seo': ^3.4.0
-  '@takumi-rs/core': ^0.70.4
-  '@takumi-rs/helpers': ^0.70.4
-  '@takumi-rs/wasm': ^0.70.4
+  '@takumi-rs/core': ^0.71.7
+  '@takumi-rs/helpers': ^0.71.7
+  '@takumi-rs/wasm': ^0.71.7
   '@unovis/vue': 1.6.4
   '@vueuse/core': ^14.2.1
   '@vueuse/motion': ^3.0.3
@@ -44,15 +44,15 @@ catalog:
   clsx: ^2.1.1
   consola: ^3.4.2
   drizzle-orm: ^0.45.1
-  eslint: ^10.0.2
-  eslint-plugin-harlanzw: ^0.5.15
+  eslint: ^10.0.3
+  eslint-plugin-harlanzw: ^0.5.17
   jsdom: ^28.1.0
   lighthouse: ^13.0.3
   markdownlint-cli: ^0.48.0
   motion-v: ^2.0.0
   nitro-cloudflare-dev: ^0.2.2
   nuxt: 4.3.1
-  nuxt-ai-ready: ^0.12.0
+  nuxt-ai-ready: ^0.12.1
   nuxt-auth-utils: ^0.5.29
   nuxt-skew-protection: ^0.7.6
   octokit: ^5.0.5
