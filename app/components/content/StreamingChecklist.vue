@@ -26,16 +26,16 @@ const rules = [
 
 <template>
   <div class="my-8 space-y-4 not-prose">
-    <div v-for="rule in rules" :key="rule.title" class="flex items-start gap-4 p-5 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] group transition-all duration-200 hover:border-[var(--ui-border-accented)] hover:shadow-sm focus-within:border-[var(--ui-border-accented)] focus-within:shadow-sm">
-      <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-[var(--ui-bg-muted)] border border-[var(--ui-border-muted)] flex items-center justify-center text-xl">
+    <div v-for="rule in rules" :key="rule.title" class="flex items-start gap-4 p-5 rounded-xl border border-default bg-elevated group transition-all duration-200 hover:border-accented hover:shadow-sm focus-within:border-accented focus-within:shadow-sm">
+      <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-muted border border-muted flex items-center justify-center text-xl">
         <UIcon :name="rule.icon" :class="rule.color" class="size-5" />
       </div>
       <div>
-        <h3 class="text-sm font-bold text-[var(--ui-text)] mb-1 flex items-center gap-2">
+        <h3 class="text-sm font-bold text-default mb-1 flex items-center gap-2">
           {{ rule.title }}
-          <span v-if="rule.critical" class="text-[10px] font-bold uppercase tracking-widest text-[var(--ui-text-error)] bg-[var(--ui-bg-muted)] px-1.5 py-0.5 rounded">Critical</span>
+          <span v-if="rule.critical" class="text-[10px] font-bold uppercase tracking-widest text-[var(--ui-text-error)] bg-muted px-1.5 py-0.5 rounded">Critical</span>
         </h3>
-        <p class="text-xs text-[var(--ui-text-muted)] leading-relaxed">
+        <p class="text-xs text-muted leading-relaxed">
           {{ rule.description }}
         </p>
       </div>

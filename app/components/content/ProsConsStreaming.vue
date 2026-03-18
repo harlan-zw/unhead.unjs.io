@@ -32,15 +32,15 @@ const strategies = [
 </script>
 
 <template>
-  <div class="my-8 overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] not-prose">
+  <div class="my-8 overflow-hidden rounded-xl border border-default bg-elevated not-prose">
     <div class="grid grid-cols-1 divide-y divide-[var(--ui-border-muted)] md:grid-cols-4 md:divide-x md:divide-y-0">
       <div v-for="strategy in strategies" :key="strategy.name" class="p-5 flex flex-col">
         <div class="mb-4">
-          <div class="inline-flex items-center gap-2 rounded-lg bg-[var(--ui-bg-muted)] px-2.5 py-1 text-xs font-bold text-[var(--ui-text-accented)] uppercase tracking-wider">
+          <div class="inline-flex items-center gap-2 rounded-lg bg-muted px-2.5 py-1 text-xs font-bold text-[var(--ui-text-accented)] uppercase tracking-wider">
             <UIcon :name="strategy.icon" class="size-4" />
             {{ strategy.name }}
           </div>
-          <p class="mt-2 text-xs text-[var(--ui-text-dimmed)] leading-relaxed">
+          <p class="mt-2 text-xs text-dimmed leading-relaxed">
             {{ strategy.description }}
           </p>
         </div>
@@ -51,7 +51,7 @@ const strategies = [
               Pros
             </div>
             <ul class="space-y-1">
-              <li v-for="pro in strategy.pros" :key="pro" class="text-xs text-[var(--ui-text-muted)] flex items-start gap-1.5">
+              <li v-for="pro in strategy.pros" :key="pro" class="text-xs text-muted flex items-start gap-1.5">
                 <span class="text-[var(--ui-text-success)] mt-0.5" aria-hidden="true">✓</span>
                 <span class="sr-only">Pro:</span>
                 {{ pro }}
@@ -63,7 +63,7 @@ const strategies = [
               Cons
             </div>
             <ul class="space-y-1">
-              <li v-for="con in strategy.cons" :key="con" class="text-xs text-[var(--ui-text-muted)] flex items-start gap-1.5">
+              <li v-for="con in strategy.cons" :key="con" class="text-xs text-muted flex items-start gap-1.5">
                 <span class="text-[var(--ui-text-error)] mt-0.5 text-[10px]" aria-hidden="true">✕</span>
                 <span class="sr-only">Con:</span>
                 {{ con }}

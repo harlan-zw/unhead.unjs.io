@@ -89,14 +89,14 @@ const lookupColumns: TableColumn<ToolLookup>[] = [
         h('div', { class: `w-8 h-8 rounded-lg bg-${meta.color}-500/10 flex items-center justify-center` }, [
           h('span', { class: `${meta.icon} w-4 h-4 text-${meta.color}-500` }),
         ]),
-        h('span', { class: 'font-medium text-[var(--ui-text-highlighted)]' }, meta.name),
+        h('span', { class: 'font-medium text-highlighted' }, meta.name),
       ])
     },
   },
   {
     accessorKey: 'action',
     header: 'Action',
-    cell: ({ row }) => h('span', { class: 'text-sm text-[var(--ui-text-highlighted)] capitalize' }, row.original.action),
+    cell: ({ row }) => h('span', { class: 'text-sm text-highlighted capitalize' }, row.original.action),
   },
   {
     accessorKey: 'label',
@@ -104,8 +104,8 @@ const lookupColumns: TableColumn<ToolLookup>[] = [
     cell: ({ row }) => {
       const label = row.original.label
       if (!label)
-        return h('span', { class: 'text-[var(--ui-text-dimmed)]' }, '—')
-      return h('code', { class: 'text-[13px] font-mono bg-[var(--ui-bg)] px-2 py-1 rounded-md text-[var(--ui-text-muted)]' }, label)
+        return h('span', { class: 'text-dimmed' }, '—')
+      return h('code', { class: 'text-[13px] font-mono bg-default px-2 py-1 rounded-md text-muted' }, label)
     },
   },
   {
@@ -114,8 +114,8 @@ const lookupColumns: TableColumn<ToolLookup>[] = [
     cell: ({ row }) => {
       const sessionId = row.original.sessionId
       if (!sessionId)
-        return h('span', { class: 'text-[var(--ui-text-dimmed)]' }, '—')
-      return h('code', { class: 'font-mono text-xs text-[var(--ui-text-muted)]' }, sessionId.slice(0, 8))
+        return h('span', { class: 'text-dimmed' }, '—')
+      return h('code', { class: 'font-mono text-xs text-muted' }, sessionId.slice(0, 8))
     },
   },
   {
@@ -125,9 +125,9 @@ const lookupColumns: TableColumn<ToolLookup>[] = [
       const raw = row.original.createdAt
       const date = raw instanceof Date ? raw : new Date(typeof raw === 'number' ? raw * 1000 : raw)
       if (Number.isNaN(date.getTime()))
-        return h('span', { class: 'text-[var(--ui-text-dimmed)]' }, '—')
+        return h('span', { class: 'text-dimmed' }, '—')
       return h('time', {
-        class: 'text-sm font-mono text-[var(--ui-text-muted)] tabular-nums',
+        class: 'text-sm font-mono text-muted tabular-nums',
         datetime: date.toISOString(),
       }, formatRelativeTime(date))
     },
@@ -182,23 +182,23 @@ const statCards = computed(() => [
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--ui-bg)]">
+  <div class="min-h-screen bg-default">
     <!-- Header -->
-    <header class="sticky top-0 z-50 border-b border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/80 backdrop-blur-xl">
+    <header class="sticky top-0 z-50 border-b border-default bg-[var(--ui-bg-elevated)]/80 backdrop-blur-xl">
       <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <div class="flex items-center gap-4">
           <NuxtLink
             to="/"
             aria-label="Back to home"
-            class="w-9 h-9 rounded-lg bg-[var(--ui-bg)] border border-[var(--ui-border)] flex items-center justify-center text-[var(--ui-text-muted)] hover:text-[var(--ui-text-highlighted)] hover:border-[var(--ui-border-accented)] transition-all"
+            class="w-9 h-9 rounded-lg bg-default border border-default flex items-center justify-center text-muted hover:text-highlighted hover:border-accented transition-all"
           >
             <UIcon name="i-carbon-arrow-left" class="w-4 h-4" />
           </NuxtLink>
           <div>
-            <h1 class="text-base font-semibold text-[var(--ui-text-highlighted)]">
+            <h1 class="text-base font-semibold text-highlighted">
               Admin Dashboard
             </h1>
-            <p class="text-xs text-[var(--ui-text-dimmed)]">
+            <p class="text-xs text-dimmed">
               Analytics & Tool Usage
             </p>
           </div>
@@ -206,7 +206,7 @@ const statCards = computed(() => [
         <div v-if="loggedIn" class="flex items-center gap-4">
           <div class="flex items-center gap-2">
             <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span class="text-sm text-[var(--ui-text-muted)]">{{ user?.email }}</span>
+            <span class="text-sm text-muted">{{ user?.email }}</span>
           </div>
           <UButton variant="ghost" size="sm" color="neutral" @click="clear">
             Sign out
@@ -218,13 +218,13 @@ const statCards = computed(() => [
     <main class="max-w-6xl mx-auto px-6 py-8">
       <!-- Auth States -->
       <div v-if="!loggedIn" class="flex flex-col items-center justify-center py-24">
-        <div class="w-20 h-20 rounded-2xl bg-[var(--ui-bg-elevated)] border border-[var(--ui-border)] flex items-center justify-center mb-6">
-          <UIcon name="i-carbon-locked" class="w-8 h-8 text-[var(--ui-text-dimmed)]" />
+        <div class="w-20 h-20 rounded-2xl bg-elevated border border-default flex items-center justify-center mb-6">
+          <UIcon name="i-carbon-locked" class="w-8 h-8 text-dimmed" />
         </div>
-        <h2 class="text-xl font-semibold text-[var(--ui-text-highlighted)] mb-2">
+        <h2 class="text-xl font-semibold text-highlighted mb-2">
           Authentication Required
         </h2>
-        <p class="text-[var(--ui-text-muted)] mb-8 text-center max-w-sm">
+        <p class="text-muted mb-8 text-center max-w-sm">
           Sign in with your GitHub account to access the admin dashboard.
         </p>
         <UButton to="/auth/github" external size="lg" icon="i-carbon-logo-github">
@@ -236,11 +236,11 @@ const statCards = computed(() => [
         <div class="w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6">
           <UIcon name="i-carbon-warning" class="w-8 h-8 text-amber-500" />
         </div>
-        <h2 class="text-xl font-semibold text-[var(--ui-text-highlighted)] mb-2">
+        <h2 class="text-xl font-semibold text-highlighted mb-2">
           Access Denied
         </h2>
-        <p class="text-[var(--ui-text-muted)] mb-8 text-center max-w-sm">
-          <code class="text-sm bg-[var(--ui-bg)] px-2 py-0.5 rounded">{{ user?.email }}</code>
+        <p class="text-muted mb-8 text-center max-w-sm">
+          <code class="text-sm bg-default px-2 py-0.5 rounded">{{ user?.email }}</code>
           is not authorized to access this dashboard.
         </p>
         <UButton variant="soft" color="neutral" @click="clear">
@@ -254,10 +254,10 @@ const statCards = computed(() => [
         <section>
           <div class="flex items-center justify-between mb-6">
             <div>
-              <h2 class="text-lg font-semibold text-[var(--ui-text-highlighted)]">
+              <h2 class="text-lg font-semibold text-highlighted">
                 Analytics Overview
               </h2>
-              <p class="text-sm text-[var(--ui-text-dimmed)]">
+              <p class="text-sm text-dimmed">
                 Real-time tool usage metrics
               </p>
             </div>
@@ -285,7 +285,7 @@ const statCards = computed(() => [
             <div
               v-for="stat in statCards"
               :key="stat.label"
-              class="group relative p-5 rounded-xl bg-[var(--ui-bg-elevated)] border border-[var(--ui-border)] hover:border-[var(--ui-border-accented)] transition-all"
+              class="group relative p-5 rounded-xl bg-elevated border border-default hover:border-accented transition-all"
             >
               <div class="flex items-start justify-between mb-3">
                 <div
@@ -294,12 +294,12 @@ const statCards = computed(() => [
                 >
                   <UIcon :name="stat.icon" class="w-5 h-5" :class="`text-${stat.color}-500`" />
                 </div>
-                <div v-if="status === 'pending'" class="w-12 h-4 rounded bg-[var(--ui-bg)] animate-pulse" />
+                <div v-if="status === 'pending'" class="w-12 h-4 rounded bg-default animate-pulse" />
               </div>
-              <p class="text-sm text-[var(--ui-text-muted)] mb-1">
+              <p class="text-sm text-muted mb-1">
                 {{ stat.label }}
               </p>
-              <p class="text-2xl font-bold font-mono tabular-nums text-[var(--ui-text-highlighted)]">
+              <p class="text-2xl font-bold font-mono tabular-nums text-highlighted">
                 <template v-if="status !== 'pending'">
                   {{ stat.isPercent ? `${stat.value.toFixed(1)}%` : stat.value.toLocaleString() }}
                 </template>
@@ -310,8 +310,8 @@ const statCards = computed(() => [
 
           <!-- Tool Usage with Progress Bars -->
           <div class="grid lg:grid-cols-2 gap-6">
-            <div class="p-6 rounded-xl bg-[var(--ui-bg-elevated)] border border-[var(--ui-border)]">
-              <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider mb-5">
+            <div class="p-6 rounded-xl bg-elevated border border-default">
+              <h3 class="text-sm font-medium text-muted uppercase tracking-wider mb-5">
                 Tool Usage
               </h3>
               <div v-if="analytics?.topTools?.length" class="space-y-4">
@@ -328,15 +328,15 @@ const statCards = computed(() => [
                           :class="`text-${getToolMeta(tool.tool).color}-500`"
                         />
                       </div>
-                      <span class="text-sm font-medium text-[var(--ui-text-highlighted)]">
+                      <span class="text-sm font-medium text-highlighted">
                         {{ getToolMeta(tool.tool).name }}
                       </span>
                     </div>
-                    <span class="text-sm font-mono tabular-nums text-[var(--ui-text-muted)]">
+                    <span class="text-sm font-mono tabular-nums text-muted">
                       {{ tool.count.toLocaleString() }}
                     </span>
                   </div>
-                  <div class="h-1.5 rounded-full bg-[var(--ui-bg)] overflow-hidden">
+                  <div class="h-1.5 rounded-full bg-default overflow-hidden">
                     <div
                       class="h-full rounded-full transition-all duration-500"
                       :class="`bg-${getToolMeta(tool.tool).color}-500`"
@@ -348,45 +348,45 @@ const statCards = computed(() => [
               <div v-else-if="status === 'pending'" class="space-y-4">
                 <div v-for="i in 2" :key="i" class="space-y-2">
                   <div class="flex justify-between">
-                    <div class="w-32 h-4 rounded bg-[var(--ui-bg)] animate-pulse" />
-                    <div class="w-8 h-4 rounded bg-[var(--ui-bg)] animate-pulse" />
+                    <div class="w-32 h-4 rounded bg-default animate-pulse" />
+                    <div class="w-8 h-4 rounded bg-default animate-pulse" />
                   </div>
-                  <div class="h-1.5 rounded-full bg-[var(--ui-bg)]" />
+                  <div class="h-1.5 rounded-full bg-default" />
                 </div>
               </div>
-              <p v-else class="text-sm text-[var(--ui-text-dimmed)] text-center py-8">
+              <p v-else class="text-sm text-dimmed text-center py-8">
                 No tool usage data yet
               </p>
             </div>
 
-            <div class="p-6 rounded-xl bg-[var(--ui-bg-elevated)] border border-[var(--ui-border)]">
-              <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider mb-5">
+            <div class="p-6 rounded-xl bg-elevated border border-default">
+              <h3 class="text-sm font-medium text-muted uppercase tracking-wider mb-5">
                 Action Breakdown
               </h3>
               <div v-if="analytics?.topActions?.length" class="space-y-3">
                 <div
                   v-for="action in analytics.topActions"
                   :key="action.action"
-                  class="flex items-center justify-between py-2 border-b border-[var(--ui-border)] last:border-0"
+                  class="flex items-center justify-between py-2 border-b border-default last:border-0"
                 >
                   <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-[var(--ui-primary)]" />
-                    <span class="text-sm text-[var(--ui-text-highlighted)] capitalize">
+                    <div class="w-2 h-2 rounded-full bg-primary" />
+                    <span class="text-sm text-highlighted capitalize">
                       {{ action.action }}
                     </span>
                   </div>
-                  <span class="text-sm font-mono tabular-nums text-[var(--ui-text-muted)]">
+                  <span class="text-sm font-mono tabular-nums text-muted">
                     {{ action.count.toLocaleString() }}
                   </span>
                 </div>
               </div>
               <div v-else-if="status === 'pending'" class="space-y-3">
-                <div v-for="i in 3" :key="i" class="flex justify-between py-2 border-b border-[var(--ui-border)] last:border-0">
-                  <div class="w-24 h-4 rounded bg-[var(--ui-bg)] animate-pulse" />
-                  <div class="w-12 h-4 rounded bg-[var(--ui-bg)] animate-pulse" />
+                <div v-for="i in 3" :key="i" class="flex justify-between py-2 border-b border-default last:border-0">
+                  <div class="w-24 h-4 rounded bg-default animate-pulse" />
+                  <div class="w-12 h-4 rounded bg-default animate-pulse" />
                 </div>
               </div>
-              <p v-else class="text-sm text-[var(--ui-text-dimmed)] text-center py-8">
+              <p v-else class="text-sm text-dimmed text-center py-8">
                 No action data yet
               </p>
             </div>
@@ -397,14 +397,14 @@ const statCards = computed(() => [
         <section>
           <div class="flex items-center justify-between mb-6">
             <div>
-              <h2 class="text-lg font-semibold text-[var(--ui-text-highlighted)]">
+              <h2 class="text-lg font-semibold text-highlighted">
                 Recent Lookups
               </h2>
-              <p class="text-sm text-[var(--ui-text-dimmed)]">
+              <p class="text-sm text-dimmed">
                 Tool interactions from D1 database
               </p>
             </div>
-            <div class="text-sm font-mono text-[var(--ui-text-dimmed)]">
+            <div class="text-sm font-mono text-dimmed">
               {{ lookupData?.total ?? 0 }} total
             </div>
           </div>
@@ -417,8 +417,8 @@ const statCards = computed(() => [
               class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all"
               :class="[
                 activeLookupTab === tool.value
-                  ? 'bg-[var(--ui-primary)] text-white shadow-lg shadow-[var(--ui-primary)]/25'
-                  : 'bg-[var(--ui-bg-elevated)] text-[var(--ui-text-muted)] hover:text-[var(--ui-text-highlighted)] border border-[var(--ui-border)] hover:border-[var(--ui-border-accented)]',
+                  ? 'bg-primary text-white shadow-lg shadow-[var(--ui-primary)]/25'
+                  : 'bg-elevated text-muted hover:text-highlighted border border-default hover:border-accented',
               ]"
               @click="activeLookupTab = tool.value"
             >
@@ -427,7 +427,7 @@ const statCards = computed(() => [
               <span
                 v-if="lookupData?.stats"
                 class="ml-0.5 px-2 py-0.5 rounded-md text-xs font-mono"
-                :class="activeLookupTab === tool.value ? 'bg-white/20' : 'bg-[var(--ui-bg)]'"
+                :class="activeLookupTab === tool.value ? 'bg-white/20' : 'bg-default'"
               >
                 {{ tool.value === 'all' ? lookupData.total : (lookupData.stats[tool.value] || 0) }}
               </span>
@@ -435,7 +435,7 @@ const statCards = computed(() => [
           </div>
 
           <!-- Table -->
-          <div class="rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] overflow-hidden">
+          <div class="rounded-xl border border-default bg-elevated overflow-hidden">
             <UTable
               v-if="lookupStatus !== 'pending' && filteredLookups.length"
               :data="filteredLookups"
@@ -444,10 +444,10 @@ const statCards = computed(() => [
 
             <div v-else-if="lookupStatus === 'pending'" class="p-12">
               <div class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-xl bg-[var(--ui-bg)] flex items-center justify-center mb-4">
-                  <UIcon name="i-carbon-renew" class="w-5 h-5 text-[var(--ui-text-dimmed)] animate-spin" />
+                <div class="w-12 h-12 rounded-xl bg-default flex items-center justify-center mb-4">
+                  <UIcon name="i-carbon-renew" class="w-5 h-5 text-dimmed animate-spin" />
                 </div>
-                <p class="text-sm text-[var(--ui-text-muted)]">
+                <p class="text-sm text-muted">
                   Loading lookups...
                 </p>
               </div>
@@ -455,13 +455,13 @@ const statCards = computed(() => [
 
             <div v-else class="p-12">
               <div class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-xl bg-[var(--ui-bg)] flex items-center justify-center mb-4">
-                  <UIcon name="i-carbon-data-table" class="w-5 h-5 text-[var(--ui-text-dimmed)]" />
+                <div class="w-12 h-12 rounded-xl bg-default flex items-center justify-center mb-4">
+                  <UIcon name="i-carbon-data-table" class="w-5 h-5 text-dimmed" />
                 </div>
-                <p class="text-sm font-medium text-[var(--ui-text-highlighted)] mb-1">
+                <p class="text-sm font-medium text-highlighted mb-1">
                   No lookups found
                 </p>
-                <p class="text-xs text-[var(--ui-text-dimmed)]">
+                <p class="text-xs text-dimmed">
                   Tool lookup data will appear here
                 </p>
               </div>

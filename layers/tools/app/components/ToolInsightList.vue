@@ -44,7 +44,7 @@ defineProps<{
             >
               {{ insight.title }}
             </p>
-            <p class="text-xs text-[var(--ui-text-muted)] mt-0.5">
+            <p class="text-xs text-muted mt-0.5">
               {{ insight.description }}
             </p>
           </div>

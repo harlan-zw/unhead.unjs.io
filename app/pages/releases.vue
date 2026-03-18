@@ -93,7 +93,7 @@ const HighlightedVersion = defineComponent({
             Last fetched:
             {{ formatTimeAgo(new Date(stats.fetchedAt)) }}.
           </div>
-          <div class="mt-1 text-[var(--ui-text-muted)] text-sm">
+          <div class="mt-1 text-muted text-sm">
             See <NuxtLink external href="https://github.com/unjs/unhead/releases" target="_blank">
               GitHub Releases
             </NuxtLink> for realtime updates.
@@ -111,7 +111,7 @@ const HighlightedVersion = defineComponent({
           />
         </div>
 
-        <p v-if="activeFilter === 'prerelease' && prereleaseCount === 0" class="text-center text-[var(--ui-text-dimmed)] text-sm py-8">
+        <p v-if="activeFilter === 'prerelease' && prereleaseCount === 0" class="text-center text-dimmed text-sm py-8">
           No pre-releases found.
         </p>
 

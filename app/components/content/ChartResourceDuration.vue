@@ -62,16 +62,16 @@ const criticalDelta = scenarios[1].criticalEnd - scenarios[0].criticalEnd
 </script>
 
 <template>
-  <div class="my-8 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-4 sm:p-6 not-prose">
+  <div class="my-8 rounded-xl border border-default bg-elevated p-4 sm:p-6 not-prose">
     <div class="flex items-baseline justify-between mb-1">
-      <h4 class="text-sm font-semibold text-[var(--ui-text)] tracking-tight">
+      <h4 class="text-sm font-semibold text-default tracking-tight">
         Resource Loading Waterfall
       </h4>
-      <span class="text-xs text-[var(--ui-text-dimmed)]">heavy page, slow-3g</span>
+      <span class="text-xs text-dimmed">heavy page, slow-3g</span>
     </div>
 
     <!-- Legend -->
-    <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-5 text-xs text-[var(--ui-text-muted)]">
+    <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-5 text-xs text-muted">
       <span v-for="(label, type) in typeLabels" :key="type" class="flex items-center gap-1.5">
         <span
           class="w-2.5 h-2.5 rounded-sm inline-block"
@@ -92,7 +92,7 @@ const criticalDelta = scenarios[1].criticalEnd - scenarios[0].criticalEnd
         :key="scenario.label"
       >
         <div class="flex items-center gap-2 mb-2.5">
-          <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+          <span class="text-xs font-medium text-muted uppercase tracking-wider">
             {{ scenario.label }}
           </span>
           <span
@@ -110,7 +110,7 @@ const criticalDelta = scenarios[1].criticalEnd - scenarios[0].criticalEnd
             <div
               v-for="tick in ticks"
               :key="tick"
-              class="absolute top-0 bottom-0 border-l border-[var(--ui-border-muted)]"
+              class="absolute top-0 bottom-0 border-l border-muted"
               :class="{ 'opacity-0': tick === 0 }"
               :style="{ left: pct(tick) }"
             />
@@ -125,8 +125,8 @@ const criticalDelta = scenarios[1].criticalEnd - scenarios[0].criticalEnd
             >
               <!-- Resource name label (overlay on the left) -->
               <div
-                class="absolute left-0 z-10 text-[11px] font-medium text-[var(--ui-text)] pl-1.5 pointer-events-none flex items-center h-7 mix-blend-difference"
-                :class="resource.start > 100 ? 'text-[var(--ui-text)]' : ''"
+                class="absolute left-0 z-10 text-[11px] font-medium text-default pl-1.5 pointer-events-none flex items-center h-7 mix-blend-difference"
+                :class="resource.start > 100 ? 'text-default' : ''"
               >
                 <span class="truncate max-w-[100px] sm:max-w-none">{{ resource.name }}</span>
               </div>
@@ -148,7 +148,7 @@ const criticalDelta = scenarios[1].criticalEnd - scenarios[0].criticalEnd
                   :style="{
                     left: `calc(${pct(resource.end)} + 6px)`,
                   }"
-                  :class="resource.type === 'defer' ? 'text-[var(--ui-text-dimmed)]' : 'text-[var(--ui-text-muted)]'"
+                  :class="resource.type === 'defer' ? 'text-dimmed' : 'text-muted'"
                 >
                   {{ resource.end - resource.start }}ms
                 </div>
@@ -175,7 +175,7 @@ const criticalDelta = scenarios[1].criticalEnd - scenarios[0].criticalEnd
           <div
             v-for="tick in ticks"
             :key="tick"
-            class="absolute text-[10px] font-mono tabular-nums text-[var(--ui-text-dimmed)] -translate-x-1/2"
+            class="absolute text-[10px] font-mono tabular-nums text-dimmed -translate-x-1/2"
             :style="{ left: pct(tick) }"
             :class="{ 'translate-x-0': tick === 0 }"
           >
@@ -187,25 +187,25 @@ const criticalDelta = scenarios[1].criticalEnd - scenarios[0].criticalEnd
 
     <!-- Impact callout -->
     <div class="mt-5 flex items-stretch gap-3">
-      <div class="flex-1 rounded-lg bg-[var(--ui-bg-muted)] p-3 border border-[var(--ui-border-muted)] text-center">
+      <div class="flex-1 rounded-lg bg-muted p-3 border border-muted text-center">
         <div class="text-lg font-bold text-[var(--ui-text-error)]">
           +{{ criticalDelta }}ms
         </div>
-        <div class="text-[11px] text-[var(--ui-text-dimmed)] mt-0.5">
+        <div class="text-[11px] text-dimmed mt-0.5">
           Delayed first paint
         </div>
       </div>
-      <div class="flex-1 rounded-lg bg-[var(--ui-bg-muted)] p-3 border border-[var(--ui-border-muted)] text-center">
-        <div class="text-lg font-bold text-[var(--ui-text-dimmed)]">
+      <div class="flex-1 rounded-lg bg-muted p-3 border border-muted text-center">
+        <div class="text-lg font-bold text-dimmed">
           -572ms
         </div>
-        <div class="text-[11px] text-[var(--ui-text-dimmed)] mt-0.5">
+        <div class="text-[11px] text-dimmed mt-0.5">
           Deferred scripts (wasted)
         </div>
       </div>
     </div>
 
-    <p class="text-[13px] text-[var(--ui-text-muted)] [&_strong]:text-[var(--ui-text)] mt-4 leading-relaxed bg-[var(--ui-bg-muted)] p-3 rounded-md border border-[var(--ui-border-muted)]">
+    <p class="text-[13px] text-muted [&_strong]:text-default mt-4 leading-relaxed bg-muted p-3 rounded-md border border-muted">
       Wrong ordering lets deferred scripts "steal" bandwidth from critical resources. They finish faster, but
       <strong>parser-blocking scripts are delayed by ~466ms</strong>, pushing back the first paint.
     </p>

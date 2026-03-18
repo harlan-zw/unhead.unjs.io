@@ -35,12 +35,12 @@ const legend = [
 
 <template>
   <ClientOnly>
-    <figure class="chart-container my-8 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-5 not-prose">
+    <figure class="chart-container my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <figcaption class="flex items-center justify-between mb-4">
-        <span class="text-sm font-medium text-[var(--ui-text)]">
+        <span class="text-sm font-medium text-default">
           % Page Loads in "Good" Threshold
         </span>
-        <span class="flex flex-wrap gap-3 text-xs text-[var(--ui-text-muted)]">
+        <span class="flex flex-wrap gap-3 text-xs text-muted">
           <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
             <span class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: item.color }" />
             {{ item.label }}

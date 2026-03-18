@@ -179,13 +179,13 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
     <div class="mb-12 max-w-6xl">
       <!-- Tab switcher -->
       <div class="flex items-center gap-4 mb-5">
-        <div class="flex gap-1 p-1 rounded-lg bg-[var(--ui-bg-elevated)] border border-[var(--ui-border)]">
+        <div class="flex gap-1 p-1 rounded-lg bg-elevated border border-default">
           <button
             type="button"
             class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
             :class="inputTab === 'paste'
               ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 shadow-sm'
-              : 'text-[var(--ui-text-muted)] hover:text-[var(--ui-text)]'"
+              : 'text-muted hover:text-default'"
             @click="inputTab = 'paste'"
           >
             <span class="flex items-center gap-2">
@@ -198,7 +198,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
             class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
             :class="inputTab === 'url'
               ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 shadow-sm'
-              : 'text-[var(--ui-text-muted)] hover:text-[var(--ui-text)]'"
+              : 'text-muted hover:text-default'"
             @click="inputTab = 'url'"
           >
             <span class="flex items-center gap-2">
@@ -224,7 +224,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         <ToolInputGlow>
           <div class="flex items-center gap-3 mb-4">
             <UIcon name="i-carbon-code" class="w-5 h-5 text-cyan-500" />
-            <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+            <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
               Paste your &lt;head&gt; HTML
             </h3>
           </div>
@@ -240,7 +240,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         <ToolInputGlow>
           <div class="flex items-center gap-3 mb-4">
             <UIcon name="i-carbon-earth" class="w-5 h-5 text-cyan-500" />
-            <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+            <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
               Enter a URL to analyze
             </h3>
           </div>
@@ -253,7 +253,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
               @keydown.enter="handleAnalyzeUrl"
             >
               <template #leading>
-                <UIcon name="i-carbon-link" class="size-4 text-[var(--ui-text-dimmed)]" />
+                <UIcon name="i-carbon-link" class="size-4 text-dimmed" />
               </template>
             </UInput>
             <UButton
@@ -283,7 +283,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       <!-- Score + Issues Grid -->
       <div class="grid lg:grid-cols-3 gap-6 mb-10">
         <!-- Score Card with Ring -->
-        <div class="relative overflow-hidden rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-8">
+        <div class="relative overflow-hidden rounded-2xl border border-default bg-elevated p-8">
           <div class="absolute inset-0 bg-gradient-to-br opacity-30" :class="scoreBg" />
           <div class="relative flex flex-col items-center">
             <!-- Score Ring -->
@@ -310,20 +310,20 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
               <!-- Score number -->
               <div class="absolute inset-0 flex flex-col items-center justify-center">
                 <span class="text-4xl font-bold tabular-nums" :class="scoreColor">{{ score }}</span>
-                <span class="text-[10px] font-medium uppercase tracking-wider text-[var(--ui-text-dimmed)]">/ 100</span>
+                <span class="text-[10px] font-medium uppercase tracking-wider text-dimmed">/ 100</span>
               </div>
             </div>
             <div class="text-sm font-semibold" :class="scoreColor">
               {{ scoreLabel }}
             </div>
-            <div class="mt-2 text-xs text-[var(--ui-text-dimmed)]">
+            <div class="mt-2 text-xs text-dimmed">
               {{ analyzedTags.length }} tags analyzed
             </div>
           </div>
         </div>
 
         <!-- Issues Panel -->
-        <div class="lg:col-span-2 rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-6">
+        <div class="lg:col-span-2 rounded-2xl border border-default bg-elevated p-6">
           <div class="flex items-center gap-3 mb-4">
             <div class="p-1.5 rounded-lg" :class="issues.length ? 'bg-yellow-500/10' : 'bg-green-500/10'">
               <UIcon
@@ -332,7 +332,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
                 :class="issues.length ? 'text-yellow-500' : 'text-green-500'"
               />
             </div>
-            <h3 class="text-sm font-semibold text-[var(--ui-text-highlighted)]">
+            <h3 class="text-sm font-semibold text-highlighted">
               {{ issues.length ? `${issues.length} ordering issue${issues.length > 1 ? 's' : ''} found` : 'Perfect order' }}
             </h3>
           </div>
@@ -351,12 +351,12 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
                 class="w-4 h-4 mt-0.5 shrink-0"
                 :class="issue.severity === 'error' ? 'text-red-500' : 'text-yellow-500'"
               />
-              <span class="text-sm text-[var(--ui-text)]">{{ issue.message }}</span>
+              <span class="text-sm text-default">{{ issue.message }}</span>
             </div>
           </div>
           <div v-else class="flex items-center gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/10">
             <UIcon name="i-carbon-checkmark-filled" class="w-5 h-5 text-green-500" />
-            <span class="text-sm text-[var(--ui-text)]">All tags are in optimal Capo.js order</span>
+            <span class="text-sm text-default">All tags are in optimal Capo.js order</span>
           </div>
         </div>
       </div>
@@ -364,11 +364,11 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       <!-- Tag List: Current vs Optimal -->
       <div class="grid lg:grid-cols-2 gap-6 mb-10">
         <!-- Current Order -->
-        <div class="rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] overflow-hidden">
-          <div class="flex items-center justify-between gap-3 px-5 py-3 border-b border-[var(--ui-border)]">
+        <div class="rounded-2xl border border-default bg-elevated overflow-hidden">
+          <div class="flex items-center justify-between gap-3 px-5 py-3 border-b border-default">
             <div class="flex items-center gap-2">
-              <UIcon name="i-carbon-list" class="w-4 h-4 text-[var(--ui-text-muted)]" />
-              <span class="text-xs font-semibold text-[var(--ui-text-muted)] uppercase tracking-wider">Current Order</span>
+              <UIcon name="i-carbon-list" class="w-4 h-4 text-muted" />
+              <span class="text-xs font-semibold text-muted uppercase tracking-wider">Current Order</span>
             </div>
             <UBadge v-if="score < 100" variant="subtle" color="warning" size="xs">
               {{ issues.length }} to fix
@@ -380,13 +380,13 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
               :key="idx"
               class="flex items-center gap-3 px-4 py-2.5 hover:bg-[var(--ui-bg-accented)]/30 transition-colors group"
             >
-              <span class="text-[11px] font-mono text-[var(--ui-text-dimmed)] w-5 text-right tabular-nums">{{ idx + 1 }}</span>
+              <span class="text-[11px] font-mono text-dimmed w-5 text-right tabular-nums">{{ idx + 1 }}</span>
               <span class="w-2.5 h-2.5 rounded-full shrink-0 ring-2 ring-white/10" :class="weightColorMap[tag.weightLabel] || 'bg-gray-500'" />
               <div class="flex-1 min-w-0">
-                <div class="text-sm font-medium text-[var(--ui-text)] truncate">
+                <div class="text-sm font-medium text-default truncate">
                   {{ tag.weightLabel }}
                 </div>
-                <div class="text-[11px] font-mono text-[var(--ui-text-dimmed)] truncate">
+                <div class="text-[11px] font-mono text-dimmed truncate">
                   {{ formatTagPreview(tag) }}
                 </div>
               </div>
@@ -407,11 +407,11 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         </div>
 
         <!-- Optimal Order -->
-        <div class="rounded-2xl border border-cyan-500/20 bg-[var(--ui-bg-elevated)] overflow-hidden">
+        <div class="rounded-2xl border border-cyan-500/20 bg-elevated overflow-hidden">
           <div class="flex items-center justify-between gap-3 px-5 py-3 border-b border-cyan-500/10 bg-gradient-to-r from-cyan-500/8 to-transparent">
             <div class="flex items-center gap-2">
               <UIcon name="i-carbon-checkmark-outline" class="w-4 h-4 text-cyan-500" />
-              <span class="text-xs font-semibold text-[var(--ui-text-muted)] uppercase tracking-wider">Optimal Order</span>
+              <span class="text-xs font-semibold text-muted uppercase tracking-wider">Optimal Order</span>
             </div>
             <UBadge variant="subtle" color="success" size="xs">
               Capo.js
@@ -423,17 +423,17 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
               :key="idx"
               class="flex items-center gap-3 px-4 py-2.5 hover:bg-cyan-500/3 transition-colors group"
             >
-              <span class="text-[11px] font-mono text-[var(--ui-text-dimmed)] w-5 text-right tabular-nums">{{ idx + 1 }}</span>
+              <span class="text-[11px] font-mono text-dimmed w-5 text-right tabular-nums">{{ idx + 1 }}</span>
               <span class="w-2.5 h-2.5 rounded-full shrink-0 ring-2 ring-white/10" :class="weightColorMap[tag.weightLabel] || 'bg-gray-500'" />
               <div class="flex-1 min-w-0">
-                <div class="text-sm font-medium text-[var(--ui-text)] truncate">
+                <div class="text-sm font-medium text-default truncate">
                   {{ tag.weightLabel }}
                 </div>
-                <div class="text-[11px] font-mono text-[var(--ui-text-dimmed)] truncate">
+                <div class="text-[11px] font-mono text-dimmed truncate">
                   {{ formatTagPreview(tag) }}
                 </div>
               </div>
-              <span class="text-[10px] font-mono text-[var(--ui-text-dimmed)] opacity-0 group-hover:opacity-100 transition-opacity tabular-nums">w:{{ tag.weight }}</span>
+              <span class="text-[10px] font-mono text-dimmed opacity-0 group-hover:opacity-100 transition-opacity tabular-nums">w:{{ tag.weight }}</span>
             </div>
           </div>
         </div>
@@ -442,13 +442,13 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       <!-- Code Output -->
       <div
         ref="codeOutputRef"
-        class="relative bg-[var(--ui-bg-elevated)] rounded-2xl border border-[var(--ui-border)] overflow-hidden"
+        class="relative bg-elevated rounded-2xl border border-default overflow-hidden"
       >
         <!-- Terminal-style header -->
-        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)]">
+        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-default">
           <div class="flex items-center gap-2">
             <UIcon name="i-carbon-code" class="w-4 h-4 text-cyan-500" />
-            <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Optimized Code</span>
+            <span class="text-xs font-medium text-muted uppercase tracking-wider">Optimized Code</span>
           </div>
           <ClientOnly>
             <UButton
@@ -488,51 +488,51 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
 
       <section>
         <ToolSectionHeader title="Why Head Tag Order Matters" icon="i-carbon-lightning" color="cyan" />
-        <p class="text-[var(--ui-text-muted)] mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
-          Browsers parse the <code class="text-sm bg-[var(--ui-bg-accented)] px-1.5 py-0.5 rounded font-mono">&lt;head&gt;</code> element top-to-bottom. Getting the order wrong can delay rendering, cause re-parsing, and hurt your Core Web Vitals.
+        <p class="text-muted mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
+          Browsers parse the <code class="text-sm bg-accented px-1.5 py-0.5 rounded font-mono">&lt;head&gt;</code> element top-to-bottom. Getting the order wrong can delay rendering, cause re-parsing, and hurt your Core Web Vitals.
         </p>
         <div class="grid sm:grid-cols-2 gap-3 sm:gap-4">
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
                 <UIcon name="i-carbon-flash" class="w-4 h-4 text-cyan-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">Faster LCP</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Critical resources discovered and loaded sooner</span>
+                <strong class="text-highlighted block mb-1">Faster LCP</strong>
+                <span class="text-sm text-muted">Critical resources discovered and loaded sooner</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
                 <UIcon name="i-carbon-renew" class="w-4 h-4 text-cyan-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">No Re-parsing</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Charset and viewport before content avoids re-parsing</span>
+                <strong class="text-highlighted block mb-1">No Re-parsing</strong>
+                <span class="text-sm text-muted">Charset and viewport before content avoids re-parsing</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
                 <UIcon name="i-carbon-connection-signal" class="w-4 h-4 text-cyan-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">Effective Preconnects</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Connection hints before the resources that need them</span>
+                <strong class="text-highlighted block mb-1">Effective Preconnects</strong>
+                <span class="text-sm text-muted">Connection hints before the resources that need them</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
                 <UIcon name="i-carbon-automatic" class="w-4 h-4 text-cyan-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">Automated by Unhead</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Zero config — useHead() sorts tags automatically</span>
+                <strong class="text-highlighted block mb-1">Automated by Unhead</strong>
+                <span class="text-sm text-muted">Zero config — useHead() sorts tags automatically</span>
               </div>
             </div>
           </div>

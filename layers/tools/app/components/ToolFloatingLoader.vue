@@ -16,9 +16,9 @@ defineProps<{
       leave-to-class="opacity-0 -translate-y-2"
     >
       <div v-if="show" class="fixed top-4 left-1/2 -translate-x-1/2 z-50">
-        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--ui-bg-elevated)] shadow-lg border border-[var(--ui-border)]">
+        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-elevated shadow-lg border border-default">
           <UIcon name="i-heroicons-arrow-path" class="w-4 h-4 text-[var(--ui-text-primary)] animate-spin" />
-          <span class="text-sm text-[var(--ui-text)]">{{ message || 'Loading...' }}</span>
+          <span class="text-sm text-default">{{ message || 'Loading...' }}</span>
         </div>
       </div>
     </Transition>

@@ -100,21 +100,21 @@ const { data: lastCommit } = await useAsyncData(`learn-commit-${route.path}`, ()
       >
         <template #headline>
           <div class="flex items-center gap-2.5">
-            <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--ui-text-muted)]">
+            <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
               <UIcon :name="category.icon" class="size-3.5" :class="category.iconColor" />
               {{ category.label }}
             </span>
-            <span v-if="page.readTime" class="text-xs text-[var(--ui-text-dimmed)]">
+            <span v-if="page.readTime" class="text-xs text-dimmed">
               {{ page.readTime }} read
             </span>
           </div>
         </template>
 
-        <div class="flex items-center gap-3 mt-3 text-sm text-[var(--ui-text-dimmed)] flex-wrap">
+        <div class="flex items-center gap-3 mt-3 text-sm text-dimmed flex-wrap">
           <UBadge color="neutral" variant="outline">
             <NuxtLink to="https://x.com/harlan-zw" external target="_blank" class="inline-flex items-center gap-1.5">
               <img alt="Harlan Wilton" src="https://avatars.githubusercontent.com/u/5326365?v=4" class="w-4 h-4 rounded-full">
-              <span class="hover:text-[var(--ui-text)] text-[var(--ui-text-muted)] transition">Harlan Wilton</span>
+              <span class="hover:text-default text-muted transition">Harlan Wilton</span>
             </NuxtLink>
           </UBadge>
           <span v-if="page.publishedAt">

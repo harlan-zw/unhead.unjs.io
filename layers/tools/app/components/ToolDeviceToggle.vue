@@ -8,11 +8,11 @@ const model = defineModel<'mobile' | 'desktop'>({ default: 'mobile' })
 </script>
 
 <template>
-  <div class="inline-flex rounded-lg border border-[var(--ui-border)] p-0.5 bg-[var(--ui-bg-muted)]">
+  <div class="inline-flex rounded-lg border border-default p-0.5 bg-muted">
     <button
       type="button"
       class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5"
-      :class="[model === 'mobile' ? 'bg-[var(--ui-bg)] text-[var(--ui-text-highlighted)] shadow-sm' : 'text-[var(--ui-text-dimmed)] hover:text-[var(--ui-text-muted)]']"
+      :class="[model === 'mobile' ? 'bg-default text-highlighted shadow-sm' : 'text-dimmed hover:text-muted']"
       :disabled="disabled"
       @click="model = 'mobile'"
     >
@@ -22,7 +22,7 @@ const model = defineModel<'mobile' | 'desktop'>({ default: 'mobile' })
     <button
       type="button"
       class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5"
-      :class="[model === 'desktop' ? 'bg-[var(--ui-bg)] text-[var(--ui-text-highlighted)] shadow-sm' : 'text-[var(--ui-text-dimmed)] hover:text-[var(--ui-text-muted)]']"
+      :class="[model === 'desktop' ? 'bg-default text-highlighted shadow-sm' : 'text-dimmed hover:text-muted']"
       :disabled="disabled"
       @click="model = 'desktop'"
     >

@@ -37,18 +37,18 @@ const categories = computed(() => {
             <nav aria-label="Learn Navigation" class="space-y-6">
               <div v-for="category in categories" :key="category.key">
                 <div class="mb-2 pl-2.5">
-                  <span class="text-[11px] font-medium uppercase tracking-widest text-[var(--ui-text-dimmed)]">
+                  <span class="text-[11px] font-medium uppercase tracking-widest text-dimmed">
                     {{ category.label }}
                   </span>
                 </div>
-                <ul class="space-y-0.5 border-l border-[var(--ui-border)]">
+                <ul class="space-y-0.5 border-l border-default">
                   <li v-for="article in category.items" :key="article.path">
                     <NuxtLink
                       :to="article.path"
-                      class="group relative block pl-2.5 py-1 -ml-px border-l text-[13px] leading-snug transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-primary)]"
+                      class="group relative block pl-2.5 py-1 -ml-px border-l text-[13px] leading-snug transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       :class="route.path === article.path
-                        ? 'border-[var(--ui-primary)] text-[var(--ui-text-highlighted)] font-medium'
-                        : 'border-transparent text-[var(--ui-text-muted)] hover:text-[var(--ui-text)] hover:border-[var(--ui-border-accented)]'"
+                        ? 'border-primary text-highlighted font-medium'
+                        : 'border-transparent text-muted hover:text-default hover:border-accented'"
                     >
                       {{ article.navigation?.title || article.title }}
                     </NuxtLink>

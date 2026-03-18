@@ -72,7 +72,7 @@ onBeforeUpdate(() => {
       </button>
     </div>
 
-    <div class="group text-sm/6 border border-[var(--ui-border-muted)] bg-[var(--ui-bg)] rounded-[calc(var(--ui-radius)*1.5)] px-4 py-3 overflow-x-auto focus:outline-none">
+    <div class="group text-sm/6 border border-muted bg-default rounded-[calc(var(--ui-radius)*1.5)] px-4 py-3 overflow-x-auto focus:outline-none">
       <component :is="selectedTab?.component" :key="selectedIndex" hide-header />
     </div>
   </div>

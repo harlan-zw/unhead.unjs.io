@@ -57,11 +57,11 @@ const tools = [
   <div class="min-h-screen">
     <section class="relative pt-12 pb-8 lg:pt-16 lg:pb-12">
       <div class="max-w-4xl mx-auto px-6 text-center">
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.1] text-[var(--ui-text-highlighted)] mb-4">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.1] text-highlighted mb-4">
           Head & SEO
           <span class="text-[var(--ui-text-primary)]">Tools</span>
         </h1>
-        <p class="text-lg text-[var(--ui-text-muted)] max-w-2xl mx-auto">
+        <p class="text-lg text-muted max-w-2xl mx-auto">
           Free interactive tools to generate, test, and optimize your document head.
         </p>
       </div>
@@ -74,7 +74,7 @@ const tools = [
             v-for="tool in tools"
             :key="tool.to"
             :to="tool.to"
-            class="group relative p-6 rounded-2xl bg-[var(--ui-bg)] border border-[var(--ui-border)] transition-all hover:shadow-lg"
+            class="group relative p-6 rounded-2xl bg-default border border-default transition-all hover:shadow-lg"
             :class="{
               'hover:border-emerald-300 dark:hover:border-emerald-700': tool.color === 'emerald',
               'hover:border-purple-300 dark:hover:border-purple-700': tool.color === 'purple',
@@ -106,14 +106,14 @@ const tools = [
                 >
                   {{ tool.title }}
                 </h2>
-                <p class="text-[var(--ui-text-muted)] mb-3">
+                <p class="text-muted mb-3">
                   {{ tool.description }}
                 </p>
                 <div class="flex flex-wrap gap-2">
                   <span
                     v-for="tag in tool.tags"
                     :key="tag"
-                    class="px-2 py-0.5 text-xs font-medium rounded-full bg-[var(--ui-bg-accented)] text-[var(--ui-text-muted)]"
+                    class="px-2 py-0.5 text-xs font-medium rounded-full bg-accented text-muted"
                   >
                     {{ tag }}
                   </span>
@@ -121,7 +121,7 @@ const tools = [
               </div>
               <UIcon
                 name="i-heroicons-arrow-right"
-                class="w-5 h-5 text-[var(--ui-text-dimmed)] group-hover:translate-x-1 transition-all"
+                class="w-5 h-5 text-dimmed group-hover:translate-x-1 transition-all"
                 :class="{
                   'group-hover:text-emerald-500': tool.color === 'emerald',
                   'group-hover:text-purple-500': tool.color === 'purple',

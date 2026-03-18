@@ -89,7 +89,7 @@ const tools = [
                   </clipPath>
                 </defs>
               </svg>
-              <div class="text-[var(--ui-text-muted)]">
+              <div class="text-muted">
                 Part of the UnJS ecosystem
               </div>
             </UButton>

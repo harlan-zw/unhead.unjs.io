@@ -74,18 +74,18 @@ const headSafeStyle = {
 
 const streamsStyle = {
   'Yes': { text: 'text-[var(--ui-text-success)]', icon: 'i-ph-broadcast-fill' },
-  'No': { text: 'text-[var(--ui-text-dimmed)]', icon: 'i-ph-prohibit' },
-  'Opt-in': { text: 'text-[var(--ui-text-muted)]', icon: 'i-ph-toggle-right-fill' },
+  'No': { text: 'text-dimmed', icon: 'i-ph-prohibit' },
+  'Opt-in': { text: 'text-muted', icon: 'i-ph-toggle-right-fill' },
 } as const
 </script>
 
 <template>
   <div class="scorecard my-8 not-prose">
     <!-- Desktop -->
-    <div class="hidden md:block overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]">
+    <div class="hidden md:block overflow-hidden rounded-xl border border-default bg-elevated">
       <table class="w-full">
         <thead>
-          <tr class="border-b border-[var(--ui-border)]">
+          <tr class="border-b border-default">
             <th class="sc-th text-left pl-5 w-[160px]">
               Framework
             </th>
@@ -109,10 +109,10 @@ const streamsStyle = {
           >
             <td class="px-5 py-3.5">
               <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-md bg-[var(--ui-bg-muted)] border border-[var(--ui-border-muted)] flex items-center justify-center transition-colors group-hover:border-[var(--ui-border-accented)]">
-                  <UIcon :name="fw.icon" class="size-3.5 text-[var(--ui-text-dimmed)] group-hover:text-[var(--ui-text-muted)] transition-colors" />
+                <div class="w-7 h-7 rounded-md bg-muted border border-muted flex items-center justify-center transition-colors group-hover:border-accented">
+                  <UIcon :name="fw.icon" class="size-3.5 text-dimmed group-hover:text-muted transition-colors" />
                 </div>
-                <span class="text-[13px] font-semibold text-[var(--ui-text)]">{{ fw.name }}</span>
+                <span class="text-[13px] font-semibold text-default">{{ fw.name }}</span>
               </div>
             </td>
             <td class="px-3 py-3.5 text-center">
@@ -131,7 +131,7 @@ const streamsStyle = {
               </span>
             </td>
             <td class="px-3 py-3.5">
-              <span class="text-[12px] text-[var(--ui-text-muted)] leading-snug">{{ fw.how }}</span>
+              <span class="text-[12px] text-muted leading-snug">{{ fw.how }}</span>
             </td>
           </tr>
         </tbody>
@@ -143,15 +143,15 @@ const streamsStyle = {
       <div
         v-for="(fw, i) in frameworks"
         :key="fw.name"
-        class="sc-row rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-4"
+        class="sc-row rounded-xl border border-default bg-elevated p-4"
         :style="{ animationDelay: `${i * 50}ms` }"
       >
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-md bg-[var(--ui-bg-muted)] border border-[var(--ui-border-muted)] flex items-center justify-center">
-              <UIcon :name="fw.icon" class="size-3.5 text-[var(--ui-text-dimmed)]" />
+            <div class="w-7 h-7 rounded-md bg-muted border border-muted flex items-center justify-center">
+              <UIcon :name="fw.icon" class="size-3.5 text-dimmed" />
             </div>
-            <span class="text-sm font-semibold text-[var(--ui-text)]">{{ fw.name }}</span>
+            <span class="text-sm font-semibold text-default">{{ fw.name }}</span>
           </div>
           <span
             class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
@@ -162,7 +162,7 @@ const streamsStyle = {
           </span>
         </div>
         <div class="flex items-center gap-3 mb-2.5 text-[11px]">
-          <span class="inline-flex items-center gap-1 text-[var(--ui-text-dimmed)]">
+          <span class="inline-flex items-center gap-1 text-dimmed">
             Streams:
             <span :class="streamsStyle[fw.streams].text" class="font-semibold inline-flex items-center gap-0.5">
               <UIcon :name="streamsStyle[fw.streams].icon" class="size-2.5" />
@@ -170,7 +170,7 @@ const streamsStyle = {
             </span>
           </span>
         </div>
-        <p class="text-[11px] text-[var(--ui-text-dimmed)] leading-relaxed">
+        <p class="text-[11px] text-dimmed leading-relaxed">
           {{ fw.how }}
         </p>
       </div>

@@ -102,7 +102,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
     <!-- Quick Start Presets -->
     <div class="mb-12 max-w-6xl">
       <div class="flex items-center gap-4 mb-5">
-        <span class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Quick Start</span>
+        <span class="text-sm font-medium text-muted uppercase tracking-wider">Quick Start</span>
         <div class="h-px flex-1 bg-[var(--ui-border)]" />
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
@@ -114,7 +114,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           :class="[
             activePreset === preset.id
               ? 'border-emerald-500/60 bg-emerald-500/10 shadow-lg shadow-emerald-500/10'
-              : 'border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 hover:border-emerald-500/40',
+              : 'border-default bg-[var(--ui-bg-elevated)]/50 hover:border-emerald-500/40',
           ]"
           @click="() => { applyPreset(preset); track('preset', preset.id) }"
         >
@@ -129,9 +129,9 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             </div>
             <span
               class="text-xs sm:text-sm font-semibold transition-colors"
-              :class="activePreset === preset.id ? 'text-emerald-500' : 'text-[var(--ui-text-highlighted)] group-hover:text-emerald-500'"
+              :class="activePreset === preset.id ? 'text-emerald-500' : 'text-highlighted group-hover:text-emerald-500'"
             >{{ preset.label }}</span>
-            <p class="text-[10px] sm:text-xs text-[var(--ui-text-dimmed)] mt-1 line-clamp-2">
+            <p class="text-[10px] sm:text-xs text-dimmed mt-1 line-clamp-2">
               {{ preset.description }}
             </p>
           </div>
@@ -145,7 +145,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
       <div>
         <ToolInputGlow>
           <!-- Form Tabs -->
-          <div class="flex gap-1 mb-6 p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto">
+          <div class="flex gap-1 mb-6 p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-default/50 overflow-x-auto">
             <button
               v-for="tab in [
                 { value: 'basic', label: 'Basic', icon: 'i-carbon-text-short-paragraph' },
@@ -157,8 +157,8 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               class="relative flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2.5 rounded-lg text-xs font-medium transition-all duration-300 shrink-0"
               :class="[
                 activeFormTab === tab.value
-                  ? 'bg-[var(--ui-bg-elevated)] shadow-md text-[var(--ui-text-highlighted)]'
-                  : 'text-[var(--ui-text-muted)] hover:text-[var(--ui-text-highlighted)]',
+                  ? 'bg-elevated shadow-md text-highlighted'
+                  : 'text-muted hover:text-highlighted',
               ]"
               @click="activeFormTab = tab.value"
             >
@@ -246,7 +246,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 class="w-full"
               />
               <template #help>
-                <span class="text-[var(--ui-text-dimmed)]">Recommended: 1200x630px</span>
+                <span class="text-dimmed">Recommended: 1200x630px</span>
               </template>
             </UFormField>
 
@@ -295,7 +295,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-4">
               <div class="flex items-start gap-2">
                 <UIcon name="i-carbon-information" class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-                <p class="text-xs text-[var(--ui-text-muted)]">
+                <p class="text-xs text-muted">
                   Article metadata helps search engines and social platforms understand your content better.
                 </p>
               </div>
@@ -421,13 +421,13 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             <div class="p-2 rounded-lg bg-blue-500/10">
               <UIcon name="i-carbon-search" class="w-5 h-5 text-blue-500" />
             </div>
-            <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+            <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
               Google Preview
             </h3>
           </div>
 
           <!-- Search result card -->
-          <div class="bg-white dark:bg-[#202124] rounded-xl p-4 sm:p-5 border border-[var(--ui-border)] shadow-lg shadow-black/5 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-black/10">
+          <div class="bg-white dark:bg-[#202124] rounded-xl p-4 sm:p-5 border border-default shadow-lg shadow-black/5 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-black/10">
             <!-- Favicon + URL breadcrumb -->
             <div class="flex items-center gap-2 mb-1 min-w-0">
               <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
@@ -459,27 +459,27 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
 
     <!-- Social Card Preview - Full Width -->
     <div class="max-w-6xl mt-10">
-      <div class="relative bg-[var(--ui-bg-elevated)] rounded-2xl p-4 sm:p-6 border border-[var(--ui-border)]">
+      <div class="relative bg-elevated rounded-2xl p-4 sm:p-6 border border-default">
         <!-- Header -->
         <div class="flex items-center gap-3 mb-4 sm:mb-6">
           <div class="p-2 rounded-lg bg-emerald-500/10">
             <UIcon name="i-carbon-share" class="w-5 h-5 text-emerald-500" />
           </div>
-          <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+          <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
             Social Card Preview
           </h3>
         </div>
 
         <!-- Platform tabs -->
-        <div class="flex gap-1 sm:gap-1.5 mb-4 sm:mb-6 p-1 sm:p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto -mx-1 px-1">
+        <div class="flex gap-1 sm:gap-1.5 mb-4 sm:mb-6 p-1 sm:p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-default/50 overflow-x-auto -mx-1 px-1">
           <button
             v-for="tab in platformTabs"
             :key="tab.value"
             class="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 whitespace-nowrap shrink-0"
             :class="[
               activePlatform === tab.value
-                ? 'bg-[var(--ui-bg-elevated)] shadow-sm text-[var(--ui-text-highlighted)]'
-                : 'text-[var(--ui-text-muted)] hover:text-[var(--ui-text-highlighted)] hover:bg-[var(--ui-bg-elevated)]/50',
+                ? 'bg-elevated shadow-sm text-highlighted'
+                : 'text-muted hover:text-highlighted hover:bg-[var(--ui-bg-elevated)]/50',
             ]"
             @click="activePlatform = tab.value"
           >
@@ -572,7 +572,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             <!-- WhatsApp Preview -->
             <div v-if="activePlatform === 'whatsapp'" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <p class="text-xs text-[var(--ui-text-dimmed)]">
+                <p class="text-xs text-dimmed">
                   Inline
                 </p>
                 <div class="rounded-lg overflow-hidden bg-[#DCF8C6] dark:bg-[#1F2C34] shadow-lg flex max-w-full sm:max-w-[240px]">
@@ -597,7 +597,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 </div>
               </div>
               <div class="space-y-2">
-                <p class="text-xs text-[var(--ui-text-dimmed)]">
+                <p class="text-xs text-dimmed">
                   Full card
                 </p>
                 <div class="rounded-lg overflow-hidden bg-[#DCF8C6] dark:bg-[#1F2C34] shadow-lg max-w-full sm:w-[240px]">
@@ -671,7 +671,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           <div>
             <!-- Twitter Inputs -->
             <div v-if="activePlatform === 'twitter'" class="space-y-4">
-              <p class="text-xs text-[var(--ui-text-dimmed)]">
+              <p class="text-xs text-dimmed">
                 Twitter/X uses Open Graph tags as fallback. Configure Twitter-specific overrides below.
               </p>
               <UFormField label="Card Type">
@@ -692,7 +692,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
 
             <!-- Slack Inputs -->
             <div v-if="activePlatform === 'slack'" class="space-y-4">
-              <p class="text-xs text-[var(--ui-text-dimmed)]">
+              <p class="text-xs text-dimmed">
                 Slack reads Open Graph tags and supports additional label/data fields for extra context.
               </p>
               <div class="grid grid-cols-2 gap-3">
@@ -715,14 +715,14 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
 
             <!-- Other Platforms Info -->
             <div v-if="['facebook', 'linkedin', 'whatsapp', 'discord'].includes(activePlatform)" class="space-y-4">
-              <div class="p-4 rounded-lg bg-[var(--ui-bg-accented)]/30 border border-[var(--ui-border)]">
+              <div class="p-4 rounded-lg bg-[var(--ui-bg-accented)]/30 border border-default">
                 <div class="flex items-start gap-3">
-                  <UIcon name="i-carbon-information" class="w-5 h-5 text-[var(--ui-text-muted)] mt-0.5 shrink-0" />
+                  <UIcon name="i-carbon-information" class="w-5 h-5 text-muted mt-0.5 shrink-0" />
                   <div>
-                    <p class="text-sm text-[var(--ui-text-highlighted)] font-medium mb-1">
+                    <p class="text-sm text-highlighted font-medium mb-1">
                       Uses Open Graph Tags
                     </p>
-                    <p class="text-xs text-[var(--ui-text-muted)]">
+                    <p class="text-xs text-muted">
                       {{ activePlatform.charAt(0).toUpperCase() + activePlatform.slice(1) }} reads the standard Open Graph tags (og:title, og:description, og:image) configured in the form above.
                     </p>
                   </div>
@@ -740,13 +740,13 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
       ref="codeOutputRef"
       class="max-w-6xl mt-10"
     >
-      <div class="relative bg-[var(--ui-bg-elevated)] rounded-2xl border border-[var(--ui-border)] overflow-hidden">
+      <div class="relative bg-elevated rounded-2xl border border-default overflow-hidden">
         <!-- Terminal-style header -->
-        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)]">
+        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-default">
           <div class="flex items-center gap-3">
             <div class="flex items-center gap-2">
               <UIcon name="i-carbon-code" class="w-4 h-4 text-emerald-500" />
-              <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Generated Code</span>
+              <span class="text-xs font-medium text-muted uppercase tracking-wider">Generated Code</span>
             </div>
           </div>
           <ClientOnly>
@@ -797,51 +797,51 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
 
       <section>
         <ToolSectionHeader title="Why Use useSeoMeta?" icon="i-carbon-flash" color="emerald" />
-        <p class="text-[var(--ui-text-muted)] mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
+        <p class="text-muted mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
           The useSeoMeta composable provides a type-safe, flat API for setting meta tags. Unlike manually writing meta tags, it handles all the complexity for you.
         </p>
         <div class="grid sm:grid-cols-2 gap-3 sm:gap-4">
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-green-500/30 hover:bg-green-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-green-500/30 hover:bg-green-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
                 <UIcon name="i-carbon-checkmark-filled" class="w-4 h-4 text-green-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">Type-safe</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Full TypeScript support with auto-completion</span>
+                <strong class="text-highlighted block mb-1">Type-safe</strong>
+                <span class="text-sm text-muted">Full TypeScript support with auto-completion</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-green-500/30 hover:bg-green-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-green-500/30 hover:bg-green-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
                 <UIcon name="i-carbon-checkmark-filled" class="w-4 h-4 text-green-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">XSS-safe</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Values are properly escaped</span>
+                <strong class="text-highlighted block mb-1">XSS-safe</strong>
+                <span class="text-sm text-muted">Values are properly escaped</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-green-500/30 hover:bg-green-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-green-500/30 hover:bg-green-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
                 <UIcon name="i-carbon-checkmark-filled" class="w-4 h-4 text-green-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">SSR-ready</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Works seamlessly with server-side rendering</span>
+                <strong class="text-highlighted block mb-1">SSR-ready</strong>
+                <span class="text-sm text-muted">Works seamlessly with server-side rendering</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-green-500/30 hover:bg-green-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-green-500/30 hover:bg-green-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
                 <UIcon name="i-carbon-checkmark-filled" class="w-4 h-4 text-green-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">Flat API</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">No nested objects - just set properties directly</span>
+                <strong class="text-highlighted block mb-1">Flat API</strong>
+                <span class="text-sm text-muted">No nested objects - just set properties directly</span>
               </div>
             </div>
           </div>
@@ -851,16 +851,16 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
       <section>
         <ToolSectionHeader title="Meta Tag Best Practices" icon="i-carbon-idea" color="green" />
         <div class="grid md:grid-cols-2 gap-3 sm:gap-4">
-          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-emerald-500/30 transition-all duration-300 overflow-hidden">
+          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-emerald-500/30 transition-all duration-300 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div class="relative">
               <div class="flex items-center gap-2 mb-2 sm:mb-3">
                 <UIcon name="i-carbon-text-short-paragraph" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
-                <h3 class="font-semibold text-sm sm:text-base text-[var(--ui-text-highlighted)]">
+                <h3 class="font-semibold text-sm sm:text-base text-highlighted">
                   Title Tag
                 </h3>
               </div>
-              <ul class="text-xs sm:text-sm text-[var(--ui-text-muted)] space-y-1.5 sm:space-y-2">
+              <ul class="text-xs sm:text-sm text-muted space-y-1.5 sm:space-y-2">
                 <li class="flex items-center gap-2">
                   <span class="w-1 h-1 rounded-full bg-emerald-500 shrink-0" />Keep under 60 characters
                 </li>
@@ -873,16 +873,16 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               </ul>
             </div>
           </div>
-          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-blue-500/30 transition-all duration-300 overflow-hidden">
+          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-blue-500/30 transition-all duration-300 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div class="relative">
               <div class="flex items-center gap-2 mb-2 sm:mb-3">
                 <UIcon name="i-carbon-text-align-left" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-                <h3 class="font-semibold text-sm sm:text-base text-[var(--ui-text-highlighted)]">
+                <h3 class="font-semibold text-sm sm:text-base text-highlighted">
                   Description
                 </h3>
               </div>
-              <ul class="text-xs sm:text-sm text-[var(--ui-text-muted)] space-y-1.5 sm:space-y-2">
+              <ul class="text-xs sm:text-sm text-muted space-y-1.5 sm:space-y-2">
                 <li class="flex items-center gap-2">
                   <span class="w-1 h-1 rounded-full bg-blue-500 shrink-0" />Keep under 160 characters
                 </li>
@@ -895,16 +895,16 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               </ul>
             </div>
           </div>
-          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-purple-500/30 transition-all duration-300 overflow-hidden">
+          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 transition-all duration-300 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div class="relative">
               <div class="flex items-center gap-2 mb-2 sm:mb-3">
                 <UIcon name="i-carbon-share" class="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
-                <h3 class="font-semibold text-sm sm:text-base text-[var(--ui-text-highlighted)]">
+                <h3 class="font-semibold text-sm sm:text-base text-highlighted">
                   Open Graph
                 </h3>
               </div>
-              <ul class="text-xs sm:text-sm text-[var(--ui-text-muted)] space-y-1.5 sm:space-y-2">
+              <ul class="text-xs sm:text-sm text-muted space-y-1.5 sm:space-y-2">
                 <li class="flex items-center gap-2">
                   <span class="w-1 h-1 rounded-full bg-purple-500 shrink-0" />Use 1200x630px images
                 </li>
@@ -917,16 +917,16 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               </ul>
             </div>
           </div>
-          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-sky-500/30 transition-all duration-300 overflow-hidden">
+          <div class="group relative p-4 sm:p-5 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-sky-500/30 transition-all duration-300 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-sky-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div class="relative">
               <div class="flex items-center gap-2 mb-2 sm:mb-3">
                 <UIcon name="i-carbon-logo-x" class="w-4 h-4 sm:w-5 sm:h-5 text-sky-500" />
-                <h3 class="font-semibold text-sm sm:text-base text-[var(--ui-text-highlighted)]">
+                <h3 class="font-semibold text-sm sm:text-base text-highlighted">
                   Twitter Cards
                 </h3>
               </div>
-              <ul class="text-xs sm:text-sm text-[var(--ui-text-muted)] space-y-1.5 sm:space-y-2">
+              <ul class="text-xs sm:text-sm text-muted space-y-1.5 sm:space-y-2">
                 <li class="flex items-center gap-2">
                   <span class="w-1 h-1 rounded-full bg-sky-500 shrink-0" />Use summary_large_image for articles
                 </li>

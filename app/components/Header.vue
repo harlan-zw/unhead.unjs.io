@@ -259,7 +259,7 @@ const subSectionLinks = computed(() => {
               :aria-label="item.label"
             >
               <span v-text="item.label" />
-              <div :class="item.active ? 'absolute bottom-0 h-[1.5px] w-full bg-[var(--ui-primary)] dark:bg-primary-light' : 'absolute bottom-0 h-[1.5px] w-full group-hover:bg-gray-200 dark:group-hover:bg-gray-700'" />
+              <div :class="item.active ? 'absolute bottom-0 h-[1.5px] w-full bg-primary dark:bg-primary-light' : 'absolute bottom-0 h-[1.5px] w-full group-hover:bg-gray-200 dark:group-hover:bg-gray-700'" />
             </NuxtLink>
           </div>
         </div>

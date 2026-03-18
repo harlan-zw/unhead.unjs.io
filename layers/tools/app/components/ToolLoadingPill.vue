@@ -21,7 +21,7 @@ defineProps<{
       />
       <span class="text-sm" :class="toolLoadingPillClasses(color).text">{{ message }}</span>
     </div>
-    <p v-if="hint" class="mt-4 text-xs text-[var(--ui-text-dimmed)]">
+    <p v-if="hint" class="mt-4 text-xs text-dimmed">
       {{ hint }}
     </p>
   </div>

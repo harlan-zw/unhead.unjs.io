@@ -29,7 +29,7 @@ watchEffect(async () => {
 <template>
   <div class="tool-code-block not-prose">
     <div v-if="highlightedCode" v-html="highlightedCode" />
-    <pre v-else class="p-4 bg-[var(--ui-bg-elevated)] rounded-lg overflow-x-auto"><code>{{ code }}</code></pre>
+    <pre v-else class="p-4 bg-elevated rounded-lg overflow-x-auto"><code>{{ code }}</code></pre>
   </div>
 </template>
 

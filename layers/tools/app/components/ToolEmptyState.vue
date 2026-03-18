@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="p-8 text-center text-[var(--ui-text-dimmed)]">
+  <div class="p-8 text-center text-dimmed">
     <UIcon :name="icon" class="w-12 h-12 mx-auto mb-3 opacity-30" />
     <p>{{ message }}</p>
     <p v-if="hint" class="text-xs mt-2">

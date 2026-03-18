@@ -44,12 +44,12 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
-    <figure class="chart-container my-8 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-5 not-prose">
+    <figure class="chart-container my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <figcaption class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <span class="text-sm font-medium text-[var(--ui-text)]">
+        <span class="text-sm font-medium text-default">
           Average Head Tags: First-Party vs Third-Party
         </span>
-        <span class="flex flex-wrap gap-4 text-xs text-[var(--ui-text-muted)]">
+        <span class="flex flex-wrap gap-4 text-xs text-muted">
           <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
             <span class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: item.color }" />
             {{ item.label }}
@@ -68,7 +68,7 @@ function tooltipTemplate(d: D) {
         <VisAxis type="y" :tick-format="(v: number) => `${v}`" :grid-line="true" :domain-line="false" :tick-line="false" />
         <VisTooltip :triggers="{ [VisStackedBar]: tooltipTemplate }" />
       </VisXYContainer>
-      <p class="mt-4 text-[10px] text-[var(--ui-text-dimmed)] text-center leading-relaxed">
+      <p class="mt-4 text-[10px] text-dimmed text-center leading-relaxed">
         Average number of tags in <code>&lt;head&gt;</code> per framework on commercial sites. Third-party tags counted after JS execution. Feb 2026.
       </p>
     </figure>

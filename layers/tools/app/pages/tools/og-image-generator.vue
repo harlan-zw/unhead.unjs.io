@@ -111,7 +111,7 @@ const previewImage = result
                     v-for="tmpl in templateOptions"
                     :key="tmpl"
                     class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm transition-colors"
-                    :class="selectedTemplate === tmpl ? 'bg-purple-500/20 border-purple-500 text-purple-500' : 'bg-[var(--ui-bg-elevated)] border-[var(--ui-border)] hover:border-purple-500/50'"
+                    :class="selectedTemplate === tmpl ? 'bg-purple-500/20 border-purple-500 text-purple-500' : 'bg-elevated border-default hover:border-purple-500/50'"
                     @click="selectedTemplate = tmpl"
                   >
                     <UIcon v-if="tmpl === 'code'" name="i-carbon-code" class="w-3.5 h-3.5" />
@@ -232,16 +232,16 @@ const previewImage = result
 
         <!-- Right Column: Preview -->
         <div class="space-y-6 order-1 lg:order-2">
-          <div class="relative bg-[var(--ui-bg-elevated)] rounded-2xl p-5 sm:p-8 border border-[var(--ui-border)]">
+          <div class="relative bg-elevated rounded-2xl p-5 sm:p-8 border border-default">
             <div class="flex items-center justify-between mb-6">
               <div class="flex items-center gap-3">
-                <div class="p-2.5 rounded-xl bg-[var(--ui-bg-accented)]">
-                  <UIcon name="i-carbon-share" class="w-5 h-5 text-[var(--ui-text-muted)]" />
+                <div class="p-2.5 rounded-xl bg-accented">
+                  <UIcon name="i-carbon-share" class="w-5 h-5 text-muted" />
                 </div>
-                <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+                <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
                   Social Card Preview
                 </h3>
-                <UIcon v-show="isRendering" name="i-carbon-circle-dash" class="w-4 h-4 text-[var(--ui-text-muted)] animate-spin" />
+                <UIcon v-show="isRendering" name="i-carbon-circle-dash" class="w-4 h-4 text-muted animate-spin" />
               </div>
               <UButton
                 v-if="result"
@@ -256,15 +256,15 @@ const previewImage = result
             </div>
 
             <!-- Platform tabs -->
-            <div class="flex gap-1.5 mb-6 p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-[var(--ui-border)]/50 overflow-x-auto">
+            <div class="flex gap-1.5 mb-6 p-1.5 bg-[var(--ui-bg-accented)]/30 rounded-xl border border-default/50 overflow-x-auto">
               <button
                 v-for="tab in platformTabs"
                 :key="tab.value"
                 class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 whitespace-nowrap shrink-0"
                 :class="[
                   activePlatform === tab.value
-                    ? 'bg-[var(--ui-bg-elevated)] shadow-sm text-[var(--ui-text-highlighted)] ring-1 ring-[var(--ui-border)]'
-                    : 'text-[var(--ui-text-muted)] hover:text-[var(--ui-text-highlighted)] hover:bg-[var(--ui-bg-elevated)]/50',
+                    ? 'bg-elevated shadow-sm text-highlighted ring-1 ring-[var(--ui-border)]'
+                    : 'text-muted hover:text-highlighted hover:bg-[var(--ui-bg-elevated)]/50',
                 ]"
                 @click="activePlatform = tab.value"
               >
@@ -287,7 +287,7 @@ const previewImage = result
                 <div class="rounded-2xl overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-white dark:bg-neutral-900 shadow-lg">
                   <div class="aspect-[1.91/1] w-full bg-neutral-100 dark:bg-neutral-800 relative overflow-hidden">
                     <div v-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-[var(--ui-text-muted)]" />
+                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                     </div>
                     <div v-else-if="error" class="absolute inset-0 flex items-center justify-center text-red-500 p-2 text-center text-xs">
                       {{ error }}
@@ -320,7 +320,7 @@ const previewImage = result
                 <div class="rounded overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-[#F0F2F5] dark:bg-[#242526] shadow-lg">
                   <div class="aspect-[1.91/1] w-full bg-neutral-200 dark:bg-neutral-700 relative overflow-hidden">
                     <div v-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-[var(--ui-text-muted)]" />
+                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                     </div>
                     <div v-else-if="error" class="absolute inset-0 flex items-center justify-center text-red-500 p-2 text-center text-xs">
                       {{ error }}
@@ -352,7 +352,7 @@ const previewImage = result
                 <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700/50 bg-white dark:bg-[#1B1F23] shadow-lg">
                   <div class="aspect-[1.91/1] w-full bg-neutral-200 dark:bg-neutral-700 relative overflow-hidden">
                     <div v-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-[var(--ui-text-muted)]" />
+                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                     </div>
                     <div v-else-if="error" class="absolute inset-0 flex items-center justify-center text-red-500 p-2 text-center text-xs">
                       {{ error }}
@@ -379,13 +379,13 @@ const previewImage = result
                 class="w-full max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-6"
               >
                 <div class="space-y-2">
-                  <p class="text-xs text-[var(--ui-text-dimmed)]">
+                  <p class="text-xs text-dimmed">
                     Inline
                   </p>
                   <div class="rounded-lg overflow-hidden bg-[#DCF8C6] dark:bg-[#1F2C34] shadow-lg flex max-w-full sm:max-w-[240px]">
                     <div class="w-14 h-14 bg-neutral-200 dark:bg-neutral-700 shrink-0 relative">
                       <div v-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                        <UIcon name="i-carbon-circle-dash" class="w-4 h-4 animate-spin text-[var(--ui-text-muted)]" />
+                        <UIcon name="i-carbon-circle-dash" class="w-4 h-4 animate-spin text-muted" />
                       </div>
                       <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" class="w-full h-full object-cover">
                       <div v-else class="w-full h-full flex items-center justify-center">
@@ -407,13 +407,13 @@ const previewImage = result
                   </div>
                 </div>
                 <div class="space-y-2">
-                  <p class="text-xs text-[var(--ui-text-dimmed)]">
+                  <p class="text-xs text-dimmed">
                     Full card
                   </p>
                   <div class="rounded-lg overflow-hidden bg-[#DCF8C6] dark:bg-[#1F2C34] shadow-lg max-w-full sm:w-[240px]">
                     <div class="aspect-[2/1] w-full bg-neutral-200 dark:bg-neutral-700 relative">
                       <div v-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                        <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-[var(--ui-text-muted)]" />
+                        <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                       </div>
                       <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" class="w-full h-full object-cover">
                       <div v-else class="w-full h-full flex items-center justify-center">
@@ -449,7 +449,7 @@ const previewImage = result
                   </p>
                   <div class="mt-2 rounded overflow-hidden max-w-xs bg-neutral-100 dark:bg-neutral-800 relative min-h-[100px]">
                     <div v-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-[var(--ui-text-muted)]" />
+                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                     </div>
                     <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" class="w-full h-auto max-h-40 object-cover">
                     <div v-else class="w-full h-[100px] flex items-center justify-center">
@@ -476,7 +476,7 @@ const previewImage = result
                   </p>
                   <div class="mt-3 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700 relative min-h-[100px]">
                     <div v-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-[var(--ui-text-muted)]" />
+                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                     </div>
                     <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" class="max-w-full max-h-60 rounded object-cover">
                     <div v-else class="w-full h-[100px] flex items-center justify-center">
@@ -488,7 +488,7 @@ const previewImage = result
             </div>
 
             <div class="flex justify-end mt-4">
-              <a href="https://takumi.kane.tw/" target="_blank" rel="noopener" class="text-xs text-[var(--ui-text-dimmed)] hover:text-purple-500 transition-colors flex items-center gap-1.5">
+              <a href="https://takumi.kane.tw/" target="_blank" rel="noopener" class="text-xs text-dimmed hover:text-purple-500 transition-colors flex items-center gap-1.5">
                 <UIcon name="i-carbon-flash" class="w-3 h-3" />
                 Powered by Takumi
               </a>
@@ -496,9 +496,9 @@ const previewImage = result
           </div>
 
           <!-- Code Snippet -->
-          <div class="bg-[var(--ui-bg-elevated)] rounded-xl border border-[var(--ui-border)] overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--ui-border)] bg-[var(--ui-bg-accented)]/10">
-              <span class="text-xs font-medium text-[var(--ui-text-muted)]">Unhead Usage</span>
+          <div class="bg-elevated rounded-xl border border-default overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-default bg-[var(--ui-bg-accented)]/10">
+              <span class="text-xs font-medium text-muted">Unhead Usage</span>
               <UButton
                 :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
                 :color="copied ? 'success' : 'neutral'"

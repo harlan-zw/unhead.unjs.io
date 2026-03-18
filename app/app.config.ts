@@ -13,8 +13,8 @@ export default ({
       variants: {
         active: {
           false: {
-            link: 'text-[var(--ui-text-toned)]',
-            linkLeadingIcon: 'text-[var(--ui-text-toned)]',
+            link: 'text-toned',
+            linkLeadingIcon: 'text-toned',
           },
         },
       },
@@ -24,8 +24,8 @@ export default ({
           variant: 'pill',
           active: true,
           class: {
-            link: 'text-[var(--ui-text)]',
-            linkLeadingIcon: 'rounded-full p-[1px] text-[var(--ui-text)] group-data-[state=open]:text-[var(--ui-primary)]',
+            link: 'text-default',
+            linkLeadingIcon: 'rounded-full p-[1px] text-default group-data-[state=open]:text-primary',
           },
         },
         {
@@ -84,13 +84,13 @@ export default ({
         active: {
           true: {
             link: [
-              'text-[var(--ui-text-highlighted)] font-medium',
-              'before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:rounded-full before:bg-[var(--ui-primary)]',
+              'text-highlighted font-medium',
+              'before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:rounded-full before:bg-primary',
             ],
           },
           false: {
-            link: 'text-[var(--ui-text-muted)] hover:text-[var(--ui-text-highlighted)] transition-colors',
-            linkLeadingIcon: 'text-[var(--ui-text-dimmed)]',
+            link: 'text-muted hover:text-highlighted transition-colors',
+            linkLeadingIcon: 'text-dimmed',
           },
         },
       },
@@ -102,7 +102,7 @@ export default ({
       },
       a: {
         base: [
-          'relative border-none underline underline-offset-6 text-[var(--ui-text)] decoration-transition-all decoration-[0.1rem] decoration-[var(--ui-text-secondary)]',
+          'relative border-none underline underline-offset-6 text-default decoration-transition-all decoration-[0.1rem] decoration-[var(--ui-text-secondary)]',
           'transition-all',
           'hover:text-[var(--ui-text-secondary)] hover:underline-offset-4 hover:decoration-[0.25rem]',
         ],

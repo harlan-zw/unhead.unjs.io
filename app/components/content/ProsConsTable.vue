@@ -36,9 +36,9 @@ function getBadgeClass(priority: string) {
   switch (priority) {
     case 'Critical': return 'bg-[var(--ui-text-error)]/10 text-[var(--ui-text-error)]'
     case 'High': return 'bg-[var(--ui-text-warning)]/10 text-[var(--ui-text-warning)]'
-    case 'Optional': return 'bg-[var(--ui-bg-muted)] text-[var(--ui-text-dimmed)]'
+    case 'Optional': return 'bg-muted text-dimmed'
     case 'Nice-to-have': return 'bg-[var(--ui-text-info)]/10 text-[var(--ui-text-info)]'
-    default: return 'bg-[var(--ui-bg-muted)] text-[var(--ui-text-dimmed)]'
+    default: return 'bg-muted text-dimmed'
   }
 }
 </script>
@@ -46,9 +46,9 @@ function getBadgeClass(priority: string) {
 <template>
   <div class="my-8 not-prose">
     <!-- Desktop table -->
-    <div class="hidden sm:block overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]">
+    <div class="hidden sm:block overflow-hidden rounded-xl border border-default bg-elevated">
       <table class="w-full text-left text-sm">
-        <thead class="bg-[var(--ui-bg-muted)] text-[var(--ui-text)]">
+        <thead class="bg-muted text-default">
           <tr>
             <th class="px-6 py-3 font-semibold">
               Scenario
@@ -65,11 +65,11 @@ function getBadgeClass(priority: string) {
           <tr v-for="item in items" :key="item.scenario" class="transition-colors hover:bg-[var(--ui-bg-muted)]/50">
             <td class="px-6 py-3 font-medium">
               {{ item.scenario }}
-              <div class="text-xs font-normal text-[var(--ui-text-dimmed)] mt-0.5">
+              <div class="text-xs font-normal text-dimmed mt-0.5">
                 {{ item.desc }}
               </div>
             </td>
-            <td class="px-6 py-3 text-[var(--ui-text-muted)]">
+            <td class="px-6 py-3 text-muted">
               {{ item.impact }}
             </td>
             <td class="px-6 py-3 text-right">
@@ -90,10 +90,10 @@ function getBadgeClass(priority: string) {
       <div
         v-for="item in items"
         :key="item.scenario"
-        class="rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-4"
+        class="rounded-xl border border-default bg-elevated p-4"
       >
         <div class="flex items-start justify-between gap-3 mb-2">
-          <div class="text-sm font-medium text-[var(--ui-text)]">
+          <div class="text-sm font-medium text-default">
             {{ item.scenario }}
           </div>
           <span
@@ -103,10 +103,10 @@ function getBadgeClass(priority: string) {
             {{ item.priority }}
           </span>
         </div>
-        <div class="text-xs text-[var(--ui-text-dimmed)] mb-2">
+        <div class="text-xs text-dimmed mb-2">
           {{ item.desc }}
         </div>
-        <div class="text-xs text-[var(--ui-text-muted)]">
+        <div class="text-xs text-muted">
           {{ item.impact }}
         </div>
       </div>

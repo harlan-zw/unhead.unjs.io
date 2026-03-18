@@ -54,7 +54,7 @@ const colorClasses = computed(() => {
       <div class="p-2 rounded-lg bg-gradient-to-br" :class="headerColorClasses.bg">
         <UIcon name="i-carbon-help" class="w-6 h-6" :class="headerColorClasses.icon" />
       </div>
-      <h2 class="text-2xl font-semibold text-[var(--ui-text-highlighted)]">
+      <h2 class="text-2xl font-semibold text-highlighted">
         Frequently Asked Questions
       </h2>
     </div>
@@ -78,7 +78,7 @@ const colorClasses = computed(() => {
             {{ String(index + 1).padStart(2, '0') }}
           </span>
 
-          <h3 class="flex-1 font-medium text-[var(--ui-text-highlighted)] leading-snug pr-2 text-base">
+          <h3 class="flex-1 font-medium text-highlighted leading-snug pr-2 text-base">
             {{ faq.question }}
           </h3>
 
@@ -102,7 +102,7 @@ const colorClasses = computed(() => {
             :class="colorClasses.accent.replace('text-', 'bg-')"
           />
           <div class="pl-16 pr-6 pb-5 pt-1">
-            <p class="text-[var(--ui-text-muted)] text-sm leading-relaxed">
+            <p class="text-muted text-sm leading-relaxed">
               {{ faq.answer }}
             </p>
           </div>

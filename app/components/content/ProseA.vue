@@ -29,7 +29,7 @@ const resolvedHref = computed(() => {
   <NuxtLink
     :href="resolvedHref"
     :target="target"
-    class="border-b border-transparent hover:border-primary font-medium focus-visible:outline-primary focus-visible:has-[>code]:outline-0 [&>code]:border-dashed hover:[&>code]:border-primary hover:[&>code]:text-primary focus-visible:[&>code]:border-primary focus-visible:[&>code]:text-primary [&>code]:transition-colors relative border-none underline underline-offset-6 text-[var(--ui-text)] decoration-[0.1rem] decoration-[var(--ui-text-secondary)] transition-all hover:text-[var(--ui-text-secondary)] hover:underline-offset-4 hover:decoration-[0.25rem]"
+    class="border-b border-transparent hover:border-primary font-medium focus-visible:outline-primary focus-visible:has-[>code]:outline-0 [&>code]:border-dashed hover:[&>code]:border-primary hover:[&>code]:text-primary focus-visible:[&>code]:border-primary focus-visible:[&>code]:text-primary [&>code]:transition-colors relative border-none underline underline-offset-6 text-default decoration-[0.1rem] decoration-[var(--ui-text-secondary)] transition-all hover:text-[var(--ui-text-secondary)] hover:underline-offset-4 hover:decoration-[0.25rem]"
   >
     <slot />
   </NuxtLink>

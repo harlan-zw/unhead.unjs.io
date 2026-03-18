@@ -41,14 +41,14 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
-    <div class="my-8 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-5 not-prose">
+    <div class="my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <div class="flex items-baseline justify-between mb-4">
-        <h4 class="text-sm font-semibold text-[var(--ui-text)] tracking-tight">
+        <h4 class="text-sm font-semibold text-default tracking-tight">
           The DCL Paradox: Painting vs Loading
         </h4>
-        <span class="text-xs text-[var(--ui-text-dimmed)]">heavy page, fast-4g</span>
+        <span class="text-xs text-dimmed">heavy page, fast-4g</span>
       </div>
-      <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-5 text-xs text-[var(--ui-text-muted)]">
+      <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-5 text-xs text-muted">
         <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full inline-block" :style="{ backgroundColor: item.color }" />
           {{ item.label }}
@@ -69,24 +69,24 @@ function tooltipTemplate(d: D) {
       </VisXYContainer>
       <!-- Delta callouts to make the paradox visible without hovering -->
       <div class="mt-4 grid grid-cols-2 gap-3">
-        <div class="rounded-lg bg-[var(--ui-bg-muted)] p-3 border border-[var(--ui-border-muted)] text-center">
+        <div class="rounded-lg bg-muted p-3 border border-muted text-center">
           <div class="text-lg font-bold text-[var(--ui-text-error)]">
             {{ deltas.fcp.value }}
           </div>
-          <div class="text-[11px] text-[var(--ui-text-dimmed)] mt-0.5">
+          <div class="text-[11px] text-dimmed mt-0.5">
             FCP {{ deltas.fcp.desc }}
           </div>
         </div>
-        <div class="rounded-lg bg-[var(--ui-bg-muted)] p-3 border border-[var(--ui-border-muted)] text-center">
+        <div class="rounded-lg bg-muted p-3 border border-muted text-center">
           <div class="text-lg font-bold text-[var(--ui-text-success)]">
             {{ deltas.dcl.value }}
           </div>
-          <div class="text-[11px] text-[var(--ui-text-dimmed)] mt-0.5">
+          <div class="text-[11px] text-dimmed mt-0.5">
             DCL {{ deltas.dcl.desc }}
           </div>
         </div>
       </div>
-      <p class="text-[13px] text-[var(--ui-text-muted)] [&_strong]:text-[var(--ui-text)] mt-4 leading-relaxed bg-[var(--ui-bg-muted)] p-3 rounded-md border border-[var(--ui-border-muted)]">
+      <p class="text-[13px] text-muted [&_strong]:text-default mt-4 leading-relaxed bg-muted p-3 rounded-md border border-muted">
         In "Worst" ordering, <strong>DCL is actually faster</strong> because deferred scripts are discovered and downloaded earlier. However, this bandwidth "theft" delays the First Contentful Paint. It's a faster load event, but a slower user experience.
       </p>
     </div>

@@ -37,11 +37,11 @@ const colorClasses = {
             class="w-1.5 h-1.5 rounded-full"
             :class="colorClasses[category.color].dot"
           />
-          <span class="text-[11px] font-semibold uppercase tracking-wider text-[var(--ui-text-muted)]">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-muted">
             {{ category.label }}
           </span>
         </div>
-        <p class="text-[10px] text-[var(--ui-text-dimmed)] pl-3.5">
+        <p class="text-[10px] text-dimmed pl-3.5">
           {{ category.description }}
         </p>
       </div>
@@ -67,26 +67,26 @@ const colorClasses = {
           </div>
 
           <div class="flex flex-col min-w-0">
-            <span class="text-sm font-medium text-[var(--ui-text)] group-hover:text-[var(--ui-text-highlighted)] transition-colors">
+            <span class="text-sm font-medium text-default group-hover:text-highlighted transition-colors">
               {{ tool.label }}
             </span>
-            <span class="text-[11px] text-[var(--ui-text-dimmed)] truncate">
+            <span class="text-[11px] text-dimmed truncate">
               {{ tool.description }}
             </span>
           </div>
 
           <UIcon
             name="i-heroicons-chevron-right-20-solid"
-            class="w-3.5 h-3.5 ml-auto text-[var(--ui-text-dimmed)] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
+            class="w-3.5 h-3.5 ml-auto text-dimmed opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
           />
         </NuxtLink>
       </div>
     </div>
 
-    <div class="border-t border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50">
+    <div class="border-t border-default bg-[var(--ui-bg-elevated)]/50">
       <NuxtLink
         to="/tools"
-        class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[var(--ui-text-muted)] hover:text-[var(--ui-text)] transition-colors group"
+        class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-muted hover:text-default transition-colors group"
       >
         <UIcon name="i-heroicons-wrench-screwdriver" class="w-4 h-4" />
         <span>View all tools</span>

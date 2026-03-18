@@ -54,14 +54,14 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
-    <div class="my-8 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] p-5 not-prose">
+    <div class="my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <div class="flex items-baseline justify-between mb-4">
-        <h4 class="text-sm font-semibold text-[var(--ui-text)] tracking-tight">
+        <h4 class="text-sm font-semibold text-default tracking-tight">
           FCP by Head Ordering
         </h4>
-        <span class="text-xs text-[var(--ui-text-dimmed)]">median, 5 runs each</span>
+        <span class="text-xs text-dimmed">median, 5 runs each</span>
       </div>
-      <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-4 text-xs text-[var(--ui-text-muted)]">
+      <div class="flex flex-wrap gap-x-5 gap-y-1.5 mb-4 text-xs text-muted">
         <span v-for="item in legend" :key="item.label" class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full inline-block" :style="{ backgroundColor: item.color }" />
           {{ item.label }}
@@ -81,7 +81,7 @@ function tooltipTemplate(d: D) {
         <VisAxis type="y" :tick-format="(v: number) => `${v}ms`" :grid-line="false" :domain-line="false" />
         <VisTooltip :triggers="{ [VisGroupedBar]: tooltipTemplate }" />
       </VisXYContainer>
-      <p class="text-xs text-[var(--ui-text-dimmed)] mt-3 leading-relaxed">
+      <p class="text-xs text-dimmed mt-3 leading-relaxed">
         Heavy page on slow-3g shows the only meaningful delta. Minimal and medium pages are within noise.
       </p>
     </div>

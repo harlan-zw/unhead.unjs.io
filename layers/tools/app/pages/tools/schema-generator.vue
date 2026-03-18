@@ -67,7 +67,7 @@ function handleTypeSelect(type: SchemaType) {
       class="mb-12 max-w-6xl"
     >
       <div class="flex items-center gap-4 mb-5">
-        <span class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Quick Start</span>
+        <span class="text-sm font-medium text-muted uppercase tracking-wider">Quick Start</span>
         <div class="h-px flex-1 bg-[var(--ui-border)]" />
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
@@ -75,7 +75,7 @@ function handleTypeSelect(type: SchemaType) {
           v-for="preset in presets"
           :key="preset.id"
           type="button"
-          class="group relative overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 p-3 sm:p-4 text-left transition-all duration-300 hover:border-purple-500/40 cursor-pointer"
+          class="group relative overflow-hidden rounded-xl border border-default bg-[var(--ui-bg-elevated)]/50 p-3 sm:p-4 text-left transition-all duration-300 hover:border-purple-500/40 cursor-pointer"
           @click="() => { applyPreset(preset); track('preset', preset.id) }"
         >
           <div>
@@ -84,8 +84,8 @@ function handleTypeSelect(type: SchemaType) {
                 <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-purple-500" />
               </div>
             </div>
-            <span class="text-xs sm:text-sm font-semibold text-[var(--ui-text-highlighted)] group-hover:text-purple-500 transition-colors">{{ preset.label }}</span>
-            <p class="text-[10px] sm:text-xs text-[var(--ui-text-dimmed)] mt-1 line-clamp-2">
+            <span class="text-xs sm:text-sm font-semibold text-highlighted group-hover:text-purple-500 transition-colors">{{ preset.label }}</span>
+            <p class="text-[10px] sm:text-xs text-dimmed mt-1 line-clamp-2">
               {{ preset.description }}
             </p>
           </div>
@@ -103,7 +103,7 @@ function handleTypeSelect(type: SchemaType) {
           <div class="p-2 rounded-lg bg-gradient-to-br from-purple-500/10 to-violet-500/10">
             <UIcon name="i-carbon-data-structured" class="w-5 h-5 text-purple-500" />
           </div>
-          <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+          <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
             Schema Type
           </h3>
         </div>
@@ -118,25 +118,25 @@ function handleTypeSelect(type: SchemaType) {
             :class="[
               state.schemaType === schemaType.type
                 ? 'border-purple-500 bg-purple-500/10 shadow-lg shadow-purple-500/10'
-                : 'border-[var(--ui-border)] bg-[var(--ui-bg-elevated)]/50 hover:border-purple-500/40 hover:bg-purple-500/5',
+                : 'border-default bg-[var(--ui-bg-elevated)]/50 hover:border-purple-500/40 hover:bg-purple-500/5',
             ]"
             @click="handleTypeSelect(schemaType.type)"
           >
             <div class="flex items-center gap-2.5">
               <div
                 class="p-1.5 rounded-lg transition-colors shrink-0"
-                :class="state.schemaType === schemaType.type ? 'bg-purple-500/20' : 'bg-[var(--ui-bg-accented)]'"
+                :class="state.schemaType === schemaType.type ? 'bg-purple-500/20' : 'bg-accented'"
               >
                 <UIcon
                   :name="schemaType.icon"
                   class="size-4 transition-colors"
-                  :class="state.schemaType === schemaType.type ? 'text-purple-500' : 'text-[var(--ui-text-muted)]'"
+                  :class="state.schemaType === schemaType.type ? 'text-purple-500' : 'text-muted'"
                 />
               </div>
               <div class="min-w-0 flex-1">
                 <p
                   class="text-sm font-medium truncate transition-colors"
-                  :class="state.schemaType === schemaType.type ? 'text-purple-500' : 'text-[var(--ui-text-highlighted)]'"
+                  :class="state.schemaType === schemaType.type ? 'text-purple-500' : 'text-highlighted'"
                 >
                   {{ schemaType.label }}
                 </p>
@@ -154,10 +154,10 @@ function handleTypeSelect(type: SchemaType) {
             <div class="flex items-center gap-3 mb-6">
               <UIcon :name="currentSchemaConfig.icon" class="w-5 h-5 text-purple-500" />
               <div>
-                <h4 class="font-semibold text-[var(--ui-text-highlighted)]">
+                <h4 class="font-semibold text-highlighted">
                   {{ currentSchemaConfig.label }}
                 </h4>
-                <p class="text-xs text-[var(--ui-text-dimmed)]">
+                <p class="text-xs text-dimmed">
                   {{ currentSchemaConfig.description }}
                 </p>
               </div>
@@ -217,7 +217,7 @@ function handleTypeSelect(type: SchemaType) {
                 <div class="p-2 rounded-lg bg-gradient-to-br from-violet-500/10 to-purple-500/10">
                   <UIcon name="i-carbon-code" class="w-5 h-5 text-violet-500" />
                 </div>
-                <h3 class="text-sm font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+                <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
                   JSON-LD Preview
                 </h3>
               </div>
@@ -233,7 +233,7 @@ function handleTypeSelect(type: SchemaType) {
                 </ClientOnly>
                 <UIcon
                   name="i-carbon-chevron-down"
-                  class="w-4 h-4 text-[var(--ui-text-muted)] transition-transform lg:hidden"
+                  class="w-4 h-4 text-muted transition-transform lg:hidden"
                   :class="{ 'rotate-180': showJsonPreview }"
                 />
               </div>
@@ -241,11 +241,11 @@ function handleTypeSelect(type: SchemaType) {
 
             <!-- Preview card with structured data visualization -->
             <div
-              class="bg-[var(--ui-bg-elevated)] rounded-xl border border-[var(--ui-border)] overflow-hidden transition-all duration-300"
+              class="bg-elevated rounded-xl border border-default overflow-hidden transition-all duration-300"
               :class="showJsonPreview ? 'opacity-100' : 'hidden lg:block opacity-100'"
             >
               <!-- Schema type badge -->
-              <div class="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--ui-border)]">
+              <div class="flex items-center gap-2 px-4 py-2.5 border-b border-default">
                 <span class="text-[10px] font-mono uppercase tracking-wider text-purple-500">@type</span>
                 <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-500 border border-purple-500/20">
                   {{ state.schemaType }}
@@ -270,12 +270,12 @@ function handleTypeSelect(type: SchemaType) {
       ref="codeOutputRef"
       class="max-w-6xl mt-10"
     >
-      <div class="relative bg-[var(--ui-bg-elevated)] rounded-2xl border border-[var(--ui-border)] overflow-hidden">
+      <div class="relative bg-elevated rounded-2xl border border-default overflow-hidden">
         <!-- Terminal-style header -->
-        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[var(--ui-border)]">
+        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-default">
           <div class="flex items-center gap-2">
             <UIcon name="i-carbon-code" class="w-4 h-4 text-purple-500" />
-            <span class="text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">Generated Code</span>
+            <span class="text-xs font-medium text-muted uppercase tracking-wider">Generated Code</span>
           </div>
           <ClientOnly>
             <UButton
@@ -325,51 +325,51 @@ function handleTypeSelect(type: SchemaType) {
 
       <section>
         <ToolSectionHeader title="What is Schema.org?" icon="i-carbon-data-structured" color="purple" />
-        <p class="text-[var(--ui-text-muted)] mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
+        <p class="text-muted mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
           Schema.org is a collaborative vocabulary for structured data that helps search engines understand your content. When implemented correctly, it can enable rich results in Google Search.
         </p>
         <div class="grid sm:grid-cols-2 gap-3 sm:gap-4">
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
                 <UIcon name="i-carbon-search" class="w-4 h-4 text-purple-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">Rich Results</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Enable enhanced search snippets with ratings, prices, and more</span>
+                <strong class="text-highlighted block mb-1">Rich Results</strong>
+                <span class="text-sm text-muted">Enable enhanced search snippets with ratings, prices, and more</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
                 <UIcon name="i-carbon-analytics" class="w-4 h-4 text-purple-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">Better CTR</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Rich snippets can significantly improve click-through rates</span>
+                <strong class="text-highlighted block mb-1">Better CTR</strong>
+                <span class="text-sm text-muted">Rich snippets can significantly improve click-through rates</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
                 <UIcon name="i-carbon-machine-learning" class="w-4 h-4 text-purple-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">AI-Ready</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">Structured data helps AI systems understand your content</span>
+                <strong class="text-highlighted block mb-1">AI-Ready</strong>
+                <span class="text-sm text-muted">Structured data helps AI systems understand your content</span>
               </div>
             </div>
           </div>
-          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
+          <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
                 <UIcon name="i-carbon-checkmark-filled" class="w-4 h-4 text-purple-500" />
               </div>
               <div>
-                <strong class="text-[var(--ui-text-highlighted)] block mb-1">Type-Safe</strong>
-                <span class="text-sm text-[var(--ui-text-muted)]">useSchemaOrg provides full TypeScript support</span>
+                <strong class="text-highlighted block mb-1">Type-Safe</strong>
+                <span class="text-sm text-muted">useSchemaOrg provides full TypeScript support</span>
               </div>
             </div>
           </div>
@@ -382,17 +382,17 @@ function handleTypeSelect(type: SchemaType) {
           <div
             v-for="schemaType in schemaTypes"
             :key="schemaType.type"
-            class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-[var(--ui-border)] hover:border-violet-500/30 transition-all duration-300"
+            class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-violet-500/30 transition-all duration-300"
           >
             <div class="flex items-center gap-3">
               <div class="p-2 rounded-lg bg-violet-500/10 group-hover:bg-violet-500/20 transition-colors">
                 <UIcon :name="schemaType.icon" class="w-4 h-4 text-violet-500" />
               </div>
               <div>
-                <p class="font-semibold text-sm text-[var(--ui-text-highlighted)]">
+                <p class="font-semibold text-sm text-highlighted">
                   {{ schemaType.label }}
                 </p>
-                <p class="text-xs text-[var(--ui-text-dimmed)]">
+                <p class="text-xs text-dimmed">
                   {{ schemaType.description }}
                 </p>
               </div>

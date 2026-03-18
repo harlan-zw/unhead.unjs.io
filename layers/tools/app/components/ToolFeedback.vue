@@ -61,17 +61,17 @@ async function onSubmit(event: FormSubmitEvent<CommentFeedbackSchemaOutput>) {
   <UCard class="mt-6">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <div class="text-sm font-medium text-[var(--ui-text-highlighted)]">
+        <div class="text-sm font-medium text-highlighted">
           Was this tool helpful?
         </div>
-        <p class="text-xs text-[var(--ui-text-muted)] mt-0.5">
+        <p class="text-xs text-muted mt-0.5">
           Your feedback helps us improve
         </p>
       </div>
 
       <div class="flex items-center gap-3">
         <template v-if="thumbSubmissionStatus === 'loading'">
-          <UIcon name="i-carbon-in-progress" class="w-5 h-5 animate-spin text-[var(--ui-text-muted)]" />
+          <UIcon name="i-carbon-in-progress" class="w-5 h-5 animate-spin text-muted" />
         </template>
         <template v-else-if="thumbSubmissionStatus === 'submitted'">
           <div v-if="thumbsResponse?.thumbs === 'up'" class="flex items-center gap-2 text-[var(--ui-text-success)]">
@@ -80,7 +80,7 @@ async function onSubmit(event: FormSubmitEvent<CommentFeedbackSchemaOutput>) {
               {{ thumbsResponse.stats.up }} {{ thumbsResponse.stats.up > 1 ? 'agree' : 'agrees' }}
             </span>
           </div>
-          <div v-else class="flex items-center gap-2 text-[var(--ui-text-muted)]">
+          <div v-else class="flex items-center gap-2 text-muted">
             <UIcon name="i-carbon-thumbs-down-filled" class="w-5 h-5" />
             <span class="text-sm">Thanks for the feedback</span>
           </div>
@@ -112,7 +112,7 @@ async function onSubmit(event: FormSubmitEvent<CommentFeedbackSchemaOutput>) {
       </div>
     </div>
 
-    <div v-if="commentSubmissionStatus !== 'submitted'" class="mt-4 pt-4 border-t border-[var(--ui-border)]">
+    <div v-if="commentSubmissionStatus !== 'submitted'" class="mt-4 pt-4 border-t border-default">
       <UForm :schema="CommentFeedbackSchema" :state="state" class="space-y-3" :validate-on="['change']" @submit="onSubmit">
         <UFormField label="Anything that could be done better? :)" name="comment">
           <UTextarea v-model="state.comment" placeholder="Tell us how we can improve this tool..." class="w-full" :rows="2" />
