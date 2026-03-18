@@ -27,7 +27,7 @@ function tooltipTemplate(d: typeof data[number]) {
             :show-labels="false"
             :color="color"
           />
-          <VisTooltip :triggers="{ [VisDonut]: tooltipTemplate }" />
+          <VisTooltip :triggers="{ [VisDonut as any]: tooltipTemplate }" />
         </VisXYContainer>
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
           <span class="text-2xl font-bold text-[var(--ui-text-error)]">22%</span>

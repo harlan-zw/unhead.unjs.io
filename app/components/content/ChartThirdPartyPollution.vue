@@ -66,7 +66,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="true" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}`" :grid-line="true" :domain-line="false" :tick-line="false" />
-        <VisTooltip :triggers="{ [VisStackedBar]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisStackedBar as any]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="mt-4 text-[10px] text-dimmed text-center leading-relaxed">
         Average number of tags in <code>&lt;head&gt;</code> per framework on commercial sites. Third-party tags counted after JS execution. Feb 2026.

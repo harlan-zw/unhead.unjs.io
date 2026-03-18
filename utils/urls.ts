@@ -1,19 +1,23 @@
 import { normalizeURL } from 'ufo'
 
+const DocsV2Pattern = /^\/docs\/v2/
+const FrameworkPattern = /\/(vue|typescript|react|svelte|solid-js|angular|nuxt)/g
+const FrameworkMatchPattern = /\/(vue|typescript|react|svelte|solid-js|angular|nuxt)/
+
 export function getPathWithoutVersion(path: string): string {
-  return path.replace(/^\/docs\/v2/, '/docs')
+  return path.replace(DocsV2Pattern, '/docs')
 }
 
 export function getPathWithoutFramework(path: string, replacement = ''): string {
   // remove framework slug from path, i.e vue, typescript, etc
-  path = path.replace(/\/(vue|typescript|react|svelte|solid-js|angular|nuxt)/g, `/${replacement}`)
+  path = path.replace(FrameworkPattern, `/${replacement}`)
   path = normalizeURL(path).replaceAll('//', '/')
   return path
 }
 
 export function getPathFramework(path: string): string {
   // get framework slug from path, i.e vue, typescript, etc
-  const match = path.match(/\/(vue|typescript|react|svelte|solid-js|angular|nuxt)/)
+  const match = path.match(FrameworkMatchPattern)
   return match ? match[1] : ''
 }
 

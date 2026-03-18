@@ -5,6 +5,9 @@ const versions = [
   { label: 'v2 (stable)', slug: 'v2' as const, badge: 'stable' },
 ] as const
 
+const DocsV2Pattern = /^\/docs\/v2/
+const DocsPattern = /^\/docs/
+
 export function useVersionSelector() {
   const route = useRoute()
 
@@ -18,10 +21,10 @@ export function useVersionSelector() {
 
   function getVersionedPath(path: string, version: DocsVersion): string {
     // Remove any existing version prefix
-    const cleanPath = path.replace(/^\/docs\/v2/, '/docs')
+    const cleanPath = path.replace(DocsV2Pattern, '/docs')
 
     if (version === 'v2') {
-      return cleanPath.replace(/^\/docs/, '/docs/v2')
+      return cleanPath.replace(DocsPattern, '/docs/v2')
     }
     return cleanPath
   }

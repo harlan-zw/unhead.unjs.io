@@ -19,7 +19,6 @@ useSeoMeta({
 
 const {
   input,
-  mode,
   url,
   framework,
   loading,

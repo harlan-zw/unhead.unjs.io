@@ -63,7 +63,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)}s` : `${v}ms`" :grid-line="false" :domain-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="text-xs text-dimmed mt-3 leading-relaxed">
         Nuxt has the best head ordering but worst LCP. Shopify has no head optimization but best LCP. TTFB dominates.

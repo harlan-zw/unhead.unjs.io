@@ -63,7 +63,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}ms`" :grid-line="false" :domain-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="text-[13px] text-muted [&_strong]:text-default mt-5 leading-relaxed bg-muted p-3 rounded-md border border-muted">
         <strong>Wait, why is Nuxt last?</strong> Despite automatic head ordering, Nuxt's population-level LCP is highest. This is driven by <strong>TTFB</strong> (989ms) and <strong>hydration cost</strong>. Shopify wins not because of heads, but because of its global edge network (534ms TTFB) and server-rendered architecture.

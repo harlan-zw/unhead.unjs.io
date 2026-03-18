@@ -6,6 +6,8 @@ import { ThumbsFeedbackSchema } from '~~/types/schemas'
 import { feedback } from '../database/schema'
 import { getDB } from '../utils/db'
 
+const LeadingSlashPattern = /^\/+/
+
 export default defineEventHandler<Promise<ThumbsFeedbackResponse>>(async (e) => {
   const body = await readValidatedBody(e, ThumbsFeedbackSchema.safeParse)
   if (!body.success) {
@@ -14,7 +16,7 @@ export default defineEventHandler<Promise<ThumbsFeedbackResponse>>(async (e) => 
 
   const { thumbs, toolId } = body.data
   const referrer = parseURL(getHeader(e, 'Referer') || '').pathname
-  const path = toolId ? `/tools/${toolId}` : referrer.replace(/^\/+/, '')
+  const path = toolId ? `/tools/${toolId}` : referrer.replace(LeadingSlashPattern, '')
 
   const db = getDB(e)
   await db.insert(feedback).values({ path, thumb: thumbs })

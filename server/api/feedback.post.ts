@@ -9,6 +9,8 @@ const BodySchema = CommentFeedbackSchema.extend({
   toolId: z.string().optional(),
 })
 
+const LeadingSlashPattern = /^\/+/
+
 export default defineEventHandler(async (e) => {
   const body = await readValidatedBody(e, BodySchema.safeParse)
   if (!body.success) {
@@ -17,7 +19,7 @@ export default defineEventHandler(async (e) => {
 
   const { comment, toolId } = body.data
   const referrer = parseURL(getHeader(e, 'Referer') || '').pathname
-  const path = toolId ? `/tools/${toolId}` : referrer.replace(/^\/+/, '')
+  const path = toolId ? `/tools/${toolId}` : referrer.replace(LeadingSlashPattern, '')
 
   const db = getDB(e)
   await db.insert(feedback).values({ path, comment })

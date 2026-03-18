@@ -1,3 +1,6 @@
+const ProtocolPattern = /^https?:\/\//i
+const HeadPattern = /<head[^>]*>([\s\S]*?)<\/head>/i
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const url = query.url as string
@@ -6,7 +9,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Missing url parameter' })
 
   // Prepend https:// if no protocol provided
-  const normalizedUrl = /^https?:\/\//i.test(url) ? url : `https://${url}`
+  const normalizedUrl = ProtocolPattern.test(url) ? url : `https://${url}`
 
   // Validate URL format
   let parsed: URL
@@ -43,7 +46,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 413, statusMessage: 'Response too large' })
 
   // Extract <head> content
-  const headMatch = html.match(/<head[^>]*>([\s\S]*?)<\/head>/i)
+  const headMatch = html.match(HeadPattern)
   if (!headMatch)
     throw createError({ statusCode: 422, statusMessage: 'No <head> tag found in response' })
 

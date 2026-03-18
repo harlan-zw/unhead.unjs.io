@@ -65,7 +65,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}ms`" :grid-line="false" :domain-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
       </VisXYContainer>
       <!-- Delta callouts to make the paradox visible without hovering -->
       <div class="mt-4 grid grid-cols-2 gap-3">

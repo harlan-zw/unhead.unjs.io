@@ -63,7 +63,7 @@ function tooltipTemplate(d: typeof data[number]) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="true" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}%`" :grid-line="true" :domain-line="false" :tick-line="false" />
-        <VisTooltip :triggers="{ [VisStackedBar]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisStackedBar as any]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="mt-4 text-[10px] text-dimmed text-center leading-relaxed">
         Data sourced from HTTP Archive (Feb 2026) and CrUX (Jan 2026). <br class="sm:hidden">

@@ -33,6 +33,8 @@ function onVersionChange(v: { label: string, value: string }) {
   }
 }
 
+const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
+
 const docsNavItem = computed(() => ({
   label: 'Docs',
   icon: 'i-heroicons-book-open',
@@ -46,8 +48,6 @@ const toolsNavItem = computed(() => ({
   to: '/tools',
   children: [{}],
 }))
-
-const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
 
 const learnNavItem = computed(() => ({
   label: 'Learn',

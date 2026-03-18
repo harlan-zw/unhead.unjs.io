@@ -3,9 +3,13 @@
   "type": "module",
   "private": true,
   "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "nuxi dev",
-    "build": "nuxi build",
+    "build": "nuxi prepare && nuxi build",
+    "postinstall": "nuxt prepare && simple-git-hooks",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:docs": "markdownlint ./snippets && case-police 'snippets/**/*.md' *.md",
@@ -50,6 +54,7 @@
     "eslint": "catalog:",
     "eslint-plugin-harlanzw": "catalog:",
     "jsdom": "catalog:",
+    "lint-staged": "catalog:",
     "markdownlint-cli": "catalog:",
     "motion-v": "catalog:",
     "nitro-cloudflare-dev": "catalog:",
@@ -63,6 +68,7 @@
     "shiki": "catalog:",
     "shiki-magic-move": "catalog:",
     "shiki-transformer-color-highlight": "catalog:",
+    "simple-git-hooks": "catalog:",
     "sponsorkit": "catalog:",
     "sucrase": "catalog:",
     "tailwind-merge": "catalog:",
@@ -71,5 +77,13 @@
     "vitest": "catalog:",
     "wrangler": "catalog:",
     "zod": "catalog:"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,mjs,cjs,vue}": [
+      "pnpm exec eslint --fix"
+    ]
   }
 }

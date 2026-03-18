@@ -50,7 +50,7 @@ const categories = computed(() => {
                         ? 'border-primary text-highlighted font-medium'
                         : 'border-transparent text-muted hover:text-default hover:border-accented'"
                     >
-                      {{ article.navigation?.title || article.title }}
+                      {{ (typeof article.navigation === 'object' && article.navigation?.title) || article.title }}
                     </NuxtLink>
                   </li>
                 </ul>

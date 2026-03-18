@@ -15,7 +15,7 @@ useSeoMeta({
   titleTemplate: null,
 })
 
-defineOgImage(page.value.ogImageComponent || 'Unhead', {
+defineOgImage((page.value.ogImageComponent || 'Unhead') as any, {
   title: page.value?.title || '',
   description: page.value?.description,
   colorMode: 'dark',

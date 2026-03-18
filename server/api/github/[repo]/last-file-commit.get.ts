@@ -2,12 +2,14 @@ import type { H3Event } from 'h3'
 import { getQuery } from 'h3'
 import { initOctokitRequestHandler } from '~~/server/utils/github'
 
+const PrMatchPattern = /#(\d+)/
+
 export default defineCachedEventHandler(async (e) => {
   const { octokit, repo, owner } = initOctokitRequestHandler(e)
   const { data } = await octokit.request('GET /repos/{owner}/{repo}/commits', {
     owner,
     repo,
-    path: getQuery(e)?.file || '',
+    path: (getQuery(e)?.file as string) || '',
     per_page: 1,
   })
 
@@ -22,7 +24,7 @@ export default defineCachedEventHandler(async (e) => {
 
   // If committer is web-flow, try to get the actual PR author
   if (committerLogin === 'web-flow') {
-    const prMatch = lastCommit.commit.message.match(/#(\d+)/)
+    const prMatch = lastCommit.commit.message.match(PrMatchPattern)
     if (prMatch?.[1]) {
       const { data: prData } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
         owner,

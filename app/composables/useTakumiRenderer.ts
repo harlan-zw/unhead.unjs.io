@@ -20,8 +20,6 @@ export function useTakumiRenderer() {
       const { type, id, result: opResult } = event.data
 
       if (type === 'ready') {
-        // eslint-disable-next-line no-console
-        console.log('Worker: Ready')
         isReady.value = true
         return
       }

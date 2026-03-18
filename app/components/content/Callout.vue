@@ -7,7 +7,8 @@ const props = withDefaults(defineProps<{
   icon: 'i-ph-info-duotone',
 })
 
-const tag = computed(() => props.to ? resolveComponent('NuxtLink') : 'div')
+const NuxtLink = resolveComponent('NuxtLink')
+const tag = computed(() => props.to ? NuxtLink : 'div')
 </script>
 
 <template>

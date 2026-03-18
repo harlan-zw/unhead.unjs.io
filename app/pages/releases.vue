@@ -32,6 +32,8 @@ const filteredReleases = computed(() => {
 
 const prereleaseCount = computed(() => releases.value.filter(r => r.prerelease).length)
 
+const VersionSplitPattern = /(\.)/g
+
 // credits https://github.com/antfu/releases.antfu.me/blob/main/app/components/TheItem.vue
 const HighlightedVersion = defineComponent({
   props: {
@@ -43,7 +45,7 @@ const HighlightedVersion = defineComponent({
   setup(props) {
     return () => {
       const version = props.version
-      const parts = version.split(/(\.)/g)
+      const parts = version.split(VersionSplitPattern)
 
       let highlightedIndex = -1
       for (let i = parts.length - 1; i >= 0; i--) {

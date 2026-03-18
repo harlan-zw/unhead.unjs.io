@@ -11,7 +11,7 @@ useSeoMeta({
   description: 'Free meta tag generator, schema.org builder, OG image creator, and head tag analyzer. Generate production-ready code with live previews.',
 })
 
-defineOgImage('NuxtSeo', {
+defineOgImage('NuxtSeo' as any, {
   title: 'Free Head & SEO Tools',
   description: 'Meta tags, Schema.org, OG images, and more',
   theme: '#18181b',

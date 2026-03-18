@@ -16,7 +16,7 @@ export function useToolSeo(opts: ToolSeoOptions) {
     description: opts.description,
   })
 
-  defineOgImage('NuxtSeo', {
+  defineOgImage('NuxtSeo' as any, {
     title: opts.title,
     description: opts.description,
     theme: '#18181b',

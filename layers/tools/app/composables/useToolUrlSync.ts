@@ -10,7 +10,6 @@ interface ToolUrlSyncOptions {
 export function useToolUrlSync(urlInput: Ref<string>, options: ToolUrlSyncOptions = {}) {
   const { paramName = 'url', extraParams, onReady, debounce = 500 } = options
   const route = useRoute()
-  const router = useRouter()
 
   onMounted(() => {
     const urlParam = route.query[paramName] as string
@@ -29,26 +28,26 @@ export function useToolUrlSync(urlInput: Ref<string>, options: ToolUrlSyncOption
 
   watchDebounced(
     urlInput,
-    (newUrl) => {
+    async (newUrl) => {
       if (newUrl) {
-        navigateTo({ query: { ...route.query, [paramName]: encodeURIComponent(newUrl) } }, { replace: true })
+        await navigateTo({ query: { ...route.query, [paramName]: encodeURIComponent(newUrl) } }, { replace: true })
       }
       else {
         const { [paramName]: _, ...rest } = route.query
-        navigateTo({ query: rest }, { replace: true })
+        await navigateTo({ query: rest }, { replace: true })
       }
     },
     { debounce },
   )
 
   function syncParam(paramKey: string, value: Ref<string>, defaultValue?: string) {
-    watch(value, (newVal) => {
+    watch(value, async (newVal) => {
       if (defaultValue && newVal === defaultValue) {
         const { [paramKey]: _, ...rest } = route.query
-        navigateTo({ query: rest }, { replace: true })
+        await navigateTo({ query: rest }, { replace: true })
       }
       else {
-        navigateTo({ query: { ...route.query, [paramKey]: newVal } }, { replace: true })
+        await navigateTo({ query: { ...route.query, [paramKey]: newVal } }, { replace: true })
       }
     })
   }

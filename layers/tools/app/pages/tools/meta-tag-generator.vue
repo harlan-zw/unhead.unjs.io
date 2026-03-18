@@ -71,6 +71,8 @@ const platformTabs = [
   { label: 'Discord', value: 'discord', icon: 'i-carbon-logo-discord', color: 'text-indigo-400' },
 ]
 
+const ProtocolPattern = /^https?:\/\//
+
 function truncate(text: string, max: number): string {
   if (!text)
     return ''
@@ -80,7 +82,7 @@ function truncate(text: string, max: number): string {
 function getHostname(url: string): string {
   if (!url)
     return 'example.com'
-  return url.replace(/^https?:\/\//, '').split('/')[0]
+  return url.replace(ProtocolPattern, '').split('/')[0]
 }
 
 const previewTitle = computed(() => state.ogTitle || state.title || 'Your Page Title')

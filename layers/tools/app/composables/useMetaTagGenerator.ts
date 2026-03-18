@@ -628,14 +628,21 @@ export function useMetaTagGenerator() {
   }
 }
 
+const BackslashPattern = /\\/g
+const SingleQuotePattern = /'/g
+const AmpersandPattern = /&/g
+const LessThanPattern = /</g
+const GreaterThanPattern = />/g
+const DoubleQuotePattern = /"/g
+
 function escapeString(str: string): string {
-  return str.replace(/\\/g, '\\\\').replace(/'/g, '\\\'')
+  return str.replace(BackslashPattern, '\\\\').replace(SingleQuotePattern, '\\\'')
 }
 
 function escapeHtml(str: string): string {
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
+    .replace(AmpersandPattern, '&amp;')
+    .replace(LessThanPattern, '&lt;')
+    .replace(GreaterThanPattern, '&gt;')
+    .replace(DoubleQuotePattern, '&quot;')
 }

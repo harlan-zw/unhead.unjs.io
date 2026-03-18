@@ -64,7 +64,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="true" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}%`" :grid-line="true" :domain-line="false" :tick-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="mt-4 text-[10px] text-dimmed text-center leading-relaxed">
         Percentage of origins with duplicate or conflicting tags in raw server HTML. Feb 2026.

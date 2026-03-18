@@ -15,8 +15,8 @@ export const toolLookups = sqliteTable('tool_lookups', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
   sessionId: text('session_id'),
-  tool: text('tool', { enum: ['meta-tag-generator', 'schema-generator'] }).notNull(),
-  action: text('action', { enum: ['view', 'use', 'copy', 'reset', 'preset'] }).notNull(),
+  tool: text('tool', { enum: ['meta-tag-generator', 'schema-generator', 'og-image-generator', 'capo-analyzer'] }).notNull(),
+  action: text('action', { enum: ['view', 'use', 'copy', 'reset', 'preset', 'download'] }).notNull(),
   label: text('label'),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 }, t => [

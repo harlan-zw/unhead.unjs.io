@@ -6,6 +6,7 @@ export default antfu(
     rules: {
       'no-use-before-define': 'off',
       'node/prefer-global/process': 'off',
+      'node/prefer-global/buffer': 'off',
     },
   },
   {
@@ -20,8 +21,15 @@ export default antfu(
   },
   ...harlanzw({ link: true, nuxt: true, vue: true }),
   {
+    files: ['test/**', 'scripts/**', 'server/api/**'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
     rules: {
       'harlanzw/link-require-descriptive-text': 'off',
+      'harlanzw/ai-deslop-passive-voice': 'off',
     },
   },
 )

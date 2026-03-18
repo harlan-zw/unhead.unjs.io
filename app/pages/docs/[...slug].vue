@@ -32,7 +32,7 @@ useSeoMeta({
 // V2: noindex and exclude from sitemap
 if (isV2) {
   useRobotsRule(false)
-  defineOgImage(false)
+  defineOgImage(false as any)
 }
 else {
   defineOgImage('Unhead', {

@@ -18,6 +18,9 @@ export interface Issue {
   suggestedPosition: number
 }
 
+const PreloadPattern = /^(?:preload|modulepreload)$/i
+const PrefetchPattern = /^(?:prefetch|dns-prefetch|prerender)$/i
+
 // Capo.js weight definitions — 14 levels
 const WEIGHT_TABLE = [
   { weight: -30, label: 'Content-Security-Policy', test: (t: ParsedTag) => t.tag === 'meta' && t.attributes['http-equiv']?.toLowerCase() === 'content-security-policy' },
@@ -30,11 +33,14 @@ const WEIGHT_TABLE = [
   { weight: 40, label: 'Style @import', test: (t: ParsedTag) => t.tag === 'style' && (t.content?.includes('@import') ?? false) },
   { weight: 50, label: 'Sync Script', test: (t: ParsedTag) => t.tag === 'script' && t.attributes.src && !('async' in t.attributes) && !('defer' in t.attributes) && !('type' in t.attributes && t.attributes.type === 'module') },
   { weight: 60, label: 'Stylesheet', test: (t: ParsedTag) => (t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'stylesheet') || (t.tag === 'style' && !(t.content?.includes('@import') ?? false)) },
-  { weight: 70, label: 'Preload', test: (t: ParsedTag) => t.tag === 'link' && /^(preload|modulepreload)$/i.test(t.attributes.rel || '') },
+  { weight: 70, label: 'Preload', test: (t: ParsedTag) => t.tag === 'link' && PreloadPattern.test(t.attributes.rel || '') },
   { weight: 80, label: 'Deferred Script', test: (t: ParsedTag) => t.tag === 'script' && ('defer' in t.attributes || t.attributes.type === 'module') },
-  { weight: 90, label: 'Prefetch/DNS', test: (t: ParsedTag) => t.tag === 'link' && /^(prefetch|dns-prefetch|prerender)$/i.test(t.attributes.rel || '') },
+  { weight: 90, label: 'Prefetch/DNS', test: (t: ParsedTag) => t.tag === 'link' && PrefetchPattern.test(t.attributes.rel || '') },
   { weight: 100, label: 'Other', test: () => true },
 ] as const
+
+const TagRegex = /<(meta|link|title|base|style|script|noscript)(?:\s[^>]*?)?\/?>(?:([\s\S]*?)<\/\1>)?/gi
+const AttrRegex = /(\w[\w-]*)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|(\S+)))?/g
 
 function classifyTag(tag: ParsedTag): AnalyzedTag {
   for (let i = 0; i < WEIGHT_TABLE.length; i++) {
@@ -54,17 +60,12 @@ function classifyTag(tag: ParsedTag): AnalyzedTag {
 function parseHeadTags(html: string): ParsedTag[] {
   const tags: ParsedTag[] = []
   // Match self-closing and open tags with optional content
-  const tagRegex = /<(meta|link|title|base|style|script|noscript)(\s[^>]*?)?\/?>(?:([\s\S]*?)<\/\1>)?/gi
-  let match: RegExpExecArray | null
-
-  while ((match = tagRegex.exec(html)) !== null) {
+  for (const match of html.matchAll(TagRegex)) {
     const [raw, tagName, attrString, content] = match
     const attributes: Record<string, string> = {}
 
     if (attrString) {
-      const attrRegex = /(\w[\w-]*)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|(\S+)))?/g
-      let attrMatch: RegExpExecArray | null
-      while ((attrMatch = attrRegex.exec(attrString)) !== null) {
+      for (const attrMatch of attrString.matchAll(AttrRegex)) {
         const [, name, v1, v2, v3] = attrMatch
         attributes[name] = v1 ?? v2 ?? v3 ?? ''
       }

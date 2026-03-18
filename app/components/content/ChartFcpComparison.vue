@@ -32,9 +32,9 @@ const legend = [
 
 const annotations = [
   {
-    x: '88%',
-    y: '4%',
-    width: '120px',
+    x: '88%' as any,
+    y: '4%' as any,
+    width: '120px' as any,
     content: { text: '+212ms (17%)', fontSize: 13, fontWeight: 600, color: '#dc2626' },
   },
 ]
@@ -79,7 +79,7 @@ function tooltipTemplate(d: D) {
         <VisAnnotations :items="annotations" />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}ms`" :grid-line="false" :domain-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="text-xs text-dimmed mt-3 leading-relaxed">
         Heavy page on slow-3g shows the only meaningful delta. Minimal and medium pages are within noise.

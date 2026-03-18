@@ -1,6 +1,5 @@
-/* eslint-disable no-restricted-globals, no-console, no-new-func */
+/* eslint-disable no-restricted-globals, no-new-func */
 import init, { Renderer } from '@takumi-rs/wasm'
-// @ts-expect-error vite ?url import
 import wasmUrl from '@takumi-rs/wasm/takumi_wasm_bg.wasm?url'
 import { transform } from 'sucrase'
 
@@ -20,12 +19,13 @@ const jsxRuntime = {
   Fragment: 'symbol-fragment',
 }
 
+const ExportDefaultPattern = /export default/g
+
 self.onmessage = async (event) => {
   const { type, id, code, options } = event.data
 
   if (type === 'init') {
     if (!wasmInitialized) {
-      console.log('Worker: Initializing WASM from import', wasmUrl)
       try {
         await init({ module_or_path: wasmUrl })
       }
@@ -42,7 +42,6 @@ self.onmessage = async (event) => {
         if (fontRes.ok) {
           const fontData = await fontRes.arrayBuffer()
           renderer.loadFont(new Uint8Array(fontData))
-          console.log('Worker: Font loaded successfully')
         }
         else {
           console.error('Worker: Font fetch failed', fontRes.status)
@@ -77,7 +76,7 @@ self.onmessage = async (event) => {
       // We wrap it to handle the 'export default' and provide the runtime
       const wrappedCode = `
         const { h, Fragment } = runtime;
-        ${transformed.replace(/export default/g, 'return')}
+        ${transformed.replace(ExportDefaultPattern, 'return')}
       `
 
       const renderFn = new Function('runtime', wrappedCode)
@@ -171,9 +170,7 @@ self.onmessage = async (event) => {
         return takumiNode
       }
 
-      console.log('Worker: VNode', JSON.stringify(vnode, null, 2))
       const takumiNode = toTakumiNode(vnode)
-      console.log('Worker: Takumi Node', JSON.stringify(takumiNode, null, 2))
 
       // Process images: fetch and convert to base64
       async function processImages(node: any) {
@@ -182,7 +179,6 @@ self.onmessage = async (event) => {
 
         if (node.type === 'image' && node.src && node.src.startsWith('http')) {
           try {
-            console.log('Worker: Fetching image', node.src)
             const res = await fetch(node.src)
             if (res.ok) {
               const blob = await res.blob()
@@ -193,7 +189,6 @@ self.onmessage = async (event) => {
               )
               const mimeType = res.headers.get('content-type') || 'image/png'
               node.src = `data:${mimeType};base64,${base64}`
-              console.log('Worker: Image fetched and converted')
             }
             else {
               console.error('Worker: Failed to fetch image', res.status)
