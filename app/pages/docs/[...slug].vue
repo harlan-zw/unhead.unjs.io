@@ -116,8 +116,9 @@ const transformedPage = computed(() => {
         ] : []"
         :ui="{ title: 'leading-normal' }"
       >
-        <div v-if="lastCommit" class="mt-3">
+        <div class="mt-3">
           <DocsCommitMeta
+            v-if="lastCommit"
             :date="lastCommit.date"
             :date-human="lastCommit.dateHuman"
             :author-name="lastCommit.author.name"
@@ -125,6 +126,12 @@ const transformedPage = computed(() => {
             :commit-message="lastCommit.message"
             :commit-url="lastCommit.url"
           />
+          <div v-else class="flex items-center gap-1.5 text-sm">
+            <USkeleton class="h-4 w-[280px]" />
+            <USkeleton class="h-5 w-[100px] rounded-md" />
+            <USkeleton class="h-4 w-[16px]" />
+            <USkeleton class="h-5 w-[140px] rounded-md" />
+          </div>
         </div>
       </UPageHeader>
 

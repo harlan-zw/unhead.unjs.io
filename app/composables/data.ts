@@ -75,18 +75,21 @@ export async function useCurrentDocPage() {
     // Skip commit metadata for bots, not needed for indexing
     const filePath = pageData.id.split('/').slice(2).join('/')
     const payloadKey = `commit-${filePath}`
-    let lastCommitData
+    const cachedData = !import.meta.server ? nuxtApp.payload.data[payloadKey] : undefined
+    const lastCommit = ref(cachedData ?? null)
     if (isBotRef.value) {
-      lastCommitData = null
+      // no-op
     }
     else if (import.meta.server) {
-      lastCommitData = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`).catch(() => null)
-      nuxtApp.payload.data[payloadKey] = lastCommitData
+      lastCommit.value = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`).catch(() => null)
+      nuxtApp.payload.data[payloadKey] = lastCommit.value
     }
-    else {
-      lastCommitData = nuxtApp.payload.data[payloadKey] ?? await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`).catch(() => null)
+    else if (!cachedData) {
+      // client-side nav without cache, fetch lazily so we don't block navigation
+      $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`)
+        .then((data) => { lastCommit.value = data })
+        .catch(() => null)
     }
-    const lastCommit = ref(lastCommitData)
 
     return {
       page,
