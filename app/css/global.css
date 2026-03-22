@@ -2,6 +2,8 @@
 @import "@nuxt/ui";
 @source '../../docs/**';
 
+/* safelist: grid-cols-1 grid-cols-2 grid-cols-3 col-span-1 col-span-2 col-span-3 */
+
 @theme {
   --font-sans: 'Nunito Sans', sans-serif;
   --font-display: 'Hubot Sans', sans-serif;

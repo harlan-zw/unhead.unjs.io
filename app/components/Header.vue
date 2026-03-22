@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useContentSearch } from '#ui/composables/useContentSearch'
 import { motion } from 'motion-v'
+import { NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuRoot, NavigationMenuTrigger, NavigationMenuViewport } from 'reka-ui'
 import { ref } from 'vue'
 import { getPathSegments, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
@@ -35,43 +36,100 @@ function onVersionChange(v: { label: string, value: string }) {
 
 const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
 
-const docsNavItem = computed(() => ({
-  label: 'Docs',
-  icon: 'i-heroicons-book-open',
-  to: `${versionPrefix.value}/${selectedFramework.value.slug}/head/guides/get-started/overview`,
-  children: [{}],
-}))
+function docPath(path: string) {
+  return `${versionPrefix.value}/${selectedFramework.value.slug}${path}`
+}
 
-const toolsNavItem = computed(() => ({
-  label: 'Tools',
-  icon: 'i-heroicons-wrench-screwdriver',
-  to: '/tools',
-  children: [{}],
-}))
-
-const learnNavItem = computed(() => ({
-  label: 'Learn',
-  icon: 'i-heroicons-academic-cap',
-  to: '/learn/guides/what-is-capo',
-  children: [{}],
-}))
-
-const menu = computed(() => {
-  return [
-    // {
-    //   label: 'Scripts',
-    //   to: '/',
-    //   disabled: true,
-    //   badge: 'Soon',
-    //   active: route.path.split('/')[2] === 'scripts',
-    //   class: 'hidden 2xl:flex',
-    // },
-    {
-      label: 'Releases',
-      to: '/releases',
-    },
-  ]
-})
+const megaMenuItems = computed(() => [
+  {
+    value: 'docs',
+    label: 'Docs',
+    icon: 'i-carbon-document',
+    to: docPath('/head/guides/get-started/overview'),
+    cols: 3,
+    minWidth: '620px',
+    footer: { label: 'Browse all docs', icon: 'i-heroicons-book-open', to: docPath('/head/guides/get-started/overview') },
+    categories: [
+      {
+        label: 'Head Management',
+        description: 'Meta tags & SEO',
+        items: [
+          { label: 'Getting Started', icon: 'i-heroicons-rocket-launch', to: docPath('/head/guides/get-started/overview') },
+          { label: 'useHead', icon: 'i-heroicons-code-bracket', to: docPath('/head/api/composables/use-head') },
+          { label: 'useSeoMeta', icon: 'i-heroicons-magnifying-glass', to: docPath('/head/api/composables/use-seo-meta') },
+          { label: 'useHeadSafe', icon: 'i-heroicons-shield-check', to: docPath('/head/api/composables/use-head-safe') },
+          { label: 'useScript', icon: 'i-heroicons-play-circle', to: docPath('/head/api/composables/use-script') },
+        ],
+      },
+      {
+        label: 'Schema.org',
+        description: 'Structured data',
+        items: [
+          { label: 'Getting Started', icon: 'i-heroicons-rocket-launch', to: docPath('/schema-org/guides/get-started/overview') },
+          { label: 'useSchemaOrg', icon: 'i-heroicons-code-bracket', to: docPath('/schema-org/api/composables/use-schema-org') },
+          { label: 'Nodes', icon: 'i-heroicons-cube', to: docPath('/schema-org/guides/core-concepts/nodes') },
+          { label: 'Recipes', icon: 'i-heroicons-book-open', to: docPath('/schema-org/guides/recipes/identity') },
+        ],
+      },
+      {
+        label: 'Guides',
+        description: 'Core concepts',
+        items: [
+          { label: 'Titles', icon: 'i-heroicons-document-text', to: docPath('/head/guides/core-concepts/titles') },
+          { label: 'Streaming SSR', icon: 'i-heroicons-bolt', to: docPath('/head/guides/core-concepts/streaming') },
+          { label: 'DOM Events', icon: 'i-heroicons-cursor-arrow-rays', to: docPath('/head/guides/core-concepts/dom-event-handling') },
+          { label: 'Plugins', icon: 'i-heroicons-puzzle-piece', to: docPath('/head/guides/plugins/template-params') },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'tools',
+    label: 'Tools',
+    icon: 'i-carbon-tools',
+    to: '/tools',
+    cols: 1,
+    minWidth: '300px',
+    categories: [
+      {
+        label: 'Tools',
+        description: 'Debug & optimize',
+        items: [
+          { label: 'Meta Tag Generator', icon: 'i-heroicons-code-bracket', to: '/tools/meta-tag-generator', description: 'Generate meta tags for your site' },
+          { label: 'OG Image Generator', icon: 'i-heroicons-photo', to: '/tools/og-image-generator', description: 'Create Open Graph images' },
+          { label: 'Schema.org Generator', icon: 'i-heroicons-cube', to: '/tools/schema-generator', description: 'Build structured data markup' },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'learn',
+    label: 'Learn',
+    icon: 'i-carbon-education',
+    to: '/learn/guides/what-is-capo',
+    cols: 2,
+    minWidth: '520px',
+    footer: { label: 'Browse all articles', icon: 'i-heroicons-academic-cap', to: '/learn/guides/what-is-capo' },
+    categories: [
+      {
+        label: 'Articles',
+        description: 'Deep dives & guides',
+        items: [
+          { label: 'What is Capo.js?', icon: 'i-heroicons-academic-cap', to: '/learn/guides/what-is-capo', description: 'Why HTML head tag order matters' },
+        ],
+      },
+      {
+        label: 'Research',
+        description: 'Original data & analysis',
+        items: [
+          { label: 'State of <head> in 2026', icon: 'i-heroicons-chart-bar', to: '/learn/research/state-of-head-2026', description: '660k sites audited across 8 frameworks' },
+          { label: 'Streaming Head Performance', icon: 'i-heroicons-chart-bar-square', to: '/learn/research/streaming-head-performance', description: 'Cross-framework SSR SEO study' },
+          { label: 'Capo.js Performance Research', icon: 'i-heroicons-beaker', to: '/learn/research/capo-performance-research', description: '120 benchmarks + 10.7M CrUX origins' },
+        ],
+      },
+    ],
+  },
+])
 
 const open = ref(false)
 watch(selectedFramework, () => {
@@ -105,7 +163,7 @@ const subSectionLinks = computed(() => {
 </script>
 
 <template>
-  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 px-5 h-auto', container: 'max-w-[1452px] lg:bg-gray-600/3 lg:border border-[var(--ui-border)] lg:dark:bg-gray-900/10 mx-auto py-0 px-0 lg:px-5 sm:px-0 rounded-lg' }">
+  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 px-5 h-auto', container: 'max-w-[1452px] lg:bg-gray-500/[0.02] lg:border border-[var(--ui-border)] lg:dark:bg-gray-900/10 mx-auto py-0 px-0 lg:px-5 sm:px-0 rounded-lg' }">
     <template #left>
       <NuxtLink
         to="/"
@@ -117,22 +175,40 @@ const subSectionLinks = computed(() => {
     </template>
 
     <template #default>
-      <UNavigationMenu :ui="{ viewport: 'min-w-[620px]' }" :items="[docsNavItem]" class="hidden lg:flex justify-center">
-        <template #item-content>
-          <DocsMenu />
-        </template>
-      </UNavigationMenu>
-      <UNavigationMenu :ui="{ viewport: 'min-w-[320px]' }" :items="[toolsNavItem]" class="hidden lg:flex justify-center">
-        <template #item-content>
-          <ToolMenu />
-        </template>
-      </UNavigationMenu>
-      <UNavigationMenu :ui="{ viewport: 'min-w-[660px]' }" :items="[learnNavItem]" class="hidden lg:flex justify-center">
-        <template #item-content>
-          <LearnMenu />
-        </template>
-      </UNavigationMenu>
-      <UNavigationMenu highlight :items="menu" class="hidden lg:flex justify-center" />
+      <NavigationMenuRoot class="hidden lg:flex justify-center relative py-2">
+        <NavigationMenuList class="flex items-center gap-0.5">
+          <NavigationMenuItem v-for="item in megaMenuItems" :key="item.value" :value="item.value">
+            <NavigationMenuTrigger as-child>
+              <NuxtLink
+                :to="item.to"
+                class="group relative flex items-center gap-1.5 font-medium text-sm px-2.5 py-1.5 before:absolute before:z-[-1] before:rounded-md before:inset-x-px before:inset-y-0 data-[state=open]:before:bg-elevated data-[state=open]:text-highlighted before:transition-colors transition-colors"
+              >
+                <UIcon :name="item.icon" class="shrink-0 size-4 opacity-50 group-hover:opacity-80 group-data-[state=open]:opacity-90 transition-opacity" />
+                {{ item.label }}
+              </NuxtLink>
+            </NavigationMenuTrigger>
+            <NavigationMenuContent
+              class="absolute top-0 left-0 w-auto data-[motion=from-start]:animate-[enter-from-left_200ms_ease] data-[motion=from-end]:animate-[enter-from-right_200ms_ease] data-[motion=to-start]:animate-[exit-to-left_200ms_ease] data-[motion=to-end]:animate-[exit-to-right_200ms_ease]"
+            >
+              <MegaMenu :categories="item.categories" :footer="item.footer" :cols="item.cols" :style="{ minWidth: item.minWidth }" />
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+
+        <Teleport to="body">
+          <NavigationMenuViewport
+            class="fixed top-[60px] left-1/2 -translate-x-1/2 overflow-hidden bg-elevated shadow-xl rounded-md ring-1 ring-[var(--ui-border-accented)] h-(--reka-navigation-menu-viewport-height) w-(--reka-navigation-menu-viewport-width) transition-[width,height] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[100]"
+          />
+        </Teleport>
+        <NavigationMenuItem as-child>
+          <NuxtLink
+            to="/releases"
+            class="group relative flex items-center gap-1.5 font-medium text-sm px-2.5 py-1.5 before:absolute before:z-[-1] before:rounded-md before:inset-x-px before:inset-y-0 before:transition-colors transition-colors"
+          >
+            Releases
+          </NuxtLink>
+        </NavigationMenuItem>
+      </NavigationMenuRoot>
     </template>
 
     <template #body>
@@ -249,7 +325,7 @@ const subSectionLinks = computed(() => {
     </template>
   </UHeader>
   <div v-if="route.path.startsWith('/docs')" class=" h-12">
-    <div class="relative max-w-[1452px] px-6 mx-auto flex lg:grid grid-cols-10 h-full justify-between lg:justify-center items-center w-full">
+    <div class="relative max-w-[1452px] px-4 sm:px-5 lg:px-0 mx-auto flex lg:grid grid-cols-10 h-full justify-between lg:justify-center items-center w-full">
       <div class="col-span-3 flex h-12">
         <div class="h-full flex text-sm space-x-6">
           <div v-for="item in subSectionLinks" :key="item.to">

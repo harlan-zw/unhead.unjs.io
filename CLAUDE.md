@@ -32,3 +32,8 @@ Border classes:
 - `border-[var(--ui-border-muted)]`: Muted border color
 - `border-[var(--ui-border-accented)]`: Accented border color
 - `border-[var(--ui-border-inverted)]`: Inverted border color
+
+<!-- skilld -->
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+<!-- /skilld -->

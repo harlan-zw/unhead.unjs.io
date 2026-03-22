@@ -10,10 +10,11 @@ export default defineCachedEventHandler(async (e) => {
     owner,
     repo,
     path: (getQuery(e)?.file as string) || '',
-    per_page: 1,
+    per_page: 10,
   })
 
-  const lastCommit = data[0]
+  // Skip merge commits to find the actual content change
+  const lastCommit = data.find(c => !c.commit.message.startsWith('Merge ')) || data[0]
   if (!lastCommit) {
     return null
   }
@@ -53,7 +54,7 @@ export default defineCachedEventHandler(async (e) => {
     dateHuman: formattedDate,
     date,
     url: commitUrl,
-    message: lastCommit.commit.message,
+    message: lastCommit.commit.message.split('\n')[0],
   }
 }, {
   name: 'gh-last-commit',

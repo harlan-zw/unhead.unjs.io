@@ -38,7 +38,7 @@ function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
   // use github source
   const repoConfig = isV2
     ? { url: 'https://github.com/unjs/unhead', tag: 'v2.1.2' }
-    : { url: 'https://github.com/unjs/unhead', branch: 'v3' }
+    : { url: 'https://github.com/unjs/unhead', branch: 'main' }
 
   logger.info(`🔗 Docs ${version} source using GitHub (${isV2 ? 'tag: v2.1.2' : 'branch: v3'})`)
   return defineCollection(asSeoCollection({

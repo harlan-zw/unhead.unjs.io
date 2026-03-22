@@ -10,6 +10,7 @@ definePageMeta({
   },
 })
 
+// Releases content is valuable for bots to index
 const stats = await useStats()
 
 const filterItems: TabsItem[] = [

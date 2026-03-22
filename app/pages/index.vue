@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import { ShikiMagicMovePrecompiled } from 'shiki-magic-move/vue'
 import { ref } from 'vue'
 import { stripHeaderAnchorLinks } from '~~/utils/content'
 import { useStats } from '~/composables/data'
 import { humanNumber } from '~/composables/format'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
-import { MagicMoveTokens } from '../magic-move'
-import { MagicMoveTokens as SideEffectTokens } from '../magic-move-mount'
-import 'shiki-magic-move/dist/style.css'
+
+// Lazy-load heavy magic-move dependencies (~5,700 lines of token data + component)
+const ShikiMagicMovePrecompiled = defineAsyncComponent(() =>
+  import('shiki-magic-move/vue').then(m => m.ShikiMagicMovePrecompiled),
+)
+const MagicMoveTokens = ref<any[]>([])
+const SideEffectTokens = ref<any[]>([])
+if (import.meta.client) {
+  import('../magic-move').then(m => MagicMoveTokens.value = m.MagicMoveTokens)
+  import('../magic-move-mount').then(m => SideEffectTokens.value = m.MagicMoveTokens)
+  import('shiki-magic-move/dist/style.css')
+}
 
 definePageMeta({
   breadcrumb: {
@@ -17,7 +25,9 @@ definePageMeta({
 })
 
 const { selectedFramework } = useFrameworkSelector()
+const { isBot } = useBotDetection()
 
+// Below-fold data: lazy load for humans, skip SSR for bots
 const { data: snippets } = await useAsyncData(`snippets`, async () => {
   const all = await queryCollection('snippets').all()
   if (!all?.length)
@@ -27,9 +37,9 @@ const { data: snippets } = await useAsyncData(`snippets`, async () => {
       stripHeaderAnchorLinks(s.body.value)
   }
   return all
-})
+}, { lazy: !isBot.value, server: !isBot.value })
 
-const stats = await useStats()
+const stats = await useStats({ lazy: !isBot.value, server: !isBot.value })
 
 useSeoMeta({
   title: '%siteName %separator Full stack <head> package',
@@ -39,7 +49,10 @@ useSeoMeta({
 
 defineOgImage('Home')
 
-const { data: sponsors } = await useFetch('/api/github/sponsors.json')
+const { data: sponsors } = await useFetch('/api/github/sponsors.json', {
+  lazy: !isBot.value,
+  server: !isBot.value,
+})
 
 if (import.meta.server) {
   useHead({
@@ -131,7 +144,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
         <div class="xl:flex gap-10">
           <div class="flex flex-col justify-center">
             <h1 class="max-w-xl text-neutral-900/90 dark:text-neutral-100 text-4xl md:text-6xl leading-tight font-bold tracking-tight" style="line-height: 1.3;">
-              The <span class="italic dark:text-neutral-200 text-neutral-800 ">full stack</span> <span class="font-cursive text-yellow-500">&lt;head&gt;</span> package for <span class="bg-green-500/10 dark:bg-green-400/40 px-2"> any framework</span>.
+              The <span class="italic dark:text-neutral-200 text-neutral-800 ">full stack</span> <span class="font-cursive text-yellow-500">&lt;head&gt;</span> package for <span class="bg-green-500/10 dark:bg-green-400/15 px-2"> any framework</span>.
             </h1>
             <p class="max-w-xl text-neutral-700 dark:text-neutral-300 mt-4 max-w-3xl text-base md:text-xl">
               Unhead wraps your document template, improving reactive SSR JavaScript framework SEO and performance.
@@ -197,7 +210,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
           </div>
         </div>
         <div class=" h-full flex items-center justify-center flex-col">
-          <ProsePre class="prose shiki overflow-visible">
+          <ProsePre v-if="SideEffectTokens.length" class="prose shiki overflow-visible">
             <ShikiMagicMovePrecompiled
               animate
               :steps="SideEffectTokens"
@@ -246,7 +259,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
           <ProseP>
             Unhead ships with a default head tag order that is optimized for SEO and performance.
           </ProseP>
-          <ProsePre class="prose  shiki">
+          <ProsePre v-if="MagicMoveTokens.length" class="prose  shiki">
             <ShikiMagicMovePrecompiled
               animate
               :steps="MagicMoveTokens"
@@ -304,7 +317,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
                 Unhead was started at the end of 2022 and has received continuous bug fixes and feature improvements from the community.
               </p>
               <div class="gap-2 mx-auto text-center grid grid-cols-12">
-                <span v-for="(c, index) in stats.contributors || []" :key="index" class="inline-flex items-center justify-center shrink-0 select-none overflow-hidden rounded-full align-middle bg-[--ui-bg-elevated] size-8 text-base">
+                <span v-for="(c, index) in stats?.contributors || []" :key="index" class="inline-flex items-center justify-center shrink-0 select-none overflow-hidden rounded-full align-middle bg-[--ui-bg-elevated] size-8 text-base">
                   <img class="h-full w-full rounded-[inherit] object-cover" :alt="`GitHub User ${c.login}`" height="45" width="45" loading="lazy" :src="c.avatar_url">
                 </span>
               </div>
@@ -316,7 +329,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
                 <div>
                   <div class="font-light justify-center flex items-center gap-3 text-6xl mb-2">
                     <UIcon name="i-carbon-commit" />
-                    {{ humanNumber(stats.commitCount) }}
+                    {{ humanNumber(stats?.commitCount) }}
                   </div>
                   <div class="text-sm opacity-80">
                     Commits
@@ -325,7 +338,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
                 <div>
                   <div class="font-light justify-center flex items-center gap-3 text-6xl mb-2">
                     <UIcon name="i-carbon-checkmark" />
-                    {{ humanNumber(stats.issuesClosed) }}
+                    {{ humanNumber(stats?.issuesClosed) }}
                   </div>
                   <div class="text-sm opacity-80">
                     Issues Closed
@@ -337,7 +350,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
               <div>
                 <div class="font-light text-6xl mb-2">
                   <UIcon name="i-carbon-user-favorite-alt" />
-                  {{ humanNumber(stats.contributors?.length) }}
+                  {{ humanNumber(stats?.contributors?.length) }}
                 </div>
                 <div class="text-sm opacity-80">
                   Contributors
@@ -354,7 +367,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
         <div class="xl:flex-col items-center justify-around my-14">
           <div class="xl:max-w-sm xl:mb-0 mb-10">
             <div class="font-bold mb-5 text-5xl">
-              {{ humanNumber(stats.modules[0].averageDownloads90) }} downloads<br>
+              {{ humanNumber(stats?.modules?.[0]?.averageDownloads90) }} downloads<br>
               <span class="text-blue-300 text-3xl">per day, on average</span>
             </div>
             <p class="opacity-80 mb-5">
@@ -365,7 +378,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             <div class="flex justify-between text-right gap-5">
               <div class="mb-1  font-light items-center flex gap-5">
                 <UIcon name="i-carbon-chart-line-smooth" class="h-15 w-15 mr-1 opacity-80" />
-                {{ humanNumber(stats.modules[0].totalDownloads30) }}
+                {{ humanNumber(stats?.modules?.[0]?.totalDownloads30) }}
               </div>
               <div class="flex items-center font-normal opacity-70 text-sm">
                 Downloads<br>/ month
@@ -374,7 +387,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             <div class="flex justify-between gap-5">
               <div class="mb-1 font-light items-center flex gap-5">
                 <UIcon name="i-carbon-star" class="h-15 w-15 mr-1 opacity-90" />
-                {{ stats.stars.stars }}
+                {{ stats?.stars?.stars }}
               </div>
               <div class="flex items-center font-normal text-right opacity-70 text-sm">
                 Total Stars

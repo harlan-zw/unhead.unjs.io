@@ -20,3 +20,6 @@ docs/.nuxt
 .DS_Store
 .env.*
 !.env.example
+
+# Skilld references (recreated by `skilld install`)
+.skilld

@@ -1,23 +1,55 @@
 <script setup lang="ts">
 import { StackblitzPlaygrounds } from '~~/const'
+import { getPathSection, getPathWithoutFramework } from '~~/utils/urls'
 import { useStats } from '~/composables/data'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
+import { useVersionSelector } from '~/composables/versionSelector'
 
 const { selectedFramework } = useFrameworkSelector()
+const { selectedVersion } = useVersionSelector()
+
+const route = useRoute()
 
 const stats = await useStats()
 const module = useModule(stats)
 const nav = useDocsNav()
 
+const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
+
+function docPath(path: string) {
+  return `${versionPrefix.value}/${selectedFramework.value.slug}${path}`
+}
+
+const currentSection = computed(() => {
+  const section = getPathSection(getPathWithoutFramework(route.path))
+  if (section.includes('schema-org'))
+    return 'schema-org'
+  return 'head'
+})
+
+const sections = [
+  { label: 'Head', slug: 'head', icon: 'i-heroicons-code-bracket', path: '/head/guides/get-started/overview' },
+  { label: 'Schema.org', slug: 'schema-org', icon: 'i-heroicons-cube', path: '/schema-org/guides/get-started/overview' },
+]
+
+const activeSection = computed(() => sections.find(s => s.slug === currentSection.value) || sections[0])
+
+const sectionMenuItems = computed(() => sections.map(s => ({
+  label: s.label,
+  icon: s.icon,
+  active: s.slug === currentSection.value,
+  onSelect: async () => await navigateTo(docPath(s.path)),
+})))
+
 const topLinks = computed(() => [
   {
     title: 'Discord Support',
-    icon: 'i-logos-discord-icon',
+    icon: 'i-carbon-logo-discord',
     to: 'https://discord.com/invite/275MBUBvgP',
   },
   {
     title: `${selectedFramework.value.label} Playground`,
-    icon: 'i-logos-stackblitz-icon',
+    icon: 'i-carbon-lightning',
     to: StackblitzPlaygrounds[selectedFramework.value.slug]?.ssr,
   },
 ].filter(l => !!l.to))
@@ -26,6 +58,18 @@ const topLinks = computed(() => [
 <template>
   <div v-if="module && nav">
     <nav :key="selectedFramework?.slug" aria-title="Documentation Navigation" class="flex flex-col gap-7">
+      <UDropdownMenu :items="sectionMenuItems" class="-mx-2.5 -mb-2">
+        <button
+          type="button"
+          class="group flex w-full items-center gap-2 rounded-lg pl-2.5 pr-0 py-1.5 text-sm font-medium text-highlighted hover:bg-[var(--ui-bg-elevated)]/50 transition-colors"
+        >
+          <div class="shrink-0 rounded-md p-1 inline-flex bg-accented text-muted">
+            <UIcon :name="activeSection.icon" class="size-3.5" />
+          </div>
+          <span>{{ activeSection.label }}</span>
+          <UIcon name="i-heroicons-chevron-down-20-solid" class="ml-auto size-4 text-dimmed" />
+        </button>
+      </UDropdownMenu>
       <ul class="isolate -mx-2.5 -mb-2">
         <li v-for="link in topLinks" :key="link.to">
           <NuxtLink

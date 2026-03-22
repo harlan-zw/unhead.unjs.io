@@ -29,9 +29,10 @@ export interface Stats {
   contributors: any[]
 }
 
-export async function useStats() {
+export async function useStats(options?: { lazy?: boolean, server?: boolean }) {
   const { data: stats } = await useFetch<Stats>('/api/stats.json', {
     key: 'stats',
+    ...options,
   })
   return stats
 }
@@ -47,6 +48,8 @@ export async function useCurrentDocPage() {
   const fallbackPath = getPathWithoutFramework(route.path)
   const isV2 = route.path.startsWith('/docs/v2')
   const collection = isV2 ? 'docsUnheadV2' : 'docsUnhead'
+
+  const { isBot: isBotRef } = useBotDetection()
 
   const q = queryCollection(collection).path(contentPath).first()
   const p = (async () => {
@@ -69,8 +72,20 @@ export async function useCurrentDocPage() {
       _path: m.path,
     })))
 
+    // Skip commit metadata for bots, not needed for indexing
     const filePath = pageData.id.split('/').slice(2).join('/')
-    const lastCommitData = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`).catch(() => null)
+    const payloadKey = `commit-${filePath}`
+    let lastCommitData
+    if (isBotRef.value) {
+      lastCommitData = null
+    }
+    else if (import.meta.server) {
+      lastCommitData = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`).catch(() => null)
+      nuxtApp.payload.data[payloadKey] = lastCommitData
+    }
+    else {
+      lastCommitData = nuxtApp.payload.data[payloadKey] ?? await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`).catch(() => null)
+    }
     const lastCommit = ref(lastCommitData)
 
     return {

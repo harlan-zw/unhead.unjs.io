@@ -257,8 +257,10 @@ export default defineNuxtConfig({
       // SWR for page routes - serve stale HTML instantly, revalidate in background
       '/': { swr: 60 * 60 },
       '/docs/**': { swr: 60 * 60 },
+      '/learn/**': { swr: 60 * 60 },
       '/releases': { swr: 60 * 60 },
       '/v2': { swr: 60 * 60 },
+      '/v3': { swr: 60 * 60 },
       '/tools/meta-tag-generator': { swr: 60 * 60 },
       '/tools/schema-generator': { swr: 60 * 60 },
     },
@@ -312,6 +314,20 @@ export default defineNuxtConfig({
       themeColor: [
         { content: '#18181b', media: '(prefers-color-scheme: dark)' },
         { content: 'white', media: '(prefers-color-scheme: light)' },
+      ],
+    },
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        'fuse.js',
+        'reka-ui',
+        'tailwind-variants',
+        '@unhead/schema-org/vue',
+        'zod',
       ],
     },
   },

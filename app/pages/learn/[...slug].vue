@@ -4,6 +4,7 @@ definePageMeta({
 })
 
 const route = useRoute()
+const { isBot } = useBotDetection()
 
 const { data: page } = await useAsyncData(`learn-${route.path}`, () => {
   return queryCollection('learn').path(route.path).first()
@@ -12,9 +13,10 @@ const { data: page } = await useAsyncData(`learn-${route.path}`, () => {
 if (!page.value)
   throw createError({ statusCode: 404, statusMessage: 'Article not found', fatal: true })
 
+// Surround nav: lazy for humans, bots get it for link discovery
 const { data: surround } = await useAsyncData(`learn-surround-${route.path}`, () => {
   return queryCollectionItemSurroundings('learn', route.path)
-})
+}, { lazy: !isBot.value })
 
 const categoryConfig = {
   research: {
@@ -82,12 +84,13 @@ const humanUpdatedDate = computed(() => formatArticleDate(page.value?.updatedAt,
 const filePath = computed(() => page.value?.id?.replace('learn/', '') || '')
 const editLink = computed(() => `https://github.com/harlan-zw/unhead.unjs.io/edit/main/content/learn/${filePath.value}`)
 
+// Skip commit metadata for bots, not needed for indexing
 const { data: lastCommit } = await useAsyncData(`learn-commit-${route.path}`, () => {
-  if (!filePath.value)
+  if (!filePath.value || isBot.value)
     return null
   return $fetch(`/api/github/harlan-zw@unhead.unjs.io/last-file-commit?file=content/learn/${filePath.value}`)
     .catch(() => null)
-})
+}, { lazy: true, server: false })
 </script>
 
 <template>
