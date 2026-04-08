@@ -25,11 +25,6 @@ export default defineNuxtConfig({
         nitro.options.alias.sharp = 'unenv/mock/empty'
         nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
       })
-      // Register Nitro plugin to escape </script> in __NUXT_DATA__ payload
-      nuxt.hooks.hook('nitro:config', (nitroConfig) => {
-        nitroConfig.plugins ||= []
-        nitroConfig.plugins.push(resolve('./server/plugins/fix-payload-script-escape'))
-      })
     },
   ],
 

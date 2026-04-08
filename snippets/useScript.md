@@ -24,7 +24,7 @@ script.onLoaded((api) => {
 ```
 
 ```html [Client Output]
-<script data-onload="" data-onerror="" defer="" fetchpriority="low" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://js.cdn/tracker.js"></script>
+<script data-onload data-onerror defer fetchpriority="low" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://js.cdn/tracker.js">
 ```
 
 ::
