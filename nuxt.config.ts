@@ -126,7 +126,7 @@ export default defineNuxtConfig({
       autoSubfolderIndex: false,
       failOnError: false,
       crawlLinks: false,
-      routes: ['/', '/404.html'],
+      routes: ['/404.html'],
       ignore: ['/auth/github', '/admin/**'],
     },
     cloudflare: {
