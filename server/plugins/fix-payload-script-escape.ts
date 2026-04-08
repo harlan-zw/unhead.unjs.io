@@ -3,15 +3,26 @@ export default defineNitroPlugin((nitroApp) => {
     // Nuxt Content minimark body can contain literal </script> from code examples.
     // The HTML parser sees this and prematurely closes the __NUXT_DATA__ script tag,
     // corrupting the JSON payload and breaking hydration.
-    // Fix: escape inner </script> occurrences so the HTML parser ignores them.
+    // Fix: escape </script> only inside the __NUXT_DATA__ JSON payload body.
     html.bodyAppend = html.bodyAppend.map((chunk) => {
-      if (!chunk.includes('__NUXT_DATA__') || !chunk.includes('</script'))
+      const dataTag = 'id="__NUXT_DATA__"'
+      const tagPos = chunk.indexOf(dataTag)
+      if (tagPos === -1)
         return chunk
-      // The last </script> is the real closing tag; all earlier ones are payload content
-      const lastIdx = chunk.lastIndexOf('</script>')
-      const before = chunk.slice(0, lastIdx)
-      const after = chunk.slice(lastIdx)
-      return before.replaceAll('</script>', '\\u003C/script>') + after
+      // Find the end of the opening tag (the >)
+      const bodyStart = chunk.indexOf('>', tagPos + dataTag.length)
+      if (bodyStart === -1)
+        return chunk
+      // Find the closing </script> for this tag (last one after bodyStart)
+      const afterBody = chunk.slice(bodyStart + 1)
+      const closeIdx = afterBody.lastIndexOf('</script>')
+      if (closeIdx === -1)
+        return chunk
+      const jsonBody = afterBody.slice(0, closeIdx)
+      const rest = afterBody.slice(closeIdx)
+      return chunk.slice(0, bodyStart + 1)
+        + jsonBody.replaceAll('</script>', '\\u003C/script>')
+        + rest
     })
   })
 })
