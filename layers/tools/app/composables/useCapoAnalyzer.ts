@@ -12,10 +12,11 @@ export interface AnalyzedTag extends ParsedTag {
 }
 
 export interface Issue {
-  message: string
-  severity: 'error' | 'warning' | 'info'
   tag: AnalyzedTag
-  suggestedPosition: number
+  currentPosition: number
+  optimalPosition: number
+  delta: number
+  severity: 'error' | 'warning' | 'info'
 }
 
 const PreloadPattern = /^(?:preload|modulepreload)$/i
@@ -39,7 +40,7 @@ const WEIGHT_TABLE = [
   { weight: 100, label: 'Other', test: () => true },
 ] as const
 
-const TagRegex = /<(meta|link|title|base|style|script|noscript)(?:\s[^>]*?)?\/?>(?:([\s\S]*?)<\/\1>)?/gi
+const TagRegex = /<(meta|link|title|base|style|script|noscript)(\s[^>]*?)?\/?>(?:([\s\S]*?)<\/\1>)?/gi
 const AttrRegex = /(\w[\w-]*)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|(\S+)))?/g
 
 function classifyTag(tag: ParsedTag): AnalyzedTag {
@@ -88,14 +89,14 @@ function computeScore(tags: AnalyzedTag[]): number {
     return 100
 
   const optimal = tags.toSorted((a, b) => a.weight - b.weight)
+  const optimalPosition = new Map(optimal.map((tag, idx) => [tag, idx]))
   let inversions = 0
   const total = tags.length * (tags.length - 1) / 2
 
   for (let i = 0; i < tags.length; i++) {
     for (let j = i + 1; j < tags.length; j++) {
-      const currentOrder = tags.indexOf(tags[i]) - tags.indexOf(tags[j])
-      const optimalOrder = optimal.indexOf(tags[i]) - optimal.indexOf(tags[j])
-      if ((currentOrder > 0 && optimalOrder < 0) || (currentOrder < 0 && optimalOrder > 0))
+      // In current order, i < j. Check if optimal order disagrees.
+      if (optimalPosition.get(tags[i])! > optimalPosition.get(tags[j])!)
         inversions++
     }
   }
@@ -110,48 +111,46 @@ function findIssues(tags: AnalyzedTag[]): Issue[] {
   for (let i = 0; i < tags.length; i++) {
     const tag = tags[i]
     const optimalIndex = optimal.indexOf(tag)
+    const delta = i - optimalIndex
 
-    if (i !== optimalIndex) {
-      const diff = i - optimalIndex
-      if (diff > 0) {
-        // Tag should be earlier
-        const blockingTag = tags[optimalIndex]
-        issues.push({
-          message: `Move ${tag.weightLabel} (${formatTagName(tag)}) before ${blockingTag.weightLabel} (${formatTagName(blockingTag)})`,
-          severity: Math.abs(diff) > 3 ? 'error' : 'warning',
-          tag,
-          suggestedPosition: optimalIndex,
-        })
-      }
+    if (delta > 0) {
+      issues.push({
+        tag,
+        currentPosition: i + 1,
+        optimalPosition: optimalIndex + 1,
+        delta,
+        severity: delta > 3 ? 'error' : 'warning',
+      })
     }
   }
 
-  return issues
+  return issues.toSorted((a, b) => b.delta - a.delta)
 }
 
-function formatTagName(tag: AnalyzedTag): string {
-  if (tag.tag === 'meta') {
-    if (tag.attributes.charset)
-      return '<meta charset>'
-    if (tag.attributes.name)
-      return `<meta name="${tag.attributes.name}">`
-    if (tag.attributes['http-equiv'])
-      return `<meta http-equiv="${tag.attributes['http-equiv']}">`
-    if (tag.attributes.property)
-      return `<meta property="${tag.attributes.property}">`
+// Estimate FCP impact based on benchmark research data
+// Heavy pages over slow-3g: worst ordering = +212ms (17% FCP)
+// Scale linearly by inversion ratio (score)
+function estimateFCPImpact(score: number): { min: number, max: number } {
+  const severity = (100 - score) / 100
+  return {
+    min: Math.round(severity * 30), // fast-4g heavy estimate
+    max: Math.round(severity * 210), // slow-3g heavy estimate
   }
-  if (tag.tag === 'link')
-    return `<link rel="${tag.attributes.rel || '?'}">`
-  if (tag.tag === 'script' && tag.attributes.src) {
-    const src = tag.attributes.src.split('/').pop() || tag.attributes.src
-    return `<script src=".../${src}">`
-  }
-  return `<${tag.tag}>`
+}
+
+const FRAMEWORK_IMPORTS: Record<string, string> = {
+  'typescript': 'unhead',
+  'vue': '@unhead/vue',
+  'react': '@unhead/react',
+  'svelte': '@unhead/svelte',
+  'solid-js': '@unhead/solid-js',
+  'angular': '@unhead/angular',
+  'nuxt': '#imports',
 }
 
 function generateUseHeadCode(tags: AnalyzedTag[], framework: string): string {
   const sorted = tags.toSorted((a, b) => a.weight - b.weight)
-  const importName = framework === 'nuxt' ? '#imports' : framework === 'vue' ? '@unhead/vue' : 'unhead'
+  const importName = FRAMEWORK_IMPORTS[framework] || 'unhead'
 
   const meta: string[] = []
   const links: string[] = []
@@ -219,6 +218,7 @@ export function useCapoAnalyzer() {
   const optimalTags = computed(() => analyzedTags.value.toSorted((a, b) => a.weight - b.weight))
   const score = computed(() => computeScore(analyzedTags.value))
   const issues = computed(() => findIssues(analyzedTags.value))
+  const fcpImpact = computed(() => estimateFCPImpact(score.value))
   const hasAnyValue = computed(() => analyzedTags.value.length > 0)
 
   const generatedCode = computed(() => {
@@ -266,6 +266,7 @@ export function useCapoAnalyzer() {
     optimalTags,
     score,
     issues,
+    fcpImpact,
     hasAnyValue,
     generatedCode,
     codeLanguage,

@@ -5,7 +5,47 @@ export default ({
     duration: 5000,
   },
   ui: {
-    tabs: { trigger: 'leading-8', label: 'font-medium', list: 'h-[48px] gap-5 p-0 ', variants: { size: { md: { trigger: 'px-0 pt-0' } } } },
+    colors: {
+      primary: 'amber',
+      neutral: 'stone',
+    },
+    button: {
+      defaultVariants: {
+        variant: 'solid' as const,
+        color: 'primary' as const,
+      },
+    },
+    card: {
+      slots: {
+        root: 'rounded-xl',
+      },
+    },
+    badge: {
+      defaultVariants: {
+        variant: 'subtle' as const,
+      },
+    },
+    separator: {
+      slots: {
+        root: 'border-muted',
+      },
+    },
+    input: {
+      slots: {
+        root: 'rounded-lg',
+      },
+    },
+    alert: {
+      slots: {
+        root: 'rounded-xl',
+      },
+    },
+    tabs: {
+      trigger: 'leading-8',
+      label: 'font-medium',
+      list: 'h-[48px] gap-5 p-0 ',
+      variants: { size: { md: { trigger: 'px-0 pt-0' } } },
+    },
     navigationMenu: {
       slots: {
         list: 'gap-1.5',
@@ -71,10 +111,6 @@ export default ({
       minus: 'i-carbon-subtract',
       search: 'i-carbon-search',
     },
-    colors: {
-      primary: 'amber',
-      neutral: 'stone',
-    },
     contentNavigation: {
       slots: {
         list: 'space-y-1',
@@ -96,7 +132,11 @@ export default ({
       },
     },
     prose: {
-      pre: {},
+      pre: {
+        slots: {
+          root: 'rounded-xl',
+        },
+      },
       codeIcon: {
         'robots.txt': 'vscode-icons:file-type-robots',
       },

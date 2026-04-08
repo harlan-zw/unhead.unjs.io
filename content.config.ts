@@ -1,6 +1,9 @@
 import { existsSync } from 'node:fs'
 import { defineCollection, defineContentConfig } from '@nuxt/content'
-import { asSeoCollection } from '@nuxtjs/seo/content'
+import { defineRobotsSchema } from '@nuxtjs/robots/content'
+import { defineSitemapSchema } from '@nuxtjs/sitemap/content'
+import { defineOgImageSchema } from 'nuxt-og-image/content'
+import { defineSchemaOrgSchema } from 'nuxt-schema-org/content'
 import { relative, resolve } from 'pathe'
 import { z } from 'zod'
 import { logger } from './logger'
@@ -8,6 +11,10 @@ import { logger } from './logger'
 const schema = z.object({
   new: z.boolean().optional(),
   deprecated: z.boolean().optional(),
+  robots: defineRobotsSchema(),
+  sitemap: defineSitemapSchema(),
+  ogImage: defineOgImageSchema(),
+  schemaOrg: defineSchemaOrgSchema(),
 })
 
 function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
@@ -17,12 +24,12 @@ function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
   // Only check local for v3 (main development)
   if (!isV2) {
     const localDirPaths = new Set([
-      resolve(__dirname, '..', 'unhead', 'docs'),
+      // resolve(__dirname, '..', 'unhead', 'docs'),
     ])
     for (const localDirPath of localDirPaths) {
       if (existsSync(localDirPath)) {
         logger.info(`🔗 Docs source using local fs: ${relative(process.cwd(), localDirPath)}`)
-        return defineCollection(asSeoCollection({
+        return defineCollection({
           type: 'page',
           source: {
             include: '**/*.{md,yml}',
@@ -30,7 +37,7 @@ function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
             prefix,
           },
           schema,
-        }))
+        })
       }
     }
   }
@@ -40,8 +47,8 @@ function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
     ? { url: 'https://github.com/unjs/unhead', tag: 'v2.1.2' }
     : { url: 'https://github.com/unjs/unhead', branch: 'main' }
 
-  logger.info(`🔗 Docs ${version} source using GitHub (${isV2 ? 'tag: v2.1.2' : 'branch: v3'})`)
-  return defineCollection(asSeoCollection({
+  logger.info(`🔗 Docs ${version} source using GitHub (${isV2 ? 'tag: v2.1.2' : 'branch: main'})`)
+  return defineCollection({
     type: 'page',
     source: {
       repository: repoConfig,
@@ -49,7 +56,7 @@ function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
       prefix,
     },
     schema,
-  }))
+  })
 }
 
 export default defineContentConfig({
@@ -63,7 +70,7 @@ export default defineContentConfig({
         cwd: resolve('./snippets'),
       },
     }),
-    learn: defineCollection(asSeoCollection({
+    learn: defineCollection({
       type: 'page',
       source: {
         include: '**/*.md',
@@ -77,9 +84,13 @@ export default defineContentConfig({
         updatedAt: z.string().optional(),
         keywords: z.array(z.string()).optional(),
         readTime: z.string(),
+        robots: defineRobotsSchema(),
+        sitemap: defineSitemapSchema(),
+        ogImage: defineOgImageSchema(),
+        schemaOrg: defineSchemaOrgSchema(),
       }),
-    })),
-    root: defineCollection(asSeoCollection({
+    }),
+    root: defineCollection({
       type: 'page',
       source: {
         include: '**/*.md',
@@ -92,7 +103,11 @@ export default defineContentConfig({
         keywords: z.array(z.string()).optional(),
         readTime: z.string(),
         ogImageComponent: z.string().optional(),
+        robots: defineRobotsSchema(),
+        sitemap: defineSitemapSchema(),
+        ogImage: defineOgImageSchema(),
+        schemaOrg: defineSchemaOrgSchema(),
       }),
-    })),
+    }),
   },
 })

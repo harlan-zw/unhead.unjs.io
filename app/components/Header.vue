@@ -98,6 +98,7 @@ const megaMenuItems = computed(() => [
           { label: 'Meta Tag Generator', icon: 'i-heroicons-code-bracket', to: '/tools/meta-tag-generator', description: 'Generate meta tags for your site' },
           { label: 'OG Image Generator', icon: 'i-heroicons-photo', to: '/tools/og-image-generator', description: 'Create Open Graph images' },
           { label: 'Schema.org Generator', icon: 'i-heroicons-cube', to: '/tools/schema-generator', description: 'Build structured data markup' },
+          { label: 'Capo.js Analyzer', icon: 'i-heroicons-beaker', to: '/tools/capo-analyzer', description: 'Analyze head tag ordering' },
         ],
       },
     ],
@@ -163,7 +164,7 @@ const subSectionLinks = computed(() => {
 </script>
 
 <template>
-  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 px-5 h-auto', container: 'max-w-[1452px] lg:bg-gray-500/[0.02] lg:border border-[var(--ui-border)] lg:dark:bg-gray-900/10 mx-auto py-0 px-0 lg:px-5 sm:px-0 rounded-lg' }">
+  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 px-5 h-auto', container: 'max-w-[1452px] lg:bg-neutral-500/[0.02] lg:border border-[var(--ui-border)] lg:dark:bg-neutral-900/10 mx-auto py-0 px-0 lg:px-5 sm:px-0 rounded-lg' }">
     <template #left>
       <NuxtLink
         to="/"
@@ -216,7 +217,7 @@ const subSectionLinks = computed(() => {
         <div class="px-3 mb-3">
           <FrameworkSelectorMinimal size="small" />
         </div>
-        <UInput type="search" class="ml-5 hidden lg:block w-[150px] xl:w-[200px]" placeholder="Search..." @click="openSearch = true">
+        <UInput type="search" aria-label="Search documentation" class="ml-5 hidden lg:block w-[150px] xl:w-[200px]" placeholder="Search..." @click="openSearch = true">
           <template #leading>
             <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" @click="openSearch = true" />
           </template>
@@ -298,7 +299,7 @@ const subSectionLinks = computed(() => {
 
     <template #right>
       <div class="flex items-center justify-end lg:-mr-1.5 gap-3">
-        <UInput type="search" class="cursor-pointer hidden lg:block w-[70px]" shortcut="divide" @click="openSearch = true">
+        <UInput type="search" aria-label="Search documentation" class="cursor-pointer hidden lg:block w-[70px]" shortcut="divide" @click="openSearch = true">
           <template #leading>
             <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100" @click="openSearch = true" />
           </template>
@@ -330,12 +331,12 @@ const subSectionLinks = computed(() => {
         <div class="h-full flex text-sm space-x-6">
           <div v-for="item in subSectionLinks" :key="item.to">
             <NuxtLink
-              :class="item.active ? 'group relative h-full flex items-center text-gray-800 dark:text-gray-200 font-semibold' : 'group relative h-full flex items-center font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-300'"
+              :class="item.active ? 'group relative h-full flex items-center text-highlighted font-semibold' : 'group relative h-full flex items-center font-medium text-muted group-hover:text-highlighted'"
               :to="item.to"
               :aria-label="item.label"
             >
               <span v-text="item.label" />
-              <div :class="item.active ? 'absolute bottom-0 h-[1.5px] w-full bg-primary dark:bg-primary-light' : 'absolute bottom-0 h-[1.5px] w-full group-hover:bg-gray-200 dark:group-hover:bg-gray-700'" />
+              <div :class="item.active ? 'absolute bottom-0 h-[1.5px] w-full bg-primary' : 'absolute bottom-0 h-[1.5px] w-full group-hover:bg-[var(--ui-border)]'" />
             </NuxtLink>
           </div>
         </div>

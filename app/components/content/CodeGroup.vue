@@ -16,7 +16,7 @@ const ui = {
   wrapper: 'relative [&>div:last-child]:!my-0 [&>div:last-child]:!static my-5',
   header: 'flex items-center gap-1 border border-neutral-200 dark:border-neutral-700 border-b-0 rounded-t-md overflow-hidden p-2',
   tab: {
-    base: 'px-2 py-1.5 focus:outline-none text-neutral-700 dark:text-neutral-200 text-sm rounded-md flex items-center gap-1.5',
+    base: 'px-2 py-1.5 focus:outline-none text-default text-sm rounded-md flex items-center gap-1.5',
     active: 'bg-neutral-100 dark:bg-neutral-800',
     inactive: 'hover:bg-neutral-50 dark:hover:bg-neutral-800/50',
     icon: {
@@ -61,7 +61,7 @@ onBeforeUpdate(() => {
       <button
         v-for="(tab, index) in tabs"
         :key="index"
-        tabindex="-1"
+        tabindex="0"
         :class="[ui.tab.base, selectedIndex === index ? ui.tab.active : ui.tab.inactive]"
         @click="selectedIndex = index"
       >

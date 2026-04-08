@@ -58,7 +58,7 @@ const searchNav = computed(() => {
         leave-to-class="opacity-0 translate-y-2"
       >
         <div v-if="isCurrentChunksOutdated" class="fixed bottom-4 right-4 z-50">
-          <div class="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-full shadow-lg ring-1 ring-gray-200 dark:ring-gray-800 px-4 py-3">
+          <div class="flex items-center gap-3 bg-elevated rounded-full shadow-lg ring-1 ring-[var(--ui-border)] px-4 py-3">
             <span class="text-lg">✨</span>
             <div class="text-sm font-medium">
               Update available
@@ -80,10 +80,14 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.07;
+  opacity: 0.06;
   z-index: 10;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  background-size: 100px 100px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+.dark body::before {
+  opacity: 0.055;
 }
 </style>

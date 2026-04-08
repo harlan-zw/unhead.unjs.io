@@ -9,6 +9,19 @@
   --font-display: 'Hubot Sans', sans-serif;
   --font-mono: 'Fira Code', monospace;
 
+  /* Warm amber-tinted neutral scale (hue 75) — distinct from nuxtseo's mauve (285) */
+  --color-neutral-50: oklch(0.984 0.003 75);
+  --color-neutral-100: oklch(0.968 0.006 75);
+  --color-neutral-200: oklch(0.920 0.010 75);
+  --color-neutral-300: oklch(0.870 0.014 75);
+  --color-neutral-400: oklch(0.710 0.018 75);
+  --color-neutral-500: oklch(0.555 0.018 75);
+  --color-neutral-600: oklch(0.445 0.016 75);
+  --color-neutral-700: oklch(0.370 0.014 75);
+  --color-neutral-800: oklch(0.270 0.012 75);
+  --color-neutral-900: oklch(0.190 0.010 75);
+  --color-neutral-950: oklch(0.110 0.008 75);
+
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;
   --color-green-200: #B3F5D1;
@@ -24,11 +37,28 @@
   --ui-text-secondary: #82AAFF;
 }
 
-.dark {
-}
-
 :root {
   --container-width: 90rem;
+  --ui-text: oklch(0.370 0.014 75);
+  --ui-text-highlighted: oklch(0.210 0.012 75);
+}
+
+.dark {
+  --ui-bg: var(--color-neutral-950);
+  --ui-bg-muted: var(--color-neutral-900);
+  --ui-bg-elevated: var(--color-neutral-800);
+  --ui-bg-accented: var(--color-neutral-700);
+  --ui-bg-inverted: #fff;
+  --ui-text-dimmed: var(--color-neutral-500);
+  --ui-text-muted: var(--color-neutral-400);
+  --ui-text-toned: var(--color-neutral-300);
+  --ui-text: var(--color-neutral-300);
+  --ui-text-highlighted: var(--color-neutral-100);
+  --ui-text-inverted: var(--color-neutral-900);
+  --ui-border: var(--color-neutral-800);
+  --ui-border-muted: var(--color-neutral-800);
+  --ui-border-accented: var(--color-neutral-700);
+  --ui-border-inverted: #fff;
 }
 
 body {
@@ -44,6 +74,7 @@ p {
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
   text-wrap: balance;
 }
 
@@ -144,10 +175,21 @@ pre {
   width: 90%;
   left: 5%;
   height: 30vh;
-  background: radial-gradient(50% 50% at 50% 50%, #f0db4f 0%, #f0db4fc2 5%);
-  filter: blur(180px);
-  opacity: 0.05;
+  background: radial-gradient(50% 50% at 50% 50%, oklch(0.82 0.15 85) 0%, oklch(0.75 0.12 75 / 0.6) 30%, transparent 70%);
+  filter: blur(150px);
+  opacity: 0.08;
   z-index: -1;
+}
+
+.dark .gradient {
+  opacity: 0.07;
+}
+
+.section-divider {
+  height: 1px;
+  max-width: min(80%, 60rem);
+  margin: 0 auto;
+  background: linear-gradient(to right, transparent, var(--ui-border), transparent);
 }
 
 @keyframes slide-right {

@@ -659,7 +659,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 <p class="text-sm font-semibold text-[#006CE7] dark:text-[#00AFF4] hover:underline cursor-pointer">
                   {{ truncate(previewTitle, 70) }}
                 </p>
-                <p class="text-sm text-neutral-700 dark:text-neutral-300 line-clamp-3 mt-1">
+                <p class="text-sm text-default line-clamp-3 mt-1">
                   {{ truncate(previewDescription, 120) }}
                 </p>
                 <div v-if="previewImage" class="mt-3 rounded overflow-hidden">

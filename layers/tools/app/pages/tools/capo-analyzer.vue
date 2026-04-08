@@ -27,6 +27,7 @@ const {
   optimalTags,
   score,
   issues,
+  fcpImpact,
   hasAnyValue,
   generatedCode,
   codeLanguage,
@@ -321,36 +322,45 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           </div>
         </div>
 
-        <!-- Issues Panel -->
+        <!-- Impact & Issues Panel -->
         <div class="lg:col-span-2 rounded-2xl border border-default bg-elevated p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="p-1.5 rounded-lg" :class="issues.length ? 'bg-yellow-500/10' : 'bg-green-500/10'">
-              <UIcon
-                :name="issues.length ? 'i-carbon-warning-alt' : 'i-carbon-checkmark-filled'"
-                class="w-4 h-4"
-                :class="issues.length ? 'text-yellow-500' : 'text-green-500'"
-              />
+          <!-- Estimated impact -->
+          <div v-if="issues.length" class="mb-5">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="p-1.5 rounded-lg bg-yellow-500/10">
+                <UIcon name="i-carbon-flash" class="w-4 h-4 text-yellow-500" />
+              </div>
+              <h3 class="text-sm font-semibold text-highlighted">
+                Estimated FCP Impact
+              </h3>
             </div>
-            <h3 class="text-sm font-semibold text-highlighted">
-              {{ issues.length ? `${issues.length} ordering issue${issues.length > 1 ? 's' : ''} found` : 'Perfect order' }}
-            </h3>
+            <div class="flex items-baseline gap-1.5 mb-1">
+              <span class="text-2xl font-bold tabular-nums" :class="scoreColor">+{{ fcpImpact.min }}–{{ fcpImpact.max }}ms</span>
+            </div>
+            <p class="text-xs text-dimmed">
+              Based on <NuxtLink to="/learn/research/capo-performance-research" class="underline underline-offset-2 hover:text-muted transition-colors">
+                120 controlled benchmarks
+              </NuxtLink>. Range covers fast 4G to slow 3G on heavy pages.
+            </p>
           </div>
 
-          <div v-if="issues.length" class="space-y-2 max-h-[280px] overflow-y-auto pr-2 -mr-2">
+          <!-- Issue list: compact per-tag format -->
+          <div v-if="issues.length" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-2 -mr-2">
             <div
               v-for="(issue, idx) in issues"
               :key="idx"
-              class="flex items-start gap-3 p-3 rounded-xl transition-colors"
+              class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors"
               :class="issue.severity === 'error'
-                ? 'bg-red-500/5 border border-red-500/10 hover:bg-red-500/8'
-                : 'bg-yellow-500/5 border border-yellow-500/10 hover:bg-yellow-500/8'"
+                ? 'bg-red-500/5 hover:bg-red-500/8'
+                : 'bg-yellow-500/5 hover:bg-yellow-500/8'"
             >
               <UIcon
-                :name="issue.severity === 'error' ? 'i-carbon-arrow-up' : 'i-carbon-arrow-up'"
-                class="w-4 h-4 mt-0.5 shrink-0"
-                :class="issue.severity === 'error' ? 'text-red-500' : 'text-yellow-500'"
+                name="i-carbon-arrow-up"
+                class="size-3.5 shrink-0"
+                :class="issue.severity === 'error' ? 'text-red-400' : 'text-yellow-400'"
               />
-              <span class="text-sm text-default">{{ issue.message }}</span>
+              <span class="text-sm font-mono text-default truncate">{{ formatTagPreview(issue.tag) }}</span>
+              <span class="ml-auto text-xs tabular-nums text-dimmed shrink-0">{{ issue.currentPosition }} → {{ issue.optimalPosition }}</span>
             </div>
           </div>
           <div v-else class="flex items-center gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/10">
