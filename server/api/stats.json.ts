@@ -63,4 +63,5 @@ export default defineCachedEventHandler(async (e) => {
   // last for 1 day
   maxAge: 60 * 60 * 24,
   swr: true,
+  name: 'stats-v1.json',
 })
