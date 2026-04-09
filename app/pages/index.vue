@@ -136,9 +136,9 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
 
     <section class="xl:max-w-full max-w-3xl mx-auto py-5 sm:py-12 xl:py-20">
       <UContainer class="container mx-auto">
-        <NuxtLink target="_blank" to="/releases/v3" aria-label="Unhead v3 Beta">
+        <NuxtLink to="/docs/releases/v3" aria-label="Unhead v3 Beta">
           <UBadge variant="outline" color="success">
-            Unhead v3 Beta
+            🌊 Unhead v3 is here
           </UBadge>
         </NuxtLink>
         <div class="xl:flex gap-10">

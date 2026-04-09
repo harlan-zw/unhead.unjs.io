@@ -254,18 +254,15 @@ export default defineNuxtConfig({
     routeRules: {
       '/api/stats.json': { prerender: true },
       '/api/github/sponsors.json': { prerender: true },
-      '/api/_mdc/highlight': { swr: 60 * 60, cache: { group: 'mdc', name: 'highlight', maxAge: 60 * 60 } },
-      '/__nuxt_content/**': { swr: 60 * 60, cache: { group: 'content', name: 'query', maxAge: 60 * 60 } },
-      '/api/_nuxt_icon': { swr: 60 * 60 * 24 * 7, cache: { group: 'icon', name: 'icon', maxAge: 60 * 60 * 24 * 7 } },
+      '/api/_mdc/highlight': { swr: 60, cache: { group: 'mdc', name: 'highlight', maxAge: 60 } },
+      '/__nuxt_content/**': { swr: 60, cache: { group: 'content', name: 'query', maxAge: 60 } },
+      '/api/_nuxt_icon': { swr: 60 * 24 * 7, cache: { group: 'icon', name: 'icon', maxAge: 60 * 24 * 7 } },
       // SWR for page routes - serve stale HTML instantly, revalidate in background
-      '/': { swr: 60 * 60 },
-      '/docs/**': { swr: 60 * 60 },
-      '/learn/**': { swr: 60 * 60 },
-      '/releases': { swr: 60 * 60 },
-      '/v2': { swr: 60 * 60 },
-      '/v3': { swr: 60 * 60 },
-      '/tools/meta-tag-generator': { swr: 60 * 60 },
-      '/tools/schema-generator': { swr: 60 * 60 },
+      '/': { swr: 60 },
+      '/docs/**': { swr: 60 },
+      '/learn/**': { swr: 60 },
+      '/tools/meta-tag-generator': { swr: 60 },
+      '/tools/schema-generator': { swr: 60 },
     },
     scripts: {
       registry: {
