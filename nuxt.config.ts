@@ -102,6 +102,7 @@ export default defineNuxtConfig({
         secure: true,
       },
     },
+    githubAuthToken: '', // NUXT_GITHUB_AUTH_TOKEN
     githubAccessToken: '', // NUXT_GITHUB_ACCESS_TOKEN
     cloudflareAccountId: '', // NUXT_CLOUDFLARE_ACCOUNT_ID
     cloudflareAnalyticsApiToken: '', // NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN
@@ -155,6 +156,7 @@ export default defineNuxtConfig({
           NUXT_OAUTH_GITHUB_CLIENT_SECRET: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || '',
           NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN: process.env.NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN || '',
           NUXT_CLOUDFLARE_ACCOUNT_ID: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID || '',
+          NUXT_GITHUB_AUTH_TOKEN: process.env.NUXT_GITHUB_AUTH_TOKEN || '',
         },
       },
     },

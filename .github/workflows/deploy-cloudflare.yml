@@ -44,6 +44,7 @@ jobs:
           NUXT_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN: ${{ secrets.NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN }}
           NUXT_SEO_PRO_KEY: ${{ secrets.NUXT_SEO_PRO_KEY }}
+          NUXT_GITHUB_AUTH_TOKEN: ${{ secrets.NUXT_GITHUB_AUTH_TOKEN }}
 
       - name: Deploy to Cloudflare Pages
         env:

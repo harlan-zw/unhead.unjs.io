@@ -1,38 +1,11 @@
 <script setup lang="ts">
-import { Unhead } from '~~/const'
-import { getPathWithFramework } from '~~/utils/urls'
-import { enhanceTitlesAndIcons } from '~/composables/data'
+import { useNavMenu } from '~/composables/navMenu'
 
-const { selectedFramework } = useFrameworkSelector()
+const { megaMenuItems } = useNavMenu()
 
-// Always use v3 navigation for footer links
-const navInject = inject<Ref<any[]>>('navigation')
-const nav = computed(() => {
-  // For v2 pages, navV3 might contain v2 navigation, so we need to handle missing structure
-  return navInject?.value || []
-})
-
-const unheadGuides = computed(() => {
-  const headSection = nav.value.find(c => c.path?.startsWith('/docs/head'))
-  return headSection?.children?.[0]?.children?.map(enhanceTitlesAndIcons).map(c => ({ ...c, icon: Unhead.icon })) || []
-})
-
-const schemaOrgAndScriptGuides = computed(() => {
-  return nav.value.filter(c => c.path?.startsWith('/docs/schema-org')).map(enhanceTitlesAndIcons).map(c => ({
-    ...c,
-    title: c.path?.includes('schema-org') ? 'Schema.org' : 'Scripts',
-    icon: c.path?.includes('schema-org') ? 'i-carbon-chart-relationship' : 'i-carbon-script',
-    children: c.children?.map(enhanceTitlesAndIcons)
-      ?.find(c => c.path?.endsWith('/guides'))
-      ?.children || [],
-  }))
-})
-
-const tools = [
-  { title: 'Meta Tag Generator', path: '/tools/meta-tag-generator', icon: 'i-carbon-code' },
-  { title: 'OG Image Generator', path: '/tools/og-image-generator', icon: 'i-carbon-image' },
-  { title: 'Schema.org Generator', path: '/tools/schema-generator', icon: 'i-carbon-data-structured' },
-]
+const footerColumns = computed(() =>
+  megaMenuItems.value.flatMap(item => item.categories),
+)
 </script>
 
 <template>
@@ -95,79 +68,22 @@ const tools = [
             </UButton>
           </div>
         </div>
-        <div class="md:grid flex flex-col gap-5 grid-cols-4 xl:grid-cols-5 mx-auto">
-          <div class="flex ">
-            <div class="inline">
-              <div v-for="(category, cKey) in [unheadGuides?.[0]].filter(Boolean)" :key="cKey">
-                <h3 class="font-bold mb-3 text-xs">
-                  Articles
-                </h3>
-                <nav>
-                  <ul class="grid gap-4">
-                    <li v-for="(link, key) in [{ title: 'Announcing Unhead v2', path: '/releases/v2', icon: undefined }]" :key="key">
-                      <ULink :to="link.path" class="flex items-center gap-1 hover:underline transition">
-                        <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
-                        {{ link.title }}
-                      </ULink>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div>
-          <div class="flex ">
+        <div class="md:grid flex flex-col gap-5 grid-cols-3 xl:grid-cols-6 mx-auto">
+          <div v-for="(category, cKey) in footerColumns" :key="cKey" class="flex">
             <div class="inline">
               <h3 class="font-bold mb-3 text-xs">
-                Tools
+                {{ category.label }}
               </h3>
               <nav>
                 <ul class="grid gap-4">
-                  <li v-for="(tool, key) in tools" :key="key">
-                    <ULink :to="tool.path" class="flex items-center gap-1 hover:underline transition">
-                      <UIcon v-if="tool.icon" dynamic :name="tool.icon" class="w-4 h-4 text-amber-500 dark:text-amber-300" />
-                      {{ tool.title }}
+                  <li v-for="(link, key) in category.items" :key="key">
+                    <ULink :to="link.to" class="flex items-center gap-1 hover:underline transition">
+                      <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4 text-blue-500 dark:text-blue-300" />
+                      {{ link.label }}
                     </ULink>
                   </li>
                 </ul>
               </nav>
-            </div>
-          </div>
-          <div class="flex ">
-            <div class="inline">
-              <div v-for="(category, cKey) in [unheadGuides?.[0]].filter(Boolean)" :key="cKey">
-                <h3 class="font-bold mb-3 text-xs">
-                  Head
-                </h3>
-                <nav>
-                  <ul class="grid gap-4">
-                    <li v-for="(link, key) in category.children" :key="key">
-                      <ULink :to="getPathWithFramework(link.path, selectedFramework.slug)" class="flex items-center gap-1 hover:underline transition">
-                        <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
-                        {{ link.title }}
-                      </ULink>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div>
-          <div class="flex ">
-            <div class="inline">
-              <div v-for="(category, cKey) in [schemaOrgAndScriptGuides?.flatMap(c => c.children)?.[0]].filter(Boolean)" :key="cKey">
-                <h3 class="font-bold mb-3 text-xs">
-                  Schema.org
-                </h3>
-                <nav>
-                  <ul class="grid gap-4">
-                    <li v-for="(link, key) in category.children" :key="key">
-                      <ULink :to="getPathWithFramework(link.path, selectedFramework.slug)" class="flex items-center gap-1 hover:underline transition">
-                        <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4" :class="cKey === 0 ? 'text-blue-500 dark:text-blue-300' : ''" />
-                        {{ link.title }}
-                      </ULink>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
             </div>
           </div>
         </div>

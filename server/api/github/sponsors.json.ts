@@ -2,11 +2,12 @@ import { fetchGitHubSponsors } from 'sponsorkit'
 import { appStorage } from '~~/server/storage'
 
 export default defineCachedEventHandler(async (e) => {
-  if (!import.meta.prerender && !import.meta.dev) {
-    return
-  }
+  // if (!import.meta.prerender && !import.meta.dev) {
+  //   return
+  // }
   const token = (await appStorage().get<string>('github:token') || useRuntimeConfig(e).githubAuthToken) as string
   if (!token) {
+    console.log('NO TOKEN')
     return []
   }
   const _sponsors = await fetchGitHubSponsors(token, 'harlan-zw', 'user', {
@@ -47,4 +48,5 @@ export default defineCachedEventHandler(async (e) => {
   // last for 1 day
   maxAge: 60 * 60 * 24,
   swr: true,
+  name: 'github-sponsors',
 })
