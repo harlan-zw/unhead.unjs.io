@@ -147,6 +147,7 @@ export function useDocsNav(all: boolean = false) {
     // For section matching, use the actual path (with v2 prefix if on v2)
     const pathWithoutFramework = getPathWithoutFramework(route.path)
     const isV2 = route.path.startsWith('/docs/v2')
+    const versionPrefix = isV2 ? '/docs/v2' : '/docs'
     // v2 needs 3 segments (/docs/v2/head), v3 needs 2 (/docs/head)
     const sectionPath = isV2 ? getPathSegments(pathWithoutFramework, 3) : getPathSection(pathWithoutFramework)
     // For v2, nav is nested under /docs/v2 parent, so look in children
@@ -162,7 +163,6 @@ export function useDocsNav(all: boolean = false) {
 
     const subSectionDocs = sectionDocs?.children?.find(n => n.path === (isV2 ? getPathSegments(pathWithoutFramework, 4) : getPathSubSection(pathWithoutFramework)))?.children
 
-    const versionPrefix = isV2 ? '/docs/v2' : '/docs'
     // For v2, sections are nested under /docs/v2 parent
     const allSections = isV2
       ? (nav.find(n => n.path === '/docs/v2')?.children || []).filter(n => n.path?.startsWith(`${versionPrefix}/head`) || n.path?.startsWith(`${versionPrefix}/schema-org`))
@@ -221,11 +221,35 @@ export function useDocsNav(all: boolean = false) {
       }
       return n
     })
+    // Extract releases and migration guide sections, prefixed with framework
+    const frameworkPrefix = isV2 ? `/docs/v2/${framework}` : `/docs/${framework}`
+    const contentSections = nav
+      .filter(n =>
+        n.path?.startsWith(`${versionPrefix}/releases`) || n.path?.startsWith(`${versionPrefix}/migration-guide`),
+      )
+      .toSorted((a, b) => {
+        // releases before migration-guide
+        const aIsReleases = a.path?.includes('/releases') ? 0 : 1
+        const bIsReleases = b.path?.includes('/releases') ? 0 : 1
+        return aIsReleases - bIsReleases
+      })
+      .map(section => ({
+        ...section,
+        path: `${frameworkPrefix}/${section.path.split('/').slice(2).join('/')}`,
+        children: section.children?.map(c => ({
+          ...c,
+          path: `${frameworkPrefix}/${c.path.split('/').slice(2).join('/')}`,
+        })),
+      }))
     // Filter firstSubSectionLinks to only show sections (head, schema-org), not frameworks
-    const firstSubSectionLinks = (sectionDocs?.children || []).filter(n =>
-      n.path?.includes('/head/') || n.path?.includes('/schema-org/')
-      || n.path?.endsWith('/head') || n.path?.endsWith('/schema-org'),
-    )
-    return { navFlat, bottom, firstSubSectionLinks }
+    // Add releases (not migration guide) as a top tab
+    const firstSubSectionLinks = [
+      ...(sectionDocs?.children || []).filter(n =>
+        n.path?.includes('/head/') || n.path?.includes('/schema-org/')
+        || n.path?.endsWith('/head') || n.path?.endsWith('/schema-org'),
+      ),
+      ...contentSections.filter(n => n.path?.includes('/releases')),
+    ]
+    return { navFlat, bottom, firstSubSectionLinks, contentSections }
   })
 }

@@ -145,7 +145,8 @@ onKeyStroke('Divide', () => {
 
 const subSectionLinks = computed(() => {
   return docsNav.value?.firstSubSectionLinks?.map((n) => {
-    const to = n.children?.[0]?.children?.[0]?.path
+    // Content sections (releases, migration-guide) have direct children, not nested two levels
+    const to = n.children?.[0]?.children?.[0]?.path || n.children?.[0]?.path
     if (!to)
       return null
     const segments = getPathSegments(getPathWithoutFramework(to), 3)

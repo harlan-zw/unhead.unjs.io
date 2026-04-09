@@ -24,7 +24,7 @@ function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
   // Only check local for v3 (main development)
   if (!isV2) {
     const localDirPaths = new Set([
-      // resolve(__dirname, '..', 'unhead', 'docs'),
+      resolve(__dirname, '..', '..', 'pkg', 'unhead', 'docs'),
     ])
     for (const localDirPath of localDirPaths) {
       if (existsSync(localDirPath)) {

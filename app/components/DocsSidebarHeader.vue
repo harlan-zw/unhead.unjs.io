@@ -24,12 +24,15 @@ const currentSection = computed(() => {
   const section = getPathSection(getPathWithoutFramework(route.path))
   if (section.includes('schema-org'))
     return 'schema-org'
+  if (section.includes('releases') || section.includes('migration-guide'))
+    return 'releases'
   return 'head'
 })
 
 const sections = [
   { label: 'Head', slug: 'head', icon: 'i-heroicons-code-bracket', path: '/head/guides/get-started/overview' },
   { label: 'Schema.org', slug: 'schema-org', icon: 'i-heroicons-cube', path: '/schema-org/guides/get-started/overview' },
+  { label: 'Releases', slug: 'releases', icon: 'i-heroicons-rocket-launch', path: '/releases/v3' },
 ]
 
 const activeSection = computed(() => sections.find(s => s.slug === currentSection.value) || sections[0])
@@ -88,7 +91,9 @@ const topLinks = computed(() => [
       </ul>
       <USeparator class="mt-0 pt-0" />
       <ContentNavigation
-        as="div" default-open :collapsible="false" :navigation="nav?.bottom || []" highlight
+        v-if="currentSection === 'releases' ? nav?.contentSections?.length : nav?.bottom?.length"
+        as="div" default-open :collapsible="false"
+        :navigation="currentSection === 'releases' ? nav.contentSections : nav.bottom" highlight
         :ui="{ listWithChildren: 'sm:ml-0 mt-2' }"
       >
         <template #link="{ link, active }">

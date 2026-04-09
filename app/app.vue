@@ -26,7 +26,7 @@ const searchTerm = ref('')
 
 const searchNav = computed(() => {
   return navigation.value.filter((s) => {
-    return s.path.startsWith('/docs/head') || s.path.startsWith('/docs/schema-org') || s.path.startsWith(`/docs/${selectedFramework.value}`)
+    return s.path.startsWith('/docs/head') || s.path.startsWith('/docs/schema-org') || s.path.startsWith('/docs/releases') || s.path.startsWith('/docs/migration-guide') || s.path.startsWith(`/docs/${selectedFramework.value}`)
   })
 })
 </script>
