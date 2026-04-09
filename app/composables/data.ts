@@ -241,12 +241,14 @@ export function useDocsNav(all: boolean = false) {
           path: `${frameworkPrefix}/${c.path.split('/').slice(2).join('/')}`,
         })),
       }))
-    // Filter firstSubSectionLinks to only show sections (head, schema-org), not frameworks
-    // Add releases (not migration guide) as a top tab
+    // Top horizontal sub-section nav: always show head's User Guides + API + Releases,
+    // independent of current section (so it stays visible on releases/migration pages too)
+    const headSectionDocs = isV2
+      ? nav.find(n => n.path === '/docs/v2')?.children?.find(c => c.path === `${versionPrefix}/head`)
+      : nav.find(n => n.path === `${versionPrefix}/head`)
     const firstSubSectionLinks = [
-      ...(sectionDocs?.children || []).filter(n =>
-        n.path?.includes('/head/') || n.path?.includes('/schema-org/')
-        || n.path?.endsWith('/head') || n.path?.endsWith('/schema-org'),
+      ...(headSectionDocs?.children || []).filter(n =>
+        n.path?.includes('/head/') || n.path?.endsWith('/head'),
       ),
       ...contentSections.filter(n => n.path?.includes('/releases')),
     ]

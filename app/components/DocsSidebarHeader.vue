@@ -32,7 +32,6 @@ const currentSection = computed(() => {
 const sections = [
   { label: 'Head', slug: 'head', icon: 'i-heroicons-code-bracket', path: '/head/guides/get-started/overview' },
   { label: 'Schema.org', slug: 'schema-org', icon: 'i-heroicons-cube', path: '/schema-org/guides/get-started/overview' },
-  { label: 'Releases', slug: 'releases', icon: 'i-heroicons-rocket-launch', path: '/releases/v3' },
 ]
 
 const activeSection = computed(() => sections.find(s => s.slug === currentSection.value) || sections[0])
