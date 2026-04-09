@@ -293,8 +293,6 @@ export default defineNuxtConfig({
 
   ogImage: {
     enabled: true,
-    zeroRuntime: true,
-    buildCache: true,
   },
 
   icon: {
