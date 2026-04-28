@@ -20,7 +20,7 @@ useSeoMeta({
 const { selectedFramework } = useFrameworkSelector()
 const { data: navigation } = await useAsyncData(`navigation`, () => queryCollectionNavigation('docsUnhead', ['new', 'deprecated']), {
   transform(val) {
-    return val[0].children
+    return val[0]?.children || []
   },
 })
 const { data: search } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'))
@@ -29,7 +29,7 @@ provide('search', search)
 const searchTerm = ref('')
 
 const searchNav = computed(() => {
-  return navigation.value.filter((s) => {
+  return (navigation.value || []).filter((s) => {
     return s.path.startsWith('/docs/head') || s.path.startsWith('/docs/schema-org') || s.path.startsWith(`/docs/${selectedFramework.value}`)
   })
 })
@@ -39,7 +39,7 @@ provide('modules', modules)
 
 const recommendedLinks = ref()
 
-if (props.error.statusCode) {
+if (props.error.statusCode && import.meta.client) {
   const walkChildren = (children: any[], parents: string[] = []) => {
     return children.flatMap((item) => {
       if (item.children) {
@@ -56,7 +56,7 @@ if (props.error.statusCode) {
       }
     })
   }
-  const childrenOnly = walkChildren(navigation.value).map((i) => {
+  const childrenOnly = walkChildren(navigation.value || []).map((i) => {
     return {
       title: i.title,
       path: i.path,
