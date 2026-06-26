@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { NuxtError } from '#app'
-import { queryCollectionNavigation, useAsyncData } from '#imports'
-import { useContentSearch } from '#ui/composables/useContentSearch'
 import Fuse from 'fuse.js'
 import { ref } from 'vue'
 import { getPathFramework, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
+import { queryCollectionNavigation, useAsyncData } from '#imports'
+import { useContentSearch } from '#ui/composables/useContentSearch'
 import { modules } from '../const'
 
 const props = defineProps<{

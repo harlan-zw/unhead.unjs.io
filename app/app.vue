@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { queryCollectionNavigation, useAsyncData } from '#imports'
 import { ref } from 'vue'
+import { queryCollectionNavigation, useAsyncData } from '#imports'
 import { useVersionSelector } from '~/composables/versionSelector'
 import { modules } from '../const'
 

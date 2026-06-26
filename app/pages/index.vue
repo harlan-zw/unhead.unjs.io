@@ -7,14 +7,14 @@ import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
 // Lazy-load heavy magic-move dependencies (~5,700 lines of token data + component)
 const ShikiMagicMovePrecompiled = defineAsyncComponent(() =>
-  import('shiki-magic-move/vue').then(m => m.ShikiMagicMovePrecompiled),
+  import('@shikijs/magic-move/vue').then(m => m.ShikiMagicMovePrecompiled),
 )
 const MagicMoveTokens = ref<any[]>([])
 const SideEffectTokens = ref<any[]>([])
 if (import.meta.client) {
   import('../magic-move').then(m => MagicMoveTokens.value = m.MagicMoveTokens)
   import('../magic-move-mount').then(m => SideEffectTokens.value = m.MagicMoveTokens)
-  import('shiki-magic-move/dist/style.css')
+  import('@shikijs/magic-move/style.css')
 }
 
 definePageMeta({

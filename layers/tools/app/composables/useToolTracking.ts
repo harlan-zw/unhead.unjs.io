@@ -8,7 +8,10 @@ export function useToolTracking(toolId: string) {
     $fetch('/api/tools/track', {
       method: 'POST',
       body: { tool: toolId, action, label },
-    }).catch(() => {})
+    }).catch((error) => {
+      // Analytics tracking is best-effort and must not block tool usage.
+      void error
+    })
   }
 
   function trackView() {

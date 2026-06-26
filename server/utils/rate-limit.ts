@@ -45,7 +45,10 @@ export async function checkFreeToolRateLimit(event: H3Event) {
   const dayKey = `ratelimit:tool:${key}:${today}`
   const storage = useStorage('kv')
 
-  const count = await storage.getItem<number>(dayKey).catch(() => null)
+  const count = await storage.getItem<number>(dayKey).catch(() => {
+    // If KV is unavailable, fall back to the per-minute limiter instead of blocking users.
+    return null
+  })
 
   if (count !== null && count >= FREE_TOOL_DAILY_LIMIT) {
     setResponseHeaders(event, {
@@ -59,7 +62,10 @@ export async function checkFreeToolRateLimit(event: H3Event) {
     })
   }
 
-  await storage.setItem(dayKey, (count || 0) + 1, { ttl: 86400 }).catch(() => {})
+  await storage.setItem(dayKey, (count || 0) + 1, { ttl: 86400 }).catch((error) => {
+    // Daily limits are best-effort when KV writes fail.
+    void error
+  })
 
   setResponseHeaders(event, {
     'X-RateLimit-Limit': String(FREE_TOOL_DAILY_LIMIT),

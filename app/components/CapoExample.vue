@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ShikiMagicMovePrecompiled } from 'shiki-magic-move/vue'
+import { ShikiMagicMovePrecompiled } from '@shikijs/magic-move/vue'
 import { MagicMoveTokens } from '~/magic-move'
 
 const toggleCapo = ref(false)

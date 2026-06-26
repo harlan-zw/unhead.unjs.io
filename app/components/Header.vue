@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useContentSearch } from '#ui/composables/useContentSearch'
 import { motion } from 'motion-v'
 import { NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuRoot, NavigationMenuTrigger, NavigationMenuViewport } from 'reka-ui'
 import { ref } from 'vue'
 import { getPathSegments, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
+import { useContentSearch } from '#ui/composables/useContentSearch'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 import { useNavMenu } from '~/composables/navMenu'
 import { useVersionSelector } from '~/composables/versionSelector'

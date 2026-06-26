@@ -37,7 +37,10 @@ export default defineEventHandler(async (event) => {
   trackToolUsage(event, tool, action, { label })
 
   // Track to D1 database (queryable)
-  trackToolLookup(event, tool, action, label).catch(() => {})
+  trackToolLookup(event, tool, action, label).catch((error) => {
+    // D1 analytics are best-effort; realtime Analytics Engine already recorded the event.
+    void error
+  })
 
   return { ok: true }
 })

@@ -3,12 +3,12 @@ import theme from '#build/ui/prose/pre'
 </script>
 
 <script setup lang="ts">
+import { useClipboard } from '@vueuse/core'
+import { cloneVNode } from 'vue'
 import { useAppConfig } from '#imports'
 import UCodeIcon from '#ui/components/prose/CodeIcon.vue'
 import { useLocale } from '#ui/composables/useLocale'
 import { tv } from '#ui/utils/tv'
-import { useClipboard } from '@vueuse/core'
-import { cloneVNode } from 'vue'
 
 const props = defineProps<{
   icon?: string

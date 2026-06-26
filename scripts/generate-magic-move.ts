@@ -1,5 +1,5 @@
+import { codeToKeyedTokens, createMagicMoveMachine } from '@shikijs/magic-move/core'
 import { createHighlighter } from 'shiki'
-import { codeToKeyedTokens, createMagicMoveMachine } from 'shiki-magic-move/core'
 
 const shiki = await createHighlighter({
   themes: ['github-light', 'material-theme-palenight'],

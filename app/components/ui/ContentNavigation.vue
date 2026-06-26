@@ -22,7 +22,9 @@ export interface ContentNavigationLink extends ContentNavigationItem {
   class?: any
 }
 
-export interface ContentNavigationProps<T> extends Pick<AccordionRootProps, 'disabled' | 'type'> {
+export interface ContentNavigationProps<T> {
+  disabled?: AccordionRootProps['disabled']
+  type?: AccordionRootProps['type']
   /**
    * The element or component this component should render as.
    * @defaultValue 'nav'

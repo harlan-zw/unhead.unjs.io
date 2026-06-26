@@ -7810,7 +7810,7 @@ describe('runtime content transforms', () => {
         [
           "a",
           {
-            "href": "/docs/vue/schema-org/recipes/blog",
+            "href": "/docs/schema-org/recipes/blog",
           },
           "BlogPosting",
         ],
