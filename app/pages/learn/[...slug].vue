@@ -116,7 +116,7 @@ const { data: lastCommit } = await useAsyncData(`learn-commit-${route.path}`, ()
         <div class="flex items-center gap-3 mt-3 text-sm text-dimmed flex-wrap">
           <UBadge color="neutral" variant="outline">
             <NuxtLink to="https://x.com/harlan-zw" external target="_blank" class="inline-flex items-center gap-1.5">
-              <img alt="Harlan Wilton" src="https://avatars.githubusercontent.com/u/5326365?v=4" class="w-4 h-4 rounded-full">
+              <img alt="Harlan Wilton" src="https://avatars.githubusercontent.com/u/5326365?v=4" width="16" height="16" decoding="async" class="w-4 h-4 rounded-full">
               <span class="hover:text-default text-muted transition">Harlan Wilton</span>
             </NuxtLink>
           </UBadge>
@@ -152,6 +152,8 @@ const { data: lastCommit } = await useAsyncData(`learn-commit-${route.path}`, ()
         <img
           :src="page.image"
           :alt="page.title"
+          width="1408"
+          height="768"
           fetchpriority="high"
           loading="eager"
           decoding="async"

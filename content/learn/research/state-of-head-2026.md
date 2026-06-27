@@ -34,7 +34,7 @@ We used [Wappalyzer](https://www.wappalyzer.com/) detection in [HTTP Archive](ht
 
 For each origin we checked three things: does the `<title>`{lang="html"} change after JS runs (indicating incomplete SSR), is a `<title>`{lang="html"} present in raw HTML at all, and is a `<meta name="description">`{lang="html"} present in raw HTML?
 
-::ChartFrameworkHealth
+::LazyChartFrameworkHealth
 ::
 
 **Under 5% title change** (Qwik, Remix, Astro): all three resolve head data before sending any HTML. Qwik blocks at the loader level. Remix's [`meta()`{lang="ts"}](https://reactrouter.com/start/framework/route-module#meta) export is synchronous. Astro resolves everything in page-level frontmatter. They trade flexibility for correctness.
@@ -67,7 +67,7 @@ The Open Graph Protocol requires four tags: `og:title`{lang="html"}, `og:type`{l
 - **Slack and Discord** show no image preview
 - **iMessage** shows a plain URL with no rich preview
 
-::ChartOgCompleteness
+::LazyChartOgCompleteness
 ::
 
 From our [HTTP Archive](https://httparchive.org) queries, only **~48% of desktop pages** include an `og:image`{lang="html"}. Over half the web ships broken social cards.
@@ -84,7 +84,7 @@ Frameworks that provide structured SEO APIs (`useSeoMeta()`{lang="ts"}, `generat
 
 Even when tags are set correctly on the server, streaming can lose them. We sampled 10,000 Next.js pages and compared tag presence in chunked (streaming) vs non-chunked responses:
 
-::ChartChunkedHead
+::LazyChartChunkedHead
 ::
 
 Titles and descriptions survive streaming. **JSON-LD drops 66%**. Canonical URLs drop 18%.
@@ -97,7 +97,7 @@ Missing canonicals mean Google guesses which URL variant is authoritative. On si
 
 Beyond missing tags, there are tags that are *present but displaced*. A "head-breaker" is any non-metadata element inside `<head>`{lang="html"} that forces the browser to implicitly close `</head>`{lang="html"} and start `<body>`{lang="html"}. Per the [WHATWG HTML parsing spec](https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inhead), only `<meta>`{lang="html"}, `<title>`{lang="html"}, `<link>`{lang="html"}, `<style>`{lang="html"}, `<script>`{lang="html"}, `<base>`{lang="html"}, `<template>`{lang="html"}, and `<noscript>`{lang="html"} are allowed. Everything else, `<div>`{lang="html"}, `<img>`{lang="html"}, `<iframe>`{lang="html"}, `<a>`{lang="html"}, triggers an implicit end tag.
 
-::ChartHeadBreakerImpact
+::LazyChartHeadBreakerImpact
 ::
 
 When a head-breaker fires, the browser parses every tag after it as body content. The browser still applies stylesheets found after the break, but Chromium downgrades their network priority from `Highest` to `High`. On throttled connections, this delay is measurable: moving a critical `<link>`{lang="html"} above a head-breaking `<img>`{lang="html"} can [cost up to ~200ms of FCP on throttled connections](/learn/research/capo-performance-research).
@@ -114,7 +114,7 @@ Chrome's preload scanner continues scanning after a head-breaker - it doesn't st
 
 Component-based architecture makes duplicate head tags a structural problem. Multiple components call `useHead()`{lang="ts"}, nested layouts each set a `<title>`{lang="html"}, and plugins inject their own meta tags. Without deduplication, the HTML ships with conflicts.
 
-::ChartDuplicateTags
+::LazyChartDuplicateTags
 ::
 
 From our HTTP Archive queries, ~3% of mobile pages have multiple `<title>`{lang="html"} elements. ~3.5% have duplicate `<meta name="description">`{lang="html"} tags. These numbers are low because most frameworks handle the easy cases. The dangerous duplicates are subtler:
@@ -137,7 +137,7 @@ How frameworks handle deduplication:
 
 The biggest source of head-breakers and displaced tags? Third-party scripts.
 
-::ChartThirdPartyPollution
+::LazyChartThirdPartyPollution
 ::
 
 Per [Web Almanac 2025](https://almanac.httparchive.org/en/2025/third-parties), **92% of pages** include third-party JavaScript. On commercial sites using GTM with GA4, Facebook Pixel, and Hotjar, the ratio of third-party to first-party tags in `<head>`{lang="html"} is typically **3:1**. A standard GTM container adds 8–12 tags to `<head>`{lang="html"} after execution.
@@ -172,7 +172,7 @@ A site running a streaming framework with a CMS that doesn't populate descriptio
 
 After all this, the natural question: if complete `<head>`{lang="html"} tags are so important, frameworks with better heads should have better Core Web Vitals. They don't.
 
-::ChartFrameworkCWV
+::LazyChartFrameworkCWV
 ::
 
 | Framework | Origins | FCP Good | LCP Good | CLS Good | INP Good |
@@ -195,7 +195,7 @@ The correlation is inverted. Angular - worst head completeness - has the **best 
 
 Compare frameworks against platforms that do zero head optimization:
 
-::ChartTheNuxtParadox
+::LazyChartTheNuxtParadox
 ::
 
 Shopify scores 87% good LCP with no head optimization at all. Nuxt, which auto-sorts tags via Capo.js, delays `</head>`{lang="html"} for async data, and deduplicates by key, scores 44%. The gap is TTFB (534ms vs 989ms) and architecture, not head management. See our [Capo.js performance research](/learn/research/capo-performance-research) for the full analysis.

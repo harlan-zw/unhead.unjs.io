@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
 import type { NuxtError } from '#app'
 import Fuse from 'fuse.js'
-import { ref } from 'vue'
+import { markRaw, ref, shallowRef } from 'vue'
 import { getPathFramework, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
 import { queryCollectionNavigation, useAsyncData } from '#imports'
 import { useContentSearch } from '#ui/composables/useContentSearch'
@@ -12,6 +13,7 @@ const props = defineProps<{
 }>()
 
 const appConfig = useAppConfig()
+const ContentSearchModal = shallowRef<Component | null>(null)
 
 useSeoMeta({
   title: props.error.statusCode === 404 ? 'Page not found' : props.error.statusMessage,
@@ -23,7 +25,11 @@ const { data: navigation } = await useAsyncData(`navigation`, () => queryCollect
     return val[0]?.children || []
   },
 })
-const { data: search } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'))
+const { data: search, execute: loadSearch, status: searchStatus } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'), {
+  default: () => [],
+  immediate: false,
+  server: false,
+})
 
 provide('search', search)
 const searchTerm = ref('')
@@ -38,6 +44,15 @@ provide('navigation', navigation)
 provide('modules', modules)
 
 const recommendedLinks = ref()
+
+async function loadContentSearchModal() {
+  if (ContentSearchModal.value) {
+    return
+  }
+
+  const component = await import('./components/ContentSearchModal.client.vue')
+  ContentSearchModal.value = markRaw(component.default)
+}
 
 if (props.error.statusCode && import.meta.client) {
   const walkChildren = (children: any[], parents: string[] = []) => {
@@ -115,6 +130,31 @@ if (props.error.statusCode && import.meta.client) {
 }
 
 const { open: openSearch } = useContentSearch()
+
+function openSearchShortcut(event: KeyboardEvent) {
+  const target = event.target as HTMLElement | null
+  if (target?.closest('input, textarea, select, [contenteditable="true"]')) {
+    return
+  }
+  if (event.key === '/' || event.code === 'Slash' || event.code === 'NumpadDivide') {
+    event.preventDefault()
+    openSearch.value = true
+  }
+}
+
+useEventListener('keydown', openSearchShortcut)
+
+watch(openSearch, (isOpen) => {
+  if (!isOpen) {
+    return
+  }
+
+  if (searchStatus.value === 'idle') {
+    loadSearch()
+  }
+
+  void loadContentSearchModal()
+}, { immediate: true })
 </script>
 
 <template>
@@ -164,7 +204,7 @@ const { open: openSearch } = useContentSearch()
                 @click="openSearch = true"
               >
                 <template #leading>
-                  <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" />
+                  <UIcon name="i-heroicons-magnifying-glass" class="size-4 text-dimmed" />
                 </template>
               </UInput>
             </div>
@@ -224,7 +264,9 @@ const { open: openSearch } = useContentSearch()
     </UContainer>
     <Footer />
     <ClientOnly>
-      <LazyUContentSearch
+      <component
+        :is="ContentSearchModal"
+        v-if="openSearch && ContentSearchModal"
         v-model:search-term="searchTerm"
         :files="search"
         :navigation="searchNav"

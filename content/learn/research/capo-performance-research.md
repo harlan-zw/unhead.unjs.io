@@ -3,7 +3,7 @@ title: "Does Head Tag Order Actually Affect Performance? Original Research"
 navigation:
   title: "Capo.js Performance"
 description: "We ran 120 controlled benchmarks with real network throttling and analyzed 10.7 million origins from CrUX to measure the actual performance impact of HTML head tag ordering."
-image: /capo-research.jpeg
+image: /capo-research.webp
 icon: i-ph-flask-duotone
 publishedAt: "2026-03-05"
 updatedAt: "2026-03-05"
@@ -52,14 +52,14 @@ Median First Contentful Paint:
 | Medium | slow-3g | 1068ms | 1040ms | 1068ms | 1080ms | +12ms (1%) |
 | Heavy | slow-3g | 1228ms | 1228ms | 1228ms | 1440ms | **+212ms (17%)** |
 
-::ChartFCPComparison
+::LazyChartFCPComparison
 ::
 
 ### The DCL Paradox
 
 While FCP and LCP suffer under "Worst" ordering, **DOMContentLoaded (DCL)** often improves. In our heavy + fast-4g test, "Worst" ordering achieved a DCL of 522ms compared to "Optimal" at 533ms.
 
-::ChartDCLParadox
+::LazyChartDCLParadox
 ::
 
 This happens because the browser discovers and finishes downloading deferred scripts (placed at the top in "Worst" order) earlier. While this improves the DCL timestamp, it's a "false" optimization: it steals bandwidth from the sync scripts needed for the initial paint.
@@ -103,7 +103,7 @@ Resource timing (heavy page, slow-3g):
 | interactions.js (defer) | 1058ms | 457ms | -57% (faster) |
 | lazy-components.js (defer) | 1030ms | 429ms | -58% (faster) |
 
-::ChartResourceDuration
+::LazyChartResourceDuration
 ::
 
 In worst ordering, deferred scripts finish faster (they got a head start) but that's wasted priority - they don't block rendering. The parser is stuck waiting for vendor.js, which is stuck waiting for bandwidth.
@@ -116,7 +116,7 @@ Head tag ordering doesn't change how fast resources download. It changes **which
 
 Benchmarks show ordering matters under specific conditions. CrUX data (Jan 2026, 10.7M mobile origins) tells a broader story about the real-world impact of head optimization compared to other performance factors.
 
-::ChartTheNuxtParadox
+::LazyChartTheNuxtParadox
 ::
 
 The **Nuxt Paradox** is the strongest evidence that head ordering alone is not a dominant performance factor at population scale. Nuxt implements the "gold standard" of automatic head ordering, yet it lags behind platforms like Shopify that perform no such optimization. The gap is driven by **TTFB** and **hydration cost**: Shopify's edge network and server-rendered architecture provide a baseline performance that head ordering cannot overcome.
@@ -125,7 +125,7 @@ The **Nuxt Paradox** is the strongest evidence that head ordering alone is not a
 
 All three major frameworks were flat over the last 8 months. No framework-level optimization, including head ordering, has moved LCP at population scale. TTFB, image optimization, and JS payload size continue to dominate.
 
-::ChartLCPTrend
+::LazyChartLCPTrend
 ::
 
 ## When It Matters

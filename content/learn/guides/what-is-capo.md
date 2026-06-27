@@ -94,7 +94,7 @@ Unhead implements all 14 Capo.js weight levels. Lower weight = placed first in `
 
 A common mistake is placing an invalid tag (like `<img>`{lang="html"} or `<iframe>`{lang="html"}) inside the `<head>`{lang="html"}. The browser's DOM builder implicitly closes the `<head>`{lang="html"} and moves everything after the invalid tag to the `<body>`{lang="html"}.
 
-::ChartHeadBreakerImpact
+::LazyChartHeadBreakerImpact
 ::
 
 According to the **Web Almanac 2025**, invalid head markup remains a significant issue for **22% of all mobile pages**. This "breaks" SEO and performance because the parser discovers critical meta tags and styles too late.

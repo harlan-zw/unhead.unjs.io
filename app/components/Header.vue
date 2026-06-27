@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { motion } from 'motion-v'
+import type { Ref } from 'vue'
 import { NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuRoot, NavigationMenuTrigger, NavigationMenuViewport } from 'reka-ui'
 import { ref } from 'vue'
 import { getPathSegments, getPathWithFramework, getPathWithoutFramework } from '~~/utils/urls'
@@ -9,11 +9,16 @@ import { useNavMenu } from '~/composables/navMenu'
 import { useVersionSelector } from '~/composables/versionSelector'
 
 const docsNav = useDocsNav(true)
-const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNav)
+const route = useRoute()
+const isDocsNavigationRoute = computed(() => route.path.startsWith('/docs'))
+const mobileMenuOpen = ref(false)
+const loadNavigation = inject('loadNavigation') as (() => Promise<unknown>) | undefined
+const navigationStatus = inject('navigationStatus') as Ref<string> | undefined
+const shouldLoadDocsNavigation = computed(() => isDocsNavigationRoute.value || mobileMenuOpen.value)
+const docsNavForFrameworks = computed(() => isDocsNavigationRoute.value ? docsNav.value : undefined)
+const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNavForFrameworks)
 const { versions, selectedVersion, getVersionedPath } = useVersionSelector()
 const { megaMenuItems } = useNavMenu()
-
-const route = useRoute()
 const versionItems = computed(() => versions.map(v => ({
   label: v.label,
   value: v.slug,
@@ -36,9 +41,14 @@ function onVersionChange(v: { label: string, value: string }) {
   }
 }
 
-const open = ref(false)
+watch(shouldLoadDocsNavigation, (shouldLoad) => {
+  if (shouldLoad && navigationStatus?.value === 'idle') {
+    loadNavigation?.()
+  }
+}, { immediate: true })
+
 watch(selectedFramework, () => {
-  open.value = false
+  mobileMenuOpen.value = false
 })
 
 const { open: openSearch } = useContentSearch()
@@ -66,10 +76,27 @@ const subSectionLinks = computed(() => {
     }
   }).filter(Boolean)
 })
+
+function mobileSectionGroups(sectionIndex: number) {
+  const section = docsNav.value?.bottom?.[sectionIndex]
+  return (section?.children || [])
+    .slice(0, 2)
+    .map(group => ({
+      title: group.title,
+      navigation: (group.children || []).map(c => ({
+        ...c,
+        title: `${group.title} - ${c.title}`,
+      })),
+    }))
+    .filter(group => group.navigation.length)
+}
+
+const mobileHeadNavigationGroups = computed(() => mobileSectionGroups(0))
+const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
 </script>
 
 <template>
-  <UHeader :ui="{ root: 'border-none bg-transparent pt-2 mb-3 px-5 h-auto', container: 'max-w-[1452px] lg:bg-neutral-500/[0.02] lg:border border-[var(--ui-border)] lg:dark:bg-neutral-900/10 mx-auto py-0 px-0 lg:px-5 sm:px-0 rounded-lg' }">
+  <UHeader v-model:open="mobileMenuOpen" :ui="{ root: 'border-none bg-transparent pt-2 mb-3 px-5 h-auto', container: 'max-w-[1452px] lg:bg-neutral-500/[0.02] lg:border border-[var(--ui-border)] lg:dark:bg-neutral-900/10 mx-auto py-0 px-0 lg:px-5 sm:px-0 rounded-lg' }">
     <template #left>
       <NuxtLink
         to="/"
@@ -124,7 +151,7 @@ const subSectionLinks = computed(() => {
         </div>
         <UInput type="search" aria-label="Search documentation" class="ml-5 hidden lg:block w-[150px] xl:w-[200px]" placeholder="Search..." @click="openSearch = true">
           <template #leading>
-            <UContentSearchButton size="sm" class="p-0 opacity-70 hover:opacity-100" @click="openSearch = true" />
+            <UIcon name="i-heroicons-magnifying-glass" class="size-4 text-dimmed" />
           </template>
         </UInput>
         <div v-if="route.path.startsWith('/docs')">
@@ -133,7 +160,7 @@ const subSectionLinks = computed(() => {
         </div>
         <UTabs v-else :items="[{ label: 'Head', slot: 'head' }, { label: 'Schema.org', slot: 'schema-org' }]" color="neutral">
           <template #head>
-            <UContentNavigation v-for="idx in [0, 1]" :key="idx" :navigation="(docsNav.bottom[0].children[idx].children.map(c => ({ ...c, title: `${docsNav.bottom[0].children[idx].title} - ${c.title}` })) as any)" class="my-5">
+            <UContentNavigation v-for="group in mobileHeadNavigationGroups" :key="group.title" :navigation="(group.navigation as any)" class="my-5">
               <template #link="{ link }">
                 <div
                   v-if="!link.html" class="flex items-center justify-between gap-2 w-full"
@@ -166,7 +193,7 @@ const subSectionLinks = computed(() => {
             </UContentNavigation>
           </template>
           <template #schema-org>
-            <UContentNavigation v-for="idx in [0, 1]" :key="idx" :navigation="(docsNav.bottom[1].children[idx].children.map(c => ({ ...c, title: `${docsNav.bottom[1].children[idx].title} - ${c.title}` })) as any)" class="my-5">
+            <UContentNavigation v-for="group in mobileSchemaNavigationGroups" :key="group.title" :navigation="(group.navigation as any)" class="my-5">
               <template #link="{ link }">
                 <div
                   v-if="!link.html" class="flex items-center justify-between gap-2 w-full"
@@ -206,7 +233,7 @@ const subSectionLinks = computed(() => {
       <div class="flex items-center justify-end lg:-mr-1.5 gap-3">
         <UInput type="search" aria-label="Search documentation" class="cursor-pointer hidden lg:block w-[70px]" shortcut="divide" @click="openSearch = true">
           <template #leading>
-            <UContentSearchButton size="sm" class="cursor-pointer  p-0 opacity-70 hover:opacity-100" @click="openSearch = true" />
+            <UIcon name="i-heroicons-magnifying-glass" class="size-4 text-dimmed" />
           </template>
           <template #trailing>
             <UKbd @click="openSearch = true">
@@ -249,34 +276,19 @@ const subSectionLinks = computed(() => {
       <div class="flex items-center gap-2 lg:pl-3 col-span-5">
         <div class="z-10  flex gap-2 items-center dark:text-blue-200 group-hover:text-blue-500 transition-all">
           <div class="font-semibold">
-            <motion.div
+            <div
               :key="selectedFramework.slug"
-              :initial="{ opacity: 0, y: 16, filter: 'blur(0.2rem)' }"
-              :animate="{ opacity: 1, y: 0, filter: 'blur(0)' }"
-              :exit="{ opacity: 0, y: 16, filter: 'blur(0.2rem)' }"
-              :while-hover="{ scale: 1.2 }" layout
+              class="transition-transform hover:scale-110"
             >
               {{ selectedFramework.label }}
-            </motion.div>
+            </div>
           </div>
         </div>
         <ul class="z-10 gap-1 text-blue-200 group-hover:text-blue-500 hidden lg:flex transition-all relative">
-          <motion.li
+          <li
             v-for="framework in frameworks"
             :key="framework.slug"
-            :while-hover="{ scale: 1.2 }"
-            layout
-            :transition="{
-              type: 'spring',
-              damping: 20,
-              stiffness: 300,
-              duration: 2,
-            }"
-            :while-press="{
-              scale: selectedFramework.slug === framework.slug ? 1.2 : 0.8,
-              rotate: selectedFramework.slug === framework.slug ? 1.2 : 0.8,
-              transform: selectedFramework.slug === framework.slug ? 'rotate(33deg)' : 'rotate(0deg)',
-            }"
+            class="transition-transform hover:scale-110 active:scale-95"
           >
             <UButton
               :title="`Switch to ${framework.label}`" :aria-label="framework.label" type="button"
@@ -287,7 +299,7 @@ const subSectionLinks = computed(() => {
             >
               <UIcon dynamic :name="framework.icon" class="w-5 h-5" />
             </UButton>
-          </motion.li>
+          </li>
         </ul>
       </div>
       <div class="col-span-2 flex justify-end">

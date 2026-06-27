@@ -1,34 +1,23 @@
 <script setup lang="ts">
-import { motion } from 'motion-v'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
 defineProps<{
   size?: 'large' | 'small'
   ignoreRedirect?: boolean
 }>()
+const route = useRoute()
 const docsNav = useDocsNav()
-const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNav)
+const docsNavForFrameworks = computed(() => route.path.startsWith('/docs') ? docsNav.value : undefined)
+const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNavForFrameworks)
 </script>
 
 <template>
   <nav class="relative h-full flex items-center justify-center w-full">
     <ul class="z-10 mr-10 text-blue-200 gap-2 flex items-center justify-center group-hover:text-blue-500 transition-all relative">
-      <motion.li
+      <li
         v-for="framework in frameworks"
         :key="framework.slug"
-        :while-hover="{ scale: 1.2 }"
-        layout
-        :transition="{
-          type: 'spring',
-          damping: 20,
-          stiffness: 300,
-          duration: 2,
-        }"
-        :while-press="{
-          scale: selectedFramework.slug === framework.slug ? 1.2 : 0.8,
-          rotate: selectedFramework.slug === framework.slug ? 1.2 : 0.8,
-          transform: selectedFramework.slug === framework.slug ? 'rotate(33deg)' : 'rotate(0deg)',
-        }"
+        class="transition-transform hover:scale-110 active:scale-95"
       >
         <UButton
           :title="`Switch to ${framework.label}`" :aria-label="framework.label" type="button"
@@ -39,7 +28,7 @@ const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(
         >
           <UIcon dynamic :name="framework.icon" :class="!size ? 'size-10' : size === 'small' ? 'size-6' : 'size-14'" />
         </UButton>
-      </motion.li>
+      </li>
     </ul>
   </nav>
 </template>

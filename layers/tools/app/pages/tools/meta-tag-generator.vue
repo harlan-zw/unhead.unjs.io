@@ -33,8 +33,7 @@ const {
 } = useMetaTagGenerator()
 
 // Sync framework selector with code generator
-const docsNav = useDocsNav()
-const { selectedFramework } = useFrameworkSelector(docsNav)
+const { selectedFramework } = useFrameworkSelector()
 watch(selectedFramework, (fw) => {
   if (fw?.slug)
     state.framework = fw.slug as typeof state.framework

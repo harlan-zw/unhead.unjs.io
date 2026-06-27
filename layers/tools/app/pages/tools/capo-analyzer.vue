@@ -35,8 +35,7 @@ const {
   reset,
 } = useCapoAnalyzer()
 
-const docsNav = useDocsNav()
-const { selectedFramework } = useFrameworkSelector(docsNav)
+const { selectedFramework } = useFrameworkSelector()
 watch(selectedFramework, (fw) => {
   if (fw?.slug)
     framework.value = fw.slug

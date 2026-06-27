@@ -4,7 +4,7 @@ navigation:
   title: "Streaming SSR SEO"
 description: "How does streaming SSR affect your meta tags? Strategies used by Next.js, Nuxt, Remix, SvelteKit, Angular, Astro, Solid Start, and Qwik — with documented production breakage."
 icon: i-ph-cloud-arrow-down-duotone
-image: /streaming-response.png
+image: /streaming-response.webp
 publishedAt: "2026-03-05"
 updatedAt: "2026-03-05"
 readTime: "12 min"

@@ -1,18 +1,31 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { queryCollectionNavigation, useAsyncData } from '#imports'
+import type { Component } from 'vue'
+import { markRaw, ref, shallowRef } from 'vue'
+import { queryCollectionNavigation } from '#imports'
+import { useContentSearch } from '#ui/composables/useContentSearch'
 import { useVersionSelector } from '~/composables/versionSelector'
 import { modules } from '../const'
 
 const appConfig = useAppConfig()
+const route = useRoute()
 const { selectedFramework } = useFrameworkSelector()
 const { currentVersion } = useVersionSelector()
+const ContentSearchModal = shallowRef<Component | null>(null)
 
 const isV2 = currentVersion.value === 'v2'
 const collection = isV2 ? 'docsUnheadV2' : 'docsUnhead'
+const isDocsRoute = computed(() => route.path.startsWith('/docs'))
 
-const { data: search } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'))
-const { data: navigation } = await useAsyncData(`navigation-${collection}`, () => queryCollectionNavigation(collection, ['new', 'deprecated']), {
+const { open: searchOpen } = useContentSearch()
+const { data: search, execute: loadSearch, status: searchStatus } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'), {
+  default: () => [],
+  immediate: false,
+  server: false,
+})
+const { data: navigation, execute: loadNavigation, status: navigationStatus } = await useLazyAsyncData(`navigation-${collection}`, () => queryCollectionNavigation(collection, ['new', 'deprecated']), {
+  default: () => [],
+  immediate: isDocsRoute.value,
+  server: isDocsRoute.value,
   transform(val) {
     return val[0]?.children || []
   },
@@ -20,9 +33,51 @@ const { data: navigation } = await useAsyncData(`navigation-${collection}`, () =
 
 provide('search', search)
 provide('navigation', navigation)
+provide('loadNavigation', loadNavigation)
+provide('navigationStatus', navigationStatus)
 provide('modules', modules)
 
 const searchTerm = ref('')
+
+async function loadContentSearchModal() {
+  if (ContentSearchModal.value) {
+    return
+  }
+
+  const component = await import('./components/ContentSearchModal.client.vue')
+  ContentSearchModal.value = markRaw(component.default)
+}
+
+function openSearchShortcut(event: KeyboardEvent) {
+  const target = event.target as HTMLElement | null
+  if (target?.closest('input, textarea, select, [contenteditable="true"]')) {
+    return
+  }
+  if (event.key === '/' || event.code === 'Slash' || event.code === 'NumpadDivide') {
+    event.preventDefault()
+    searchOpen.value = true
+  }
+}
+
+useEventListener('keydown', openSearchShortcut)
+
+watch(searchOpen, (isOpen) => {
+  if (!isOpen) {
+    return
+  }
+
+  if (searchStatus.value === 'idle') {
+    loadSearch()
+  }
+
+  void loadContentSearchModal()
+}, { immediate: true })
+
+watch(isDocsRoute, (isDocs) => {
+  if (isDocs && navigationStatus.value === 'idle') {
+    loadNavigation()
+  }
+}, { immediate: true })
 
 const searchNav = computed(() => {
   return navigation.value.filter((s) => {
@@ -40,7 +95,9 @@ const searchNav = computed(() => {
     </NuxtLayout>
     <Footer />
     <ClientOnly>
-      <LazyUContentSearch
+      <component
+        :is="ContentSearchModal"
+        v-if="searchOpen && ContentSearchModal"
         v-model:search-term="searchTerm"
         shortcut="/"
         :files="search"

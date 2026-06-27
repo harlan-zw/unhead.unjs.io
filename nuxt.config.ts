@@ -5,7 +5,6 @@ export default defineNuxtConfig({
   extends: ['./layers/admin', './layers/tools'],
 
   modules: [
-    'motion-v/nuxt',
     '@nuxt/ui',
     '@nuxtjs/seo',
     'radix-vue/nuxt',
