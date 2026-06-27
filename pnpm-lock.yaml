@@ -145,8 +145,8 @@ catalogs:
       specifier: 4.4.8
       version: 4.4.8
     nuxt-ai-ready:
-      specifier: ^1.5.1
-      version: 1.5.1
+      specifier: ^1.5.2
+      version: 1.5.2
     nuxt-auth-utils:
       specifier: ^0.5.29
       version: 0.5.29
@@ -391,7 +391,7 @@ importers:
         version: 4.4.8(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7))(@parcel/watcher@2.5.6)(@types/node@25.3.3)(@vitejs/devtools@0.3.3)(@vue/compiler-sfc@3.5.39)(better-sqlite3@12.11.1)(cac@6.7.14)(db0@0.3.4(better-sqlite3@12.11.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(better-sqlite3@12.11.1)))(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(better-sqlite3@12.11.1))(esbuild@0.28.1)(eslint@10.5.0(jiti@2.7.0))(ioredis@5.11.1)(magicast@0.5.3)(optionator@0.9.4)(rolldown@1.1.3)(rollup-plugin-visualizer@7.0.1(rolldown@1.1.3)(rollup@4.62.2))(rollup@4.62.2)(srvx@0.11.17)(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.1.0)(vue-tsc@3.3.5(typescript@6.0.3))(yaml@2.9.0)
       nuxt-ai-ready:
         specifier: 'catalog:'
-        version: 1.5.1(836117e331e40efc5f7ea411c36cb258)
+        version: 1.5.2(836117e331e40efc5f7ea411c36cb258)
       nuxt-auth-utils:
         specifier: 'catalog:'
         version: 0.5.29(magicast@0.5.3)
@@ -7676,8 +7676,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-ai-ready@1.5.1:
-    resolution: {integrity: sha512-pmd+qNH0/3OXZA5pZfNs02Gh72B2X4EWRuyW2I0O0tGGWz8gM5zQ6gu4rTfNJJupE052x7TH6MuAaFtOo/H/Mw==}
+  nuxt-ai-ready@1.5.2:
+    resolution: {integrity: sha512-UmFFpqPuZy6DK/n2hNPrQ7GkAHuS7rokI0HE70BqxCXF82Yl77ejQI7IH01J/n9zPLKIC2zISxYEvMbayJh39A==}
     hasBin: true
     peerDependencies:
       '@libsql/client': ^0.14.0
@@ -17994,7 +17994,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-ai-ready@1.5.1(836117e331e40efc5f7ea411c36cb258):
+  nuxt-ai-ready@1.5.2(836117e331e40efc5f7ea411c36cb258):
     dependencies:
       '@mdream/js': 1.4.1
       '@nuxt/kit': 4.4.8(magicast@0.5.3)
