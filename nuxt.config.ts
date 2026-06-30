@@ -280,6 +280,7 @@ export default defineNuxtConfig({
     '/api/tools/**': { prerender: false, cache: false },
     '/api/debug/**': { prerender: false, cache: false },
     '/tools/og-image-generator': { prerender: false },
+    '/releases/v3': { redirect: { to: '/docs/releases/v3', statusCode: 301 } },
     '/usage/composables/use-head': { redirect: { to: '/api/use-head', statusCode: 301 } },
     '/usage/composables/use-seo-meta': { redirect: { to: '/api/use-seo-meta', statusCode: 301 } },
     '/usage/composables/use-head-safe': { redirect: { to: '/api/use-head-safe', statusCode: 301 } },

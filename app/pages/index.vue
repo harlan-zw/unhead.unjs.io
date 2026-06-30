@@ -232,7 +232,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
               <li>~4.4kb gzipped, tree shakable utilities</li>
               <li>Built in HTML minification</li>
               <li>
-                <NuxtLink to="/releases/v3" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
+                <NuxtLink to="/docs/releases/v3" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
                   Streaming SSR
                 </NuxtLink> with head tags pushed per chunk
               </li>
