@@ -1,0 +1,14 @@
+{
+  "query": "CrUX baseline: overall mobile CWV stats for Jan 2026",
+  "date": "2026-01-01",
+  "device": "phone",
+  "results": {
+    "total_origins": 10693087,
+    "avg_lcp": 2420,
+    "avg_fcp": 1944,
+    "avg_ttfb": 1122,
+    "avg_inp": 153,
+    "pct_good_lcp": 63.7,
+    "pct_good_fcp": 56.9
+  }
+}

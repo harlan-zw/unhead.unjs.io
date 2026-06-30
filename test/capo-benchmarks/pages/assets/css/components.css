@@ -1,0 +1,4 @@
+.card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); transition: all 0.2s; }
+.card h3 { color: #2d3748; }
+.card p { color: #718096; font-size: 0.95rem; }
+[data-lazy] { opacity: 1; transition: opacity 0.3s; }

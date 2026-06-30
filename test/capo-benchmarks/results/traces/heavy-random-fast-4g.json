@@ -1,0 +1,560 @@
+{
+  "complexity": "heavy",
+  "variant": "random",
+  "throttle": "fast-4g",
+  "runs": [
+    {
+      "fcp": 504,
+      "lcp": 504,
+      "domContentLoaded": 621,
+      "domInteractive": 454,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/vendor.js",
+          "startTime": 167.7,
+          "responseEnd": 334.7,
+          "duration": 167,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/components.css",
+          "startTime": 167.8,
+          "responseEnd": 365.3,
+          "duration": 197.5,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "startTime": 167.9,
+          "responseEnd": 453,
+          "duration": 285.1,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/lazy-components.js",
+          "startTime": 167.9,
+          "responseEnd": 612.2,
+          "duration": 444.3,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 174.4,
+          "responseEnd": 358.2,
+          "duration": 183.8,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 174.4,
+          "responseEnd": 381.8,
+          "duration": 207.4,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://www.googletagmanager.com/gtag/js?id=G-XXXXX",
+          "startTime": 174.5,
+          "responseEnd": 1709,
+          "duration": 1534.5,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/reset.css",
+          "startTime": 174.6,
+          "responseEnd": 349.5,
+          "duration": 174.9,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 174.6,
+          "responseEnd": 373.7,
+          "duration": 199.1,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 174.6,
+          "responseEnd": 509,
+          "duration": 334.4,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 174.6,
+          "responseEnd": 620.5,
+          "duration": 445.9,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-bold.woff2",
+          "startTime": 174.7,
+          "responseEnd": 492.6,
+          "duration": 317.9,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://www.google-analytics.com/g/collect?v=2&tid=G-XXXXX&gtm=45je6331h1za200&_p=1772688525335&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=1686137548.1772688527&ul=en-gb&sr=800x600&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B99.0.0.0%7CGoogle%2520Chrome%3B145.0.7632.159%7CChromium%3B145.0.7632.159&uamb=0&uam=&uap=Linux&uapv=&uaw=0&are=1&frm=0&pscdl=noapi&_s=1&tag_exp=103116026~103200004~104573694~115938465~115938469~116024733~117484252~117625639~117625642~117755069&sid=1772688526&sct=1&seg=0&dl=http%3A%2F%2Flocalhost%2Fheavy%2Frandom.html&dt=Test%20Page%20-%20Heavy&en=page_view&_fv=1&_nsi=1&_ss=1&_ee=1&tfd=1728",
+          "startTime": 1729,
+          "responseEnd": 2018.6,
+          "duration": 289.6,
+          "initiatorType": "fetch"
+        }
+      ]
+    },
+    {
+      "fcp": 504,
+      "lcp": 504,
+      "domContentLoaded": 628.9000000003725,
+      "domInteractive": 462.59999999962747,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/vendor.js",
+          "startTime": 167.5,
+          "responseEnd": 334.8,
+          "duration": 167.3,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/components.css",
+          "startTime": 167.5,
+          "responseEnd": 365.8,
+          "duration": 198.3,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "startTime": 167.6,
+          "responseEnd": 461.2,
+          "duration": 293.6,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/lazy-components.js",
+          "startTime": 167.6,
+          "responseEnd": 619.8,
+          "duration": 452.2,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 175,
+          "responseEnd": 357.6,
+          "duration": 182.6,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 175,
+          "responseEnd": 382.2,
+          "duration": 207.2,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/reset.css",
+          "startTime": 175.1,
+          "responseEnd": 349.9,
+          "duration": 174.8,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 175.1,
+          "responseEnd": 508.8,
+          "duration": 333.7,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://www.googletagmanager.com/gtag/js?id=G-XXXXX",
+          "startTime": 175.1,
+          "responseEnd": 1716.8,
+          "duration": 1541.7,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 175.2,
+          "responseEnd": 374,
+          "duration": 198.8,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-bold.woff2",
+          "startTime": 175.2,
+          "responseEnd": 493.5,
+          "duration": 318.3,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 175.2,
+          "responseEnd": 628.2,
+          "duration": 453,
+          "initiatorType": "script"
+        },
+        {
+          "name": "https://www.google-analytics.com/g/collect?v=2&tid=G-XXXXX&gtm=45je6331za200&_p=1772688531003&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=1289994679.1772688532&ul=en-gb&sr=800x600&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B99.0.0.0%7CGoogle%2520Chrome%3B145.0.7632.159%7CChromium%3B145.0.7632.159&uamb=0&uam=&uap=Linux&uapv=&uaw=0&are=1&frm=0&pscdl=noapi&_s=1&tag_exp=103116026~103200004~115938465~115938468~116024733~117484252~117625642~117827222&sid=1772688532&sct=1&seg=0&dl=http%3A%2F%2Flocalhost%2Fheavy%2Frandom.html&dt=Test%20Page%20-%20Heavy&en=page_view&_fv=1&_nsi=1&_ss=1&_ee=1&tfd=1734",
+          "startTime": 1735.4,
+          "responseEnd": 2019.6,
+          "duration": 284.2,
+          "initiatorType": "fetch"
+        }
+      ]
+    },
+    {
+      "fcp": 508,
+      "lcp": 508,
+      "domContentLoaded": 620.6999999992549,
+      "domInteractive": 455,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/vendor.js",
+          "startTime": 168,
+          "responseEnd": 334.5,
+          "duration": 166.5,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/components.css",
+          "startTime": 168.2,
+          "responseEnd": 366.3,
+          "duration": 198.1,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "startTime": 168.3,
+          "responseEnd": 453.7,
+          "duration": 285.4,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/lazy-components.js",
+          "startTime": 168.3,
+          "responseEnd": 612.6,
+          "duration": 444.3,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 174.6,
+          "responseEnd": 381.7,
+          "duration": 207.1,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 174.7,
+          "responseEnd": 358.1,
+          "duration": 183.4,
+          "initiatorType": "script"
+        },
+        {
+          "name": "https://www.googletagmanager.com/gtag/js?id=G-XXXXX",
+          "startTime": 174.7,
+          "responseEnd": 1716.6,
+          "duration": 1541.9,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/reset.css",
+          "startTime": 174.8,
+          "responseEnd": 350.5,
+          "duration": 175.7,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 174.8,
+          "responseEnd": 373.5,
+          "duration": 198.7,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 174.8,
+          "responseEnd": 508.6,
+          "duration": 333.8,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 174.8,
+          "responseEnd": 619.9,
+          "duration": 445.1,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-bold.woff2",
+          "startTime": 175,
+          "responseEnd": 493.4,
+          "duration": 318.4,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://www.google-analytics.com/g/collect?v=2&tid=G-XXXXX&gtm=45je6340h2za200&_p=1772688536666&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=1624808157.1772688538&ul=en-gb&sr=800x600&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B99.0.0.0%7CGoogle%2520Chrome%3B145.0.7632.159%7CChromium%3B145.0.7632.159&uamb=0&uam=&uap=Linux&uapv=&uaw=0&are=1&frm=0&pscdl=noapi&_s=1&tag_exp=103116026~103200004~115616986~115938466~115938468~116024733~117484252~117625637&sid=1772688537&sct=1&seg=0&dl=http%3A%2F%2Flocalhost%2Fheavy%2Frandom.html&dt=Test%20Page%20-%20Heavy&en=page_view&_fv=1&_nsi=1&_ss=1&_ee=1&tfd=1736",
+          "startTime": 1737.2,
+          "responseEnd": 2027.5,
+          "duration": 290.3,
+          "initiatorType": "fetch"
+        }
+      ]
+    },
+    {
+      "fcp": 504,
+      "lcp": 504,
+      "domContentLoaded": 621,
+      "domInteractive": 454.5,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/vendor.js",
+          "startTime": 167.4,
+          "responseEnd": 334.8,
+          "duration": 167.4,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/components.css",
+          "startTime": 167.5,
+          "responseEnd": 365.6,
+          "duration": 198.1,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "startTime": 167.6,
+          "responseEnd": 453.2,
+          "duration": 285.6,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/lazy-components.js",
+          "startTime": 167.6,
+          "responseEnd": 612.3,
+          "duration": 444.7,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 175.3,
+          "responseEnd": 357.4,
+          "duration": 182.1,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 175.3,
+          "responseEnd": 382,
+          "duration": 206.7,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 175.4,
+          "responseEnd": 509.2,
+          "duration": 333.8,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://www.googletagmanager.com/gtag/js?id=G-XXXXX",
+          "startTime": 175.4,
+          "responseEnd": 1709.4,
+          "duration": 1534,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/reset.css",
+          "startTime": 175.5,
+          "responseEnd": 349.8,
+          "duration": 174.3,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 175.5,
+          "responseEnd": 373.9,
+          "duration": 198.4,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 175.5,
+          "responseEnd": 620.2,
+          "duration": 444.7,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-bold.woff2",
+          "startTime": 175.7,
+          "responseEnd": 492.8,
+          "duration": 317.1,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://www.google-analytics.com/g/collect?v=2&tid=G-XXXXX&gtm=45je6331za200&_p=1772688542325&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=1033821193.1772688544&ul=en-gb&sr=800x600&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B99.0.0.0%7CGoogle%2520Chrome%3B145.0.7632.159%7CChromium%3B145.0.7632.159&uamb=0&uam=&uap=Linux&uapv=&uaw=0&are=1&frm=0&pscdl=noapi&_s=1&tag_exp=103116026~103200004~115616985~115938465~115938468~116024733~117484252~117625640&sid=1772688543&sct=1&seg=0&dl=http%3A%2F%2Flocalhost%2Fheavy%2Frandom.html&dt=Test%20Page%20-%20Heavy&en=page_view&_fv=1&_nsi=1&_ss=1&_ee=1&tfd=1733",
+          "startTime": 1734.1,
+          "responseEnd": 2027,
+          "duration": 292.9,
+          "initiatorType": "fetch"
+        }
+      ]
+    },
+    {
+      "fcp": 500,
+      "lcp": 500,
+      "domContentLoaded": 621,
+      "domInteractive": 454.7000000011176,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/vendor.js",
+          "startTime": 167.7,
+          "responseEnd": 326,
+          "duration": 158.3,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/components.css",
+          "startTime": 167.8,
+          "responseEnd": 365.8,
+          "duration": 198,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "startTime": 167.8,
+          "responseEnd": 453.5,
+          "duration": 285.7,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/lazy-components.js",
+          "startTime": 167.8,
+          "responseEnd": 612.4,
+          "duration": 444.6,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 175.2,
+          "responseEnd": 381.4,
+          "duration": 206.2,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/reset.css",
+          "startTime": 175.3,
+          "responseEnd": 349.8,
+          "duration": 174.5,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 175.3,
+          "responseEnd": 357.7,
+          "duration": 182.4,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 175.3,
+          "responseEnd": 508.3,
+          "duration": 333,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 175.3,
+          "responseEnd": 620.5,
+          "duration": 445.2,
+          "initiatorType": "script"
+        },
+        {
+          "name": "https://www.googletagmanager.com/gtag/js?id=G-XXXXX",
+          "startTime": 175.3,
+          "responseEnd": 1724.6,
+          "duration": 1549.3,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 175.4,
+          "responseEnd": 374.2,
+          "duration": 198.8,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-bold.woff2",
+          "startTime": 175.5,
+          "responseEnd": 485.4,
+          "duration": 309.9,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://www.google-analytics.com/g/collect?v=2&tid=G-XXXXX&gtm=45je6331za200&_p=1772688547991&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=1071032768.1772688549&ul=en-gb&sr=800x600&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B99.0.0.0%7CGoogle%2520Chrome%3B145.0.7632.159%7CChromium%3B145.0.7632.159&uamb=0&uam=&uap=Linux&uapv=&uaw=0&are=1&frm=0&pscdl=noapi&_s=1&tag_exp=103116026~103200004~115938465~115938468~116024733~117484252&sid=1772688549&sct=1&seg=0&dl=http%3A%2F%2Flocalhost%2Fheavy%2Frandom.html&dt=Test%20Page%20-%20Heavy&en=page_view&_fv=1&_nsi=1&_ss=1&_ee=1&tfd=1745",
+          "startTime": 1745.7,
+          "responseEnd": 2035.2,
+          "duration": 289.5,
+          "initiatorType": "fetch"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "fcp": {
+      "median": 504,
+      "mean": 504,
+      "min": 500,
+      "max": 508,
+      "stddev": 2.53,
+      "values": [
+        500,
+        504,
+        504,
+        504,
+        508
+      ]
+    },
+    "lcp": {
+      "median": 504,
+      "mean": 504,
+      "min": 500,
+      "max": 508,
+      "stddev": 2.53,
+      "values": [
+        500,
+        504,
+        504,
+        504,
+        508
+      ]
+    },
+    "domContentLoaded": {
+      "median": 621,
+      "mean": 622.52,
+      "min": 620.7,
+      "max": 628.9,
+      "stddev": 3.19,
+      "values": [
+        620.7,
+        621,
+        621,
+        621,
+        628.9
+      ]
+    },
+    "domInteractive": {
+      "median": 454.7,
+      "mean": 456.16,
+      "min": 454,
+      "max": 462.6,
+      "stddev": 3.24,
+      "values": [
+        454,
+        454.5,
+        454.7,
+        455,
+        462.6
+      ]
+    }
+  }
+}

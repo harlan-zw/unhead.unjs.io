@@ -49,9 +49,18 @@ useSeoMeta({
 
 defineOgImage('Home')
 
-const { data: sponsors } = await useFetch('/api/github/sponsors.json', {
+function emptySponsors() {
+  return {
+    others: [],
+    $25: [],
+    $50: [],
+  }
+}
+
+const { data: sponsors } = await useAsyncData('github-sponsors', () => $fetch('/api/github/sponsors.json').catch(() => emptySponsors()), {
   lazy: !isBot.value,
   server: !isBot.value,
+  default: emptySponsors,
 })
 
 if (import.meta.server) {

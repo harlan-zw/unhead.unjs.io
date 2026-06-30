@@ -20,12 +20,13 @@ useSeoMeta({
   description: 'We are sorry but this page could not be found.',
 })
 const { selectedFramework } = useFrameworkSelector()
-const { data: navigation } = await useAsyncData(`navigation`, () => queryCollectionNavigation('docsUnhead', ['new', 'deprecated']), {
+const { data: navigation } = await useAsyncData(`navigation`, () => queryCollectionNavigation('docsUnhead', ['new', 'deprecated']).catch(() => []), {
+  default: () => [],
   transform(val) {
     return val[0]?.children || []
   },
 })
-const { data: search, execute: loadSearch, status: searchStatus } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'), {
+const { data: search, execute: loadSearch, status: searchStatus } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead').catch(() => []), {
   default: () => [],
   immediate: false,
   server: false,
@@ -158,7 +159,7 @@ watch(openSearch, (isOpen) => {
 </script>
 
 <template>
-  <UApp v-if="navigation" :toaster="appConfig.toaster">
+  <UApp :toaster="appConfig.toaster">
     <Header />
 
     <UContainer>

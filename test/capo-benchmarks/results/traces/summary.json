@@ -1,0 +1,1418 @@
+[
+  {
+    "config": "minimal-optimal-fast-4g",
+    "fcp": {
+      "median": 460,
+      "mean": 464.8,
+      "min": 452,
+      "max": 488,
+      "stddev": 12.24,
+      "values": [
+        452,
+        460,
+        460,
+        464,
+        488
+      ]
+    },
+    "lcp": {
+      "median": 460,
+      "mean": 464.8,
+      "min": 452,
+      "max": 488,
+      "stddev": 12.24,
+      "values": [
+        452,
+        460,
+        460,
+        464,
+        488
+      ]
+    },
+    "domContentLoaded": {
+      "median": 319.7,
+      "mean": 322.5,
+      "min": 318.7,
+      "max": 335.4,
+      "stddev": 6.47,
+      "values": [
+        318.7,
+        318.8,
+        319.7,
+        319.9,
+        335.4
+      ]
+    },
+    "domInteractive": {
+      "median": 319.6,
+      "mean": 322.22,
+      "min": 318.5,
+      "max": 334.7,
+      "stddev": 6.26,
+      "values": [
+        318.5,
+        318.7,
+        319.6,
+        319.6,
+        334.7
+      ]
+    }
+  },
+  {
+    "config": "minimal-common-bad-fast-4g",
+    "fcp": {
+      "median": 456,
+      "mean": 456.8,
+      "min": 452,
+      "max": 460,
+      "stddev": 2.99,
+      "values": [
+        452,
+        456,
+        456,
+        460,
+        460
+      ]
+    },
+    "lcp": {
+      "median": 456,
+      "mean": 456.8,
+      "min": 452,
+      "max": 460,
+      "stddev": 2.99,
+      "values": [
+        452,
+        456,
+        456,
+        460,
+        460
+      ]
+    },
+    "domContentLoaded": {
+      "median": 319.6,
+      "mean": 319.48,
+      "min": 318.8,
+      "max": 319.8,
+      "stddev": 0.35,
+      "values": [
+        318.8,
+        319.5,
+        319.6,
+        319.7,
+        319.8
+      ]
+    },
+    "domInteractive": {
+      "median": 319.4,
+      "mean": 319.3,
+      "min": 318.7,
+      "max": 319.6,
+      "stddev": 0.32,
+      "values": [
+        318.7,
+        319.3,
+        319.4,
+        319.5,
+        319.6
+      ]
+    }
+  },
+  {
+    "config": "minimal-random-fast-4g",
+    "fcp": {
+      "median": 456,
+      "mean": 459.2,
+      "min": 452,
+      "max": 480,
+      "stddev": 10.55,
+      "values": [
+        452,
+        452,
+        456,
+        456,
+        480
+      ]
+    },
+    "lcp": {
+      "median": 456,
+      "mean": 459.2,
+      "min": 452,
+      "max": 480,
+      "stddev": 10.55,
+      "values": [
+        452,
+        452,
+        456,
+        456,
+        480
+      ]
+    },
+    "domContentLoaded": {
+      "median": 342.5,
+      "mean": 342.66,
+      "min": 342.2,
+      "max": 343.5,
+      "stddev": 0.47,
+      "values": [
+        342.2,
+        342.3,
+        342.5,
+        342.8,
+        343.5
+      ]
+    },
+    "domInteractive": {
+      "median": 342.3,
+      "mean": 342.48,
+      "min": 342.1,
+      "max": 343.2,
+      "stddev": 0.4,
+      "values": [
+        342.1,
+        342.2,
+        342.3,
+        342.6,
+        343.2
+      ]
+    }
+  },
+  {
+    "config": "minimal-worst-fast-4g",
+    "fcp": {
+      "median": 464,
+      "mean": 461.6,
+      "min": 456,
+      "max": 464,
+      "stddev": 3.2,
+      "values": [
+        456,
+        460,
+        464,
+        464,
+        464
+      ]
+    },
+    "lcp": {
+      "median": 464,
+      "mean": 461.6,
+      "min": 456,
+      "max": 464,
+      "stddev": 3.2,
+      "values": [
+        456,
+        460,
+        464,
+        464,
+        464
+      ]
+    },
+    "domContentLoaded": {
+      "median": 457.3,
+      "mean": 455.76,
+      "min": 449.1,
+      "max": 457.7,
+      "stddev": 3.33,
+      "values": [
+        449.1,
+        457.2,
+        457.3,
+        457.5,
+        457.7
+      ]
+    },
+    "domInteractive": {
+      "median": 457.1,
+      "mean": 455.54,
+      "min": 448.9,
+      "max": 457.4,
+      "stddev": 3.32,
+      "values": [
+        448.9,
+        457,
+        457.1,
+        457.3,
+        457.4
+      ]
+    }
+  },
+  {
+    "config": "medium-optimal-fast-4g",
+    "fcp": {
+      "median": 468,
+      "mean": 469.6,
+      "min": 464,
+      "max": 480,
+      "stddev": 5.99,
+      "values": [
+        464,
+        464,
+        468,
+        472,
+        480
+      ]
+    },
+    "lcp": {
+      "median": 468,
+      "mean": 469.6,
+      "min": 464,
+      "max": 480,
+      "stddev": 5.99,
+      "values": [
+        464,
+        464,
+        468,
+        472,
+        480
+      ]
+    },
+    "domContentLoaded": {
+      "median": 494.4,
+      "mean": 497.1,
+      "min": 493.8,
+      "max": 501.9,
+      "stddev": 3.72,
+      "values": [
+        493.8,
+        494,
+        494.4,
+        501.4,
+        501.9
+      ]
+    },
+    "domInteractive": {
+      "median": 335.6,
+      "mean": 338.32,
+      "min": 334.7,
+      "max": 343.3,
+      "stddev": 3.76,
+      "values": [
+        334.7,
+        335.5,
+        335.6,
+        342.5,
+        343.3
+      ]
+    }
+  },
+  {
+    "config": "medium-common-bad-fast-4g",
+    "fcp": {
+      "median": 468,
+      "mean": 468.8,
+      "min": 464,
+      "max": 476,
+      "stddev": 4.66,
+      "values": [
+        464,
+        464,
+        468,
+        472,
+        476
+      ]
+    },
+    "lcp": {
+      "median": 468,
+      "mean": 468.8,
+      "min": 464,
+      "max": 476,
+      "stddev": 4.66,
+      "values": [
+        464,
+        464,
+        468,
+        472,
+        476
+      ]
+    },
+    "domContentLoaded": {
+      "median": 501.7,
+      "mean": 501.78,
+      "min": 501.4,
+      "max": 502.2,
+      "stddev": 0.29,
+      "values": [
+        501.4,
+        501.6,
+        501.7,
+        502,
+        502.2
+      ]
+    },
+    "domInteractive": {
+      "median": 335.1,
+      "mean": 335.22,
+      "min": 334.6,
+      "max": 336,
+      "stddev": 0.49,
+      "values": [
+        334.6,
+        334.9,
+        335.1,
+        335.5,
+        336
+      ]
+    }
+  },
+  {
+    "config": "medium-random-fast-4g",
+    "fcp": {
+      "median": 468,
+      "mean": 472,
+      "min": 464,
+      "max": 488,
+      "stddev": 9.12,
+      "values": [
+        464,
+        464,
+        468,
+        476,
+        488
+      ]
+    },
+    "lcp": {
+      "median": 468,
+      "mean": 472,
+      "min": 464,
+      "max": 488,
+      "stddev": 9.12,
+      "values": [
+        464,
+        464,
+        468,
+        476,
+        488
+      ]
+    },
+    "domContentLoaded": {
+      "median": 455.9,
+      "mean": 461.36,
+      "min": 454.5,
+      "max": 478.4,
+      "stddev": 9.08,
+      "values": [
+        454.5,
+        454.9,
+        455.9,
+        463.1,
+        478.4
+      ]
+    },
+    "domInteractive": {
+      "median": 455.4,
+      "mean": 460.84,
+      "min": 454,
+      "max": 477.8,
+      "stddev": 9.04,
+      "values": [
+        454,
+        454.4,
+        455.4,
+        462.6,
+        477.8
+      ]
+    }
+  },
+  {
+    "config": "medium-worst-fast-4g",
+    "fcp": {
+      "median": 468,
+      "mean": 468,
+      "min": 464,
+      "max": 472,
+      "stddev": 3.58,
+      "values": [
+        464,
+        464,
+        468,
+        472,
+        472
+      ]
+    },
+    "lcp": {
+      "median": 468,
+      "mean": 468,
+      "min": 464,
+      "max": 472,
+      "stddev": 3.58,
+      "values": [
+        464,
+        464,
+        468,
+        472,
+        472
+      ]
+    },
+    "domContentLoaded": {
+      "median": 460.9,
+      "mean": 463.22,
+      "min": 459.7,
+      "max": 468.2,
+      "stddev": 3.69,
+      "values": [
+        459.7,
+        460.1,
+        460.9,
+        467.2,
+        468.2
+      ]
+    },
+    "domInteractive": {
+      "median": 460.3,
+      "mean": 462.6,
+      "min": 459.1,
+      "max": 467.6,
+      "stddev": 3.71,
+      "values": [
+        459.1,
+        459.4,
+        460.3,
+        466.6,
+        467.6
+      ]
+    }
+  },
+  {
+    "config": "heavy-optimal-fast-4g",
+    "fcp": {
+      "median": 496,
+      "mean": 497.6,
+      "min": 496,
+      "max": 504,
+      "stddev": 3.2,
+      "values": [
+        496,
+        496,
+        496,
+        496,
+        504
+      ]
+    },
+    "lcp": {
+      "median": 496,
+      "mean": 497.6,
+      "min": 496,
+      "max": 504,
+      "stddev": 3.2,
+      "values": [
+        496,
+        496,
+        496,
+        496,
+        504
+      ]
+    },
+    "domContentLoaded": {
+      "median": 533.1,
+      "mean": 533.12,
+      "min": 532.7,
+      "max": 533.4,
+      "stddev": 0.24,
+      "values": [
+        532.7,
+        533.1,
+        533.1,
+        533.3,
+        533.4
+      ]
+    },
+    "domInteractive": {
+      "median": 358.5,
+      "mean": 357.16,
+      "min": 350.7,
+      "max": 359.7,
+      "stddev": 3.27,
+      "values": [
+        350.7,
+        358.4,
+        358.5,
+        358.5,
+        359.7
+      ]
+    }
+  },
+  {
+    "config": "heavy-common-bad-fast-4g",
+    "fcp": {
+      "median": 488,
+      "mean": 492.8,
+      "min": 488,
+      "max": 504,
+      "stddev": 6.4,
+      "values": [
+        488,
+        488,
+        488,
+        496,
+        504
+      ]
+    },
+    "lcp": {
+      "median": 488,
+      "mean": 492.8,
+      "min": 488,
+      "max": 504,
+      "stddev": 6.4,
+      "values": [
+        488,
+        488,
+        488,
+        496,
+        504
+      ]
+    },
+    "domContentLoaded": {
+      "median": 620.7,
+      "mean": 620.72,
+      "min": 620.4,
+      "max": 621.3,
+      "stddev": 0.31,
+      "values": [
+        620.4,
+        620.5,
+        620.7,
+        620.7,
+        621.3
+      ]
+    },
+    "domInteractive": {
+      "median": 454.4,
+      "mean": 454.54,
+      "min": 454.4,
+      "max": 455,
+      "stddev": 0.23,
+      "values": [
+        454.4,
+        454.4,
+        454.4,
+        454.5,
+        455
+      ]
+    }
+  },
+  {
+    "config": "heavy-random-fast-4g",
+    "fcp": {
+      "median": 504,
+      "mean": 504,
+      "min": 500,
+      "max": 508,
+      "stddev": 2.53,
+      "values": [
+        500,
+        504,
+        504,
+        504,
+        508
+      ]
+    },
+    "lcp": {
+      "median": 504,
+      "mean": 504,
+      "min": 500,
+      "max": 508,
+      "stddev": 2.53,
+      "values": [
+        500,
+        504,
+        504,
+        504,
+        508
+      ]
+    },
+    "domContentLoaded": {
+      "median": 621,
+      "mean": 622.52,
+      "min": 620.7,
+      "max": 628.9,
+      "stddev": 3.19,
+      "values": [
+        620.7,
+        621,
+        621,
+        621,
+        628.9
+      ]
+    },
+    "domInteractive": {
+      "median": 454.7,
+      "mean": 456.16,
+      "min": 454,
+      "max": 462.6,
+      "stddev": 3.24,
+      "values": [
+        454,
+        454.5,
+        454.7,
+        455,
+        462.6
+      ]
+    }
+  },
+  {
+    "config": "heavy-worst-fast-4g",
+    "fcp": {
+      "median": 528,
+      "mean": 526.4,
+      "min": 520,
+      "max": 528,
+      "stddev": 3.2,
+      "values": [
+        520,
+        528,
+        528,
+        528,
+        528
+      ]
+    },
+    "lcp": {
+      "median": 528,
+      "mean": 526.4,
+      "min": 520,
+      "max": 528,
+      "stddev": 3.2,
+      "values": [
+        520,
+        528,
+        528,
+        528,
+        528
+      ]
+    },
+    "domContentLoaded": {
+      "median": 522.5,
+      "mean": 521.7,
+      "min": 516,
+      "max": 524.3,
+      "stddev": 2.93,
+      "values": [
+        516,
+        522.4,
+        522.5,
+        523.3,
+        524.3
+      ]
+    },
+    "domInteractive": {
+      "median": 521.8,
+      "mean": 520.94,
+      "min": 515.2,
+      "max": 523.5,
+      "stddev": 2.95,
+      "values": [
+        515.2,
+        521.6,
+        521.8,
+        522.6,
+        523.5
+      ]
+    }
+  },
+  {
+    "config": "minimal-optimal-slow-3g",
+    "fcp": {
+      "median": 984,
+      "mean": 986.4,
+      "min": 980,
+      "max": 992,
+      "stddev": 4.8,
+      "values": [
+        980,
+        984,
+        984,
+        992,
+        992
+      ]
+    },
+    "lcp": {
+      "median": 984,
+      "mean": 986.4,
+      "min": 980,
+      "max": 992,
+      "stddev": 4.8,
+      "values": [
+        980,
+        984,
+        984,
+        992,
+        992
+      ]
+    },
+    "domContentLoaded": {
+      "median": 860.3,
+      "mean": 860.12,
+      "min": 859.7,
+      "max": 860.5,
+      "stddev": 0.35,
+      "values": [
+        859.7,
+        859.7,
+        860.3,
+        860.4,
+        860.5
+      ]
+    },
+    "domInteractive": {
+      "median": 860.1,
+      "mean": 859.94,
+      "min": 859.5,
+      "max": 860.3,
+      "stddev": 0.37,
+      "values": [
+        859.5,
+        859.5,
+        860.1,
+        860.3,
+        860.3
+      ]
+    }
+  },
+  {
+    "config": "minimal-common-bad-slow-3g",
+    "fcp": {
+      "median": 992,
+      "mean": 991.2,
+      "min": 980,
+      "max": 1012,
+      "stddev": 11.7,
+      "values": [
+        980,
+        980,
+        992,
+        992,
+        1012
+      ]
+    },
+    "lcp": {
+      "median": 992,
+      "mean": 991.2,
+      "min": 980,
+      "max": 1012,
+      "stddev": 11.7,
+      "values": [
+        980,
+        980,
+        992,
+        992,
+        1012
+      ]
+    },
+    "domContentLoaded": {
+      "median": 860,
+      "mean": 860,
+      "min": 859.7,
+      "max": 860.2,
+      "stddev": 0.19,
+      "values": [
+        859.7,
+        859.9,
+        860,
+        860.2,
+        860.2
+      ]
+    },
+    "domInteractive": {
+      "median": 859.8,
+      "mean": 859.8,
+      "min": 859.5,
+      "max": 860.1,
+      "stddev": 0.2,
+      "values": [
+        859.5,
+        859.7,
+        859.8,
+        859.9,
+        860.1
+      ]
+    }
+  },
+  {
+    "config": "minimal-random-slow-3g",
+    "fcp": {
+      "median": 992,
+      "mean": 994.4,
+      "min": 988,
+      "max": 1012,
+      "stddev": 8.98,
+      "values": [
+        988,
+        988,
+        992,
+        992,
+        1012
+      ]
+    },
+    "lcp": {
+      "median": 992,
+      "mean": 994.4,
+      "min": 988,
+      "max": 1012,
+      "stddev": 8.98,
+      "values": [
+        988,
+        988,
+        992,
+        992,
+        1012
+      ]
+    },
+    "domContentLoaded": {
+      "median": 945.4,
+      "mean": 945.34,
+      "min": 944.8,
+      "max": 945.9,
+      "stddev": 0.47,
+      "values": [
+        944.8,
+        944.8,
+        945.4,
+        945.8,
+        945.9
+      ]
+    },
+    "domInteractive": {
+      "median": 945.2,
+      "mean": 945.14,
+      "min": 944.6,
+      "max": 945.7,
+      "stddev": 0.47,
+      "values": [
+        944.6,
+        944.6,
+        945.2,
+        945.6,
+        945.7
+      ]
+    }
+  },
+  {
+    "config": "minimal-worst-slow-3g",
+    "fcp": {
+      "median": 980,
+      "mean": 983.2,
+      "min": 980,
+      "max": 988,
+      "stddev": 3.92,
+      "values": [
+        980,
+        980,
+        980,
+        988,
+        988
+      ]
+    },
+    "lcp": {
+      "median": 980,
+      "mean": 983.2,
+      "min": 980,
+      "max": 988,
+      "stddev": 3.92,
+      "values": [
+        980,
+        980,
+        980,
+        988,
+        988
+      ]
+    },
+    "domContentLoaded": {
+      "median": 977,
+      "mean": 976.98,
+      "min": 976.7,
+      "max": 977.4,
+      "stddev": 0.26,
+      "values": [
+        976.7,
+        976.7,
+        977,
+        977.1,
+        977.4
+      ]
+    },
+    "domInteractive": {
+      "median": 976.7,
+      "mean": 976.72,
+      "min": 976.4,
+      "max": 977.2,
+      "stddev": 0.28,
+      "values": [
+        976.4,
+        976.5,
+        976.7,
+        976.8,
+        977.2
+      ]
+    }
+  },
+  {
+    "config": "medium-optimal-slow-3g",
+    "fcp": {
+      "median": 1068,
+      "mean": 1068,
+      "min": 1068,
+      "max": 1068,
+      "stddev": 0,
+      "values": [
+        1068,
+        1068,
+        1068,
+        1068,
+        1068
+      ]
+    },
+    "lcp": {
+      "median": 1068,
+      "mean": 1068,
+      "min": 1068,
+      "max": 1068,
+      "stddev": 0,
+      "values": [
+        1068,
+        1068,
+        1068,
+        1068,
+        1068
+      ]
+    },
+    "domContentLoaded": {
+      "median": 1345.4,
+      "mean": 1340.02,
+      "min": 1317.3,
+      "max": 1346.3,
+      "stddev": 11.37,
+      "values": [
+        1317.3,
+        1345.3,
+        1345.4,
+        1345.8,
+        1346.3
+      ]
+    },
+    "domInteractive": {
+      "median": 916.8,
+      "mean": 911.26,
+      "min": 888.4,
+      "max": 917.5,
+      "stddev": 11.43,
+      "values": [
+        888.4,
+        916.6,
+        916.8,
+        917,
+        917.5
+      ]
+    }
+  },
+  {
+    "config": "medium-common-bad-slow-3g",
+    "fcp": {
+      "median": 1040,
+      "mean": 1042.4,
+      "min": 1040,
+      "max": 1052,
+      "stddev": 4.8,
+      "values": [
+        1040,
+        1040,
+        1040,
+        1040,
+        1052
+      ]
+    },
+    "lcp": {
+      "median": 1040,
+      "mean": 1042.4,
+      "min": 1040,
+      "max": 1052,
+      "stddev": 4.8,
+      "values": [
+        1040,
+        1040,
+        1040,
+        1040,
+        1052
+      ]
+    },
+    "domContentLoaded": {
+      "median": 1377.1,
+      "mean": 1386.64,
+      "min": 1374.8,
+      "max": 1403.5,
+      "stddev": 13.51,
+      "values": [
+        1374.8,
+        1375,
+        1377.1,
+        1402.8,
+        1403.5
+      ]
+    },
+    "domInteractive": {
+      "median": 919.6,
+      "mean": 928.94,
+      "min": 917,
+      "max": 945.5,
+      "stddev": 13.43,
+      "values": [
+        917,
+        917.4,
+        919.6,
+        945.2,
+        945.5
+      ]
+    }
+  },
+  {
+    "config": "medium-random-slow-3g",
+    "fcp": {
+      "median": 1068,
+      "mean": 1070.4,
+      "min": 1068,
+      "max": 1076,
+      "stddev": 3.2,
+      "values": [
+        1068,
+        1068,
+        1068,
+        1072,
+        1076
+      ]
+    },
+    "lcp": {
+      "median": 1068,
+      "mean": 1070.4,
+      "min": 1068,
+      "max": 1076,
+      "stddev": 3.2,
+      "values": [
+        1068,
+        1068,
+        1068,
+        1072,
+        1076
+      ]
+    },
+    "domContentLoaded": {
+      "median": 1060.2,
+      "mean": 1060.3,
+      "min": 1060,
+      "max": 1060.8,
+      "stddev": 0.27,
+      "values": [
+        1060,
+        1060.2,
+        1060.2,
+        1060.3,
+        1060.8
+      ]
+    },
+    "domInteractive": {
+      "median": 1059.8,
+      "mean": 1059.8,
+      "min": 1059.5,
+      "max": 1060.2,
+      "stddev": 0.23,
+      "values": [
+        1059.5,
+        1059.7,
+        1059.8,
+        1059.8,
+        1060.2
+      ]
+    }
+  },
+  {
+    "config": "medium-worst-slow-3g",
+    "fcp": {
+      "median": 1080,
+      "mean": 1075.2,
+      "min": 1068,
+      "max": 1080,
+      "stddev": 5.88,
+      "values": [
+        1068,
+        1068,
+        1080,
+        1080,
+        1080
+      ]
+    },
+    "lcp": {
+      "median": 1080,
+      "mean": 1075.2,
+      "min": 1068,
+      "max": 1080,
+      "stddev": 5.88,
+      "values": [
+        1068,
+        1068,
+        1080,
+        1080,
+        1080
+      ]
+    },
+    "domContentLoaded": {
+      "median": 1064.6,
+      "mean": 1063.74,
+      "min": 1059.7,
+      "max": 1065.7,
+      "stddev": 2.1,
+      "values": [
+        1059.7,
+        1063.9,
+        1064.6,
+        1064.8,
+        1065.7
+      ]
+    },
+    "domInteractive": {
+      "median": 1063.9,
+      "mean": 1063.18,
+      "min": 1059.3,
+      "max": 1065.1,
+      "stddev": 2.02,
+      "values": [
+        1059.3,
+        1063.4,
+        1063.9,
+        1064.2,
+        1065.1
+      ]
+    }
+  },
+  {
+    "config": "heavy-optimal-slow-3g",
+    "fcp": {
+      "median": 1228,
+      "mean": 1237.6,
+      "min": 1224,
+      "max": 1256,
+      "stddev": 15.09,
+      "values": [
+        1224,
+        1224,
+        1228,
+        1256,
+        1256
+      ]
+    },
+    "lcp": {
+      "median": 1228,
+      "mean": 1237.6,
+      "min": 1224,
+      "max": 1256,
+      "stddev": 15.09,
+      "values": [
+        1224,
+        1224,
+        1228,
+        1256,
+        1256
+      ]
+    },
+    "domContentLoaded": {
+      "median": 1517.1,
+      "mean": 1505.98,
+      "min": 1489,
+      "max": 1517.4,
+      "stddev": 13.74,
+      "values": [
+        1489,
+        1489.3,
+        1517.1,
+        1517.1,
+        1517.4
+      ]
+    },
+    "domInteractive": {
+      "median": 1002.8,
+      "mean": 1002.88,
+      "min": 1002.6,
+      "max": 1003.2,
+      "stddev": 0.23,
+      "values": [
+        1002.6,
+        1002.7,
+        1002.8,
+        1003.1,
+        1003.2
+      ]
+    }
+  },
+  {
+    "config": "heavy-common-bad-slow-3g",
+    "fcp": {
+      "median": 1228,
+      "mean": 1228,
+      "min": 1228,
+      "max": 1228,
+      "stddev": 0,
+      "values": [
+        1228,
+        1228,
+        1228,
+        1228,
+        1228
+      ]
+    },
+    "lcp": {
+      "median": 1228,
+      "mean": 1228,
+      "min": 1228,
+      "max": 1228,
+      "stddev": 0,
+      "values": [
+        1228,
+        1228,
+        1228,
+        1228,
+        1228
+      ]
+    },
+    "domContentLoaded": {
+      "median": 1574.4,
+      "mean": 1574.44,
+      "min": 1574.1,
+      "max": 1575,
+      "stddev": 0.3,
+      "values": [
+        1574.1,
+        1574.3,
+        1574.4,
+        1574.4,
+        1575
+      ]
+    },
+    "domInteractive": {
+      "median": 1117.1,
+      "mean": 1117.28,
+      "min": 1116.9,
+      "max": 1117.8,
+      "stddev": 0.35,
+      "values": [
+        1116.9,
+        1117,
+        1117.1,
+        1117.6,
+        1117.8
+      ]
+    }
+  },
+  {
+    "config": "heavy-random-slow-3g",
+    "fcp": {
+      "median": 1228,
+      "mean": 1230.4,
+      "min": 1228,
+      "max": 1236,
+      "stddev": 3.2,
+      "values": [
+        1228,
+        1228,
+        1228,
+        1232,
+        1236
+      ]
+    },
+    "lcp": {
+      "median": 1228,
+      "mean": 1230.4,
+      "min": 1228,
+      "max": 1236,
+      "stddev": 3.2,
+      "values": [
+        1228,
+        1228,
+        1228,
+        1232,
+        1236
+      ]
+    },
+    "domContentLoaded": {
+      "median": 1574.5,
+      "mean": 1574.4,
+      "min": 1573.5,
+      "max": 1575.1,
+      "stddev": 0.51,
+      "values": [
+        1573.5,
+        1574.4,
+        1574.5,
+        1574.5,
+        1575.1
+      ]
+    },
+    "domInteractive": {
+      "median": 1117.4,
+      "mean": 1117.46,
+      "min": 1117,
+      "max": 1118,
+      "stddev": 0.32,
+      "values": [
+        1117,
+        1117.4,
+        1117.4,
+        1117.5,
+        1118
+      ]
+    }
+  },
+  {
+    "config": "heavy-worst-slow-3g",
+    "fcp": {
+      "median": 1440,
+      "mean": 1435.2,
+      "min": 1412,
+      "max": 1444,
+      "stddev": 11.97,
+      "values": [
+        1412,
+        1436,
+        1440,
+        1444,
+        1444
+      ]
+    },
+    "lcp": {
+      "median": 1440,
+      "mean": 1435.2,
+      "min": 1412,
+      "max": 1444,
+      "stddev": 11.97,
+      "values": [
+        1412,
+        1436,
+        1440,
+        1444,
+        1444
+      ]
+    },
+    "domContentLoaded": {
+      "median": 1437,
+      "mean": 1431.26,
+      "min": 1409.6,
+      "max": 1438.8,
+      "stddev": 10.96,
+      "values": [
+        1409.6,
+        1433.6,
+        1437,
+        1437.3,
+        1438.8
+      ]
+    },
+    "domInteractive": {
+      "median": 1436.5,
+      "mean": 1430.54,
+      "min": 1408.6,
+      "max": 1437.9,
+      "stddev": 11.09,
+      "values": [
+        1408.6,
+        1433,
+        1436.5,
+        1436.7,
+        1437.9
+      ]
+    }
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "name": "streaming-head-benchmarks",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "server": "tsx server.ts",
+    "capture": "tsx ../scripts/capture-streaming.ts",
+    "benchmark": "tsx ../scripts/benchmark.ts"
+  },
+  "devDependencies": {
+    "tsx": "catalog:"
+  }
+}

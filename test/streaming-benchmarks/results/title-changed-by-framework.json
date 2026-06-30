@@ -1,0 +1,17 @@
+{
+  "query": "title_changed_on_render + missing_raw_title/desc by framework",
+  "date": "2026-02-01",
+  "client": "desktop",
+  "cost_gb": 338,
+  "note": "title_changed_on_render = title in raw HTML differs from title after JS execution. High values indicate client-side rendering or streaming head patching. missing_raw_title = no <title> in initial SSR HTML.",
+  "results": [
+    { "technology": "Next.js", "total": 342455, "pct_title_changed": 0.0958, "pct_missing_raw_title": 0.1107, "pct_missing_raw_desc": 0.2093 },
+    { "technology": "Angular", "total": 147205, "pct_title_changed": 0.3749, "pct_missing_raw_title": 0.1313, "pct_missing_raw_desc": 0.6819 },
+    { "technology": "Nuxt.js", "total": 108759, "pct_title_changed": 0.1049, "pct_missing_raw_title": 0.0874, "pct_missing_raw_desc": 0.2737 },
+    { "technology": "Astro", "total": 29035, "pct_title_changed": 0.0342, "pct_missing_raw_title": 0.0264, "pct_missing_raw_desc": 0.1185 },
+    { "technology": "Gatsby", "total": 14913, "pct_title_changed": 0.1387, "pct_missing_raw_title": 0.1559, "pct_missing_raw_desc": 0.2291 },
+    { "technology": "SvelteKit", "total": 11105, "pct_title_changed": 0.1596, "pct_missing_raw_title": 0.1721, "pct_missing_raw_desc": 0.3524 },
+    { "technology": "Remix", "total": 7138, "pct_title_changed": 0.0276, "pct_missing_raw_title": 0.0269, "pct_missing_raw_desc": 0.2644 },
+    { "technology": "Qwik", "total": 393, "pct_title_changed": 0.0204, "pct_missing_raw_title": 0.0102, "pct_missing_raw_desc": 0.1552 }
+  ]
+}

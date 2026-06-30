@@ -1,0 +1,17 @@
+{
+  "query": "framework-cwv.sql",
+  "date": "2026-02-01 (HTTP Archive) + 202601 (CrUX)",
+  "client": "desktop",
+  "cost_gb": 14.9,
+  "note": "avg_*_good = avg % of page loads in 'good' threshold. avg_*_poor = avg % in 'poor'. CLS thresholds may need calibration (bins are 0-100 scale not 0-1).",
+  "results": [
+    { "technology": "Next.js", "origins": 209395, "fcp_good": 0.382, "fcp_poor": 0.034, "lcp_good": 0.369, "lcp_poor": 0.039, "cls_good": 0.465, "inp_good": 0.464, "inp_poor": 0.015 },
+    { "technology": "Angular", "origins": 97938, "fcp_good": 0.403, "fcp_poor": 0.071, "lcp_good": 0.374, "lcp_poor": 0.088, "cls_good": 0.549, "inp_good": 0.517, "inp_poor": 0.023 },
+    { "technology": "Nuxt.js", "origins": 66097, "fcp_good": 0.373, "fcp_poor": 0.043, "lcp_good": 0.364, "lcp_poor": 0.047, "cls_good": 0.478, "inp_good": 0.476, "inp_poor": 0.015 },
+    { "technology": "Astro", "origins": 13851, "fcp_good": 0.449, "fcp_poor": 0.020, "lcp_good": 0.449, "lcp_poor": 0.021, "cls_good": 0.501, "inp_good": 0.529, "inp_poor": 0.010 },
+    { "technology": "Gatsby", "origins": 9763, "fcp_good": 0.396, "fcp_poor": 0.021, "lcp_good": 0.371, "lcp_poor": 0.028, "cls_good": 0.448, "inp_good": 0.449, "inp_poor": 0.013 },
+    { "technology": "SvelteKit", "origins": 6996, "fcp_good": 0.423, "fcp_poor": 0.033, "lcp_good": 0.418, "lcp_poor": 0.035, "cls_good": 0.508, "inp_good": 0.511, "inp_poor": 0.017 },
+    { "technology": "Remix", "origins": 4316, "fcp_good": 0.336, "fcp_poor": 0.053, "lcp_good": 0.355, "lcp_poor": 0.041, "cls_good": 0.469, "inp_good": 0.481, "inp_poor": 0.013 },
+    { "technology": "Qwik", "origins": 270, "fcp_good": 0.301, "fcp_poor": 0.022, "lcp_good": 0.295, "lcp_poor": 0.024, "cls_good": 0.355, "inp_good": 0.383, "inp_poor": 0.008 }
+  ]
+}

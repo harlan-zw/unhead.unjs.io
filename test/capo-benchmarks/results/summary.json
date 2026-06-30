@@ -1,0 +1,2018 @@
+{
+  "minimal-slow-3g": {
+    "common-bad": {
+      "lcp": {
+        "count": 1,
+        "median": 2406.39,
+        "mean": 2406.39,
+        "p5": 2406.39,
+        "p25": 2406.39,
+        "p75": 2406.39,
+        "p95": 2406.39,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 2406.39,
+        "mean": 2406.39,
+        "p5": 2406.39,
+        "p25": 2406.39,
+        "p75": 2406.39,
+        "p95": 2406.39,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.3,
+        "mean": 0.3,
+        "p5": 0.3,
+        "p25": 0.3,
+        "p75": 0.3,
+        "p95": 0.3,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 2406.39,
+        "mean": 2406.39,
+        "p5": 2406.39,
+        "p25": 2406.39,
+        "p75": 2406.39,
+        "p95": 2406.39,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": 5.84,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": 5.84,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0.02,
+          "deltaPct": 7,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": 5.84,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "optimal": {
+      "lcp": {
+        "count": 1,
+        "median": 2400.55,
+        "mean": 2400.55,
+        "p5": 2400.55,
+        "p25": 2400.55,
+        "p75": 2400.55,
+        "p95": 2400.55,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 2400.55,
+        "mean": 2400.55,
+        "p5": 2400.55,
+        "p25": 2400.55,
+        "p75": 2400.55,
+        "p95": 2400.55,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.29,
+        "mean": 0.29,
+        "p5": 0.29,
+        "p25": 0.29,
+        "p75": 0.29,
+        "p95": 0.29,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 2400.55,
+        "mean": 2400.55,
+        "p5": 2400.55,
+        "p25": 2400.55,
+        "p75": 2400.55,
+        "p95": 2400.55,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      }
+    },
+    "random": {
+      "lcp": {
+        "count": 1,
+        "median": 2404.86,
+        "mean": 2404.86,
+        "p5": 2404.86,
+        "p25": 2404.86,
+        "p75": 2404.86,
+        "p95": 2404.86,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 2404.86,
+        "mean": 2404.86,
+        "p5": 2404.86,
+        "p25": 2404.86,
+        "p75": 2404.86,
+        "p95": 2404.86,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.26,
+        "mean": 0.26,
+        "p5": 0.26,
+        "p25": 0.26,
+        "p75": 0.26,
+        "p95": 0.26,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 2404.86,
+        "mean": 2404.86,
+        "p5": 2404.86,
+        "p25": 2404.86,
+        "p75": 2404.86,
+        "p95": 2404.86,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": 4.31,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": 4.31,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.03,
+          "deltaPct": -10.5,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": 4.31,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "worst": {
+      "lcp": {
+        "count": 1,
+        "median": 2404.96,
+        "mean": 2404.96,
+        "p5": 2404.96,
+        "p25": 2404.96,
+        "p75": 2404.96,
+        "p95": 2404.96,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 2404.96,
+        "mean": 2404.96,
+        "p5": 2404.96,
+        "p25": 2404.96,
+        "p75": 2404.96,
+        "p95": 2404.96,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.32,
+        "mean": 0.32,
+        "p5": 0.32,
+        "p25": 0.32,
+        "p75": 0.32,
+        "p95": 0.32,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 2404.96,
+        "mean": 2404.96,
+        "p5": 2404.96,
+        "p25": 2404.96,
+        "p75": 2404.96,
+        "p95": 2404.96,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": 4.42,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": 4.42,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0.03,
+          "deltaPct": 10.5,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": 4.42,
+          "deltaPct": 0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    }
+  },
+  "minimal-fast-4g": {
+    "worst": {
+      "lcp": {
+        "count": 1,
+        "median": 904.97,
+        "mean": 904.97,
+        "p5": 904.97,
+        "p25": 904.97,
+        "p75": 904.97,
+        "p95": 904.97,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 904.97,
+        "mean": 904.97,
+        "p5": 904.97,
+        "p25": 904.97,
+        "p75": 904.97,
+        "p95": 904.97,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.3,
+        "mean": 0.3,
+        "p5": 0.3,
+        "p25": 0.3,
+        "p75": 0.3,
+        "p95": 0.3,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 904.97,
+        "mean": 904.97,
+        "p5": 904.97,
+        "p25": 904.97,
+        "p75": 904.97,
+        "p95": 904.97,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": 4.42,
+          "deltaPct": 0.5,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": 4.42,
+          "deltaPct": 0.5,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": 4.42,
+          "deltaPct": 0.5,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "random": {
+      "lcp": {
+        "count": 1,
+        "median": 904.51,
+        "mean": 904.51,
+        "p5": 904.51,
+        "p25": 904.51,
+        "p75": 904.51,
+        "p95": 904.51,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 904.51,
+        "mean": 904.51,
+        "p5": 904.51,
+        "p25": 904.51,
+        "p75": 904.51,
+        "p95": 904.51,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.3,
+        "mean": 0.3,
+        "p5": 0.3,
+        "p25": 0.3,
+        "p75": 0.3,
+        "p95": 0.3,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 904.51,
+        "mean": 904.51,
+        "p5": 904.51,
+        "p25": 904.51,
+        "p75": 904.51,
+        "p95": 904.51,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": 3.95,
+          "deltaPct": 0.4,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": 3.95,
+          "deltaPct": 0.4,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0.01,
+          "deltaPct": 3.4,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": 3.95,
+          "deltaPct": 0.4,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "common-bad": {
+      "lcp": {
+        "count": 1,
+        "median": 905.6,
+        "mean": 905.6,
+        "p5": 905.6,
+        "p25": 905.6,
+        "p75": 905.6,
+        "p95": 905.6,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 905.6,
+        "mean": 905.6,
+        "p5": 905.6,
+        "p25": 905.6,
+        "p75": 905.6,
+        "p95": 905.6,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.77,
+        "mean": 0.77,
+        "p5": 0.77,
+        "p25": 0.77,
+        "p75": 0.77,
+        "p95": 0.77,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 905.6,
+        "mean": 905.6,
+        "p5": 905.6,
+        "p25": 905.6,
+        "p75": 905.6,
+        "p95": 905.6,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": 5.05,
+          "deltaPct": 0.6,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": 5.05,
+          "deltaPct": 0.6,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0.47,
+          "deltaPct": 158.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": 5.05,
+          "deltaPct": 0.6,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "optimal": {
+      "lcp": {
+        "count": 1,
+        "median": 900.55,
+        "mean": 900.55,
+        "p5": 900.55,
+        "p25": 900.55,
+        "p75": 900.55,
+        "p95": 900.55,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 900.55,
+        "mean": 900.55,
+        "p5": 900.55,
+        "p25": 900.55,
+        "p75": 900.55,
+        "p95": 900.55,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.3,
+        "mean": 0.3,
+        "p5": 0.3,
+        "p25": 0.3,
+        "p75": 0.3,
+        "p95": 0.3,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 900.55,
+        "mean": 900.55,
+        "p5": 900.55,
+        "p25": 900.55,
+        "p75": 900.55,
+        "p95": 900.55,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      }
+    }
+  },
+  "medium-slow-3g": {
+    "random": {
+      "lcp": {
+        "count": 1,
+        "median": 3720.3,
+        "mean": 3720.3,
+        "p5": 3720.3,
+        "p25": 3720.3,
+        "p75": 3720.3,
+        "p95": 3720.3,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 3720.3,
+        "mean": 3720.3,
+        "p5": 3720.3,
+        "p25": 3720.3,
+        "p75": 3720.3,
+        "p95": 3720.3,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.3,
+        "mean": 0.3,
+        "p5": 0.3,
+        "p25": 0.3,
+        "p75": 0.3,
+        "p95": 0.3,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 3720.3,
+        "mean": 3720.3,
+        "p5": 3720.3,
+        "p25": 3720.3,
+        "p75": 3720.3,
+        "p95": 3720.3,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": 0.07,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": 0.07,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.35,
+          "deltaPct": -53.3,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": 0.07,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "worst": {
+      "lcp": {
+        "count": 1,
+        "median": 3722.56,
+        "mean": 3722.56,
+        "p5": 3722.56,
+        "p25": 3722.56,
+        "p75": 3722.56,
+        "p95": 3722.56,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 3722.56,
+        "mean": 3722.56,
+        "p5": 3722.56,
+        "p25": 3722.56,
+        "p75": 3722.56,
+        "p95": 3722.56,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.26,
+        "mean": 0.26,
+        "p5": 0.26,
+        "p25": 0.26,
+        "p75": 0.26,
+        "p95": 0.26,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 3722.56,
+        "mean": 3722.56,
+        "p5": 3722.56,
+        "p25": 3722.56,
+        "p75": 3722.56,
+        "p95": 3722.56,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": 2.33,
+          "deltaPct": 0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": 2.33,
+          "deltaPct": 0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.4,
+          "deltaPct": -60.9,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": 2.33,
+          "deltaPct": 0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "common-bad": {
+      "lcp": {
+        "count": 1,
+        "median": 3719.41,
+        "mean": 3719.41,
+        "p5": 3719.41,
+        "p25": 3719.41,
+        "p75": 3719.41,
+        "p95": 3719.41,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 3719.41,
+        "mean": 3719.41,
+        "p5": 3719.41,
+        "p25": 3719.41,
+        "p75": 3719.41,
+        "p95": 3719.41,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.29,
+        "mean": 0.29,
+        "p5": 0.29,
+        "p25": 0.29,
+        "p75": 0.29,
+        "p95": 0.29,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 3719.41,
+        "mean": 3719.41,
+        "p5": 3719.41,
+        "p25": 3719.41,
+        "p75": 3719.41,
+        "p95": 3719.41,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -0.82,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -0.82,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.37,
+          "deltaPct": -56.3,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -0.82,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "optimal": {
+      "lcp": {
+        "count": 1,
+        "median": 3720.23,
+        "mean": 3720.23,
+        "p5": 3720.23,
+        "p25": 3720.23,
+        "p75": 3720.23,
+        "p95": 3720.23,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 3720.23,
+        "mean": 3720.23,
+        "p5": 3720.23,
+        "p25": 3720.23,
+        "p75": 3720.23,
+        "p95": 3720.23,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.66,
+        "mean": 0.66,
+        "p5": 0.66,
+        "p25": 0.66,
+        "p75": 0.66,
+        "p95": 0.66,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 3720.23,
+        "mean": 3720.23,
+        "p5": 3720.23,
+        "p25": 3720.23,
+        "p75": 3720.23,
+        "p95": 3720.23,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      }
+    }
+  },
+  "heavy-slow-3g": {
+    "common-bad": {
+      "lcp": {
+        "count": 1,
+        "median": 3719.89,
+        "mean": 3719.89,
+        "p5": 3719.89,
+        "p25": 3719.89,
+        "p75": 3719.89,
+        "p95": 3719.89,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 3719.89,
+        "mean": 3719.89,
+        "p5": 3719.89,
+        "p25": 3719.89,
+        "p75": 3719.89,
+        "p95": 3719.89,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.27,
+        "mean": 0.27,
+        "p5": 0.27,
+        "p25": 0.27,
+        "p75": 0.27,
+        "p95": 0.27,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 3719.89,
+        "mean": 3719.89,
+        "p5": 3719.89,
+        "p25": 3719.89,
+        "p75": 3719.89,
+        "p95": 3719.89,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -0.46,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -0.46,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.07,
+          "deltaPct": -20.8,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -0.46,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "optimal": {
+      "lcp": {
+        "count": 1,
+        "median": 3720.35,
+        "mean": 3720.35,
+        "p5": 3720.35,
+        "p25": 3720.35,
+        "p75": 3720.35,
+        "p95": 3720.35,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 3720.35,
+        "mean": 3720.35,
+        "p5": 3720.35,
+        "p25": 3720.35,
+        "p75": 3720.35,
+        "p95": 3720.35,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.34,
+        "mean": 0.34,
+        "p5": 0.34,
+        "p25": 0.34,
+        "p75": 0.34,
+        "p95": 0.34,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 3720.35,
+        "mean": 3720.35,
+        "p5": 3720.35,
+        "p25": 3720.35,
+        "p75": 3720.35,
+        "p95": 3720.35,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      }
+    },
+    "random": {
+      "lcp": {
+        "count": 1,
+        "median": 3719.61,
+        "mean": 3719.61,
+        "p5": 3719.61,
+        "p25": 3719.61,
+        "p75": 3719.61,
+        "p95": 3719.61,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 3719.61,
+        "mean": 3719.61,
+        "p5": 3719.61,
+        "p25": 3719.61,
+        "p75": 3719.61,
+        "p95": 3719.61,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.27,
+        "mean": 0.27,
+        "p5": 0.27,
+        "p25": 0.27,
+        "p75": 0.27,
+        "p95": 0.27,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 3719.61,
+        "mean": 3719.61,
+        "p5": 3719.61,
+        "p25": 3719.61,
+        "p75": 3719.61,
+        "p95": 3719.61,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -0.74,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -0.74,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.07,
+          "deltaPct": -20.8,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -0.74,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "worst": {
+      "lcp": {
+        "count": 1,
+        "median": 3717.06,
+        "mean": 3717.06,
+        "p5": 3717.06,
+        "p25": 3717.06,
+        "p75": 3717.06,
+        "p95": 3717.06,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 3717.06,
+        "mean": 3717.06,
+        "p5": 3717.06,
+        "p25": 3717.06,
+        "p75": 3717.06,
+        "p95": 3717.06,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.3,
+        "mean": 0.3,
+        "p5": 0.3,
+        "p25": 0.3,
+        "p75": 0.3,
+        "p95": 0.3,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 3717.06,
+        "mean": 3717.06,
+        "p5": 3717.06,
+        "p25": 3717.06,
+        "p75": 3717.06,
+        "p95": 3717.06,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -3.29,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -3.29,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.03,
+          "deltaPct": -8.9,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -3.29,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    }
+  },
+  "medium-fast-4g": {
+    "common-bad": {
+      "lcp": {
+        "count": 1,
+        "median": 1468.22,
+        "mean": 1468.22,
+        "p5": 1468.22,
+        "p25": 1468.22,
+        "p75": 1468.22,
+        "p95": 1468.22,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 1468.22,
+        "mean": 1468.22,
+        "p5": 1468.22,
+        "p25": 1468.22,
+        "p75": 1468.22,
+        "p95": 1468.22,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.28,
+        "mean": 0.28,
+        "p5": 0.28,
+        "p25": 0.28,
+        "p75": 0.28,
+        "p95": 0.28,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 1468.22,
+        "mean": 1468.22,
+        "p5": 1468.22,
+        "p25": 1468.22,
+        "p75": 1468.22,
+        "p95": 1468.22,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -1.69,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -1.69,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.09,
+          "deltaPct": -24.7,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -1.69,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "random": {
+      "lcp": {
+        "count": 1,
+        "median": 1467.57,
+        "mean": 1467.57,
+        "p5": 1467.57,
+        "p25": 1467.57,
+        "p75": 1467.57,
+        "p95": 1467.57,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 1467.57,
+        "mean": 1467.57,
+        "p5": 1467.57,
+        "p25": 1467.57,
+        "p75": 1467.57,
+        "p95": 1467.57,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.65,
+        "mean": 0.65,
+        "p5": 0.65,
+        "p25": 0.65,
+        "p75": 0.65,
+        "p95": 0.65,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 1467.57,
+        "mean": 1467.57,
+        "p5": 1467.57,
+        "p25": 1467.57,
+        "p75": 1467.57,
+        "p95": 1467.57,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -2.33,
+          "deltaPct": -0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -2.33,
+          "deltaPct": -0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0.28,
+          "deltaPct": 76.9,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -2.33,
+          "deltaPct": -0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "worst": {
+      "lcp": {
+        "count": 1,
+        "median": 1467.61,
+        "mean": 1467.61,
+        "p5": 1467.61,
+        "p25": 1467.61,
+        "p75": 1467.61,
+        "p95": 1467.61,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 1467.61,
+        "mean": 1467.61,
+        "p5": 1467.61,
+        "p25": 1467.61,
+        "p75": 1467.61,
+        "p95": 1467.61,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.27,
+        "mean": 0.27,
+        "p5": 0.27,
+        "p25": 0.27,
+        "p75": 0.27,
+        "p95": 0.27,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 1467.61,
+        "mean": 1467.61,
+        "p5": 1467.61,
+        "p25": 1467.61,
+        "p75": 1467.61,
+        "p95": 1467.61,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -2.29,
+          "deltaPct": -0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -2.29,
+          "deltaPct": -0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": -0.09,
+          "deltaPct": -24.7,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -2.29,
+          "deltaPct": -0.2,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "optimal": {
+      "lcp": {
+        "count": 1,
+        "median": 1469.9,
+        "mean": 1469.9,
+        "p5": 1469.9,
+        "p25": 1469.9,
+        "p75": 1469.9,
+        "p95": 1469.9,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 1469.9,
+        "mean": 1469.9,
+        "p5": 1469.9,
+        "p25": 1469.9,
+        "p75": 1469.9,
+        "p95": 1469.9,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.36,
+        "mean": 0.36,
+        "p5": 0.36,
+        "p25": 0.36,
+        "p75": 0.36,
+        "p95": 0.36,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 1469.9,
+        "mean": 1469.9,
+        "p5": 1469.9,
+        "p25": 1469.9,
+        "p75": 1469.9,
+        "p95": 1469.9,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      }
+    }
+  },
+  "heavy-fast-4g": {
+    "random": {
+      "lcp": {
+        "count": 1,
+        "median": 1469.4,
+        "mean": 1469.4,
+        "p5": 1469.4,
+        "p25": 1469.4,
+        "p75": 1469.4,
+        "p95": 1469.4,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 1469.4,
+        "mean": 1469.4,
+        "p5": 1469.4,
+        "p25": 1469.4,
+        "p75": 1469.4,
+        "p95": 1469.4,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.46,
+        "mean": 0.46,
+        "p5": 0.46,
+        "p25": 0.46,
+        "p75": 0.46,
+        "p95": 0.46,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 1469.4,
+        "mean": 1469.4,
+        "p5": 1469.4,
+        "p25": 1469.4,
+        "p75": 1469.4,
+        "p95": 1469.4,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -1.8,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -1.8,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0.19,
+          "deltaPct": 71.4,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -1.8,
+          "deltaPct": -0.1,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "common-bad": {
+      "lcp": {
+        "count": 1,
+        "median": 1467.09,
+        "mean": 1467.09,
+        "p5": 1467.09,
+        "p25": 1467.09,
+        "p75": 1467.09,
+        "p95": 1467.09,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 1467.09,
+        "mean": 1467.09,
+        "p5": 1467.09,
+        "p25": 1467.09,
+        "p75": 1467.09,
+        "p95": 1467.09,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.37,
+        "mean": 0.37,
+        "p5": 0.37,
+        "p25": 0.37,
+        "p75": 0.37,
+        "p95": 0.37,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 1467.09,
+        "mean": 1467.09,
+        "p5": 1467.09,
+        "p25": 1467.09,
+        "p75": 1467.09,
+        "p95": 1467.09,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -4.12,
+          "deltaPct": -0.3,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -4.12,
+          "deltaPct": -0.3,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0.11,
+          "deltaPct": 41.4,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -4.12,
+          "deltaPct": -0.3,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "worst": {
+      "lcp": {
+        "count": 1,
+        "median": 1470.83,
+        "mean": 1470.83,
+        "p5": 1470.83,
+        "p25": 1470.83,
+        "p75": 1470.83,
+        "p95": 1470.83,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 1470.83,
+        "mean": 1470.83,
+        "p5": 1470.83,
+        "p25": 1470.83,
+        "p75": 1470.83,
+        "p95": 1470.83,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.29,
+        "mean": 0.29,
+        "p5": 0.29,
+        "p25": 0.29,
+        "p75": 0.29,
+        "p95": 0.29,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 1470.83,
+        "mean": 1470.83,
+        "p5": 1470.83,
+        "p25": 1470.83,
+        "p75": 1470.83,
+        "p95": 1470.83,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      },
+      "_deltas": {
+        "lcp": {
+          "delta": -0.37,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "fcp": {
+          "delta": -0.37,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "ttfb": {
+          "delta": 0.02,
+          "deltaPct": 7.5,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "si": {
+          "delta": -0.37,
+          "deltaPct": 0,
+          "mannWhitneyU": 0,
+          "z": -1,
+          "p": 0.3173,
+          "significant": false
+        },
+        "tbt": {
+          "delta": 0,
+          "deltaPct": null,
+          "mannWhitneyU": 0.5,
+          "z": 0,
+          "p": 1,
+          "significant": false
+        }
+      }
+    },
+    "optimal": {
+      "lcp": {
+        "count": 1,
+        "median": 1471.2,
+        "mean": 1471.2,
+        "p5": 1471.2,
+        "p25": 1471.2,
+        "p75": 1471.2,
+        "p95": 1471.2,
+        "stddev": null
+      },
+      "fcp": {
+        "count": 1,
+        "median": 1471.2,
+        "mean": 1471.2,
+        "p5": 1471.2,
+        "p25": 1471.2,
+        "p75": 1471.2,
+        "p95": 1471.2,
+        "stddev": null
+      },
+      "ttfb": {
+        "count": 1,
+        "median": 0.27,
+        "mean": 0.27,
+        "p5": 0.27,
+        "p25": 0.27,
+        "p75": 0.27,
+        "p95": 0.27,
+        "stddev": null
+      },
+      "si": {
+        "count": 1,
+        "median": 1471.2,
+        "mean": 1471.2,
+        "p5": 1471.2,
+        "p25": 1471.2,
+        "p75": 1471.2,
+        "p95": 1471.2,
+        "stddev": null
+      },
+      "tbt": {
+        "count": 1,
+        "median": 0,
+        "mean": 0,
+        "p5": 0,
+        "p25": 0,
+        "p75": 0,
+        "p95": 0,
+        "stddev": null
+      }
+    }
+  }
+}

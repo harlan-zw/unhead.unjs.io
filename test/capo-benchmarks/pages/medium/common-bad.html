@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Common-Bad: title first, sync before styles, preconnect buried after stylesheet, preload after styles, viewport in middle, OG scattered -->
+  <title>Test Page - Medium</title>
+  <script src="/assets/js/app.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <meta charset="utf-8">
+  <meta property="og:title" content="Test Page - Medium">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta property="og:description" content="A test page for benchmarking head tag order">
+  <link rel="preload" href="/assets/fonts/custom-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <script async src="/assets/js/analytics.js"></script>
+  <meta name="description" content="A test page for benchmarking head tag order">
+  <meta property="og:image" content="/assets/img/og.png">
+  <script defer src="/assets/js/interactions.js"></script>
+</head>
+<body>
+  <nav>
+    <span class="nav-brand">Capo Benchmark</span>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Features</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+  <main>
+    <img src="/assets/img/hero.webp" alt="Hero" width="1200" height="600" class="hero-img">
+    <h1>Capo.js Benchmark Test Page</h1>
+    <p>This page tests head tag ordering impact on performance metrics.</p>
+    <div class="content-section">
+      <h2>About This Test</h2>
+      <p>This benchmark page measures the impact of head tag ordering on web performance metrics including Largest Contentful Paint (LCP), First Contentful Paint (FCP), and Time to Interactive (TTI).</p>
+      <p>The head tags on this page are arranged in the Capo.js recommended optimal order, prioritizing critical rendering resources and metadata.</p>
+    </div>
+    <div class="page-layout">
+      <div>
+        <div class="content-section">
+          <h2>Performance Metrics</h2>
+          <p>Key metrics being measured include render-blocking resource load times, parser-yielding behavior, and resource discovery order through the preload scanner.</p>
+          <p>Each variant of this page contains identical body content and the same set of head tags, differing only in the order of those tags within the head element.</p>
+        </div>
+      </div>
+      <aside class="sidebar">
+        <h3>Quick Facts</h3>
+        <ul>
+          <li>15 head tags total</li>
+          <li>2 stylesheets</li>
+          <li>3 scripts</li>
+          <li>2 preconnect hints</li>
+          <li>1 font preload</li>
+          <li>4 meta tags</li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+  <footer>
+    <p>Capo.js Benchmark Suite - Medium Complexity - Common-Bad Ordering</p>
+  </footer>
+</body>
+</html>

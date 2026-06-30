@@ -1,0 +1,17 @@
+{
+  "name": "capo-benchmarks",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "serve": "tsx scripts/serve.ts",
+    "benchmark": "tsx scripts/benchmark-lighthouse.ts",
+    "traces": "tsx scripts/capture-traces.ts",
+    "analyze": "tsx scripts/analyze-results.ts"
+  },
+  "devDependencies": {
+    "chrome-launcher": "catalog:",
+    "lighthouse": "catalog:",
+    "puppeteer": "catalog:",
+    "tsx": "catalog:"
+  }
+}

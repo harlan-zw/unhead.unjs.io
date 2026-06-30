@@ -1,0 +1,14 @@
+{
+  "query": "CWV performance by CMS/framework (pages + CrUX join)",
+  "date": "2026-01-01",
+  "device": "phone",
+  "note": "HTTP Archive pages joined with CrUX on origin. Technologies detected via Wappalyzer.",
+  "results": [
+    { "cms": "Shopify", "origins": 400733, "avg_lcp": 1685, "avg_fcp": 1188, "avg_ttfb": 534, "avg_inp": 117, "pct_good_lcp": 87.3 },
+    { "cms": "Wix", "origins": 184638, "avg_lcp": 1724, "avg_fcp": 1264, "avg_ttfb": 797, "avg_inp": 106, "pct_good_lcp": 81.6 },
+    { "cms": "Squarespace", "origins": 93139, "avg_lcp": 1969, "avg_fcp": 1480, "avg_ttfb": 586, "avg_inp": 81, "pct_good_lcp": 76.6 },
+    { "cms": "WordPress", "origins": 2875440, "avg_lcp": 2663, "avg_fcp": 2265, "avg_ttfb": 1550, "avg_inp": 117, "pct_good_lcp": 55.2 },
+    { "cms": "Next.js", "origins": 260360, "avg_lcp": 2790, "avg_fcp": 2005, "avg_ttfb": 956, "avg_inp": 218, "pct_good_lcp": 50.9 },
+    { "cms": "Nuxt.js", "origins": 88093, "avg_lcp": 3051, "avg_fcp": 2221, "avg_ttfb": 989, "avg_inp": 209, "pct_good_lcp": 44.2 }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "query": "CMS/framework distribution across HTTP Archive",
+  "date": "2026-01-01",
+  "client": "mobile",
+  "total_root_pages": 15734582,
+  "results": [
+    { "technology": "WordPress", "sites": 5034403, "pct": 34.14 },
+    { "technology": "React", "sites": 1864328, "pct": 12.64 },
+    { "technology": "Vue.js", "sites": 784884, "pct": 5.32 },
+    { "technology": "Shopify", "sites": 660910, "pct": 4.48 },
+    { "technology": "Next.js", "sites": 401424, "pct": 2.72 },
+    { "technology": "Wix", "sites": 393730, "pct": 2.67 },
+    { "technology": "Squarespace", "sites": 219139, "pct": 1.49 },
+    { "technology": "Angular", "sites": 156962, "pct": 1.06 },
+    { "technology": "Nuxt.js", "sites": 135636, "pct": 0.92 },
+    { "technology": "Gatsby", "sites": 16059, "pct": 0.11 }
+  ]
+}

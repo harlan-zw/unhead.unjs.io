@@ -17,12 +17,12 @@ const collection = isV2 ? 'docsUnheadV2' : 'docsUnhead'
 const isDocsRoute = computed(() => route.path.startsWith('/docs'))
 
 const { open: searchOpen } = useContentSearch()
-const { data: search, execute: loadSearch, status: searchStatus } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead'), {
+const { data: search, execute: loadSearch, status: searchStatus } = await useLazyAsyncData(`search`, () => queryCollectionSearchSections('docsUnhead').catch(() => []), {
   default: () => [],
   immediate: false,
   server: false,
 })
-const { data: navigation, execute: loadNavigation, status: navigationStatus } = await useLazyAsyncData(`navigation-${collection}`, () => queryCollectionNavigation(collection, ['new', 'deprecated']), {
+const { data: navigation, execute: loadNavigation, status: navigationStatus } = await useLazyAsyncData(`navigation-${collection}`, () => queryCollectionNavigation(collection, ['new', 'deprecated']).catch(() => []), {
   default: () => [],
   immediate: isDocsRoute.value,
   server: isDocsRoute.value,
@@ -80,14 +80,14 @@ watch(isDocsRoute, (isDocs) => {
 }, { immediate: true })
 
 const searchNav = computed(() => {
-  return navigation.value.filter((s) => {
+  return (navigation.value || []).filter((s) => {
     return s.path.startsWith('/docs/head') || s.path.startsWith('/docs/schema-org') || s.path.startsWith('/docs/releases') || s.path.startsWith('/docs/migration-guide') || s.path.startsWith(`/docs/${selectedFramework.value}`)
   })
 })
 </script>
 
 <template>
-  <UApp v-if="navigation" :toaster="appConfig.toaster">
+  <UApp :toaster="appConfig.toaster">
     <NuxtLoadingIndicator color="#FFF" />
     <Header />
     <NuxtLayout>

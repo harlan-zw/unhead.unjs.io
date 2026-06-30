@@ -1,0 +1,350 @@
+{
+  "complexity": "medium",
+  "variant": "optimal",
+  "throttle": "fast-4g",
+  "runs": [
+    {
+      "fcp": 468,
+      "lcp": 468,
+      "domContentLoaded": 501.8999999985099,
+      "domInteractive": 343.2999999988824,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/analytics.js",
+          "startTime": 167.4,
+          "responseEnd": 350.1,
+          "duration": 182.7,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 167.5,
+          "responseEnd": 342.4,
+          "duration": 174.9,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 167.5,
+          "responseEnd": 365.6,
+          "duration": 198.1,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
+          "startTime": 167.5,
+          "responseEnd": 452.9,
+          "duration": 285.4,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 167.6,
+          "responseEnd": 334,
+          "duration": 166.4,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 167.6,
+          "responseEnd": 500.9,
+          "duration": 333.3,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 175,
+          "responseEnd": 357.4,
+          "duration": 182.4,
+          "initiatorType": "img"
+        }
+      ]
+    },
+    {
+      "fcp": 472,
+      "lcp": 472,
+      "domContentLoaded": 494.40000000037253,
+      "domInteractive": 334.7000000011176,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/analytics.js",
+          "startTime": 167.9,
+          "responseEnd": 349.6,
+          "duration": 181.7,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 168,
+          "responseEnd": 334,
+          "duration": 166,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 168.1,
+          "responseEnd": 342.4,
+          "duration": 174.3,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 168.1,
+          "responseEnd": 366.1,
+          "duration": 198,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
+          "startTime": 168.1,
+          "responseEnd": 461.5,
+          "duration": 293.4,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 168.1,
+          "responseEnd": 493.5,
+          "duration": 325.4,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 174.5,
+          "responseEnd": 357.9,
+          "duration": 183.4,
+          "initiatorType": "img"
+        }
+      ]
+    },
+    {
+      "fcp": 464,
+      "lcp": 464,
+      "domContentLoaded": 501.40000000037253,
+      "domInteractive": 342.5,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/analytics.js",
+          "startTime": 167.3,
+          "responseEnd": 350.1,
+          "duration": 182.8,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 167.4,
+          "responseEnd": 341.7,
+          "duration": 174.3,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 167.5,
+          "responseEnd": 365.7,
+          "duration": 198.2,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
+          "startTime": 167.5,
+          "responseEnd": 453.6,
+          "duration": 286.1,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 167.6,
+          "responseEnd": 333.5,
+          "duration": 165.9,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 167.6,
+          "responseEnd": 500.4,
+          "duration": 332.8,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 174.3,
+          "responseEnd": 357.5,
+          "duration": 183.2,
+          "initiatorType": "img"
+        }
+      ]
+    },
+    {
+      "fcp": 480,
+      "lcp": 480,
+      "domContentLoaded": 493.7999999988824,
+      "domInteractive": 335.59999999962747,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 167.8,
+          "responseEnd": 334.5,
+          "duration": 166.7,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/analytics.js",
+          "startTime": 167.8,
+          "responseEnd": 349.4,
+          "duration": 181.6,
+          "initiatorType": "script"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
+          "startTime": 167.9,
+          "responseEnd": 460.7,
+          "duration": 292.8,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 168,
+          "responseEnd": 342.2,
+          "duration": 174.2,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 168,
+          "responseEnd": 365.7,
+          "duration": 197.7,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 168,
+          "responseEnd": 492.9,
+          "duration": 324.9,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 175.4,
+          "responseEnd": 357.7,
+          "duration": 182.3,
+          "initiatorType": "img"
+        }
+      ]
+    },
+    {
+      "fcp": 464,
+      "lcp": 464,
+      "domContentLoaded": 494,
+      "domInteractive": 335.5,
+      "resourceTimings": [
+        {
+          "name": "http://localhost:4567/assets/js/app.js",
+          "startTime": 167.6,
+          "responseEnd": 334.4,
+          "duration": 166.8,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/analytics.js",
+          "startTime": 167.6,
+          "responseEnd": 349.6,
+          "duration": 182,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/fonts/custom-regular.woff2",
+          "startTime": 167.7,
+          "responseEnd": 342.2,
+          "duration": 174.5,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/css/style.css",
+          "startTime": 167.7,
+          "responseEnd": 365.9,
+          "duration": 198.2,
+          "initiatorType": "link"
+        },
+        {
+          "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
+          "startTime": 167.7,
+          "responseEnd": 453,
+          "duration": 285.3,
+          "initiatorType": "link"
+        },
+        {
+          "name": "http://localhost:4567/assets/js/interactions.js",
+          "startTime": 167.8,
+          "responseEnd": 493.3,
+          "duration": 325.5,
+          "initiatorType": "script"
+        },
+        {
+          "name": "http://localhost:4567/assets/img/hero.webp",
+          "startTime": 175.3,
+          "responseEnd": 357.8,
+          "duration": 182.5,
+          "initiatorType": "img"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "fcp": {
+      "median": 468,
+      "mean": 469.6,
+      "min": 464,
+      "max": 480,
+      "stddev": 5.99,
+      "values": [
+        464,
+        464,
+        468,
+        472,
+        480
+      ]
+    },
+    "lcp": {
+      "median": 468,
+      "mean": 469.6,
+      "min": 464,
+      "max": 480,
+      "stddev": 5.99,
+      "values": [
+        464,
+        464,
+        468,
+        472,
+        480
+      ]
+    },
+    "domContentLoaded": {
+      "median": 494.4,
+      "mean": 497.1,
+      "min": 493.8,
+      "max": 501.9,
+      "stddev": 3.72,
+      "values": [
+        493.8,
+        494,
+        494.4,
+        501.4,
+        501.9
+      ]
+    },
+    "domInteractive": {
+      "median": 335.6,
+      "mean": 338.32,
+      "min": 334.7,
+      "max": 343.3,
+      "stddev": 3.76,
+      "values": [
+        334.7,
+        335.5,
+        335.6,
+        342.5,
+        343.3
+      ]
+    }
+  }
+}

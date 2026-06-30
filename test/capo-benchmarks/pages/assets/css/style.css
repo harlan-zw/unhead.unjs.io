@@ -1,0 +1,20 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; color: #1a1a2e; }
+nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: #16213e; color: white; }
+.nav-brand { font-weight: 700; font-size: 1.25rem; }
+.nav-links { display: flex; gap: 1.5rem; }
+.nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; }
+main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+.hero-img { width: 100%; height: auto; display: block; margin-bottom: 2rem; background: #e2e8f0; }
+h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
+h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+p { margin-bottom: 1rem; color: #4a5568; }
+.content-section { margin: 2rem 0; padding: 1.5rem; background: #f7fafc; border-radius: 8px; }
+.page-layout { display: grid; grid-template-columns: 1fr 300px; gap: 2rem; margin-top: 2rem; }
+.sidebar { padding: 1.5rem; background: #edf2f7; border-radius: 8px; height: fit-content; }
+.sidebar ul { list-style: none; }
+.sidebar li { padding: 0.25rem 0; color: #4a5568; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.card { padding: 1.5rem; background: white; border: 1px solid #e2e8f0; border-radius: 8px; }
+footer { padding: 2rem; text-align: center; background: #1a1a2e; color: rgba(255,255,255,0.6); margin-top: 3rem; }

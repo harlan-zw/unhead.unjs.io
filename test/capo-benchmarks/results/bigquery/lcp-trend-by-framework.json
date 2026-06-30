@@ -1,0 +1,36 @@
+{
+  "query": "LCP trend comparison: Nuxt vs Next.js vs WordPress, Jun 2025 - Jan 2026",
+  "note": "Tracking same cohort of origins detected in Jan 2026 crawl backwards through CrUX. Nuxt added Capo.js head sorting ~mid 2025 but population-level LCP hasn't changed, suggesting head ordering alone is not the dominant factor.",
+  "results": {
+    "Next.js": [
+      { "date": "2025-06-01", "origins": 193772, "avg_lcp": 2806, "pct_good_lcp": 50.1 },
+      { "date": "2025-07-01", "origins": 203925, "avg_lcp": 2811, "pct_good_lcp": 50.1 },
+      { "date": "2025-08-01", "origins": 215105, "avg_lcp": 2821, "pct_good_lcp": 50.0 },
+      { "date": "2025-09-01", "origins": 223847, "avg_lcp": 2848, "pct_good_lcp": 49.3 },
+      { "date": "2025-10-01", "origins": 234314, "avg_lcp": 2784, "pct_good_lcp": 51.1 },
+      { "date": "2025-11-01", "origins": 249048, "avg_lcp": 2801, "pct_good_lcp": 50.9 },
+      { "date": "2025-12-01", "origins": 272964, "avg_lcp": 2851, "pct_good_lcp": 49.6 },
+      { "date": "2026-01-01", "origins": 260337, "avg_lcp": 2790, "pct_good_lcp": 50.9 }
+    ],
+    "Nuxt.js": [
+      { "date": "2025-06-01", "origins": 67785, "avg_lcp": 3059, "pct_good_lcp": 42.0 },
+      { "date": "2025-07-01", "origins": 71477, "avg_lcp": 3042, "pct_good_lcp": 42.7 },
+      { "date": "2025-08-01", "origins": 76460, "avg_lcp": 3028, "pct_good_lcp": 43.9 },
+      { "date": "2025-09-01", "origins": 78594, "avg_lcp": 3091, "pct_good_lcp": 42.1 },
+      { "date": "2025-10-01", "origins": 81366, "avg_lcp": 3049, "pct_good_lcp": 43.5 },
+      { "date": "2025-11-01", "origins": 85882, "avg_lcp": 3070, "pct_good_lcp": 42.9 },
+      { "date": "2025-12-01", "origins": 95218, "avg_lcp": 3086, "pct_good_lcp": 42.2 },
+      { "date": "2026-01-01", "origins": 88081, "avg_lcp": 3051, "pct_good_lcp": 44.2 }
+    ],
+    "WordPress": [
+      { "date": "2025-06-01", "origins": 2506575, "avg_lcp": 2696, "pct_good_lcp": 53.8 },
+      { "date": "2025-07-01", "origins": 2581922, "avg_lcp": 2695, "pct_good_lcp": 53.9 },
+      { "date": "2025-08-01", "origins": 2685795, "avg_lcp": 2681, "pct_good_lcp": 54.2 },
+      { "date": "2025-09-01", "origins": 2747282, "avg_lcp": 2707, "pct_good_lcp": 53.7 },
+      { "date": "2025-10-01", "origins": 2781100, "avg_lcp": 2669, "pct_good_lcp": 54.7 },
+      { "date": "2025-11-01", "origins": 2843342, "avg_lcp": 2671, "pct_good_lcp": 54.6 },
+      { "date": "2025-12-01", "origins": 2883537, "avg_lcp": 2689, "pct_good_lcp": 54.3 },
+      { "date": "2026-01-01", "origins": 2873603, "avg_lcp": 2662, "pct_good_lcp": 55.3 }
+    ]
+  }
+}
