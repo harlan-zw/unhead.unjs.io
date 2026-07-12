@@ -3,7 +3,7 @@
 import type { ContentNavigationItem } from '@nuxt/content'
 import type { AppConfig } from '@nuxt/schema'
 import type { BadgeProps, LinkProps } from '@nuxt/ui'
-import type { AccordionRootEmits, AccordionRootProps } from 'reka-ui'
+import type { AccordionRootProps } from 'reka-ui'
 import type { VariantProps } from 'tailwind-variants'
 import _appConfig from '#build/app.config'
 import theme from '#build/ui/content/content-navigation'
@@ -61,7 +61,9 @@ export interface ContentNavigationProps<T> {
   ui?: Partial<typeof contentNavigation.slots>
 }
 
-export interface ContentNavigationEmits extends AccordionRootEmits {}
+export interface ContentNavigationEmits {
+  'update:modelValue': [value: string | string[] | undefined]
+}
 
 type SlotProps<T> = (props: { link: T, active?: boolean }) => any
 

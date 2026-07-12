@@ -210,6 +210,9 @@ catalogs:
     unhead:
       specifier: 3.1.6
       version: 3.1.6
+    unstorage:
+      specifier: ^1.17.5
+      version: 1.17.5
     vitest:
       specifier: ^4.1.10
       version: 4.1.10
@@ -449,6 +452,9 @@ importers:
       unhead:
         specifier: 'catalog:'
         version: 3.1.6(esbuild@0.28.1)(rolldown@1.1.5)(rollup@4.62.2)(vite@8.1.4)
+      unstorage:
+        specifier: 'catalog:'
+        version: 1.17.5(db0@0.3.4(better-sqlite3@12.11.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260711.1)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(better-sqlite3@12.11.1)))(ioredis@5.11.1)
       vitest:
         specifier: 'catalog:'
         version: 4.1.10(@opentelemetry/api@1.9.0)(@types/node@25.3.3)(jsdom@29.1.1)(vite@8.1.4)

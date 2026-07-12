@@ -102,6 +102,7 @@ catalog:
   tsx: ^4.23.0
   typescript: ^7.0.2
   ufo: ^1.6.4
+  unstorage: ^1.17.5
   unhead: 3.1.6
   vitest: ^4.1.10
   vue-tsc: ^3.3.7
