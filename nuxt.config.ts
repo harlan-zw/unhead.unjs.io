@@ -162,8 +162,12 @@ export default defineNuxtConfig({
     },
     storage: {
       cache: {
-        driver: 'cloudflare-kv-binding',
+        // Nitro's default SWR writes carry a logical expiry but no physical KV
+        // expiration. Enforce bounded retention for every cache producer,
+        // including payload and OG-image modules that do not pass their own TTL.
+        driver: resolve('./server/utils/expiring-cloudflare-kv-driver.ts'),
         binding: 'CACHE',
+        defaultTtl: 60 * 60 * 24 * 30,
       },
       kv: {
         driver: 'cloudflare-kv-binding',

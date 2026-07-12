@@ -51,3 +51,12 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler pages deploy dist --project-name=unhead-unjs-io
+
+      # Pages Wrangler configuration does not expose Worker observability.
+      # Reconcile the backing production script after every deployment so a
+      # dashboard/default change cannot restore 100% persisted invocation logs.
+      - name: Apply cost-safe Worker observability
+        run: node scripts/configure-worker-observability.mjs --apply
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
