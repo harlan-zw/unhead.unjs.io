@@ -25,37 +25,37 @@ overrides:
   '@tiptap/starter-kit': 3.27.1
   '@tiptap/suggestion': 3.27.1
   '@tiptap/vue-3': 3.27.1
-  '@tiptap/y-tiptap': ^3.0.5
+  '@tiptap/y-tiptap': ^3.0.6
   '@typescript-eslint/parser': 8.62.0
   '@typescript-eslint/project-service': 8.62.0
   '@typescript-eslint/rule-tester': 8.62.0
   '@typescript-eslint/tsconfig-utils': 8.62.0
   '@typescript-eslint/typescript-estree': 8.62.0
   '@typescript-eslint/utils': 8.62.0
-  vite: ^8.1.0
+  vite: ^8.1.4
 catalog:
   '@antfu/eslint-config': ^9.1.0
-  '@cloudflare/workers-types': ^4.20260626.1
-  '@iconify-json/carbon': ^1.2.23
+  '@cloudflare/workers-types': ^5.20260711.1
+  '@iconify-json/carbon': ^1.2.24
   '@iconify-json/heroicons': ^1.2.3
   '@iconify-json/logos': ^1.2.11
-  '@iconify-json/material-symbols': ^1.2.81
+  '@iconify-json/material-symbols': ^1.2.83
   '@iconify-json/noto': ^1.2.7
   '@iconify-json/ph': ^1.2.2
   '@iconify-json/radix-icons': ^1.2.6
-  '@iconify-json/simple-icons': ^1.2.87
+  '@iconify-json/simple-icons': ^1.2.89
   '@iconify-json/uil': ^1.2.3
   '@iconify-json/unjs': ^1.2.4
-  '@iconify-json/vscode-icons': ^1.2.61
+  '@iconify-json/vscode-icons': ^1.2.66
   '@inspira-ui/plugins': ^0.0.2
   '@nuxt/content': 3.14.0
   '@nuxt/devtools': 4.0.0-alpha.7
   '@nuxt/fonts': ^0.14.0
-  '@nuxt/scripts': ^1.2.1
+  '@nuxt/scripts': ^1.3.0
   '@nuxt/ui': ^4.9.0
   '@nuxtjs/mdc': 0.22.0
-  '@nuxtjs/seo': ^5.3.1
-  '@shikijs/magic-move': ^4.3.0
+  '@nuxtjs/seo': ^5.3.2
+  '@shikijs/magic-move': ^4.3.1
   '@takumi-rs/core': 1.8.7
   '@takumi-rs/helpers': 1.8.7
   '@takumi-rs/wasm': 1.8.7
@@ -71,7 +71,7 @@ catalog:
   clsx: ^2.1.1
   consola: ^3.4.2
   drizzle-orm: ^0.45.2
-  eslint: ^10.5.0
+  eslint: ^10.7.0
   eslint-plugin-harlanzw: ^0.17.0
   fuse.js: ^7.4.2
   jsdom: ^29.1.1
@@ -81,13 +81,13 @@ catalog:
   motion-v: ^2.3.0
   nitro-cloudflare-dev: ^0.2.2
   nuxt: 4.4.8
-  nuxt-ai-ready: ^1.5.2
+  nuxt-ai-ready: ^1.5.4
   nuxt-auth-utils: ^0.5.29
   nuxt-skew-protection: ^1.3.0
   octokit: ^5.0.5
   ofetch: ^1.5.1
   pathe: ^2.0.3
-  puppeteer: ^25.2.1
+  puppeteer: ^25.3.0
   radix-vue: ^1.9.17
   reka-ui: ^2.10.1
   scule: ^1.3.0
@@ -99,13 +99,13 @@ catalog:
   tailwind-merge: ^3.6.0
   tailwind-variants: ^3.2.2
   tailwindcss-animate: ^1.0.7
-  tsx: ^4.22.4
-  typescript: ^6.0.3
+  tsx: ^4.23.0
+  typescript: ^7.0.2
   ufo: ^1.6.4
   unhead: 3.1.6
-  vitest: ^4.1.9
-  vue-tsc: ^3.3.5
-  wrangler: ^4.105.0
+  vitest: ^4.1.10
+  vue-tsc: ^3.3.7
+  wrangler: ^4.110.0
   zod: ^4.4.3
 
 ignoredBuiltDependencies:
