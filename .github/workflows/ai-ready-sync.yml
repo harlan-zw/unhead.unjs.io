@@ -4,10 +4,16 @@ on:
     - cron: '*/30 * * * *'
   workflow_dispatch:
 
+permissions: {}
+
+concurrency:
+  group: ai-ready-sync
+  cancel-in-progress: true
+
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Trigger AI Ready cron
-        run: |
-          curl -sf -X GET "https://unhead.unjs.io/__ai-ready/cron?secret=${{ secrets.NUXT_SEO_PRO_KEY }}" || echo "Cron endpoint returned error"
+        run: curl --fail --show-error --silent --retry 3 --retry-all-errors "https://unhead.unjs.io/__ai-ready/cron?secret=${{ secrets.NUXT_SEO_PRO_KEY }}"

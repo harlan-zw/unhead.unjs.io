@@ -64,9 +64,14 @@ const subSectionLinks = computed(() => {
     if (!to)
       return null
     const segments = getPathSegments(getPathWithoutFramework(to), 3)
-    // Apply version prefix to the framework path
-    let targetPath = getPathWithFramework(to, selectedFramework.value.slug)
-    if (selectedVersion.value.slug === 'v2') {
+    const canonicalPath = getPathWithoutFramework(to)
+    const isFrameworkNeutralSection = /^\/docs\/(?:v2\/)?(?:releases|migration-guide)(?:\/|$)/.test(canonicalPath)
+    const frameworkPath = getPathWithFramework(canonicalPath, selectedFramework.value.slug)
+    const hasFrameworkPath = docsNav.value?.navFlat?.some(n => n.path === frameworkPath)
+    let targetPath = isFrameworkNeutralSection
+      ? canonicalPath
+      : hasFrameworkPath ? frameworkPath : canonicalPath
+    if (selectedVersion.value.slug === 'v2' && !targetPath.startsWith('/docs/v2/')) {
       targetPath = targetPath.replace('/docs/', '/docs/v2/')
     }
     return {

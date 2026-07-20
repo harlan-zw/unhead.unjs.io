@@ -23,6 +23,11 @@ export default defineNuxtConfig({
         // from sponsorkit
         nitro.options.alias.sharp = 'unenv/mock/empty'
         nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
+        if (!nitro.options.dev) {
+          nitro.hooks.hook('rollup:before', (_nitro, rollupConfig) => {
+            rollupConfig.input = resolve('./server/cloudflare-pages-worker.ts')
+          })
+        }
       })
     },
   ],
@@ -75,6 +80,7 @@ export default defineNuxtConfig({
   sitemap: {
     exclude: [
       '**/.navigation',
+      '/admin',
       '/docs/v2/**',
     ],
     xslColumns: [
@@ -119,8 +125,18 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
-    unenv: {
-      external: ['node:process'],
+    rollupConfig: {
+      plugins: [{
+        name: 'preserve-unhead-stream-runtime',
+        transform(code, id) {
+          if (!id.replaceAll('\\', '/').endsWith('/unhead/dist/stream/iife.mjs'))
+            return null
+
+          // Nitro's textual `typeof window` replacement otherwise corrupts
+          // Unhead's JavaScript source string before Rollup parses the module.
+          return code.replaceAll('typeof window', 'typeof globalThis.window')
+        },
+      }],
     },
     prerender: {
       autoSubfolderIndex: false,
@@ -130,6 +146,7 @@ export default defineNuxtConfig({
       ignore: ['/auth/github', '/admin/**'],
     },
     cloudflare: {
+      nodeCompat: true,
       pages: {
         routes: {
           exclude: [
@@ -143,35 +160,33 @@ export default defineNuxtConfig({
         },
       },
       wrangler: {
+        compatibility_flags: ['nodejs_compat'],
+        observability: {
+          enabled: true,
+          logs: {
+            enabled: true,
+            head_sampling_rate: 1,
+          },
+        },
         analytics_engine_datasets: [
           {
             binding: 'TOOL_ANALYTICS',
             dataset: 'unhead_tool_usage',
           },
         ],
-        vars: {
-          NUXT_SESSION_PASSWORD: process.env.NUXT_SESSION_PASSWORD || '',
-          NUXT_OAUTH_GITHUB_CLIENT_ID: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID || '',
-          NUXT_OAUTH_GITHUB_CLIENT_SECRET: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || '',
-          NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN: process.env.NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN || '',
-          NUXT_CLOUDFLARE_ACCOUNT_ID: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID || '',
-          NUXT_GITHUB_AUTH_TOKEN: process.env.NUXT_GITHUB_AUTH_TOKEN || '',
-          NUXT_GITHUB_ACCESS_TOKEN: process.env.NUXT_GITHUB_ACCESS_TOKEN || '',
+        // Nitro's generated Wrangler type currently lags Wrangler's rate-limit binding schema.
+        ...{
+          ratelimits: [
+            {
+              name: 'RL_FREE_TOOLS',
+              namespace_id: '1001',
+              simple: { limit: 10, period: 60 },
+            },
+          ],
         },
-      },
-    },
-    storage: {
-      cache: {
-        // Nitro's default SWR writes carry a logical expiry but no physical KV
-        // expiration. Enforce bounded retention for every cache producer,
-        // including payload and OG-image modules that do not pass their own TTL.
-        driver: resolve('./server/utils/expiring-cloudflare-kv-driver.ts'),
-        binding: 'CACHE',
-        defaultTtl: 60 * 60 * 24 * 30,
-      },
-      kv: {
-        driver: 'cloudflare-kv-binding',
-        binding: 'KV',
+        vars: {
+          NUXT_CLOUDFLARE_ACCOUNT_ID: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID || '',
+        },
       },
     },
   },
@@ -257,15 +272,6 @@ export default defineNuxtConfig({
     routeRules: {
       '/api/stats.json': { prerender: true },
       '/api/github/sponsors.json': { prerender: true },
-      '/api/_mdc/highlight': { swr: 60, cache: { group: 'mdc', name: 'highlight', maxAge: 60 } },
-      '/__nuxt_content/**': { swr: 60, cache: { group: 'content', name: 'query', maxAge: 60 } },
-      '/api/_nuxt_icon': { swr: 60 * 24 * 7, cache: { group: 'icon', name: 'icon', maxAge: 60 * 24 * 7 } },
-      // SWR for page routes - serve stale HTML instantly, revalidate in background
-      '/': { swr: 60 },
-      '/docs/**': { swr: 60 },
-      '/learn/**': { swr: 60 },
-      '/tools/meta-tag-generator': { swr: 60 },
-      '/tools/schema-generator': { swr: 60 },
     },
     scripts: {
       registry: {
@@ -354,5 +360,5 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2026-03-01',
+  compatibilityDate: '2026-07-20',
 })

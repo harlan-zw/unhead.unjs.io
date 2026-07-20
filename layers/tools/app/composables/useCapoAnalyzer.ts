@@ -40,8 +40,8 @@ const WEIGHT_TABLE = [
   { weight: 100, label: 'Other', test: () => true },
 ] as const
 
-const TagRegex = /<(meta|link|title|base|style|script|noscript)(\s[^>]*?)?\/?>(?:([\s\S]*?)<\/\1>)?/gi
-const AttrRegex = /(\w[\w-]*)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|(\S+)))?/g
+const HEAD_TAGS = new Set(['meta', 'link', 'title', 'base', 'style', 'script', 'noscript'])
+const VOID_TAGS = new Set(['meta', 'link', 'base'])
 
 function classifyTag(tag: ParsedTag): AnalyzedTag {
   for (let i = 0; i < WEIGHT_TABLE.length; i++) {
@@ -58,26 +58,119 @@ function classifyTag(tag: ParsedTag): AnalyzedTag {
   return { ...tag, weight: 100, weightLabel: 'Other', priority: 14 }
 }
 
-function parseHeadTags(html: string): ParsedTag[] {
-  const tags: ParsedTag[] = []
-  // Match self-closing and open tags with optional content
-  for (const match of html.matchAll(TagRegex)) {
-    const [raw, tagName, attrString, content] = match
-    const attributes: Record<string, string> = {}
+function findTagEnd(html: string, start: number): number {
+  let quote = ''
+  for (let index = start; index < html.length; index++) {
+    const character = html[index]
+    if (quote) {
+      if (character === quote)
+        quote = ''
+    }
+    else if (character === '"' || character === '\'') {
+      quote = character
+    }
+    else if (character === '>') {
+      return index
+    }
+  }
+  return -1
+}
 
-    if (attrString) {
-      for (const attrMatch of attrString.matchAll(AttrRegex)) {
-        const [, name, v1, v2, v3] = attrMatch
-        attributes[name] = v1 ?? v2 ?? v3 ?? ''
+function parseAttributes(source: string): Record<string, string> {
+  const attributes: Record<string, string> = {}
+  let cursor = 0
+
+  while (cursor < source.length) {
+    while (/\s|\//.test(source[cursor] || ''))
+      cursor++
+    if (cursor >= source.length)
+      break
+
+    const nameStart = cursor
+    while (cursor < source.length && !/[\s=/>]/.test(source[cursor]))
+      cursor++
+    const name = source.slice(nameStart, cursor).toLowerCase()
+    if (!name) {
+      cursor++
+      continue
+    }
+
+    while (/\s/.test(source[cursor] || ''))
+      cursor++
+    let value = ''
+    if (source[cursor] === '=') {
+      cursor++
+      while (/\s/.test(source[cursor] || ''))
+        cursor++
+      const quote = source[cursor]
+      if (quote === '"' || quote === '\'') {
+        cursor++
+        const valueStart = cursor
+        while (cursor < source.length && source[cursor] !== quote)
+          cursor++
+        value = source.slice(valueStart, cursor)
+        if (source[cursor] === quote)
+          cursor++
+      }
+      else {
+        const valueStart = cursor
+        while (cursor < source.length && !/[\s>]/.test(source[cursor]))
+          cursor++
+        value = source.slice(valueStart, cursor)
+      }
+    }
+    attributes[name] = value
+  }
+
+  return attributes
+}
+
+export function parseHeadTags(html: string): ParsedTag[] {
+  const tags: ParsedTag[] = []
+  const lowerHtml = html.toLowerCase()
+  let cursor = 0
+
+  while (cursor < html.length) {
+    const openingStart = html.indexOf('<', cursor)
+    if (openingStart === -1)
+      break
+    const nameMatch = html.slice(openingStart + 1).match(/^\s*([a-z][\w-]*)/i)
+    if (!nameMatch) {
+      cursor = openingStart + 1
+      continue
+    }
+
+    const tagName = nameMatch[1].toLowerCase()
+    const openingEnd = findTagEnd(html, openingStart + 1)
+    if (openingEnd === -1)
+      break
+    if (!HEAD_TAGS.has(tagName)) {
+      cursor = openingEnd + 1
+      continue
+    }
+
+    const nameOffset = html.slice(openingStart + 1).indexOf(nameMatch[1])
+    const attributesStart = openingStart + 1 + nameOffset + nameMatch[1].length
+    const attributes = parseAttributes(html.slice(attributesStart, openingEnd))
+    let rawEnd = openingEnd + 1
+    let content: string | undefined
+
+    if (!VOID_TAGS.has(tagName) && !html.slice(openingStart, openingEnd + 1).endsWith('/>')) {
+      const closingStart = lowerHtml.indexOf(`</${tagName}`, rawEnd)
+      if (closingStart !== -1) {
+        const closingEnd = findTagEnd(html, closingStart + 2)
+        content = html.slice(rawEnd, closingStart).trim()
+        rawEnd = closingEnd === -1 ? html.length : closingEnd + 1
       }
     }
 
     tags.push({
-      tag: tagName.toLowerCase(),
+      tag: tagName,
       attributes,
-      content: content?.trim(),
-      raw,
+      content,
+      raw: html.slice(openingStart, rawEnd),
     })
+    cursor = rawEnd
   }
 
   return tags
@@ -148,7 +241,13 @@ const FRAMEWORK_IMPORTS: Record<string, string> = {
   'nuxt': '#imports',
 }
 
-function generateUseHeadCode(tags: AnalyzedTag[], framework: string): string {
+function serializeAttributes(attributes: Record<string, string>): string {
+  return Object.entries(attributes)
+    .map(([key, value]) => `${JSON.stringify(key)}: ${value ? JSON.stringify(value) : 'true'}`)
+    .join(', ')
+}
+
+export function generateUseHeadCode(tags: AnalyzedTag[], framework: string): string {
   const sorted = tags.toSorted((a, b) => a.weight - b.weight)
   const importName = FRAMEWORK_IMPORTS[framework] || 'unhead'
 
@@ -167,32 +266,32 @@ function generateUseHeadCode(tags: AnalyzedTag[], framework: string): string {
       base = tag.attributes.href || '/'
     }
     else if (tag.tag === 'meta') {
-      const attrs = Object.entries(tag.attributes).map(([k, v]) => `${k}: '${v}'`).join(', ')
+      const attrs = serializeAttributes(tag.attributes)
       meta.push(`    { ${attrs} }`)
     }
     else if (tag.tag === 'link') {
-      const attrs = Object.entries(tag.attributes).map(([k, v]) => `${k}: '${v}'`).join(', ')
+      const attrs = serializeAttributes(tag.attributes)
       links.push(`    { ${attrs} }`)
     }
     else if (tag.tag === 'script') {
-      const attrs = Object.entries(tag.attributes).map(([k, v]) => v ? `${k}: '${v}'` : `${k}: true`).join(', ')
+      const attrs = serializeAttributes(tag.attributes)
       if (tag.content) {
-        scripts.push(`    { ${attrs}, innerHTML: \`${tag.content.trim()}\` }`)
+        scripts.push(`    { ${attrs ? `${attrs}, ` : ''}innerHTML: ${JSON.stringify(tag.content.trim())} }`)
       }
       else {
         scripts.push(`    { ${attrs} }`)
       }
     }
     else if (tag.tag === 'style') {
-      styles.push(`    { innerHTML: \`${tag.content?.trim() || ''}\` }`)
+      styles.push(`    { innerHTML: ${JSON.stringify(tag.content?.trim() || '')} }`)
     }
   }
 
   const parts: string[] = []
   if (title)
-    parts.push(`  title: '${title}'`)
+    parts.push(`  title: ${JSON.stringify(title)}`)
   if (base)
-    parts.push(`  base: { href: '${base}' }`)
+    parts.push(`  base: { href: ${JSON.stringify(base)} }`)
   if (meta.length)
     parts.push(`  meta: [\n${meta.join(',\n')}\n  ]`)
   if (links.length)

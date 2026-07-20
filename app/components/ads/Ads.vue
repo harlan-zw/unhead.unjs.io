@@ -2,11 +2,9 @@
 const route = useRoute()
 const key = ref(route.path)
 
-function attachRouteWatcher() {
-  watch(() => route.path, (newPath) => {
-    key.value = newPath
-  })
-}
+watch(() => route.path, (newPath) => {
+  key.value = newPath
+})
 </script>
 
 <template>
@@ -18,7 +16,6 @@ function attachRouteWatcher() {
         serve="CW7DTKJI"
         placement="unheadunjsio"
         trigger="onNuxtReady"
-        @ready="attachRouteWatcher"
       >
         <template #error>
           <AdsFallback />

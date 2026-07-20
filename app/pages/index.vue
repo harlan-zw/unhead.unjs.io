@@ -256,7 +256,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
               <li>Vue, React, Solid.js, Svelte, and Angular</li>
               <li>Vite, Webpack, Rollup, and more</li>
               <li>
-                Built in <NuxtLink to="/docs/head/guides/debugging" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
+                Built in <NuxtLink to="/docs/typescript/head/guides/debugging" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
                   Vite Devtools
                 </NuxtLink> integration
               </li>

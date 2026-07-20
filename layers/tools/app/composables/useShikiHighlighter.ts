@@ -1,5 +1,6 @@
 import { createHighlighterCore } from 'shiki/core'
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
+import { renderPlainCode } from '../utils/code'
 
 const highlighter = shallowRef<Awaited<ReturnType<typeof createHighlighterCore>>>()
 const isLoading = ref(true)
@@ -44,6 +45,7 @@ async function initHighlighter() {
   })().catch((e) => {
     error.value = e
     isLoading.value = false
+    initPromise = null
   })
 
   return initPromise
@@ -55,7 +57,7 @@ export function useShikiHighlighter() {
   const highlight = async (code: string, lang: string): Promise<string> => {
     await initHighlighter()
     if (!highlighter.value)
-      return `<pre><code>${code}</code></pre>`
+      return renderPlainCode(code)
 
     const theme = colorMode.value === 'dark' ? 'material-theme-palenight' : 'github-light'
     // Map short names to full names
@@ -72,8 +74,9 @@ export function useShikiHighlighter() {
         theme,
       })
     }
-    catch {
-      return `<pre><code>${code}</code></pre>`
+    catch (renderError) {
+      error.value = renderError instanceof Error ? renderError : new Error('Failed to highlight code')
+      return renderPlainCode(code)
     }
   }
 

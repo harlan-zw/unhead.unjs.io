@@ -5,6 +5,7 @@ import {
   getPathSection,
   getPathSegments,
   getPathSubSection,
+  getPathWithFramework,
   getPathWithoutFramework,
 } from '~~/utils/urls'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
@@ -117,6 +118,10 @@ function mapPath(data) {
   })]
 }
 
+function flattenNavigation(items: NavItem[]): NavItem[] {
+  return items.flatMap(item => [item, ...flattenNavigation(item.children || [])])
+}
+
 export function enhanceTitlesAndIcons(n: NavItem) {
   if (n.children) {
     n.children = n.children.map(enhanceTitlesAndIcons)
@@ -154,12 +159,26 @@ export function useDocsNav(all: boolean = false) {
     const sectionDocs = isV2
       ? nav.find(n => n.path === '/docs/v2')?.children?.find(c => c.path?.startsWith(sectionPath))
       : nav.find(n => n.path?.startsWith(sectionPath))
-    const frameworkDocs = nav.find(n => n.path.startsWith(`/docs/${framework}`))?.children?.find(n => n.path.startsWith(getPathSection(route.path)))?.children?.find(n => n.path === (getPathSegments(route.path, 4)))?.children.map((c) => {
-      return {
-        ...c,
-        icon: selectedFramework.value?.icon,
-      }
-    })
+    const frameworkRoot = isV2
+      ? nav.find(n => n.path === '/docs/v2')?.children?.find(n => n.path === `/docs/v2/${framework}`)
+      : nav.find(n => n.path === `/docs/${framework}`)
+    const frameworkSectionPath = getPathWithFramework(sectionPath, framework)
+    const subSectionPath = isV2
+      ? getPathSegments(pathWithoutFramework, 4)
+      : getPathSubSection(pathWithoutFramework)
+    const frameworkSubSectionPath = getPathWithFramework(subSectionPath, framework)
+    const frameworkDocs = frameworkRoot
+      ?.children
+      ?.find(n => n.path === frameworkSectionPath)
+      ?.children
+      ?.find(n => n.path === frameworkSubSectionPath)
+      ?.children
+      ?.map((c) => {
+        return {
+          ...c,
+          icon: selectedFramework.value?.icon,
+        }
+      })
 
     const subSectionDocs = sectionDocs?.children?.find(n => n.path === (isV2 ? getPathSegments(pathWithoutFramework, 4) : getPathSubSection(pathWithoutFramework)))?.children
 
@@ -192,37 +211,11 @@ export function useDocsNav(all: boolean = false) {
         }
       })
       .map(enhanceTitlesAndIcons)
-      .map((n) => {
-        n.children = n.children?.map((c) => {
-          let path = c.path
-          const frameworkPrefix = isV2 ? `/docs/v2/${framework}` : `/docs/${framework}`
-          if (!path.startsWith(frameworkPrefix)) {
-            // For v2: /docs/v2/head/... → slice(3) to get head/...
-            // For v3: /docs/head/... → slice(2) to get head/...
-            const sliceIndex = isV2 ? 3 : 2
-            const subPath = path.split('/').slice(sliceIndex).join('/')
-            path = `${frameworkPrefix}/${subPath}`
-          }
-          return {
-            ...c,
-            path,
-          }
-        })
-        return n
-      })
-    const navFlat = nav.flatMap((n) => {
-      if (n.children?.length) {
-        return n.children.flatMap(c => c.children?.length ? c.children : c)
-      }
-      return n
-    }).flatMap((n) => {
-      if (n.children?.length) {
-        return n.children.flatMap(c => c.children?.length ? c.children : c)
-      }
-      return n
-    })
-    // Extract releases and migration guide sections, prefixed with framework
-    const frameworkPrefix = isV2 ? `/docs/v2/${framework}` : `/docs/${framework}`
+      // Shared pages keep their framework-neutral canonical paths. Authored
+      // framework pages already carry their framework prefix and remain
+      // independently discoverable in the same navigation tree.
+    const navFlat = flattenNavigation(nav)
+    // Releases and general migration guides are framework-neutral content.
     const contentSections = nav
       .filter(n =>
         n.path?.startsWith(`${versionPrefix}/releases`) || n.path?.startsWith(`${versionPrefix}/migration-guide`),
@@ -235,11 +228,7 @@ export function useDocsNav(all: boolean = false) {
       })
       .map(section => ({
         ...section,
-        path: `${frameworkPrefix}/${section.path.split('/').slice(2).join('/')}`,
-        children: section.children?.map(c => ({
-          ...c,
-          path: `${frameworkPrefix}/${c.path.split('/').slice(2).join('/')}`,
-        })),
+        children: section.children?.map(c => ({ ...c })),
       }))
     // Top horizontal sub-section nav: always show head's User Guides + API + Releases,
     // independent of current section (so it stays visible on releases/migration pages too)

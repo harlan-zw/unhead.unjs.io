@@ -1,36 +1,24 @@
 import type { H3Event } from 'h3'
 
-interface RateLimiter {
-  limit: (opts: { key: string }) => Promise<{ success: boolean }>
-}
-
-const FREE_TOOL_DAILY_LIMIT = 50
-
-function getEndOfDayTimestamp(): number {
-  const now = new Date()
-  const endOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
-  return Math.floor(endOfDay.getTime() / 1000)
-}
+const FREE_TOOL_MINUTE_LIMIT = 10
 
 export async function checkFreeToolRateLimit(event: H3Event) {
   if (import.meta.dev)
     return
 
   const ip = getHeader(event, 'cf-connecting-ip')
-    || getHeader(event, 'x-forwarded-for')?.split(',')[0]?.trim()
     || getRequestIP(event)
     || 'unknown'
   const key = `ip:${ip}`
 
   // Per-minute check (native Cloudflare binding)
-  const cf = event.context.cloudflare?.env as Record<string, RateLimiter> | undefined
-  const limiter = cf?.RL_FREE_TOOLS
+  const limiter = getRateLimiter(event)
 
   if (limiter) {
     const { success } = await limiter.limit({ key })
     if (!success) {
       setResponseHeaders(event, {
-        'X-RateLimit-Limit': String(FREE_TOOL_DAILY_LIMIT),
+        'X-RateLimit-Limit': String(FREE_TOOL_MINUTE_LIMIT),
         'Retry-After': '60',
       })
       throw createError({
@@ -39,36 +27,21 @@ export async function checkFreeToolRateLimit(event: H3Event) {
       })
     }
   }
+}
 
-  // Per-day check (KV storage)
-  const today = new Date().toISOString().slice(0, 10)
-  const dayKey = `ratelimit:tool:${key}:${today}`
-  const storage = useStorage('kv')
+function getRateLimiter(event: H3Event): RateLimit | undefined {
+  const env: unknown = event.context.cloudflare?.env
+  if (!env || typeof env !== 'object')
+    return undefined
 
-  const count = await storage.getItem<number>(dayKey).catch(() => {
-    // If KV is unavailable, fall back to the per-minute limiter instead of blocking users.
-    return null
-  })
+  const limiter = Reflect.get(env, 'RL_FREE_TOOLS')
+  return isRateLimiter(limiter) ? limiter : undefined
+}
 
-  if (count !== null && count >= FREE_TOOL_DAILY_LIMIT) {
-    setResponseHeaders(event, {
-      'X-RateLimit-Limit': String(FREE_TOOL_DAILY_LIMIT),
-      'X-RateLimit-Remaining': '0',
-      'X-RateLimit-Reset': String(getEndOfDayTimestamp()),
-    })
-    throw createError({
-      statusCode: 429,
-      message: `Daily limit of ${FREE_TOOL_DAILY_LIMIT} requests exceeded. Resets at midnight UTC.`,
-    })
-  }
-
-  await storage.setItem(dayKey, (count || 0) + 1, { ttl: 86400 }).catch((error) => {
-    // Daily limits are best-effort when KV writes fail.
-    void error
-  })
-
-  setResponseHeaders(event, {
-    'X-RateLimit-Limit': String(FREE_TOOL_DAILY_LIMIT),
-    'X-RateLimit-Remaining': String(FREE_TOOL_DAILY_LIMIT - (count || 0) - 1),
-  })
+function isRateLimiter(value: unknown): value is RateLimit {
+  return Boolean(
+    value
+    && typeof value === 'object'
+    && typeof Reflect.get(value, 'limit') === 'function',
+  )
 }

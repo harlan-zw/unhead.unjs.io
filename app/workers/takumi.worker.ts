@@ -1,90 +1,101 @@
-/* eslint-disable no-restricted-globals, no-new-func */
+/* eslint-disable no-restricted-globals */
 import init, { Renderer } from '@takumi-rs/wasm'
 import wasmUrl from '@takumi-rs/wasm/takumi_wasm_bg.wasm?url'
-import { transform } from 'sucrase'
+import { parseOgImageJsx } from './parse-og-image-jsx'
 
-let wasmInitialized = false
-let renderer: Renderer | null = null
+const MAX_IMAGE_BYTES = 8 * 1024 * 1024
+const IMAGE_TIMEOUT_MS = 10_000
+let rendererPromise: Promise<Renderer> | null = null
 
-// Simple JSX runtime for Sucrase 'automatic' transform
-function h(type: string, props: any, ...children: any[]) {
-  return {
-    type,
-    props: { ...props, children: children.length <= 1 ? children[0] : children },
+async function readResponseBytes(response: Response, limit: number): Promise<Uint8Array> {
+  const declaredLength = Number(response.headers.get('content-length'))
+  if (Number.isFinite(declaredLength) && declaredLength > limit)
+    throw new Error(`Image exceeds the ${Math.round(limit / 1024 / 1024)} MB limit`)
+
+  if (!response.body) {
+    const bytes = new Uint8Array(await response.arrayBuffer())
+    if (bytes.byteLength > limit)
+      throw new Error(`Image exceeds the ${Math.round(limit / 1024 / 1024)} MB limit`)
+    return bytes
   }
+
+  const reader = response.body.getReader()
+  const chunks: Uint8Array[] = []
+  let length = 0
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done)
+        break
+      length += value.byteLength
+      if (length > limit)
+        throw new Error(`Image exceeds the ${Math.round(limit / 1024 / 1024)} MB limit`)
+      chunks.push(value)
+    }
+  }
+  finally {
+    await reader.cancel().catch((error) => {
+      // Cancellation can race with a stream that has already closed.
+      void error
+    })
+  }
+
+  const bytes = new Uint8Array(length)
+  let offset = 0
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset)
+    offset += chunk.byteLength
+  }
+  return bytes
 }
 
-const jsxRuntime = {
-  h,
-  Fragment: 'symbol-fragment',
-}
+async function getRenderer(): Promise<Renderer> {
+  rendererPromise ||= (async () => {
+    await init({ module_or_path: wasmUrl })
+    const renderer = new Renderer()
+    const fontResponse = await fetch('/fonts/HubotSans-Regular.ttf', { credentials: 'omit' })
+    if (!fontResponse.ok)
+      throw new Error(`Font request failed with ${fontResponse.status}`)
+    renderer.registerFont({
+      name: 'Hubot Sans',
+      data: await readResponseBytes(fontResponse, MAX_IMAGE_BYTES),
+    })
+    return renderer
+  })().catch((error) => {
+    rendererPromise = null
+    throw error
+  })
 
-const ExportDefaultPattern = /export default/g
+  return rendererPromise
+}
 
 self.onmessage = async (event) => {
   const { type, id, code, options } = event.data
 
   if (type === 'init') {
-    if (!wasmInitialized) {
-      try {
-        await init({ module_or_path: wasmUrl })
-      }
-      catch (e) {
-        console.error('Worker: Failed to load WASM', e)
-        throw e
-      }
-      wasmInitialized = true
-      renderer = new Renderer()
-
-      try {
-        // Fetch and load font
-        const fontRes = await fetch('/fonts/HubotSans-Regular.ttf')
-        if (fontRes.ok) {
-          const fontData = await fontRes.arrayBuffer()
-          renderer.loadFont(new Uint8Array(fontData))
-        }
-        else {
-          console.error('Worker: Font fetch failed', fontRes.status)
-        }
-      }
-      catch (e) {
-        console.error('Worker: Failed to load font', e)
-      }
+    try {
+      await getRenderer()
+      self.postMessage({ type: 'ready' })
     }
-    self.postMessage({ type: 'ready' })
+    catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to initialize renderer'
+      console.error('Worker: Failed to initialize renderer', error)
+      self.postMessage({ type: 'init-error', error: message })
+    }
     return
   }
 
   if (type === 'render-request') {
     try {
-      if (!renderer) {
-        // Should have been initialized, but just in case
-        await init({ module_or_path: '/takumi.wasm' })
-        renderer = new Renderer()
-      }
-
-      // 1. Transform JSX to JS using Sucrase
-      const transformed = transform(code, {
-        transforms: ['jsx', 'typescript'],
-        jsxRuntime: 'classic',
-        jsxPragma: 'h',
-        jsxFragmentPragma: 'Fragment',
-        production: true,
-      }).code
-
-      // 2. Evaluate the code
-      // We wrap it to handle the 'export default' and provide the runtime
-      const wrappedCode = `
-        const { h, Fragment } = runtime;
-        ${transformed.replace(ExportDefaultPattern, 'return')}
-      `
-
-      const renderFn = new Function('runtime', wrappedCode)
-      const vnode = renderFn(jsxRuntime)()
+      const renderer = await getRenderer()
+      const vnode = parseOgImageJsx(code)
 
       // Transform VNode to Takumi format
       function toTakumiNode(node: any, inheritedStyle: any = {}): any {
         if (node === null || node === undefined)
+          return null
+
+        if (typeof node === 'boolean')
           return null
 
         if (typeof node === 'string' || typeof node === 'number') {
@@ -178,16 +189,27 @@ self.onmessage = async (event) => {
           return
 
         if (node.type === 'image' && node.src && node.src.startsWith('http')) {
+          const controller = new AbortController()
+          const timeout = setTimeout(() => controller.abort(), IMAGE_TIMEOUT_MS)
           try {
-            const res = await fetch(node.src)
+            const imageUrl = new URL(node.src)
+            if (!['http:', 'https:'].includes(imageUrl.protocol))
+              throw new Error('Unsupported image URL protocol')
+
+            const res = await fetch(imageUrl, {
+              credentials: 'omit',
+              mode: 'cors',
+              referrerPolicy: 'no-referrer',
+              signal: controller.signal,
+            })
             if (res.ok) {
-              const blob = await res.blob()
-              const buffer = await blob.arrayBuffer()
+              const mimeType = res.headers.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase()
+              if (!mimeType?.startsWith('image/'))
+                throw new Error('Remote URL did not return an image')
+              const buffer = await readResponseBytes(res, MAX_IMAGE_BYTES)
               const base64 = btoa(
-                new Uint8Array(buffer)
-                  .reduce((data, byte) => data + String.fromCharCode(byte), ''),
+                buffer.reduce((data, byte) => data + String.fromCharCode(byte), ''),
               )
-              const mimeType = res.headers.get('content-type') || 'image/png'
               node.src = `data:${mimeType};base64,${base64}`
             }
             else {
@@ -196,6 +218,9 @@ self.onmessage = async (event) => {
           }
           catch (e) {
             console.error('Worker: Error fetching image', e)
+          }
+          finally {
+            clearTimeout(timeout)
           }
         }
 
@@ -206,8 +231,7 @@ self.onmessage = async (event) => {
 
       await processImages(takumiNode)
 
-      // 3. Render
-      const dataUrl = renderer.renderAsDataUrl(takumiNode, {
+      const dataUrl = await renderer.renderAsDataUrl(takumiNode, {
         width: options.width || 1200,
         height: options.height || 630,
         format: 'png',
@@ -222,14 +246,14 @@ self.onmessage = async (event) => {
         },
       })
     }
-    catch (err: any) {
+    catch (err: unknown) {
       console.error('Worker: Render error', err)
       self.postMessage({
         type: 'render-result',
         id,
         result: {
           success: false,
-          error: err.message,
+          error: err instanceof Error ? err.message : 'Rendering failed',
         },
       })
     }

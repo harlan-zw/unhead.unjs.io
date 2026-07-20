@@ -17,19 +17,22 @@ export interface FrameworkNav {
 }
 
 export function useFrameworkSelector(nav?: Ref<FrameworkNav | undefined> | ComputedRef<FrameworkNav | undefined>) {
-  const fallbackFramework = useState<string | undefined>('fallback-framework', () => undefined)
   const route = useRoute()
+  const routeFramework = computed(() => getPathFramework(route.path))
+  const fallbackFramework = useState<string | undefined>('fallback-framework', () => routeFramework.value || undefined)
   const { currentVersion } = useVersionSelector()
-  let isSwitching = false
+  watch(routeFramework, (framework) => {
+    if (framework) {
+      fallbackFramework.value = framework
+    }
+  }, { immediate: true })
 
   const versionPrefix = computed(() => currentVersion.value === 'v2' ? '/docs/v2' : '/docs')
 
   const frameworkSlug = computed(() => {
-    return getPathFramework(route.path) || fallbackFramework.value
+    return routeFramework.value || fallbackFramework.value
   })
   function switchFramework(framework: typeof items[number]) {
-    isSwitching = true
-    // if the current path contains the framework slug, then we swap to the new one, otherwise we don't
     fallbackFramework.value = framework.slug
   }
   const selectedFramework = computed(() => {
@@ -43,9 +46,6 @@ export function useFrameworkSelector(nav?: Ref<FrameworkNav | undefined> | Compu
       }
       if (b.slug === selectedFramework.value.slug) {
         return 1
-      }
-      if (import.meta.client && isSwitching) {
-        return Math.random() - 0.5
       }
       return 0
     })
@@ -61,13 +61,12 @@ export function useFrameworkSelector(nav?: Ref<FrameworkNav | undefined> | Compu
         }))
       }
       return orderedFrameworks.value.map((f) => {
-        const to = getPathWithoutFramework(route.path)
+        const canonicalPath = getPathWithoutFramework(route.path)
+        const frameworkPath = getPathWithFramework(canonicalPath, f.slug)
         const fallbackPath = `${versionPrefix.value}/${f.slug}/head/guides/get-started/installation`
-        const matchedPath = nav.value.navFlat.find(l => l?.path === to)
-        return {
-          ...f,
-          to: matchedPath ? getPathWithFramework(to, f.slug) : fallbackPath,
-        }
+        const hasCanonicalPath = nav.value.navFlat.some(l => l?.path === canonicalPath)
+        const hasFrameworkPath = nav.value.navFlat.some(l => l?.path === frameworkPath)
+        return { ...f, to: hasFrameworkPath ? frameworkPath : hasCanonicalPath ? canonicalPath : fallbackPath }
       })
     }),
   }

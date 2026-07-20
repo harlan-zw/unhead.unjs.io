@@ -1,11 +1,16 @@
-const frameworks = ['typescript', 'vue', 'react', 'svelte', 'solid-js', 'angular', 'nuxt']
-
 export default defineEventHandler((event) => {
-  const path = getRequestURL(event).pathname
+  const url = getRequestURL(event)
+  const path = url.pathname
 
-  // /docs/:framework/head/guides/get-started/migration -> /docs/:framework/migration-guide/v3
+  // TypeScript no longer has a framework-authored upgrade page at this old
+  // route. Other frameworks do, so they must be allowed through and indexed.
   const match = path.match(/^\/docs\/([\w-]+)\/head\/guides\/get-started\/migration\/?$/)
-  if (match && frameworks.includes(match[1])) {
-    return sendRedirect(event, `/docs/${match[1]}/migration-guide/v3`, 301)
+  if (match?.[1] === 'typescript') {
+    return sendRedirect(event, `/docs/migration-guide/v3${url.search}`, 301)
+  }
+
+  // Consolidate the duplicate trailing-slash URLs visible in Search Console.
+  if (path.startsWith('/docs/') && path.endsWith('/')) {
+    return sendRedirect(event, `${path.slice(0, -1)}${url.search}`, 301)
   }
 })

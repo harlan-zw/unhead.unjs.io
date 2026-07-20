@@ -1,8 +1,11 @@
-interface Tweet {
-  text: string
-}
+import { z } from 'zod'
+import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'
 
-export default defineCachedEventHandler(async (event) => {
+const TweetSchema = z.object({
+  text: z.string().min(1),
+}).passthrough()
+
+export default defineEventHandler(async (event) => {
   const tweetId = event.context.params?.tweetId
 
   if (!tweetId)
@@ -32,12 +35,11 @@ export default defineCachedEventHandler(async (event) => {
     ].join(';'),
   )
 
-  const result = await $fetch<Tweet>(url.toString(), { responseType: 'json' })
-
-  if (result.text)
-    return result
-  else return sendError(event, new Error('something wrong'))
-}, {
-  maxAge: 60 * 60 * 24,
-  swr: true,
+  return withUpstreamCache(event, {
+    key: tweetId,
+    maxAge: upstreamCacheTtl.day,
+    name: 'twitter:tweet',
+    schema: TweetSchema,
+    staleMaxAge: upstreamCacheTtl.week,
+  }, () => $fetch<unknown>(url.toString(), { responseType: 'json' }))
 })

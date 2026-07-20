@@ -403,7 +403,7 @@ function handleTypeSelect(type: SchemaType) {
       <section>
         <ToolSectionHeader title="Learn More" icon="i-carbon-book" color="blue" />
         <div class="flex flex-wrap gap-2 sm:gap-3">
-          <NuxtLink to="/docs/schema-org/guides/get-started/overview" aria-label="Schema.org Guide" class="group">
+          <NuxtLink to="/docs/typescript/schema-org/guides/get-started/overview" aria-label="Schema.org Guide" class="group">
             <UButton variant="soft" color="primary" trailing-icon="i-carbon-arrow-right" size="sm" class="group-hover:shadow-lg group-hover:shadow-primary/20 transition-all">
               Schema.org Guide
             </UButton>

@@ -4,22 +4,26 @@ import { getHeader } from 'h3'
 import { parseURL } from 'ufo'
 import { ThumbsFeedbackSchema } from '~~/types/schemas'
 import { feedback } from '../database/schema'
+import { getOrCreateAnalyticsSession } from '../utils/analytics'
 import { getDB } from '../utils/db'
+import { checkFreeToolRateLimit } from '../utils/rate-limit'
 
 const LeadingSlashPattern = /^\/+/
 
 export default defineEventHandler<Promise<ThumbsFeedbackResponse>>(async (e) => {
+  await checkFreeToolRateLimit(e)
   const body = await readValidatedBody(e, ThumbsFeedbackSchema.safeParse)
   if (!body.success) {
     throw createError({ statusCode: 400, message: 'Invalid input' })
   }
 
-  const { thumbs, toolId } = body.data
+  const { thumbs, toolId, context } = body.data
   const referrer = parseURL(getHeader(e, 'Referer') || '').pathname
-  const path = toolId ? `/tools/${toolId}` : referrer.replace(LeadingSlashPattern, '')
+  const path = (toolId ? `/tools/${toolId}` : referrer.replace(LeadingSlashPattern, '')).slice(0, 500)
+  const sessionId = getOrCreateAnalyticsSession(e)
 
   const db = getDB(e)
-  await db.insert(feedback).values({ path, thumb: thumbs })
+  await db.insert(feedback).values({ path, thumb: thumbs, metadata: context, sessionId })
 
   const stats = await db
     .select({

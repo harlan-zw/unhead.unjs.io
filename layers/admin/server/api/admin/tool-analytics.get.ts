@@ -40,18 +40,28 @@ export default defineEventHandler(async (event): Promise<ToolAnalyticsSummary> =
     GROUP BY tool, action, session_id, status
   `
 
-  const response = await $fetch<{ data: { tool: string, action: string, session_id: string, status: string, count: number }[], errors?: { message: string }[] }>(`https://api.cloudflare.com/client/v4/accounts/${accountId}/analytics_engine/sql`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiToken}`,
-      'Content-Type': 'text/plain',
-    },
-    body: sql,
-    timeout: 10000, // 10s timeout
-  }).catch((err) => {
-    console.error('[tool-analytics] CF API error:', err.data || err.message)
-    return { data: [], error: err.data?.errors?.[0]?.message || err.message }
-  }) as { data: { tool: string, action: string, session_id: string, status: string, count: number }[], error?: string }
+  let response: { data: { tool: string, action: string, session_id: string, status: string, count: number }[] }
+  try {
+    const apiResponse = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/analytics_engine/sql`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiToken}`,
+        'Content-Type': 'text/plain',
+      },
+      body: sql,
+      signal: AbortSignal.timeout(10_000),
+    })
+    if (!apiResponse.ok)
+      throw new Error(`Cloudflare API returned ${apiResponse.status}`)
+    const payload = await apiResponse.json() as typeof response
+    if (!Array.isArray(payload.data))
+      throw new TypeError('Cloudflare API returned an invalid analytics payload')
+    response = payload
+  }
+  catch (error) {
+    console.error('[tool-analytics] Cloudflare API error', error)
+    throw createError({ statusCode: 502, statusMessage: 'Failed to load analytics data' })
+  }
 
   const rows = response.data || []
 

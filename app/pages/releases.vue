@@ -162,7 +162,7 @@ const HighlightedVersion = defineComponent({
 
               <div v-if="release.url" class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-end">
                 <UButton
-                  to="release.url"
+                  :to="release.url"
                   target="_blank"
                   variant="ghost"
                   size="sm"
