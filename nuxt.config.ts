@@ -271,7 +271,6 @@ export default defineNuxtConfig({
   $production: {
     routeRules: {
       '/api/stats.json': { prerender: true },
-      '/api/github/sponsors.json': { prerender: true },
     },
     scripts: {
       registry: {

@@ -4,6 +4,7 @@ import { initOctokitRequestHandler } from '~~/server/utils/github'
 import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'
 
 const PrMatchPattern = /#(\d+)/
+const GitHubRequestTimeoutMs = 5_000
 const LastFileCommitSchema = z.object({
   author: z.object({
     committer: z.string().nullish(),
@@ -32,6 +33,7 @@ export default defineEventHandler(async (e) => {
       repo,
       path: file,
       per_page: 10,
+      request: { signal: AbortSignal.timeout(GitHubRequestTimeoutMs) },
     })
 
     // Skip merge commits to find the actual content change
@@ -51,6 +53,7 @@ export default defineEventHandler(async (e) => {
           owner,
           repo,
           pull_number: Number.parseInt(prMatch[1]),
+          request: { signal: AbortSignal.timeout(GitHubRequestTimeoutMs) },
         }).catch(() => ({ data: null }))
         if (prData) {
           committerLogin = prData.user.login
