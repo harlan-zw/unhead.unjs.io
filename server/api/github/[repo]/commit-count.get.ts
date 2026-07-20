@@ -1,30 +1,30 @@
+import { z } from 'zod'
 import { initOctokitRequestHandler } from '~~/server/utils/github'
+import { getLastPageFromLinkHeader } from '~~/server/utils/project-stats'
+import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'
 
-const LastPagePattern = /page=(\d+)&sha=main>; rel="last"/
+const CommitCountSchema = z.number().int().nonnegative()
 
-export default defineCachedEventHandler(async (e) => {
+export default defineEventHandler(async (e) => {
   const { octokit, repo, owner } = initOctokitRequestHandler(e)
-  const { headers } = await octokit.request('GET /repos/{owner}/{repo}/commits', {
-    repo,
-    owner,
-    state: 'closed',
-    per_page: 1,
-    page: 1,
-    sha: 'main',
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
+  return withUpstreamCache(e, {
+    key: `${owner}/${repo}`,
+    maxAge: upstreamCacheTtl.week,
+    name: 'github:commit-count',
+    schema: CommitCountSchema,
+    staleMaxAge: upstreamCacheTtl.week,
+  }, async () => {
+    const { headers } = await octokit.request('GET /repos/{owner}/{repo}/commits', {
+      repo,
+      owner,
+      state: 'closed',
+      per_page: 1,
+      page: 1,
+      sha: 'main',
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    })
+    return getLastPageFromLinkHeader(headers.link)
   })
-  const link = String(headers.link) || ''
-  // looks like: <https://api.github.com/repositories/577581539/commits?sha=main&per_page=1&page=2>; rel="next", <https://api.github.com/repositories/577581539/commits?sha=main&per_page=1&page=783>; rel="last"
-  // we need to extract the last page number
-  const lastPage = link.match(LastPagePattern)
-  if (!lastPage) {
-    throw new Error('Could not find last page')
-  }
-  return Number.parseInt(lastPage[1], 10)
-}, {
-  name: 'commit-count-v2',
-  maxAge: 60 * 60 * 24 * 7,
-  swr: true,
 })

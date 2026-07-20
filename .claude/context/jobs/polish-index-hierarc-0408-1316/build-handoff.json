@@ -1,0 +1,23 @@
+{
+  "schema_version": 3,
+  "job_id": "polish-index-hierarc-0408-1316",
+  "created": "2026-04-08T13:18:00Z",
+  "git_hash": "52d8ff71b4cbbc93c1b99e1b3be14e10ede13f78",
+  "dev_port": 3000,
+  "pages_changed": ["app/pages/index.vue"],
+  "components_created": [],
+  "routes_to_test": ["/"],
+  "design_system_changes": false,
+  "design_guidelines_path": ".claude/context/design-guidelines.md",
+  "theme_name": "custom-amber-warm",
+  "contract_criteria_status": {},
+  "self_assessment": {
+    "confidence": "high",
+    "weakest_area": "Principles section extra spacing (py-24) may feel slightly oversized compared to other sections",
+    "hardest_decision": "Choosing py-14 xl:py-20 as the unified rhythm; balancing enough breathing room without making the page feel too long"
+  },
+  "has_client_animations": false,
+  "known_limitations": [],
+  "next_steps": [],
+  "dark_mode_relevant": true
+}

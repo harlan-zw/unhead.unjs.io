@@ -1,45 +1,63 @@
-function formatDate(date) {
-  return date.toISOString().split('T')[0]
-}
+import { z } from 'zod'
+import { getDownloadDateRange } from '~~/server/utils/project-stats'
+import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'
+import { modules } from '../../../../const'
 
-export default defineCachedEventHandler(async (e) => {
+const allowedPackages = new Set(modules.map(module => module.npm))
+const DownloadDaySchema = z.object({
+  day: z.string(),
+  downloads: z.number().int().nonnegative(),
+})
+const NpmRangeSchema = z.object({
+  downloads: z.array(DownloadDaySchema),
+  end: z.string(),
+  package: z.string(),
+  start: z.string(),
+})
+const DownloadsSchema = z.object({
+  averageDownloads30: z.number().int(),
+  averageDownloads90: z.number().int(),
+  downloads: z.array(DownloadDaySchema),
+  percentageChange: z.number().int(),
+  totalDownloads30: z.number().int().nonnegative(),
+  totalDownloads90: z.number().int().nonnegative(),
+})
+
+export default defineEventHandler(async (e) => {
   const packageName = (getRouterParam(e, 'pkgName') || '').replace('_', '/')
-  if (!packageName?.startsWith('@unhead') && !packageName?.startsWith('unhead')) {
-    throw new Error(`Invalid package ${packageName}`)
-  }
-  const endDate = new Date() // Today's date
-  endDate.setDate(endDate.getDate() - 2) // 90 days ago
-  const startDate = new Date()
-  startDate.setDate(endDate.getDate() - 90) // 90 days ago
-  const startDate30 = new Date()
-  startDate30.setDate(endDate.getDate() - 30) // 30 days ago
-  const formattedStartDate = formatDate(startDate)
-  const formattedEndDate = formatDate(endDate)
+  if (!allowedPackages.has(packageName))
+    throw createError({ statusCode: 400, statusMessage: 'Unsupported package' })
 
-  const data = await $fetch<{
-    start: string
-    end: string
-    package: string
-    downloads: { downloads: number, day: string }[]
-  }>(`https://api.npmjs.org/downloads/range/${formattedStartDate}:${formattedEndDate}/${packageName}`)
+  const { start, start30, end } = getDownloadDateRange()
 
-  const totalDownloads90 = data.downloads.reduce((sum, day) => sum + day.downloads, 0)
-  const totalDownloads30 = data.downloads
-    .filter(day => new Date(day.day) >= startDate30)
-    .reduce((sum, day) => sum + day.downloads, 0)
-  const averageDownloads90 = Math.round(totalDownloads90 / 90)
-  const averageDownloads30 = Math.round(totalDownloads30 / 30)
+  return withUpstreamCache(e, {
+    key: `${packageName}:${start}:${end}`,
+    maxAge: upstreamCacheTtl.day,
+    name: 'npm:downloads',
+    schema: DownloadsSchema,
+    staleMaxAge: upstreamCacheTtl.week,
+  }, async () => {
+    const data = NpmRangeSchema.parse(await $fetch<unknown>(
+      `https://api.npmjs.org/downloads/range/${start}:${end}/${packageName}`,
+    ))
 
-  const percentageChange = Math.round(((averageDownloads30 - averageDownloads90) / averageDownloads90) * 100)
-  return {
-    downloads: data.downloads,
-    totalDownloads90,
-    totalDownloads30,
-    averageDownloads30,
-    averageDownloads90,
-    percentageChange,
-  }
-}, {
-  maxAge: 60 * 60 * 24,
-  swr: true,
+    const totalDownloads90 = data.downloads.reduce((sum, day) => sum + day.downloads, 0)
+    const totalDownloads30 = data.downloads
+      .filter(day => day.day >= start30)
+      .reduce((sum, day) => sum + day.downloads, 0)
+    const averageDownloads90 = Math.round(totalDownloads90 / 90)
+    const averageDownloads30 = Math.round(totalDownloads30 / 30)
+
+    const percentageChange = averageDownloads90 === 0
+      ? 0
+      : Math.round(((averageDownloads30 - averageDownloads90) / averageDownloads90) * 100)
+    return {
+      downloads: data.downloads,
+      totalDownloads90,
+      totalDownloads30,
+      averageDownloads30,
+      averageDownloads90,
+      percentageChange,
+    }
+  })
 })

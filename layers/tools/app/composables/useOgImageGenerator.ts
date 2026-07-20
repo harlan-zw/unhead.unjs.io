@@ -1,5 +1,22 @@
 import { computed, ref, watch } from 'vue'
 
+interface OgTemplateOptions {
+  siteName: string
+  author: string
+  themeColor: string
+  image: string
+  price: string
+  brand: string
+}
+
+function jsString(value: string): string {
+  return JSON.stringify(value)
+}
+
+function jsxText(value: string): string {
+  return `{${jsString(value)}}`
+}
+
 export function useOgImageGenerator() {
   const title = ref('Unhead')
   const description = ref('The document head manager for Vue and Nuxt.')
@@ -29,8 +46,8 @@ export default function OgImage() {
       flexDirection: 'column',
       width: '100%',
       height: '100%',
-      backgroundColor: '${bg}',
-      color: '${color}',
+      backgroundColor: ${jsString(bg)},
+      color: ${jsString(color)},
       alignItems: 'center',
       justifyContent: 'center',
       padding: '40px',
@@ -42,7 +59,7 @@ export default function OgImage() {
         marginBottom: '20px',
         textAlign: 'center'
       }}>
-        ${t}
+        ${jsxText(t)}
       </h1>
       <p style={{
         fontSize: '40px',
@@ -50,7 +67,7 @@ export default function OgImage() {
         textAlign: 'center',
         maxWidth: '800px'
       }}>
-        ${d}
+        ${jsxText(d)}
       </p>
     </div>
   )
@@ -63,7 +80,7 @@ export default function OgImage() {
       display: 'flex',
       width: '100%',
       height: '100%',
-      backgroundColor: '${bg}',
+      backgroundColor: ${jsString(bg)},
       padding: '40px',
       fontFamily: 'Hubot Sans, sans-serif'
     }}>
@@ -72,20 +89,20 @@ export default function OgImage() {
         flexDirection: 'column',
         width: '100%',
         height: '100%',
-        border: '4px solid ${color}',
+        border: ${jsString(`4px solid ${color}`)},
         borderRadius: '20px',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '${color}'
+        color: ${jsString(color)}
       }}>
-        <h1 style={{ fontSize: '70px', fontWeight: 'bold' }}>${t}</h1>
-        <p style={{ fontSize: '30px', marginTop: '20px' }}>${d}</p>
+        <h1 style={{ fontSize: '70px', fontWeight: 'bold' }}>${jsxText(t)}</h1>
+        <p style={{ fontSize: '30px', marginTop: '20px' }}>${jsxText(d)}</p>
       </div>
     </div>
   )
 }
 `,
-    blog: (t: string, d: string, bg: string, color: string, extra: any) => `
+    blog: (t: string, _d: string, bg: string, color: string, extra: OgTemplateOptions) => `
 export default function BlogPostTemplate() {
   return (
     <div
@@ -94,9 +111,9 @@ export default function BlogPostTemplate() {
         flexDirection: "column",
         width: "100%",
         height: "100%",
-        backgroundColor: "${bg}",
-        color: "${color}",
-        backgroundImage: "linear-gradient(135deg, ${bg} 0%, #000 100%)",
+        backgroundColor: ${jsString(bg)},
+        color: ${jsString(color)},
+        backgroundImage: ${jsString(`linear-gradient(135deg, ${bg} 0%, #000 100%)`)},
         padding: "60px",
         justifyContent: "space-between",
         fontFamily: 'Hubot Sans, sans-serif'
@@ -105,7 +122,7 @@ export default function BlogPostTemplate() {
       <div style={{ display: "flex", alignItems: "flex-start" }}>
         <div
           style={{
-            backgroundColor: "${extra.themeColor}",
+            backgroundColor: ${jsString(extra.themeColor)},
             color: "white",
             padding: "8px 24px",
             borderRadius: "9999px",
@@ -113,7 +130,7 @@ export default function BlogPostTemplate() {
             fontWeight: 600,
           }}
         >
-          ${extra.siteName}
+          ${jsxText(extra.siteName)}
         </div>
       </div>
 
@@ -127,7 +144,7 @@ export default function BlogPostTemplate() {
             textShadow: "0 4px 12px rgba(0,0,0,0.5)",
           }}
         >
-          ${t}
+          ${jsxText(t)}
         </h1>
       </div>
 
@@ -146,11 +163,11 @@ export default function BlogPostTemplate() {
               backgroundColor: "#333"
             }}
           >
-            <img src="${extra.image}" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src={${jsString(extra.image)}} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
         )}
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <span style={{ fontSize: 32, fontWeight: 600 }}>${extra.author}</span>
+          <span style={{ fontSize: 32, fontWeight: 600 }}>${jsxText(extra.author)}</span>
           <span style={{ fontSize: 24, color: "#a1a1aa" }}>${new Date().toLocaleDateString()}</span>
         </div>
       </div>
@@ -158,20 +175,20 @@ export default function BlogPostTemplate() {
   );
 }
 `,
-    docs: (t: string, d: string, bg: string, color: string, extra: any) => `
+    docs: (t: string, d: string, bg: string, color: string, extra: OgTemplateOptions) => `
 export default function DocsTemplate() {
   return (
     <div
       style={{
         width: "100%",
         height: "100%",
-        backgroundColor: "${bg}",
+        backgroundColor: ${jsString(bg)},
         position: "relative",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
-        color: "${color}",
-        backgroundImage: "linear-gradient(to bottom right, ${extra.themeColor}, transparent)",
+        color: ${jsString(color)},
+        backgroundImage: ${jsString(`linear-gradient(to bottom right, ${extra.themeColor}, transparent)`)},
         fontFamily: 'Hubot Sans, sans-serif'
       }}
     >
@@ -201,15 +218,15 @@ export default function DocsTemplate() {
               fontWeight: 800,
               lineHeight: 1.1,
               letterSpacing: "-0.04em",
-              color: "${color}",
+              color: ${jsString(color)},
             }}
           >
-            ${t}
+            ${jsxText(t)}
           </span>
           <span
             style={{
               fontSize: 44,
-              color: "${color}",
+              color: ${jsString(color)},
               opacity: 0.7,
               fontWeight: 400,
               lineHeight: 1.4,
@@ -220,7 +237,7 @@ export default function DocsTemplate() {
               overflow: "hidden",
             }}
           >
-            ${d}
+            ${jsxText(d)}
           </span>
         </div>
 
@@ -232,25 +249,25 @@ export default function DocsTemplate() {
           }}
         >
           {${extra.image ? 'true' : 'false'} && (
-             <img src="${extra.image}" width="64" height="64" />
+             <img src={${jsString(extra.image)}} width="64" height="64" />
           )}
           <span
             style={{
               fontSize: 32,
               fontWeight: 700,
               letterSpacing: "-0.02em",
-              color: "${color}",
+              color: ${jsString(color)},
               opacity: 0.9,
             }}
           >
-            ${extra.siteName}
+            ${jsxText(extra.siteName)}
           </span>
           <div style={{ flexGrow: 1 }} />
           <div
             style={{
               height: 4,
               width: 60,
-              backgroundColor: "${extra.themeColor}",
+              backgroundColor: ${jsString(extra.themeColor)},
               borderRadius: 2,
             }}
           />
@@ -260,7 +277,7 @@ export default function DocsTemplate() {
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: "0.2em",
-              color: "${extra.themeColor}",
+              color: ${jsString(extra.themeColor)},
               opacity: 0.8,
             }}
           >
@@ -272,7 +289,7 @@ export default function DocsTemplate() {
   );
 }
 `,
-    product: (t: string, d: string, bg: string, color: string, extra: any) => `
+    product: (t: string, d: string, bg: string, _color: string, extra: OgTemplateOptions) => `
 export default function ProductCardTemplate() {
   return (
     <div
@@ -280,7 +297,7 @@ export default function ProductCardTemplate() {
         display: "flex",
         width: "100%",
         height: "100%",
-        backgroundColor: "${bg}",
+        backgroundColor: ${jsString(bg)},
         padding: "40px",
         alignItems: "center",
         justifyContent: "center",
@@ -313,7 +330,7 @@ export default function ProductCardTemplate() {
           }}
         >
           {${extra.image ? 'true' : 'false'} ? (
-             <img src="${extra.image}" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+             <img src={${jsString(extra.image)}} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
           ) : (
              <div style={{ fontSize: 100 }}>📦</div>
           )}
@@ -338,7 +355,7 @@ export default function ProductCardTemplate() {
                 letterSpacing: "0.1em",
               }}
             >
-              ${extra.brand}
+              ${jsxText(extra.brand)}
             </span>
             <span
               style={{
@@ -349,7 +366,7 @@ export default function ProductCardTemplate() {
                 letterSpacing: "-0.02em",
               }}
             >
-              ${t}
+              ${jsxText(t)}
             </span>
           </div>
 
@@ -363,7 +380,7 @@ export default function ProductCardTemplate() {
               fontWeight: 400,
             }}
           >
-            ${d}
+            ${jsxText(d)}
           </span>
 
           <div
@@ -373,7 +390,7 @@ export default function ProductCardTemplate() {
               color: "#2563eb",
             }}
           >
-            ${extra.price}
+            ${jsxText(extra.price)}
           </div>
         </div>
       </div>
@@ -429,7 +446,7 @@ useSeoMeta({
       url: 'https://example.com/og-image.png',
       width: 1200,
       height: 630,
-      alt: '${title.value}',
+      alt: ${jsString(title.value)},
     }
   ]
 })

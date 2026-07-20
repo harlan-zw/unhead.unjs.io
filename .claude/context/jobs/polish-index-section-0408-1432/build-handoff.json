@@ -1,0 +1,41 @@
+{
+  "schema_version": 3,
+  "job_id": "polish-index-section-0408-1432",
+  "created": "2026-04-08T05:27:41Z",
+  "git_hash": "52d8ff71b4cbbc93c1b99e1b3be14e10ede13f78",
+  "dev_port": 3300,
+  "pages_changed": ["app/pages/index.vue"],
+  "components_created": [],
+  "routes_to_test": ["/"],
+  "design_system_changes": true,
+  "design_guidelines_path": ".claude/context/design-guidelines.md",
+  "theme_name": "custom-amber",
+  "contract_path": null,
+  "contract_criteria_status": {},
+  "self_assessment": {
+    "confidence": "medium",
+    "weakest_area": "Shiki green code tokens at 4.42:1 remain borderline (from third-party theme, not addressable without fragile inline style overrides)",
+    "hardest_decision": "Used variant='outline' for success badge instead of 'soft' to fix contrast; outline gives colored border + text on transparent bg"
+  },
+  "has_client_animations": false,
+  "known_limitations": [
+    "Shiki green code tokens (#22863A on warm neutral-50) still at ~4.42:1 vs 4.5:1 threshold, from shiki theme's inline styles",
+    "Dev server could not start due to @nuxt/content git source conflict with local changes"
+  ],
+  "next_steps": ["Visual verification once dev server is running"],
+  "dark_mode_relevant": true,
+  "repair_pass": {
+    "issues_fixed": [
+      "[HARD REJECT] Hero text-primary amber contrast: text-amber-700 in light mode (was 2.13:1)",
+      "[HARD REJECT] Success badge contrast: variant='outline' replaces 'soft' (was 2.16:1)",
+      "[HARD REJECT] Mount button contrast: color='neutral' replaces 'info' (was 3.76:1)",
+      "[HARD REJECT] Search input missing aria-label: added to both Header.vue instances",
+      "[RUBRIC] Dark mode noise grain: opacity 0.035 -> 0.055",
+      "[RUBRIC] Dark mode gradient: opacity 0.04 -> 0.07",
+      "[RUBRIC] Missing section dividers: added between ReactiveLifecycles→SEOTags and SEOTags→MakingWebsitesFaster"
+    ],
+    "issues_not_fixed": [
+      "Shiki green code tokens 4.42:1 contrast: third-party theme colors, would require fragile inline style overrides"
+    ]
+  }
+}

@@ -1,25 +1,22 @@
+import { z } from 'zod'
 import { initOctokitRequestHandler } from '~~/server/utils/github'
+import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'
 
-export default defineCachedEventHandler(async (e) => {
+const IssuesClosedSchema = z.number().int().nonnegative()
+
+export default defineEventHandler(async (e) => {
   const { octokit, repo, owner } = initOctokitRequestHandler(e)
-  const res = await octokit.graphql<{ repository: { closed: { totalCount: string } } }>(`query ($owner: String!, $name: String!) {
-  repository(owner: $owner, name: $name) {
-    all:issues {
-      totalCount
-    }
-    closed:issues(states:CLOSED) {
-      totalCount
-    }
-    open:issues(states:OPEN) {
-      totalCount
-    }
-  }
-}`, {
-    name: repo,
-    owner,
+  return withUpstreamCache(e, {
+    key: `${owner}/${repo}`,
+    maxAge: upstreamCacheTtl.week,
+    name: 'github:issues-closed',
+    schema: IssuesClosedSchema,
+    staleMaxAge: upstreamCacheTtl.week,
+  }, async () => {
+    const { data } = await octokit.rest.search.issuesAndPullRequests({
+      q: `repo:${owner}/${repo} is:issue is:closed`,
+      per_page: 1,
+    })
+    return data.total_count
   })
-  return Number.parseInt(res.repository.closed.totalCount, 10)
-}, {
-  maxAge: 60 * 60 * 24 * 7,
-  swr: true,
 })

@@ -1,5 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 import type { H3Event } from 'h3'
+import { getCookie, setCookie } from 'h3'
 import { toolLookups } from '../database/schema'
 import { getDB } from './db'
 
@@ -16,6 +17,21 @@ export function getAnalyticsEngine(event: H3Event): AnalyticsEngineDataset | und
   return (event.context.cloudflare?.env as { TOOL_ANALYTICS?: AnalyticsEngineDataset } | undefined)?.TOOL_ANALYTICS
 }
 
+export function getOrCreateAnalyticsSession(event: H3Event): string {
+  const current = getCookie(event, 'analytics-session')
+  if (current)
+    return current
+
+  const sessionId = crypto.randomUUID()
+  setCookie(event, 'analytics-session', sessionId, {
+    maxAge: 60 * 60 * 24 * 365,
+    httpOnly: true,
+    secure: !import.meta.dev,
+    sameSite: 'lax',
+  })
+  return sessionId
+}
+
 export function trackToolUsage(
   event: H3Event,
   toolId: ToolName,
@@ -25,12 +41,12 @@ export function trackToolUsage(
     responseTime?: number
     error?: boolean
   },
+  sessionId = getOrCreateAnalyticsSession(event),
 ) {
   const analytics = getAnalyticsEngine(event)
   if (!analytics)
     return
 
-  const sessionId = getCookie(event, 'analytics-session') || crypto.randomUUID()
   const timestamp = Date.now()
 
   const dataPoint: AnalyticsDataPoint = {
@@ -68,9 +84,9 @@ export async function trackToolLookup(
   tool: ToolName,
   action: ToolAction,
   label?: string,
+  sessionId = getOrCreateAnalyticsSession(event),
 ) {
   const db = getDB(event)
-  const sessionId = getCookie(event, 'analytics-session')
 
   await db.insert(toolLookups).values({
     sessionId,

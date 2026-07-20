@@ -29,6 +29,22 @@ const { data: analytics, refresh, status } = useFetch('/api/admin/tool-analytics
 const toolMetadata: Record<string, { name: string, icon: string, color: string }> = {
   'meta-tag-generator': { name: 'Meta Tag Generator', icon: 'i-carbon-tag', color: 'amber' },
   'schema-generator': { name: 'Schema.org Generator', icon: 'i-carbon-data-structured', color: 'purple' },
+  'og-image-generator': { name: 'OG Image Generator', icon: 'i-carbon-image', color: 'blue' },
+  'capo-analyzer': { name: 'Capo Analyzer', icon: 'i-carbon-meter', color: 'emerald' },
+}
+
+const colorClasses: Record<string, { soft: string, text: string, solid: string }> = {
+  amber: { soft: 'bg-amber-500/10', text: 'text-amber-500', solid: 'bg-amber-500' },
+  blue: { soft: 'bg-blue-500/10', text: 'text-blue-500', solid: 'bg-blue-500' },
+  emerald: { soft: 'bg-emerald-500/10', text: 'text-emerald-500', solid: 'bg-emerald-500' },
+  neutral: { soft: 'bg-neutral-500/10', text: 'text-neutral-500', solid: 'bg-neutral-500' },
+  purple: { soft: 'bg-purple-500/10', text: 'text-purple-500', solid: 'bg-purple-500' },
+  red: { soft: 'bg-red-500/10', text: 'text-red-500', solid: 'bg-red-500' },
+  violet: { soft: 'bg-violet-500/10', text: 'text-violet-500', solid: 'bg-violet-500' },
+}
+
+function getColorClasses(color: string) {
+  return colorClasses[color] || colorClasses.neutral
 }
 
 function getToolMeta(id: string) {
@@ -47,7 +63,7 @@ interface ToolLookup {
   id: string
   userId: string | null
   sessionId: string | null
-  tool: 'meta-tag-generator' | 'schema-generator'
+  tool: 'meta-tag-generator' | 'schema-generator' | 'og-image-generator' | 'capo-analyzer'
   action: string
   label: string | null
   createdAt: number | string | Date
@@ -67,6 +83,8 @@ const lookupTools = [
   { value: 'all', label: 'All', icon: 'i-carbon-grid' },
   { value: 'meta-tag-generator', label: 'Meta Tags', icon: 'i-carbon-tag' },
   { value: 'schema-generator', label: 'Schema', icon: 'i-carbon-data-structured' },
+  { value: 'og-image-generator', label: 'OG Images', icon: 'i-carbon-image' },
+  { value: 'capo-analyzer', label: 'Capo', icon: 'i-carbon-meter' },
 ]
 
 const activeLookupTab = ref('all')
@@ -86,8 +104,8 @@ const lookupColumns: TableColumn<ToolLookup>[] = [
     cell: ({ row }) => {
       const meta = getToolMeta(row.original.tool)
       return h('div', { class: 'flex items-center gap-2.5' }, [
-        h('div', { class: `w-8 h-8 rounded-lg bg-${meta.color}-500/10 flex items-center justify-center` }, [
-          h('span', { class: `${meta.icon} w-4 h-4 text-${meta.color}-500` }),
+        h('div', { class: `w-8 h-8 rounded-lg ${getColorClasses(meta.color).soft} flex items-center justify-center` }, [
+          h('span', { class: `${meta.icon} w-4 h-4 ${getColorClasses(meta.color).text}` }),
         ]),
         h('span', { class: 'font-medium text-highlighted' }, meta.name),
       ])
@@ -290,9 +308,9 @@ const statCards = computed(() => [
               <div class="flex items-start justify-between mb-3">
                 <div
                   class="w-10 h-10 rounded-lg flex items-center justify-center"
-                  :class="`bg-${stat.color}-500/10`"
+                  :class="getColorClasses(stat.color).soft"
                 >
-                  <UIcon :name="stat.icon" class="w-5 h-5" :class="`text-${stat.color}-500`" />
+                  <UIcon :name="stat.icon" class="w-5 h-5" :class="getColorClasses(stat.color).text" />
                 </div>
                 <div v-if="status === 'pending'" class="w-12 h-4 rounded bg-default animate-pulse" />
               </div>
@@ -320,12 +338,12 @@ const statCards = computed(() => [
                     <div class="flex items-center gap-2.5">
                       <div
                         class="w-7 h-7 rounded-md flex items-center justify-center"
-                        :class="`bg-${getToolMeta(tool.tool).color}-500/10`"
+                        :class="getColorClasses(getToolMeta(tool.tool).color).soft"
                       >
                         <UIcon
                           :name="getToolMeta(tool.tool).icon"
                           class="w-3.5 h-3.5"
-                          :class="`text-${getToolMeta(tool.tool).color}-500`"
+                          :class="getColorClasses(getToolMeta(tool.tool).color).text"
                         />
                       </div>
                       <span class="text-sm font-medium text-highlighted">
@@ -339,7 +357,7 @@ const statCards = computed(() => [
                   <div class="h-1.5 rounded-full bg-default overflow-hidden">
                     <div
                       class="h-full rounded-full transition-all duration-500"
-                      :class="`bg-${getToolMeta(tool.tool).color}-500`"
+                      :class="getColorClasses(getToolMeta(tool.tool).color).solid"
                       :style="{ width: `${(tool.count / maxToolCount) * 100}%` }"
                     />
                   </div>

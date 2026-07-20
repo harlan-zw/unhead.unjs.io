@@ -550,7 +550,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       <section>
         <ToolSectionHeader title="Learn More" icon="i-carbon-book" color="blue" />
         <div class="flex flex-wrap gap-2 sm:gap-3">
-          <NuxtLink to="/learn/what-is-capo" aria-label="What is Capo.js?" class="group">
+          <NuxtLink to="/learn/guides/what-is-capo" aria-label="What is Capo.js?" class="group">
             <UButton variant="soft" color="primary" trailing-icon="i-carbon-arrow-right" size="sm" class="group-hover:shadow-lg group-hover:shadow-primary/20 transition-all">
               What is Capo.js?
             </UButton>

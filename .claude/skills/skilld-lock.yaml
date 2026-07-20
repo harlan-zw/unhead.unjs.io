@@ -1,0 +1,16 @@
+skills:
+  nuxt-skilld:
+    packageName: nuxt
+    version: 4.4.2
+    repo: nuxt/nuxt
+    source: "https://nuxt.com/llms.txt"
+    syncedAt: 2026-03-22
+    generator: skilld
+  reka-ui-skilld:
+    packageName: reka-ui
+    version: 2.9.2
+    packages: "reka-ui@2.9.2"
+    repo: unovue/reka-ui
+    source: "https://reka-ui.com/llms.txt"
+    syncedAt: 2026-03-22
+    generator: skilld

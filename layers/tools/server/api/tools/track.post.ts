@@ -1,10 +1,12 @@
 import { z } from 'zod'
-import { getAnalyticsEngine, trackToolLookup, trackToolUsage } from '~~/server/utils/analytics'
+import { getOrCreateAnalyticsSession, trackToolLookup, trackToolUsage } from '~~/server/utils/analytics'
+import { checkFreeToolRateLimit } from '~~/server/utils/rate-limit'
 
 const schema = z.object({
   tool: z.enum(['meta-tag-generator', 'schema-generator', 'og-image-generator', 'capo-analyzer']),
   action: z.enum(['view', 'use', 'copy', 'reset', 'preset', 'download']),
-  label: z.string().optional(),
+  label: z.string().trim().max(100).optional(),
+  outcome: z.enum(['success', 'error']).optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -15,32 +17,22 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Invalid request' })
   }
 
-  const { tool, action, label } = parsed.data
-
-  // Check Analytics Engine binding exists
-  const analytics = getAnalyticsEngine(event)
-  if (!analytics) {
-    return { ok: true, skipped: true }
-  }
-
-  // Set session cookie if not exists
-  if (!getCookie(event, 'analytics-session')) {
-    setCookie(event, 'analytics-session', crypto.randomUUID(), {
-      maxAge: 60 * 60 * 24 * 365, // 1 year
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-    })
-  }
+  await checkFreeToolRateLimit(event)
+  const { tool, action, label, outcome } = parsed.data
+  const sessionId = getOrCreateAnalyticsSession(event)
 
   // Track to Analytics Engine (real-time)
-  trackToolUsage(event, tool, action, { label })
+  try {
+    trackToolUsage(event, tool, action, { label, error: outcome === 'error' }, sessionId)
+  }
+  catch (error) {
+    console.error('Failed to write tool event to Analytics Engine', error)
+  }
 
   // Track to D1 database (queryable)
-  trackToolLookup(event, tool, action, label).catch((error) => {
-    // D1 analytics are best-effort; realtime Analytics Engine already recorded the event.
-    void error
-  })
+  event.waitUntil(trackToolLookup(event, tool, action, label, sessionId).catch((error) => {
+    console.error('Failed to write tool event to D1', error)
+  }))
 
   return { ok: true }
 })

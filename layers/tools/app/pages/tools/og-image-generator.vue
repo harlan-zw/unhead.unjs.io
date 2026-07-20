@@ -38,10 +38,13 @@ const imageHeight = ref(630)
 
 // Debounced render to avoid spamming the worker
 const debouncedRender = useDebounceFn(() => {
-  render(code.value, {
+  void render(code.value, {
     width: imageWidth.value,
     height: imageHeight.value,
     format: 'png',
+  }).catch((renderError) => {
+    // The renderer exposes the same failure through its reactive error state.
+    void renderError
   })
 }, 500)
 

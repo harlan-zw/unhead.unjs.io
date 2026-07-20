@@ -1,19 +1,7 @@
+import { selectLatestMajorVersions } from '~~/server/utils/project-stats'
 import { modules } from '../../const'
 
-function customSortSemver(a, b) {
-  const aParts = String(a).split('.')
-  const bParts = String(b).split('.')
-  for (let i = 0; i < aParts.length; i++) {
-    if (aParts[i] === bParts[i]) {
-      continue
-    }
-    return Number.parseInt(bParts[i]) - Number.parseInt(aParts[i])
-  }
-  return 0
-}
-
-export default defineCachedEventHandler(async (e) => {
-  const promises = []
+export default defineEventHandler(async (e) => {
   const [stars, commitCount, issuesClosed, releases, contributors] = await Promise.all([
     e.$fetch(`/api/github/unjs@unhead/stars`).catch(() => ({ stars: 0 })),
     e.$fetch(`/api/github/unjs@unhead/commit-count`).catch(() => 0),
@@ -21,37 +9,26 @@ export default defineCachedEventHandler(async (e) => {
     e.$fetch(`/api/github/unjs@unhead/releases`).catch(() => []),
     e.$fetch(`/api/github/unjs@unhead/contributors`).catch(() => []),
   ])
-  // get all major versions from releases, need to map into major version groups then get first child
-  const versionGroups = releases.map(r => r.name).reduce((group, v) => {
-    const [major] = v.split('.').slice(0, 1)
-    group[major] = group[major] || []
-    group[major].push(v)
-    return group
-  }, [])
-  const versions = Object.values(versionGroups).sort(customSortSemver).map(v => v[0]).map(v => v.startsWith('v') ? v : `v${v}`).sort((a, b) => b.localeCompare(a))
+  const versions = selectLatestMajorVersions(releases.map(release => release.name))
+  const moduleStats = await Promise.all(modules.map(async (module) => {
+    const downloads = await e.$fetch(`/api/npm/${module.npm.replace('/', '_')}/downloads`).catch(() => {
+      return {
+        totalDownloads90: 0,
+        totalDownloads30: 0,
+        averageDownloads30: 0,
+        averageDownloads90: 0,
+        percentageChange: 0,
+      }
+    })
+    return {
+      slug: module.slug,
+      ...downloads,
+    }
+  }))
 
-  for (const m of modules) {
-    // eslint-disable-next-line no-async-promise-executor
-    promises.push(new Promise(async (resolve) => {
-      const downloads = await e.$fetch(`/api/npm/${m.npm.replace('/', '_')}/downloads`).catch(() => {
-        return {
-          totalDownloads90: 0,
-          totalDownloads30: 0,
-          averageDownloads30: 0,
-          averageDownloads90: 0,
-          percentageChange: 0,
-        }
-      })
-      // first of each group make an object, sort so we get the oldest version
-      resolve({
-        slug: m.slug,
-        ...downloads,
-      })
-    }))
-  }
   return {
     fetchedAt: Date.now(),
-    modules: await Promise.all(promises),
+    modules: moduleStats,
     versions,
     stars,
     commitCount,
@@ -59,9 +36,4 @@ export default defineCachedEventHandler(async (e) => {
     releases,
     contributors,
   }
-}, {
-  // last for 1 day
-  maxAge: 60 * 60 * 24,
-  swr: true,
-  name: 'stats-v1.json',
 })

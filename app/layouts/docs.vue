@@ -10,7 +10,7 @@ const isV2 = computed(() => route.path.startsWith('/docs/v2'))
   <div v-if="isV2" class="bg-amber-500/10 border-b border-amber-500/20 text-amber-600 dark:text-amber-400 text-sm py-2 px-4 text-center">
     <UIcon name="i-carbon-warning" class="size-4 mr-1 inline-block align-text-bottom" />
     You're viewing <strong>Unhead v2 (legacy)</strong> documentation.
-    <NuxtLink to="/docs/typescript/migration-guide/v3" class="underline ml-1">
+    <NuxtLink to="/docs/migration-guide/v3" class="underline ml-1">
       Upgrade to v3 →
     </NuxtLink>
   </div>

@@ -52,7 +52,7 @@ export function stripHeaderAnchorLinks(payload: any) {
 // Matches paths that already have a framework
 const FrameworkPattern = /^\/docs\/(?:vue|typescript|react|svelte|solid-js|angular|nuxt)\//
 // Matches framework-agnostic paths that should NOT get a framework prefix
-const AgnosticPattern = /^\/docs\/(?:schema-org|head)\//
+const AgnosticPattern = /^\/docs\/(?:schema-org|head|releases|migration-guide)\//
 
 export function modifyRelativeDocLinksWithFramework(
   payload: any,

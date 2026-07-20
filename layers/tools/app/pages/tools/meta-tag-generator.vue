@@ -951,12 +951,12 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               Installation Guide
             </UButton>
           </NuxtLink>
-          <NuxtLink to="/docs/head/api/composables/use-seo-meta" aria-label="useSeoMeta API" class="group">
+          <NuxtLink to="/docs/typescript/head/api/composables/use-seo-meta" aria-label="useSeoMeta API" class="group">
             <UButton variant="soft" color="neutral" trailing-icon="i-carbon-arrow-right" size="sm" class="group-hover:shadow-lg transition-all">
               useSeoMeta API
             </UButton>
           </NuxtLink>
-          <NuxtLink to="/docs/head/api/composables/use-head" aria-label="useHead API" class="group">
+          <NuxtLink to="/docs/typescript/head/api/composables/use-head" aria-label="useHead API" class="group">
             <UButton variant="soft" color="neutral" trailing-icon="i-carbon-arrow-right" size="sm" class="group-hover:shadow-lg transition-all">
               useHead API
             </UButton>

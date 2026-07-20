@@ -17,7 +17,7 @@ const nav = useDocsNav()
 const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
 
 function docPath(path: string) {
-  return `${versionPrefix.value}/${selectedFramework.value.slug}${path}`
+  return `${versionPrefix.value}${path}`
 }
 
 const currentSection = computed(() => {

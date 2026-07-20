@@ -46,12 +46,11 @@ async function onSubmit(event: FormSubmitEvent<CommentFeedbackSchemaOutput>) {
   })
     .then(() => {
       toast.add({ title: 'Success', description: 'Your feedback has been submitted, thanks!', color: 'success' })
+      commentSubmissionStatus.value = 'submitted'
     })
     .catch((error) => {
+      commentSubmissionStatus.value = false
       toast.add({ title: 'Error', description: error.message, color: 'error' })
-    })
-    .finally(() => {
-      commentSubmissionStatus.value = 'submitted'
     })
 }
 </script>

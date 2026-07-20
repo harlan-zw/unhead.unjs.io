@@ -16,12 +16,12 @@ const props = withDefaults(defineProps<{
 })
 
 const loadingType = computed(() => {
-  return props.lazy ? 'lazy' : 'eager'
+  return props.lazy === true || props.lazy === 'true' ? 'lazy' : 'eager'
 })
 </script>
 
 <template>
-  <figure class="figure-image flex flex-col items-center justify-center mx-auto max-w-full my-2">
+  <figure class="figure-image flex flex-col items-center justify-center mx-auto max-w-full my-2" :class="figureClass">
     <img
       v-bind="$attrs"
       height="700"
@@ -43,7 +43,7 @@ const loadingType = computed(() => {
   }
 }
 
-.figure-image :deep(img:not([src$=".svg"])) {
+.figure-image img:not([src$=".svg"]) {
   width: auto;
   border-radius: 0.5em;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05);

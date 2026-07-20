@@ -5,7 +5,6 @@ import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/
 import {
   getLastPathSegment,
   getPathSegments,
-  getPathWithFramework,
   getPathWithoutFramework,
 } from '~~/utils/urls'
 import { useCurrentDocPage } from '~/composables/data'
@@ -21,56 +20,59 @@ if (!page?.value?.id) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
 
-const { selectedFramework, frameworks } = useFrameworkSelector()
+const { selectedFramework } = useFrameworkSelector()
+
+// Content-authored framework pages are distinct implementation guides and keep
+// their own canonical. Framework-prefixed fallbacks resolve to the shared
+// content path, so they consolidate on that framework-neutral source instead.
+const isFrameworkSpecific = computed(() => page.value.path !== getPathWithoutFramework(page.value.path))
+const seoTitle = computed(() => {
+  const title = page.value?.title || ''
+  if (!isFrameworkSpecific.value || title.toLocaleLowerCase().includes(selectedFramework.value.label.toLocaleLowerCase())) {
+    return title
+  }
+  return `${title} for ${selectedFramework.value.label}`
+})
+const canonicalUrl = computed(() => `https://unhead.unjs.io${page.value.path}`)
 
 useSeoMeta({
-  title: () => page.value?.title,
+  title: seoTitle,
   description: () => page.value?.description,
+  ogUrl: () => isV2 ? undefined : canonicalUrl.value,
   titleTemplate: isV2 ? '%s %separator v2 %separator %siteName' : '%s %separator %siteName',
 })
 
-// V2: noindex and exclude from sitemap
+// Keep legacy docs available to users without competing with current docs.
+// Do not combine noindex with a cross-version canonical: some v2 pages have no
+// equivalent in v3, and Google recommends choosing one signal or the other.
 if (isV2) {
-  useRobotsRule(false)
+  useRobotsRule({ noindex: true, follow: true })
   defineOgImage(false as any)
 }
 else {
   defineOgImage('Unhead', {
-    title: page.value?.title || '',
+    title: seoTitle.value,
     description: page.value?.description,
     frameworkIcon: selectedFramework.value.icon,
     ...(page.value.ogImage || {}),
   })
 }
 
-// V2: canonical points to v3 equivalent
-const canonicalPath = isV2 ? page.value.path.replace('/docs/v2', '/docs') : page.value.path
-
 useHead({
-  link: () => {
-    const isFrameworkSpecific = page.value.path !== getPathWithoutFramework(page.value.path)
-    return [
-      { rel: 'canonical', href: `https://unhead.unjs.io${canonicalPath}` },
-      ...(!isV2 && isFrameworkSpecific
-        ? frameworks.value.map((f) => {
-            return {
-              rel: 'alternate',
-              href: `https://unhead.unjs.io/${getPathWithFramework(page.value.path, f.slug)}`,
-              title: f.label,
-            }
-          })
-        : []),
-      // add prev and next using surround
-      ...(surround.value?.length
-        ? surround.value.map((s, i) => {
-            return {
-              rel: i === 0 ? 'prev' : 'next',
-              href: `https://unhead.unjs.io/${s.path}`,
-            }
-          })
-        : []),
-    ]
-  },
+  link: () => [
+    ...(!isV2
+      ? [{ rel: 'canonical', href: canonicalUrl.value }]
+      : []),
+    // add prev and next using surround
+    ...(surround.value?.length
+      ? surround.value.map((s, i) => {
+          return {
+            rel: i === 0 ? 'prev' : 'next',
+            href: `https://unhead.unjs.io${s.path}`,
+          }
+        })
+      : []),
+  ],
 })
 
 const headline = computed(() => titleCase(getLastPathSegment(getPathSegments(route.path, route.path.split('/').length - 2))))
