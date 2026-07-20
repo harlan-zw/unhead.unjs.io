@@ -82,7 +82,9 @@ export async function useCurrentDocPage() {
       // no-op
     }
     else if (import.meta.server) {
-      lastCommit.value = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`).catch(() => null)
+      lastCommit.value = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`, {
+        timeout: 6_000,
+      }).catch(() => null)
       nuxtApp.payload.data[payloadKey] = lastCommit.value
     }
     else if (!cachedData) {

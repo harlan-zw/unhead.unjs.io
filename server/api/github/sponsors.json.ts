@@ -1,5 +1,5 @@
-import { fetchGitHubSponsors } from 'sponsorkit'
 import { z } from 'zod'
+import { fetchActiveGitHubSponsors } from '~~/server/utils/github-sponsors'
 import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'
 
 const SponsorSchema = z.object({
@@ -29,11 +29,9 @@ export default defineEventHandler(async (e) => {
     schema: SponsorsSchema,
     staleMaxAge: upstreamCacheTtl.week,
   }, async () => {
-    let fetchedSponsors: Awaited<ReturnType<typeof fetchGitHubSponsors>>
+    let fetchedSponsors: Awaited<ReturnType<typeof fetchActiveGitHubSponsors>>
     try {
-      fetchedSponsors = await fetchGitHubSponsors(token, 'harlan-zw', 'user', {
-        force: true, // The global upstream cache owns freshness.
-      })
+      fetchedSponsors = await fetchActiveGitHubSponsors(token, 'harlan-zw')
     }
     catch (error) {
       console.error(JSON.stringify({

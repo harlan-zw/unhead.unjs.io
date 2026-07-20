@@ -159,9 +159,6 @@ catalogs:
     simple-git-hooks:
       specifier: ^2.13.1
       version: 2.13.1
-    sponsorkit:
-      specifier: ^17.1.1
-      version: 17.1.1
     tailwind-variants:
       specifier: ^3.2.2
       version: 3.2.2
@@ -380,9 +377,6 @@ importers:
       simple-git-hooks:
         specifier: 'catalog:'
         version: 2.13.1
-      sponsorkit:
-        specifier: 'catalog:'
-        version: 17.1.1
       tailwind-variants:
         specifier: 'catalog:'
         version: 3.2.2(tailwind-merge@3.6.0)(tailwindcss@4.3.3)
@@ -8365,10 +8359,6 @@ packages:
   speedline-core@1.4.3:
     resolution: {integrity: sha512-DI7/OuAUD+GMpR6dmu8lliO2Wg5zfeh+/xsdyJZCzd8o5JgFUjCeLsBDuZjIQJdwXS3J0L/uZYrELKYqx+PXog==}
     engines: {node: '>=8.0'}
-
-  sponsorkit@17.1.1:
-    resolution: {integrity: sha512-qsDA8ggyJSVszmaDa9aXJFp6DXu8ucK1kA2LRhxijpKcmRA9ndDcQZd8j9RfnLto49Q3SuAsH0L+8QStaZhwzw==}
-    hasBin: true
 
   srvx@0.11.22:
     resolution: {integrity: sha512-LqZxxBDMKuMAZzFzJnDCkFOrs9MZQZr0LvHiO/SuSZVdQaXD7xQ5UWTUxheJrQPve1qk9MG2B/yttUvJxw8egQ==}
@@ -19427,16 +19417,6 @@ snapshots:
       '@types/node': 25.3.3
       image-ssim: 0.2.0
       jpeg-js: 0.4.4
-
-  sponsorkit@17.1.1:
-    dependencies:
-      ansis: 4.3.1
-      cac: 7.0.0
-      consola: 3.4.2
-      dotenv: 17.4.2
-      ofetch: 1.5.1
-      sharp: 0.34.5
-      unconfig: 7.5.0
 
   srvx@0.11.22: {}
 
