@@ -2,7 +2,7 @@
   "name": "unhead.unjs.io",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@11.15.1",
+  "packageManager": "pnpm@11.17.0",
   "engines": {
     "node": "^24.11.0"
   },
@@ -55,9 +55,11 @@
     "eslint": "catalog:",
     "eslint-plugin-harlanzw": "catalog:",
     "fuse.js": "catalog:",
+    "h3": "catalog:",
     "lint-staged": "catalog:",
     "markdownlint-cli": "catalog:",
     "nitro-cloudflare-dev": "catalog:",
+    "nostics": "catalog:",
     "nuxt": "catalog:",
     "nuxt-ai-ready": "catalog:",
     "nuxt-auth-utils": "catalog:",

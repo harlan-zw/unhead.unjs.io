@@ -89,7 +89,10 @@ const { data: lastCommit } = await useAsyncData(`learn-commit-${route.path}`, ()
   if (!filePath.value || isBot.value)
     return null
   return $fetch(`/api/github/harlan-zw@unhead.unjs.io/last-file-commit?file=content/learn/${filePath.value}`)
-    .catch(() => null)
+    .catch((error) => {
+      console.warn('[learn] Failed to load commit metadata', error)
+      return null
+    })
 }, { lazy: true, server: false })
 </script>
 

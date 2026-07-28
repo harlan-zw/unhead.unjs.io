@@ -20,9 +20,10 @@ const schema = z.object({
 function getSubModuleCollection(version: 'v3' | 'v2' = 'v3') {
   const isV2 = version === 'v2'
   const prefix = isV2 ? '/docs/v2' : '/docs'
+  const useLocalDocs = process.env.UNHEAD_DOCS_SOURCE !== 'remote'
 
   // Only check local for v3 (main development)
-  if (!isV2) {
+  if (!isV2 && useLocalDocs) {
     const localDirPaths = new Set([
       resolve(__dirname, '..', '..', 'pkg', 'unhead', 'docs'),
     ])

@@ -48,7 +48,11 @@ async function handler(req: IncomingMessage, res: ServerResponse) {
   const ext = extname(filePath)
   const contentType = MIME_TYPES[ext] ?? 'application/octet-stream'
 
-  const content = await readFile(filePath).catch(() => null)
+  const content = await readFile(filePath).catch((error: NodeJS.ErrnoException) => {
+    if (error.code === 'ENOENT' || error.code === 'EISDIR')
+      return null
+    throw error
+  })
   if (!content) {
     res.writeHead(404, { 'Content-Type': 'text/plain' })
     res.end('Not Found')

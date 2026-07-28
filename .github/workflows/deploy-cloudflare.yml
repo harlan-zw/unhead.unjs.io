@@ -20,11 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
           cache: pnpm
@@ -32,7 +32,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Cache for Nuxt SEO
-        uses: actions/cache@v5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: node_modules/.cache/nuxt-seo
           key: nuxt-seo-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'nuxt.config.ts', 'content.config.ts') }}
@@ -56,9 +56,19 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           NUXT_AI_READY_RUNTIME_SYNC_SECRET: ${{ secrets.NUXT_SEO_PRO_KEY }}
           NUXT_SEO_PRO_KEY: ${{ secrets.NUXT_SEO_PRO_KEY }}
+          UNHEAD_DOCS_SOURCE: remote
 
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: pnpm exec wrangler pages deploy dist --project-name=unhead-unjs-io
+
+      # Nuxt Content's lazy D1 import can exceed the request lifetime and leave
+      # checksum rows at ready=false. Resume generated dumps after deploy, then
+      # fail unless every expected content hash and checksum is present.
+      - name: Sync and verify Nuxt Content D1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/sync-nuxt-content-d1.mjs --database unhead-unjs-io

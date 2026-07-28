@@ -23,6 +23,7 @@ export default defineNuxtConfig({
         // from sponsorkit
         nitro.options.alias.sharp = 'unenv/mock/empty'
         nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
+        nitro.options.alias['better-sqlite3'] = 'unenv/mock/empty'
         if (!nitro.options.dev) {
           nitro.hooks.hook('rollup:before', (_nitro, rollupConfig) => {
             rollupConfig.input = resolve('./server/cloudflare-pages-worker.ts')

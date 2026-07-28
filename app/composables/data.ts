@@ -84,14 +84,19 @@ export async function useCurrentDocPage() {
     else if (import.meta.server) {
       lastCommit.value = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`, {
         timeout: 6_000,
-      }).catch(() => null)
+      }).catch((error) => {
+        console.warn('[docs] Failed to load commit metadata', error)
+        return null
+      })
       nuxtApp.payload.data[payloadKey] = lastCommit.value
     }
     else if (!cachedData) {
       // client-side nav without cache, fetch lazily so we don't block navigation
       $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`)
         .then((data) => { lastCommit.value = data })
-        .catch(() => null)
+        .catch((error) => {
+          console.warn('[docs] Failed to load commit metadata', error)
+        })
     }
 
     return {
