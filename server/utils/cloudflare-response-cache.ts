@@ -1,6 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 
-export const CLOUDFLARE_RESPONSE_CACHE_NAME = 'unhead:responses:v1'
+export const CLOUDFLARE_RESPONSE_CACHE_NAME = 'unhead:responses:v2'
 
 const CACHE_CREATED_AT_HEADER = 'x-unhead-cache-created-at'
 const CACHE_CONTROL_PRESENT_HEADER = 'x-unhead-cache-control-present'
