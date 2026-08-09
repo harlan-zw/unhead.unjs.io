@@ -17,7 +17,7 @@ const SponsorsSchema = z.object({
 
 export default defineEventHandler(async (e) => {
   const { githubAccessToken, githubAuthToken } = useRuntimeConfig(e)
-  const token = githubAccessToken || githubAuthToken
+  const token = githubAuthToken || githubAccessToken
   const empty = { others: [], $25: [], $50: [] }
   if (!token)
     return empty
