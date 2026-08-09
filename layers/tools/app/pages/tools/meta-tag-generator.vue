@@ -10,11 +10,9 @@ useIntersectionObserver(codeOutputRef, ([{ isIntersecting }]) => {
   }
 }, { threshold: 0.5 })
 
-useSeoMeta({
+useToolSeo({
   title: 'Meta Tag Generator - Generate useSeoMeta Code',
   description: 'Free meta tag generator for Vue, React, Nuxt, and more. Generate useSeoMeta() code with live SERP and social card preview.',
-  ogTitle: 'Meta Tag Generator | Unhead',
-  ogDescription: 'Generate SEO meta tags as useSeoMeta() composable code. Preview Google SERP and social cards.',
 })
 
 const {
@@ -155,6 +153,9 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 { value: 'technical', label: 'Technical', icon: 'i-carbon-settings' },
               ].filter(t => t.show !== false)"
               :key="tab.value"
+              type="button"
+              :aria-label="tab.label"
+              :aria-pressed="activeFormTab === tab.value"
               class="relative flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2.5 rounded-lg text-xs font-medium transition-all duration-300 shrink-0"
               :class="[
                 activeFormTab === tab.value
@@ -476,6 +477,9 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           <button
             v-for="tab in platformTabs"
             :key="tab.value"
+            type="button"
+            :aria-label="tab.label"
+            :aria-pressed="activePlatform === tab.value"
             class="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 whitespace-nowrap shrink-0"
             :class="[
               activePlatform === tab.value
@@ -754,6 +758,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             <UButton
               :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
               :color="copied ? 'success' : 'neutral'"
+              :aria-label="copied ? 'Code copied' : 'Copy generated code'"
               variant="soft"
               size="xs"
               class="transition-all"

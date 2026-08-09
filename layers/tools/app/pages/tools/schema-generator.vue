@@ -10,11 +10,9 @@ useIntersectionObserver(codeOutputRef, ([{ isIntersecting }]) => {
   }
 }, { threshold: 0.5 })
 
-useSeoMeta({
+useToolSeo({
   title: 'Schema.org Generator - Free Structured Data Markup Tool',
   description: 'Free Schema.org JSON-LD generator. Build LocalBusiness, Article, HowTo, FAQ, and Product structured data visually. Export as useSchemaOrg() or raw JSON-LD.',
-  ogTitle: 'Schema.org Generator | Unhead',
-  ogDescription: 'Generate Schema.org structured data visually. Export as JSON-LD or useSchemaOrg() composable code.',
 })
 
 const {
@@ -113,6 +111,7 @@ function handleTypeSelect(type: SchemaType) {
             v-for="schemaType in schemaTypes"
             :key="schemaType.type"
             type="button"
+            :aria-pressed="state.schemaType === schemaType.type"
             class="group relative overflow-hidden rounded-xl border p-3 text-left transition-all duration-300 shrink-0 w-[140px] sm:w-auto"
             :class="[
               state.schemaType === schemaType.type
@@ -207,19 +206,26 @@ function handleTypeSelect(type: SchemaType) {
         <div>
           <div class="relative group">
             <!-- Header - clickable on mobile to toggle -->
-            <button
-              type="button"
-              class="flex items-center justify-between gap-3 mb-3 sm:mb-4 w-full text-left lg:cursor-default"
-              @click="showJsonPreview = !showJsonPreview"
-            >
-              <div class="flex items-center gap-3">
+            <div class="flex items-center justify-between gap-3 mb-3 sm:mb-4 w-full">
+              <button
+                type="button"
+                class="flex flex-1 items-center gap-3 text-left lg:cursor-default"
+                aria-controls="schema-json-preview"
+                :aria-expanded="showJsonPreview"
+                @click="showJsonPreview = !showJsonPreview"
+              >
                 <div class="p-2 rounded-lg bg-gradient-to-br from-violet-500/10 to-purple-500/10">
                   <UIcon name="i-carbon-code" class="w-5 h-5 text-violet-500" />
                 </div>
                 <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
                   JSON-LD Preview
                 </h3>
-              </div>
+                <UIcon
+                  name="i-carbon-chevron-down"
+                  class="ml-auto w-4 h-4 text-muted transition-transform lg:hidden"
+                  :class="{ 'rotate-180': showJsonPreview }"
+                />
+              </button>
               <div class="flex items-center gap-2">
                 <ClientOnly>
                   <UButton
@@ -227,19 +233,16 @@ function handleTypeSelect(type: SchemaType) {
                     :color="copied ? 'success' : 'neutral'"
                     variant="ghost"
                     size="xs"
+                    :aria-label="copied ? 'JSON-LD copied' : 'Copy JSON-LD'"
                     @click.stop="() => { copy(jsonLdPreview); track('copy', 'jsonld') }"
                   />
                 </ClientOnly>
-                <UIcon
-                  name="i-carbon-chevron-down"
-                  class="w-4 h-4 text-muted transition-transform lg:hidden"
-                  :class="{ 'rotate-180': showJsonPreview }"
-                />
               </div>
-            </button>
+            </div>
 
             <!-- Preview card with structured data visualization -->
             <div
+              id="schema-json-preview"
               class="bg-elevated rounded-xl border border-default overflow-hidden transition-all duration-300"
               :class="showJsonPreview ? 'opacity-100' : 'hidden lg:block opacity-100'"
             >
@@ -280,6 +283,7 @@ function handleTypeSelect(type: SchemaType) {
             <UButton
               :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
               :color="copied ? 'success' : 'neutral'"
+              :aria-label="copied ? 'Code copied' : 'Copy generated code'"
               variant="soft"
               size="xs"
               class="transition-all"

@@ -10,7 +10,23 @@ definePageMeta({
   },
 })
 
-// Releases content is valuable for bots to index
+const releasesTitle = 'Unhead Release Notes'
+const releasesDescription = 'Follow stable and pre-release versions of Unhead, including fixes, features, and upgrade details.'
+
+useSeoMeta({
+  title: releasesTitle,
+  description: releasesDescription,
+  ogTitle: releasesTitle,
+  ogDescription: releasesDescription,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+})
+
+defineOgImage('Unhead', {
+  title: releasesTitle,
+  description: releasesDescription,
+})
+
 const stats = await useStats()
 
 const filterItems: TabsItem[] = [
@@ -20,6 +36,8 @@ const filterItems: TabsItem[] = [
 ]
 
 const activeFilter = ref('stable')
+const RELEASES_PER_PAGE = 10
+const visibleReleaseCount = ref(RELEASES_PER_PAGE)
 
 const releases = computed(() => stats.value?.releases || [])
 
@@ -30,6 +48,17 @@ const filteredReleases = computed(() => {
     return releases.value.filter(r => r.prerelease)
   return releases.value.filter(r => !r.prerelease)
 })
+
+const visibleReleases = computed(() => filteredReleases.value.slice(0, visibleReleaseCount.value))
+const hasMoreReleases = computed(() => visibleReleaseCount.value < filteredReleases.value.length)
+
+watch(activeFilter, () => {
+  visibleReleaseCount.value = RELEASES_PER_PAGE
+})
+
+function showMoreReleases() {
+  visibleReleaseCount.value += RELEASES_PER_PAGE
+}
 
 const prereleaseCount = computed(() => releases.value.filter(r => r.prerelease).length)
 
@@ -88,9 +117,9 @@ const HighlightedVersion = defineComponent({
     <div class="gradient" />
     <section class="py-12 mb-14">
       <UContainer>
-        <h2 class="text-3xl font-bold mb-8 text-center">
+        <h1 class="text-3xl font-bold mb-8 text-center">
           Release Notes
-        </h2>
+        </h1>
         <div class="text-center">
           <div class="mt-3 dark:text-neutral-300 text-sm">
             Last fetched:
@@ -124,7 +153,7 @@ const HighlightedVersion = defineComponent({
           class="space-y-6 max-w-3xl mx-auto"
         >
           <li
-            v-for="(release, key) in filteredReleases"
+            v-for="(release, key) in visibleReleases"
             :key="release.name"
             class="transform transition-all duration-300 hover:translate-y-[-2px]"
           >
@@ -176,6 +205,17 @@ const HighlightedVersion = defineComponent({
             </UCard>
           </li>
         </TransitionGroup>
+
+        <div v-if="hasMoreReleases" class="mt-10 text-center">
+          <UButton
+            variant="soft"
+            color="neutral"
+            trailing-icon="i-carbon-chevron-down"
+            @click="showMoreReleases"
+          >
+            Show more releases
+          </UButton>
+        </div>
 
         <div class="mt-10 text-center">
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">

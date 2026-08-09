@@ -105,7 +105,7 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
     <template #left>
       <NuxtLink
         to="/"
-        title="Home" aria-label="Title"
+        title="Home"
         class="flex mr-4 items-end gap-1.5 font-bold text-base text-(--ui-text-highlighted) font-title"
       >
         <Logo />

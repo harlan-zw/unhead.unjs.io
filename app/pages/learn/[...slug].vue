@@ -39,7 +39,20 @@ const category = computed(() => {
 useSeoMeta({
   title: () => page.value?.title,
   description: () => page.value?.description,
+  ogTitle: () => page.value?.title,
+  ogDescription: () => page.value?.description,
+  ogImage: () => page.value?.image,
+  twitterTitle: () => page.value?.title,
+  twitterDescription: () => page.value?.description,
+  twitterImage: () => page.value?.image,
 })
+
+if (!page.value.image) {
+  defineOgImage('Unhead', {
+    title: page.value.title,
+    description: page.value.description,
+  })
+}
 
 const articlePublishedTime = toISODateTime(page.value.publishedAt)
 const articleModifiedTime = toISODateTime(page.value.updatedAt)
@@ -71,6 +84,7 @@ useSchemaOrg([
   }),
   defineArticle({
     author: { '@id': '#author' },
+    image: page.value.image,
     keywords: page.value.keywords,
     ...(articlePublishedTime && { datePublished: articlePublishedTime }),
     ...(articleModifiedTime && { dateModified: articleModifiedTime }),

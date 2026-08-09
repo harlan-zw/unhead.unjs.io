@@ -3,7 +3,7 @@ defineOptions({
   inheritAttrs: false,
 })
 
-defineProps<{
+const { verbose = false } = defineProps<{
   verbose?: boolean
 }>()
 
@@ -29,7 +29,7 @@ const isDark = computed({
     v-bind="{
       ...$attrs,
     }"
-    :aria-label="`Switch to ${isDark ? 'light' : 'dark'} mode`"
+    :aria-label="verbose ? undefined : `Switch to ${isDark ? 'light' : 'dark'} mode`"
     @click="isDark = !isDark"
   >
     <ClientOnly>

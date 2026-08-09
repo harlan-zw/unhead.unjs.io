@@ -349,6 +349,11 @@ export default defineNuxtConfig({
       ],
       link: [
         {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: '/favicon.ico',
+        },
+        {
           rel: 'author',
           href: 'https://harlanzw.com/',
         },

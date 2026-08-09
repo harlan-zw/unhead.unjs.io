@@ -6,6 +6,11 @@ definePageMeta({
   layout: false,
 })
 
+useRobotsRule({
+  noindex: true,
+  nofollow: true,
+})
+
 const ADMIN_EMAILS = ['harlan@harlanzw.com']
 
 const { loggedIn, user, clear } = useUserSession()

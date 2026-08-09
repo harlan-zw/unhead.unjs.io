@@ -4,6 +4,18 @@ const DocsV2Pattern = /^\/docs\/v2/
 const FrameworkPattern = /\/(vue|typescript|react|svelte|solid-js|angular|nuxt)/g
 const FrameworkMatchPattern = /\/(vue|typescript|react|svelte|solid-js|angular|nuxt)/
 
+export type DocFramework = 'vue' | 'typescript' | 'react' | 'svelte' | 'solid-js' | 'angular' | 'nuxt'
+
+export type DocPathTarget
+  = | { _tag: 'shared', version: 'v2' | 'v3' }
+    | { _tag: 'framework', version: 'v2' | 'v3', framework: DocFramework }
+
+export function getDocPath(path: string, target: DocPathTarget): string {
+  const versionPrefix = target.version === 'v2' ? '/docs/v2' : '/docs'
+  const frameworkPrefix = target._tag === 'framework' ? `/${target.framework}` : ''
+  return `${versionPrefix}${frameworkPrefix}/${path.replace(/^\/+/, '')}`
+}
+
 export function getPathWithoutVersion(path: string): string {
   return path.replace(DocsV2Pattern, '/docs')
 }

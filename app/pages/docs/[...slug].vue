@@ -8,6 +8,7 @@ import {
   getPathWithoutFramework,
 } from '~~/utils/urls'
 import { useCurrentDocPage } from '~/composables/data'
+import { getDocsOpportunity } from '~/utils/docs-opportunities'
 
 definePageMeta({
   layout: 'docs',
@@ -21,12 +22,16 @@ if (!page?.value?.id) {
 }
 
 const { selectedFramework } = useFrameworkSelector()
+const opportunity = computed(() => isV2 ? undefined : getDocsOpportunity(route.path))
 
 // Content-authored framework pages are distinct implementation guides and keep
 // their own canonical. Framework-prefixed fallbacks resolve to the shared
 // content path, so they consolidate on that framework-neutral source instead.
 const isFrameworkSpecific = computed(() => page.value.path !== getPathWithoutFramework(page.value.path))
 const seoTitle = computed(() => {
+  if (opportunity.value) {
+    return opportunity.value.title
+  }
   const title = page.value?.title || ''
   if (!isFrameworkSpecific.value || title.toLocaleLowerCase().includes(selectedFramework.value.label.toLocaleLowerCase())) {
     return title
@@ -37,7 +42,7 @@ const canonicalUrl = computed(() => `https://unhead.unjs.io${page.value.path}`)
 
 useSeoMeta({
   title: seoTitle,
-  description: () => page.value?.description,
+  description: () => opportunity.value?.description || page.value?.description,
   ogUrl: () => isV2 ? undefined : canonicalUrl.value,
   titleTemplate: isV2 ? '%s %separator v2 %separator %siteName' : '%s %separator %siteName',
 })
@@ -113,7 +118,7 @@ const transformedPage = computed(() => {
   <div v-if="page" class="flex justify-between w-full">
     <div class="xl:mx-auto w-full max-w-[66ch]">
       <UPageHeader
-        :title="page.title" :headline="headline" class="text-balance pt-4" :links="!isV2 && !['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
+        :title="opportunity?.title || page.title" :headline="headline" class="text-balance pt-4" :links="!isV2 && !['overview', 'intro-to-unhead'].includes(route.path.split('/').pop()) ? [
           { label: 'Copy for LLMs', to: repoLinks[1]?.to, icon: 'i-catppuccin-markdown', target: '_blank' },
         ] : []"
         :ui="{ title: 'leading-normal' }"
@@ -150,6 +155,7 @@ const transformedPage = computed(() => {
       </div>
 
       <UPageBody prose class="pb-0">
+        <DocsOpportunity v-if="opportunity" :opportunity="opportunity" />
         <ContentRenderer v-if="page.body" :value="transformedPage" />
         <div class="justify-center flex items-center gap-5 font-semibold">
           <div class="flex items-center gap-2">

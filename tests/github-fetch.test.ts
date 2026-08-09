@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createPublicGithubFetch } from '../server/utils/github'
+import { createPublicGithubFetch, githubThrottleOptions } from '../server/utils/github'
 
 describe('createPublicGithubFetch', () => {
   it('retries authentication failures without credentials', async () => {
@@ -38,5 +38,12 @@ describe('createPublicGithubFetch', () => {
 
     expect((await githubFetch('https://api.github.com')).status).toBe(403)
     expect(fetchImpl).toHaveBeenCalledOnce()
+  })
+})
+
+describe('githubThrottleOptions', () => {
+  it('fails fast instead of waiting for a rate-limit reset', () => {
+    expect(githubThrottleOptions.onRateLimit()).toBe(false)
+    expect(githubThrottleOptions.onSecondaryRateLimit()).toBe(false)
   })
 })

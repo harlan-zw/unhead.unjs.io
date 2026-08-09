@@ -1,6 +1,11 @@
 import type { H3Event } from 'h3'
 import { Octokit } from 'octokit'
 
+export const githubThrottleOptions = {
+  onRateLimit: () => false,
+  onSecondaryRateLimit: () => false,
+}
+
 export function createPublicGithubFetch(fetchImpl: typeof fetch = globalThis.fetch): typeof fetch {
   return async (input, init) => {
     const retryInput = input instanceof Request ? input.clone() : input
@@ -35,6 +40,9 @@ export function initOctokitRequestHandler(e: H3Event) {
     owner: repo.split('/')[0],
     octokit: new Octokit({
       auth: githubAccessToken || undefined,
+      // Public page rendering already has cached and empty fallbacks. Waiting
+      // until GitHub's reset timestamp can otherwise stall builds for hours.
+      throttle: githubThrottleOptions,
       request: {
         // These endpoints only expose public allowlisted repositories. If a
         // configured token expires or is rejected by an organization policy,

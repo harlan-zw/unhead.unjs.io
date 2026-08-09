@@ -2,6 +2,7 @@
 import { useNavMenu } from '~/composables/navMenu'
 
 const { megaMenuItems } = useNavMenu()
+const currentYear = useState('footer-current-year', () => new Date().getFullYear())
 
 const footerColumns = computed(() =>
   megaMenuItems.value.flatMap(item => item.categories),
@@ -38,7 +39,7 @@ const footerColumns = computed(() =>
               Discord
             </UButton>
             <ColorModeButton verbose />
-            <ULink target="_blank" external href="/llms.txt" class="flex items-center gap-1 hover:underline transition">
+            <ULink target="_blank" external href="/llms.txt" class="flex min-h-6 items-center gap-1 hover:underline transition">
               <UIcon dynamic name="i-noto-sparkles" class="w-4 h-4" />
               /llms.txt
             </ULink>
@@ -92,7 +93,9 @@ const footerColumns = computed(() =>
     <div class="border-t border-neutral-200 dark:border-neutral-800">
       <UContainer>
         <div class="py-10">
-          Copyright © 2025-{{ new Date().getFullYear() }} Harlan Wilton - <a href="https://github.com/unjs/unhead/blob/main/license">MIT License</a>
+          Copyright © 2025-{{ currentYear }} Harlan Wilton,
+          <!-- eslint-disable-next-line harlanzw/link-lowercase -->
+          <a href="https://github.com/unjs/unhead/blob/main/LICENSE">MIT License</a>
         </div>
       </UContainer>
     </div>

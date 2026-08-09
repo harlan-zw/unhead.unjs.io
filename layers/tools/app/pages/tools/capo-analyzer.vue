@@ -10,11 +10,9 @@ useIntersectionObserver(codeOutputRef, ([{ isIntersecting }]) => {
   }
 }, { threshold: 0.5 })
 
-useSeoMeta({
+useToolSeo({
   title: 'Capo.js Head Analyzer - Check Your HTML Head Tag Order',
   description: 'Analyze your HTML head tag order for optimal page load performance. Get a Capo.js score, see ordering issues, and generate optimized useHead() code.',
-  ogTitle: 'Capo.js Head Analyzer | Unhead',
-  ogDescription: 'Paste HTML or enter a URL to analyze head tag ordering. Get a score and specific fix suggestions based on Capo.js rules.',
 })
 
 const {
@@ -181,6 +179,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         <div class="flex gap-1 p-1 rounded-lg bg-elevated border border-default">
           <button
             type="button"
+            :aria-pressed="inputTab === 'paste'"
             class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
             :class="inputTab === 'paste'
               ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 shadow-sm'
@@ -194,6 +193,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           </button>
           <button
             type="button"
+            :aria-pressed="inputTab === 'url'"
             class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
             :class="inputTab === 'url'
               ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 shadow-sm'
@@ -462,6 +462,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
             <UButton
               :icon="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'"
               :color="copied ? 'success' : 'neutral'"
+              :aria-label="copied ? 'Code copied' : 'Copy generated code'"
               variant="soft"
               size="xs"
               class="transition-all"

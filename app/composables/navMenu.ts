@@ -1,4 +1,4 @@
-import { useFrameworkSelector } from '~/composables/frameworkSelector'
+import { getDocPath } from '~~/utils/urls'
 import { useVersionSelector } from '~/composables/versionSelector'
 
 export interface NavMenuLink {
@@ -26,13 +26,13 @@ export interface NavMenuItem {
 }
 
 export function useNavMenu() {
-  const { selectedFramework } = useFrameworkSelector()
   const { selectedVersion } = useVersionSelector()
 
-  const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
-
   function docPath(path: string) {
-    return `${versionPrefix.value}/${selectedFramework.value.slug}${path}`
+    return getDocPath(path, {
+      _tag: 'shared',
+      version: selectedVersion.value.slug,
+    })
   }
 
   const megaMenuItems = computed<NavMenuItem[]>(() => [

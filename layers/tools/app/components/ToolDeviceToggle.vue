@@ -11,6 +11,8 @@ const model = defineModel<'mobile' | 'desktop'>({ default: 'mobile' })
   <div class="inline-flex rounded-lg border border-default p-0.5 bg-muted">
     <button
       type="button"
+      aria-label="Mobile preview"
+      :aria-pressed="model === 'mobile'"
       class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5"
       :class="[model === 'mobile' ? 'bg-default text-highlighted shadow-sm' : 'text-dimmed hover:text-muted']"
       :disabled="disabled"
@@ -21,6 +23,8 @@ const model = defineModel<'mobile' | 'desktop'>({ default: 'mobile' })
     </button>
     <button
       type="button"
+      aria-label="Desktop preview"
+      :aria-pressed="model === 'desktop'"
       class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5"
       :class="[model === 'desktop' ? 'bg-default text-highlighted shadow-sm' : 'text-dimmed hover:text-muted']"
       :disabled="disabled"

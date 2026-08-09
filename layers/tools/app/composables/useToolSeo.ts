@@ -14,6 +14,9 @@ export function useToolSeo(opts: ToolSeoOptions) {
   useSeoMeta({
     title: opts.title,
     description: opts.description,
+    ogTitle: opts.title,
+    ogDescription: opts.description,
+    twitterCard: 'summary_large_image',
   })
 
   defineOgImage('NuxtSeo' as any, {

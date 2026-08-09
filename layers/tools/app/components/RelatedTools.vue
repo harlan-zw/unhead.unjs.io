@@ -51,9 +51,9 @@ const colorMap: Record<string, string> = {
 <template>
   <div class="mt-24 sm:mt-32">
     <div class="flex items-center gap-4 mb-8">
-      <h3 class="text-sm font-bold text-muted uppercase tracking-widest whitespace-nowrap">
+      <h2 class="text-sm font-bold text-muted uppercase tracking-widest whitespace-nowrap">
         Discover More Tools
-      </h3>
+      </h2>
       <div class="h-px flex-1 bg-[var(--ui-border)]" />
     </div>
 
@@ -62,7 +62,6 @@ const colorMap: Record<string, string> = {
         v-for="tool in filteredTools"
         :key="tool.id"
         :to="tool.to"
-        :aria-label="tool.title"
         class="group p-5 rounded-2xl border border-default bg-default transition-all duration-200 hover:shadow-md"
         :class="colorMap[tool.color]"
       >
@@ -71,9 +70,9 @@ const colorMap: Record<string, string> = {
             <UIcon :name="tool.icon" class="w-6 h-6" />
           </div>
           <div>
-            <h4 class="font-bold text-highlighted group-hover:text-inherit transition-colors mb-1">
+            <h3 class="font-bold text-highlighted group-hover:text-inherit transition-colors mb-1">
               {{ tool.title }}
-            </h4>
+            </h3>
             <p class="text-sm text-muted leading-relaxed">
               {{ tool.description }}
             </p>
