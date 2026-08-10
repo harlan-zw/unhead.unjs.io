@@ -106,10 +106,10 @@ describe('tool page accessibility regressions', () => {
   })
 
   it('uses passing dark and selected control contrast classes', () => {
-    expect(source).toContain('text-purple-600 dark:text-purple-400')
-    expect(source).toContain('text-xs text-neutral-500 dark:text-neutral-400 truncate')
+    expect(source).toContain('text-purple-700 dark:text-purple-300')
+    expect(source).toContain('text-xs text-neutral-600 dark:text-neutral-400 truncate')
     expect(source).toContain('Powered by Takumi')
-    expect(source).toContain('class="text-xs text-muted hover:text-purple-500')
+    expect(source).toContain('class="text-xs text-muted hover:text-purple-700 dark:hover:text-purple-300')
   })
 
   it('provides a main landmark', () => {

@@ -45,10 +45,10 @@ const inputTab = ref('paste')
 
 const scoreColor = computed(() => {
   if (score.value >= 80)
-    return 'text-green-500'
+    return 'text-green-800 dark:text-green-300'
   if (score.value >= 50)
-    return 'text-yellow-500'
-  return 'text-red-500'
+    return 'text-amber-800 dark:text-amber-300'
+  return 'text-red-700 dark:text-red-300'
 })
 
 const scoreRingColor = computed(() => {
@@ -182,7 +182,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
             :aria-pressed="inputTab === 'paste'"
             class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
             :class="inputTab === 'paste'
-              ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 shadow-sm'
+              ? 'bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 shadow-sm'
               : 'text-muted hover:text-default'"
             @click="inputTab = 'paste'"
           >
@@ -196,7 +196,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
             :aria-pressed="inputTab === 'url'"
             class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
             :class="inputTab === 'url'
-              ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 shadow-sm'
+              ? 'bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 shadow-sm'
               : 'text-muted hover:text-default'"
             @click="inputTab = 'url'"
           >
@@ -209,7 +209,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         <button
           v-if="!hasAnyValue"
           type="button"
-          class="text-sm font-medium text-cyan-500 hover:text-cyan-400 transition-colors flex items-center gap-1.5"
+          class="text-sm font-medium text-cyan-700 hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200 transition-colors flex items-center gap-1.5"
           @click="loadSample"
         >
           <UIcon name="i-carbon-play-filled" class="size-3" />
@@ -222,14 +222,14 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       <div v-if="inputTab === 'paste'">
         <ToolInputGlow>
           <div class="flex items-center gap-3 mb-4">
-            <UIcon name="i-carbon-code" class="w-5 h-5 text-cyan-500" />
-            <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
+            <UIcon name="i-carbon-code" class="w-5 h-5 text-cyan-700 dark:text-cyan-300" />
+            <h2 class="text-sm font-medium text-muted uppercase tracking-wider">
               Paste your &lt;head&gt; HTML
-            </h3>
+            </h2>
           </div>
           <ToolCodeEditor
             v-model="input"
-            lang="html"
+            label="HTML head source"
           />
         </ToolInputGlow>
       </div>
@@ -238,10 +238,10 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       <div v-else>
         <ToolInputGlow>
           <div class="flex items-center gap-3 mb-4">
-            <UIcon name="i-carbon-earth" class="w-5 h-5 text-cyan-500" />
-            <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
+            <UIcon name="i-carbon-earth" class="w-5 h-5 text-cyan-700 dark:text-cyan-300" />
+            <h2 class="text-sm font-medium text-muted uppercase tracking-wider">
               Enter a URL to analyze
-            </h3>
+            </h2>
           </div>
           <div class="flex gap-3">
             <UInput
@@ -344,7 +344,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           </div>
 
           <!-- Issue list: compact per-tag format -->
-          <div v-if="issues.length" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-2 -mr-2">
+          <div v-if="issues.length" aria-label="Ordering issues" tabindex="0" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-2 -mr-2">
             <div
               v-for="(issue, idx) in issues"
               :key="idx"
@@ -382,7 +382,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
               {{ issues.length }} to fix
             </UBadge>
           </div>
-          <div class="divide-y divide-[var(--ui-border)]/50 max-h-[420px] overflow-y-auto">
+          <div aria-label="Current tag order" tabindex="0" class="divide-y divide-[var(--ui-border)]/50 max-h-[420px] overflow-y-auto">
             <div
               v-for="(tag, idx) in analyzedTags"
               :key="idx"
@@ -418,14 +418,14 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         <div class="rounded-2xl border border-cyan-500/20 bg-elevated overflow-hidden">
           <div class="flex items-center justify-between gap-3 px-5 py-3 border-b border-cyan-500/10 bg-gradient-to-r from-cyan-500/8 to-transparent">
             <div class="flex items-center gap-2">
-              <UIcon name="i-carbon-checkmark-outline" class="w-4 h-4 text-cyan-500" />
+              <UIcon name="i-carbon-checkmark-outline" class="w-4 h-4 text-cyan-700 dark:text-cyan-300" />
               <span class="text-xs font-semibold text-muted uppercase tracking-wider">Optimal Order</span>
             </div>
             <UBadge variant="subtle" color="success" size="xs">
               Capo.js
             </UBadge>
           </div>
-          <div class="divide-y divide-[var(--ui-border)]/50 max-h-[420px] overflow-y-auto">
+          <div aria-label="Optimal tag order" tabindex="0" class="divide-y divide-[var(--ui-border)]/50 max-h-[420px] overflow-y-auto">
             <div
               v-for="(tag, idx) in optimalTags"
               :key="idx"
@@ -455,7 +455,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
         <!-- Terminal-style header -->
         <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-default">
           <div class="flex items-center gap-2">
-            <UIcon name="i-carbon-code" class="w-4 h-4 text-cyan-500" />
+            <UIcon name="i-carbon-code" class="w-4 h-4 text-cyan-700 dark:text-cyan-300" />
             <span class="text-xs font-medium text-muted uppercase tracking-wider">Optimized Code</span>
           </div>
           <ClientOnly>
@@ -485,7 +485,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
       </div>
 
       <div class="flex justify-end mt-4">
-        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="opacity-60 hover:opacity-100 transition-opacity" @click="() => { reset(); track('reset') }">
+        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="text-muted hover:text-highlighted transition-colors" @click="() => { reset(); track('reset') }">
           Reset All
         </UButton>
       </div>
@@ -504,7 +504,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
-                <UIcon name="i-carbon-flash" class="w-4 h-4 text-cyan-500" />
+                <UIcon name="i-carbon-flash" class="w-4 h-4 text-cyan-700 dark:text-cyan-300" />
               </div>
               <div>
                 <strong class="text-highlighted block mb-1">Faster LCP</strong>
@@ -515,7 +515,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
-                <UIcon name="i-carbon-renew" class="w-4 h-4 text-cyan-500" />
+                <UIcon name="i-carbon-renew" class="w-4 h-4 text-cyan-700 dark:text-cyan-300" />
               </div>
               <div>
                 <strong class="text-highlighted block mb-1">No Re-parsing</strong>
@@ -526,7 +526,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
-                <UIcon name="i-carbon-connection-signal" class="w-4 h-4 text-cyan-500" />
+                <UIcon name="i-carbon-connection-signal" class="w-4 h-4 text-cyan-700 dark:text-cyan-300" />
               </div>
               <div>
                 <strong class="text-highlighted block mb-1">Effective Preconnects</strong>
@@ -537,7 +537,7 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
           <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
-                <UIcon name="i-carbon-automatic" class="w-4 h-4 text-cyan-500" />
+                <UIcon name="i-carbon-automatic" class="w-4 h-4 text-cyan-700 dark:text-cyan-300" />
               </div>
               <div>
                 <strong class="text-highlighted block mb-1">Automated by Unhead</strong>

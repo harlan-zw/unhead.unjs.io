@@ -66,7 +66,7 @@ catalog:
   '@antfu/eslint-config': ^9.3.0
   '@babel/parser': ^8.0.4
   '@babel/types': ^8.0.4
-  '@cloudflare/workers-types': ^5.20260808.1
+  '@cloudflare/workers-types': ^5.20260809.1
   '@iconify-json/carbon': ^1.2.25
   '@iconify-json/heroicons': ^1.2.3
   '@iconify-json/logos': ^1.2.12
@@ -141,8 +141,3 @@ allowBuilds:
   simple-git-hooks: true
   vue-demi: false
   workerd: false
-catalogs:
-  conflicts_@takumi-rs/core_2_5_11:
-    '@takumi-rs/core': 2.5.11
-  conflicts_@takumi-rs/wasm_2_5_11:
-    '@takumi-rs/wasm': 2.5.11

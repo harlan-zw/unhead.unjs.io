@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   modelValue: string
+  label: string
   placeholder?: string
 }>()
 
@@ -19,6 +20,7 @@ const value = computed({
 <template>
   <textarea
     v-model="value"
+    :aria-label="label"
     :placeholder="placeholder"
     class="tool-code-editor w-full rounded-xl border border-default bg-elevated p-4 font-mono text-sm text-default placeholder-[var(--ui-text-dimmed)] focus:outline-none focus:ring-2 focus:ring-[var(--ui-border-accented)] resize-y"
     spellcheck="false"

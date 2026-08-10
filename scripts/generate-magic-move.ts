@@ -2,7 +2,7 @@ import { codeToKeyedTokens, createMagicMoveMachine } from '@shikijs/magic-move/c
 import { createHighlighter } from 'shiki'
 
 const shiki = await createHighlighter({
-  themes: ['github-light', 'material-theme-palenight'],
+  themes: ['github-light-high-contrast', 'github-dark-high-contrast'],
   langs: ['html'],
 })
 
@@ -44,9 +44,9 @@ const codeSteps = [
 const machine = createMagicMoveMachine(
   code => codeToKeyedTokens(shiki, code, {
     themes: {
-      light: 'github-light',
-      default: 'github-light',
-      dark: 'material-theme-palenight',
+      light: 'github-light-high-contrast',
+      default: 'github-light-high-contrast',
+      dark: 'github-dark-high-contrast',
     },
     lang: 'html',
   }),

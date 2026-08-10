@@ -113,7 +113,7 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
     </template>
 
     <template #default>
-      <NavigationMenuRoot class="hidden lg:flex justify-center relative py-2">
+      <NavigationMenuRoot aria-label="Primary navigation" class="hidden lg:flex justify-center relative py-2">
         <NavigationMenuList class="flex items-center gap-0.5">
           <NavigationMenuItem v-for="item in megaMenuItems" :key="item.value" :value="item.value">
             <NavigationMenuTrigger as-child>

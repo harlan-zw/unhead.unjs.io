@@ -136,12 +136,12 @@ export function enhanceTitlesAndIcons(n: NavItem) {
   if (n.title.endsWith('()')) {
     n.html = true
     const [fnName] = n.title.split('()')
-    n.title = `<code class="language-ts shiki shiki-themes github-light github-light material-theme-palenight" language="ts"><span style="--shiki-light: #6F42C1; --shiki-default: #6F42C1; --shiki-dark: #82AAFF;">${fnName}</span><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #BABED8;">()</span></code>`
+    n.title = `<code class="language-ts shiki shiki-themes github-light-high-contrast github-light-high-contrast github-dark-high-contrast" language="ts"><span style="--shiki-light: #512598; --shiki-default: #512598; --shiki-dark: #82AAFF;">${fnName}</span><span style="--shiki-light: #0E1116; --shiki-default: #0E1116; --shiki-dark: #BABED8;">()</span></code>`
   }
   else if (n.title.startsWith('<') && n.title.endsWith('>') && !n.title.includes('<code')) {
     const inner = n.title.slice(1, -1)
     n.html = true
-    n.title = `<code class="language-ts shiki shiki-themes github-light github-light material-theme-palenight" language="ts"><span class="line" line="2"><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #89DDFF;">  &lt;</span><span style="--shiki-light: #22863A; --shiki-default: #22863A; --shiki-dark: #F07178;">${inner}</span><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #89DDFF;"> /&gt;
+    n.title = `<code class="language-ts shiki shiki-themes github-light-high-contrast github-light-high-contrast github-dark-high-contrast" language="ts"><span class="line" line="2"><span style="--shiki-light: #0E1116; --shiki-default: #0E1116; --shiki-dark: #89DDFF;">  &lt;</span><span style="--shiki-light: #055D20; --shiki-default: #055D20; --shiki-dark: #F07178;">${inner}</span><span style="--shiki-light: #0E1116; --shiki-default: #0E1116; --shiki-dark: #89DDFF;"> /&gt;
 </span></span></code>`
   }
   return n

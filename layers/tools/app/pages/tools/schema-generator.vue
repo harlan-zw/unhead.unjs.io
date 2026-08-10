@@ -78,10 +78,10 @@ function handleTypeSelect(type: SchemaType) {
           <div>
             <div class="flex items-center gap-2 sm:gap-3 mb-2">
               <div class="p-1.5 sm:p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
-                <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-purple-500" />
+                <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-purple-700 dark:text-purple-300" />
               </div>
             </div>
-            <span class="text-xs sm:text-sm font-semibold text-highlighted group-hover:text-purple-500 transition-colors">{{ preset.label }}</span>
+            <span class="text-xs sm:text-sm font-semibold text-highlighted group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">{{ preset.label }}</span>
             <p class="text-[10px] sm:text-xs text-dimmed mt-1 line-clamp-2">
               {{ preset.description }}
             </p>
@@ -98,11 +98,11 @@ function handleTypeSelect(type: SchemaType) {
       <div class="mb-8">
         <div class="flex items-center gap-3 mb-4">
           <div class="p-2 rounded-lg bg-gradient-to-br from-purple-500/10 to-violet-500/10">
-            <UIcon name="i-carbon-data-structured" class="w-5 h-5 text-purple-500" />
+            <UIcon name="i-carbon-data-structured" class="w-5 h-5 text-purple-700 dark:text-purple-300" />
           </div>
-          <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
+          <h2 class="text-sm font-medium text-muted uppercase tracking-wider">
             Schema Type
-          </h3>
+          </h2>
         </div>
 
         <!-- Mobile: horizontal scroll, Desktop: grid -->
@@ -128,13 +128,13 @@ function handleTypeSelect(type: SchemaType) {
                 <UIcon
                   :name="schemaType.icon"
                   class="size-4 transition-colors"
-                  :class="state.schemaType === schemaType.type ? 'text-purple-500' : 'text-muted'"
+                  :class="state.schemaType === schemaType.type ? 'text-purple-700 dark:text-purple-300' : 'text-muted'"
                 />
               </div>
               <div class="min-w-0 flex-1">
                 <p
                   class="text-sm font-medium truncate transition-colors"
-                  :class="state.schemaType === schemaType.type ? 'text-purple-500' : 'text-highlighted'"
+                  :class="state.schemaType === schemaType.type ? 'text-purple-700 dark:text-purple-300' : 'text-highlighted'"
                 >
                   {{ schemaType.label }}
                 </p>
@@ -150,11 +150,11 @@ function handleTypeSelect(type: SchemaType) {
         <div>
           <ToolInputGlow>
             <div class="flex items-center gap-3 mb-6">
-              <UIcon :name="currentSchemaConfig.icon" class="w-5 h-5 text-purple-500" />
+              <UIcon :name="currentSchemaConfig.icon" class="w-5 h-5 text-purple-700 dark:text-purple-300" />
               <div>
-                <h4 class="font-semibold text-highlighted">
+                <h3 class="font-semibold text-highlighted">
                   {{ currentSchemaConfig.label }}
-                </h4>
+                </h3>
                 <p class="text-xs text-dimmed">
                   {{ currentSchemaConfig.description }}
                 </p>
@@ -248,8 +248,8 @@ function handleTypeSelect(type: SchemaType) {
             >
               <!-- Schema type badge -->
               <div class="flex items-center gap-2 px-4 py-2.5 border-b border-default">
-                <span class="text-[10px] font-mono uppercase tracking-wider text-purple-500">@type</span>
-                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-500 border border-purple-500/20">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-purple-700 dark:text-purple-300">@type</span>
+                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
                   {{ state.schemaType }}
                 </span>
               </div>
@@ -276,7 +276,7 @@ function handleTypeSelect(type: SchemaType) {
         <!-- Terminal-style header -->
         <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-default">
           <div class="flex items-center gap-2">
-            <UIcon name="i-carbon-code" class="w-4 h-4 text-purple-500" />
+            <UIcon name="i-carbon-code" class="w-4 h-4 text-purple-700 dark:text-purple-300" />
             <span class="text-xs font-medium text-muted uppercase tracking-wider">Generated Code</span>
           </div>
           <ClientOnly>
@@ -316,7 +316,7 @@ function handleTypeSelect(type: SchemaType) {
       </div>
 
       <div class="flex justify-end mt-4">
-        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="opacity-60 hover:opacity-100 transition-opacity" @click="() => { reset(); track('reset') }">
+        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="text-muted hover:text-highlighted transition-colors" @click="() => { reset(); track('reset') }">
           Reset All
         </UButton>
       </div>
@@ -335,7 +335,7 @@ function handleTypeSelect(type: SchemaType) {
           <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
-                <UIcon name="i-carbon-search" class="w-4 h-4 text-purple-500" />
+                <UIcon name="i-carbon-search" class="w-4 h-4 text-purple-700 dark:text-purple-300" />
               </div>
               <div>
                 <strong class="text-highlighted block mb-1">Rich Results</strong>
@@ -346,7 +346,7 @@ function handleTypeSelect(type: SchemaType) {
           <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
-                <UIcon name="i-carbon-analytics" class="w-4 h-4 text-purple-500" />
+                <UIcon name="i-carbon-analytics" class="w-4 h-4 text-purple-700 dark:text-purple-300" />
               </div>
               <div>
                 <strong class="text-highlighted block mb-1">Better CTR</strong>
@@ -357,7 +357,7 @@ function handleTypeSelect(type: SchemaType) {
           <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
-                <UIcon name="i-carbon-machine-learning" class="w-4 h-4 text-purple-500" />
+                <UIcon name="i-carbon-machine-learning" class="w-4 h-4 text-purple-700 dark:text-purple-300" />
               </div>
               <div>
                 <strong class="text-highlighted block mb-1">AI-Ready</strong>
@@ -368,7 +368,7 @@ function handleTypeSelect(type: SchemaType) {
           <div class="group p-4 rounded-xl bg-[var(--ui-bg-elevated)]/50 border border-default hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
             <div class="flex items-start gap-3">
               <div class="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
-                <UIcon name="i-carbon-checkmark-filled" class="w-4 h-4 text-purple-500" />
+                <UIcon name="i-carbon-checkmark-filled" class="w-4 h-4 text-purple-700 dark:text-purple-300" />
               </div>
               <div>
                 <strong class="text-highlighted block mb-1">Type-Safe</strong>

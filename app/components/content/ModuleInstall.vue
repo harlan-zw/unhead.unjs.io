@@ -13,9 +13,8 @@ const packageManagersList = [
 
 const packageManagers = computed(() => packageManagersList.map(p => ({
   filename: p.name,
-  code: `<code class="language-bash shiki shiki-themes github-light github-light material-theme-palenight" language="bash"><span style="--shiki-light: #6F42C1; --shiki-default: #6F42C1; --shiki-dark: #FFCB6B;">${p.command}</span><span style="--shiki-light: #24292E; --shiki-default: #24292E; --shiki-dark: #BABED8;"> ${p.install} ${props.name}</span></code>`,
+  code: `<code class="language-bash shiki shiki-themes github-light-high-contrast github-light-high-contrast github-dark-high-contrast" language="bash"><span style="--shiki-light: #512598; --shiki-default: #512598; --shiki-dark: #FFCB6B;">${p.command}</span><span style="--shiki-light: #0E1116; --shiki-default: #0E1116; --shiki-dark: #BABED8;"> ${p.install} ${props.name}</span></code>`,
   key: p.name,
-  lang: 'bash',
 })))
 </script>
 
@@ -24,7 +23,7 @@ const packageManagers = computed(() => packageManagersList.map(p => ({
     <CodeGroup>
       <UCard v-for="(codeBlock, index) in packageManagers" :key="index" v-bind="codeBlock" class="rounded-t-none ring-neutral-200 dark:ring-neutral-700 mx-[1px]">
         <div class="bg-neutral-100 dark:bg-neutral-800 ring-neutral-300 dark:ring-neutral-700 ring rounded py-2 px-4 relative">
-          <div class="absolute right-3 opacity-50 top-3 text-xs font-mono">
+          <div class="absolute right-3 top-3 text-xs font-mono text-muted">
             bash
           </div>
           <div v-html="codeBlock.code" />

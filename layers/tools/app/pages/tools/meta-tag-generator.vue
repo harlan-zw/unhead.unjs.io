@@ -123,12 +123,12 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 class="p-1.5 sm:p-2 rounded-lg transition-colors"
                 :class="activePreset === preset.id ? 'bg-emerald-500/20' : 'bg-emerald-500/10 group-hover:bg-emerald-500/20'"
               >
-                <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-emerald-500" />
+                <UIcon :name="preset.icon" class="size-3.5 sm:size-4 text-emerald-700 dark:text-emerald-300" />
               </div>
             </div>
             <span
               class="text-xs sm:text-sm font-semibold transition-colors"
-              :class="activePreset === preset.id ? 'text-emerald-500' : 'text-highlighted group-hover:text-emerald-500'"
+              :class="activePreset === preset.id ? 'text-emerald-700 dark:text-emerald-300' : 'text-highlighted group-hover:text-emerald-700 dark:group-hover:text-emerald-300'"
             >{{ preset.label }}</span>
             <p class="text-[10px] sm:text-xs text-dimmed mt-1 line-clamp-2">
               {{ preset.description }}
@@ -167,7 +167,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               <UIcon
                 :name="tab.icon"
                 class="w-4 h-4 transition-colors duration-300 shrink-0"
-                :class="activeFormTab === tab.value ? 'text-emerald-500' : ''"
+                :class="activeFormTab === tab.value ? 'text-emerald-700 dark:text-emerald-300' : ''"
               />
               <span class="hidden sm:inline truncate">{{ tab.label }}</span>
               <!-- Active indicator dot -->
@@ -188,7 +188,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 class="w-full"
               />
               <template v-if="titleWarning" #help>
-                <span class="text-emerald-500">{{ titleWarning }}</span>
+                <span class="text-emerald-700 dark:text-emerald-300">{{ titleWarning }}</span>
               </template>
             </UFormField>
 
@@ -200,7 +200,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 class="w-full"
               />
               <template v-if="descriptionWarning" #help>
-                <span class="text-emerald-500">{{ descriptionWarning }}</span>
+                <span class="text-emerald-700 dark:text-emerald-300">{{ descriptionWarning }}</span>
               </template>
             </UFormField>
           </div>
@@ -296,7 +296,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
           <div v-show="activeFormTab === 'article'" class="space-y-4">
             <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-4">
               <div class="flex items-start gap-2">
-                <UIcon name="i-carbon-information" class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+                <UIcon name="i-carbon-information" class="w-4 h-4 text-emerald-700 dark:text-emerald-300 mt-0.5 shrink-0" />
                 <p class="text-xs text-muted">
                   Article metadata helps search engines and social platforms understand your content better.
                 </p>
@@ -423,9 +423,9 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             <div class="p-2 rounded-lg bg-blue-500/10">
               <UIcon name="i-carbon-search" class="w-5 h-5 text-blue-500" />
             </div>
-            <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
+            <h2 class="text-sm font-medium text-muted uppercase tracking-wider">
               Google Preview
-            </h3>
+            </h2>
           </div>
 
           <!-- Search result card -->
@@ -465,11 +465,11 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
         <!-- Header -->
         <div class="flex items-center gap-3 mb-4 sm:mb-6">
           <div class="p-2 rounded-lg bg-emerald-500/10">
-            <UIcon name="i-carbon-share" class="w-5 h-5 text-emerald-500" />
+            <UIcon name="i-carbon-share" class="w-5 h-5 text-emerald-700 dark:text-emerald-300" />
           </div>
-          <h3 class="text-sm font-medium text-muted uppercase tracking-wider">
+          <h2 class="text-sm font-medium text-muted uppercase tracking-wider">
             Social Card Preview
-          </h3>
+          </h2>
         </div>
 
         <!-- Platform tabs -->
@@ -518,13 +518,13 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   <UIcon name="i-carbon-image" class="w-8 h-8 text-neutral-400" />
                 </div>
                 <div class="p-3 flex-1 min-w-0">
-                  <p class="text-xs text-neutral-500 truncate">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-300 truncate">
                     {{ previewSiteName }}
                   </p>
                   <p class="text-sm text-neutral-900 dark:text-white font-medium truncate">
                     {{ truncate(previewTitle, 70) }}
                   </p>
-                  <p class="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2">
                     {{ truncate(previewDescription, 120) }}
                   </p>
                 </div>
@@ -541,13 +541,13 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   <UIcon name="i-carbon-image" class="w-12 h-12 text-neutral-400" />
                 </div>
                 <div class="p-3 bg-[#F0F2F5] dark:bg-[#242526]">
-                  <p class="text-xs text-neutral-500 uppercase tracking-wide truncate">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-300 uppercase tracking-wide truncate">
                     {{ previewSiteName }}
                   </p>
                   <p class="text-base text-neutral-900 dark:text-white font-semibold truncate mt-1">
                     {{ truncate(previewTitle, 70) }}
                   </p>
-                  <p class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-1">
+                  <p class="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2 mt-1">
                     {{ truncate(previewDescription, 120) }}
                   </p>
                 </div>
@@ -567,7 +567,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                   <p class="text-sm text-neutral-900 dark:text-white font-semibold truncate">
                     {{ truncate(previewTitle, 70) }}
                   </p>
-                  <p class="text-xs text-neutral-500 truncate mt-1">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-300 truncate mt-1">
                     {{ previewSiteName }}
                   </p>
                 </div>
@@ -594,7 +594,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                     <p class="text-[10px] text-neutral-600 dark:text-[#8696A0] line-clamp-1 mt-0.5">
                       {{ truncate(previewDescription, 50) }}
                     </p>
-                    <p class="text-[10px] text-neutral-500 dark:text-[#8696A0] truncate mt-0.5 flex items-center gap-1">
+                    <p class="text-[10px] text-neutral-600 dark:text-[#8696A0] truncate mt-0.5 flex items-center gap-1">
                       <UIcon name="i-carbon-link" class="w-2.5 h-2.5" />
                       {{ previewSiteName }}
                     </p>
@@ -633,11 +633,11 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
                 <p class="text-sm text-[#1264A3] dark:text-[#1D9BD1] hover:underline cursor-pointer">
                   {{ truncate(previewTitle, 70) }}
                 </p>
-                <p class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2">
+                <p class="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
                   {{ truncate(previewDescription, 120) }}
                 </p>
                 <!-- Slack label/data fields -->
-                <div v-if="state.twitterLabel1 || state.twitterLabel2" class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <div v-if="state.twitterLabel1 || state.twitterLabel2" class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-neutral-600 dark:text-neutral-400">
                   <div v-if="state.twitterLabel1 && state.twitterData1" class="flex gap-1">
                     <span class="font-medium">{{ state.twitterLabel1 }}:</span>
                     <span>{{ state.twitterData1 }}</span>
@@ -656,10 +656,10 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             <!-- Discord Preview -->
             <div v-if="activePlatform === 'discord'">
               <div class="rounded border-l-4 border-[#5865F2] bg-[#F2F3F5] dark:bg-[#2F3136] p-4 shadow-lg">
-                <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                <p class="text-xs text-neutral-600 dark:text-neutral-400 mb-1">
                   {{ previewSiteName }}
                 </p>
-                <p class="text-sm font-semibold text-[#006CE7] dark:text-[#00AFF4] hover:underline cursor-pointer">
+                <p class="text-sm font-semibold text-[#005DBF] dark:text-[#00AFF4] hover:underline cursor-pointer">
                   {{ truncate(previewTitle, 70) }}
                 </p>
                 <p class="text-sm text-default line-clamp-3 mt-1">
@@ -750,7 +750,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
         <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-default">
           <div class="flex items-center gap-3">
             <div class="flex items-center gap-2">
-              <UIcon name="i-carbon-code" class="w-4 h-4 text-emerald-500" />
+              <UIcon name="i-carbon-code" class="w-4 h-4 text-emerald-700 dark:text-emerald-300" />
               <span class="text-xs font-medium text-muted uppercase tracking-wider">Generated Code</span>
             </div>
           </div>
@@ -791,7 +791,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
       </div>
 
       <div class="flex justify-end mt-4">
-        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="opacity-60 hover:opacity-100 transition-opacity" @click="() => { reset(); track('reset') }">
+        <UButton variant="ghost" color="neutral" size="sm" icon="i-carbon-reset" class="text-muted hover:text-highlighted transition-colors" @click="() => { reset(); track('reset') }">
           Reset All
         </UButton>
       </div>
@@ -861,7 +861,7 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div class="relative">
               <div class="flex items-center gap-2 mb-2 sm:mb-3">
-                <UIcon name="i-carbon-text-short-paragraph" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
+                <UIcon name="i-carbon-text-short-paragraph" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-700 dark:text-emerald-300" />
                 <h3 class="font-semibold text-sm sm:text-base text-highlighted">
                   Title Tag
                 </h3>

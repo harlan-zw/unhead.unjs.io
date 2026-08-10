@@ -135,6 +135,7 @@ export default ({
       pre: {
         slots: {
           root: 'rounded-xl',
+          base: '**:[.line.highlight]:bg-default!',
         },
       },
       codeIcon: {

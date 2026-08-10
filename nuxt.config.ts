@@ -47,9 +47,9 @@ export default defineNuxtConfig({
     },
     highlight: {
       theme: {
-        light: 'github-light',
-        default: 'github-light',
-        dark: 'material-theme-palenight',
+        light: 'github-light-high-contrast',
+        default: 'github-light-high-contrast',
+        dark: 'github-dark-high-contrast',
       },
       langs: [
         'ts',
@@ -222,9 +222,9 @@ export default defineNuxtConfig({
       markdown: {
         highlight: {
           theme: {
-            light: 'github-light',
-            default: 'github-light',
-            dark: 'material-theme-palenight',
+            light: 'github-light-high-contrast',
+            default: 'github-light-high-contrast',
+            dark: 'github-dark-high-contrast',
           },
           langs: [
             'ts',

@@ -59,7 +59,7 @@ const topLinks = computed(() => [
 
 <template>
   <div v-if="module && nav">
-    <nav :key="selectedFramework?.slug" aria-title="Documentation Navigation" class="flex flex-col gap-7">
+    <nav :key="selectedFramework?.slug" aria-label="Documentation Navigation" class="flex flex-col gap-7">
       <UDropdownMenu :items="sectionMenuItems" class="-mx-2.5 -mb-2">
         <button
           type="button"

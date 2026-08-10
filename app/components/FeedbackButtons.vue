@@ -76,12 +76,12 @@ async function onSubmit(event: FormSubmitEvent<CommentFeedbackSchemaOutput>) {
       </template>
       <template v-else>
         <UTooltip text="Looks good!">
-          <UButton type="button" class="cursor-pointer hover:bg-green-500/10 bg-neutral-500/10 text-neutral-600 dark:text-white" size="lg" @click="thumbs('up')">
+          <UButton aria-label="Yes, this page helped" type="button" class="cursor-pointer hover:bg-green-500/10 bg-neutral-500/10 text-neutral-600 dark:text-white" size="lg" @click="thumbs('up')">
             <UIcon name="i-carbon-thumbs-up" class="w-6 h-6" />
           </UButton>
         </UTooltip>
         <UTooltip text="It needs some work.">
-          <UButton type="button" class="cursor-pointer hover:bg-red-500/10 bg-neutral-500/10 text-neutral-600  dark:text-white" size="lg" color="neutral" @click="thumbs('down')">
+          <UButton aria-label="No, this page did not help" type="button" class="cursor-pointer hover:bg-red-500/10 bg-neutral-500/10 text-neutral-600 dark:text-white" size="lg" color="neutral" @click="thumbs('down')">
             <UIcon name="i-carbon-thumbs-down" class="w-6 h-6" />
           </UButton>
         </UTooltip>
@@ -92,7 +92,7 @@ async function onSubmit(event: FormSubmitEvent<CommentFeedbackSchemaOutput>) {
         <div class="flex items-center justify-between">
           Thank you for your feedback!
           <div>
-            <UButton variant="ghost" color="neutral" @click="commentSubmissionStatus = 'submitted'">
+            <UButton aria-label="Close feedback form" variant="ghost" color="neutral" @click="commentSubmissionStatus = 'submitted'">
               <UIcon name="i-carbon-close" class="w-4 h-4" />
             </UButton>
           </div>

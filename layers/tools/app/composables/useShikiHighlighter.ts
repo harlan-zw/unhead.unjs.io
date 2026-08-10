@@ -17,8 +17,8 @@ async function initHighlighter() {
 
   initPromise = (async () => {
     const [
-      githubLight,
-      materialPalenight,
+      githubLightHighContrast,
+      githubDarkHighContrast,
       langTs,
       langJson,
       langHtml,
@@ -26,8 +26,8 @@ async function initHighlighter() {
       langTsx,
       langJsx,
     ] = await Promise.all([
-      import('shiki/themes/github-light.mjs'),
-      import('shiki/themes/material-theme-palenight.mjs'),
+      import('shiki/themes/github-light-high-contrast.mjs'),
+      import('shiki/themes/github-dark-high-contrast.mjs'),
       import('shiki/langs/typescript.mjs'),
       import('shiki/langs/json.mjs'),
       import('shiki/langs/html.mjs'),
@@ -37,7 +37,7 @@ async function initHighlighter() {
     ])
 
     highlighter.value = await createHighlighterCore({
-      themes: [githubLight.default, materialPalenight.default],
+      themes: [githubLightHighContrast.default, githubDarkHighContrast.default],
       langs: [langTs.default, langJson.default, langHtml.default, langVue.default, langTsx.default, langJsx.default],
       engine: createJavaScriptRegexEngine(),
     })
@@ -59,7 +59,7 @@ export function useShikiHighlighter() {
     if (!highlighter.value)
       return renderPlainCode(code)
 
-    const theme = colorMode.value === 'dark' ? 'material-theme-palenight' : 'github-light'
+    const theme = colorMode.value === 'dark' ? 'github-dark-high-contrast' : 'github-light-high-contrast'
     // Map short names to full names
     const langMap: Record<string, string> = {
       ts: 'typescript',

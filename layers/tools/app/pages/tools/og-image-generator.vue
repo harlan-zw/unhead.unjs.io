@@ -104,7 +104,7 @@ const previewImage = result
                     :aria-label="`${tmpl} template`"
                     :aria-pressed="selectedTemplate === tmpl"
                     class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm transition-colors"
-                    :class="selectedTemplate === tmpl ? 'bg-purple-500/20 border-purple-500 text-purple-600 dark:text-purple-400' : 'bg-elevated border-default hover:border-purple-500/50'"
+                    :class="selectedTemplate === tmpl ? 'bg-purple-500/20 border-purple-500 text-purple-700 dark:text-purple-300' : 'bg-elevated border-default hover:border-purple-500/50'"
                     @click="selectedTemplate = tmpl"
                   >
                     <UIcon v-if="tmpl === 'code'" name="i-carbon-code" class="w-3.5 h-3.5" />
@@ -116,6 +116,7 @@ const previewImage = result
               <UFormField v-if="selectedTemplate === 'code'" label="JSX Code">
                 <ToolCodeEditor
                   v-model="customCode"
+                  label="JSX template source"
                   placeholder="export default function OgImage() { ... }"
                 />
               </UFormField>
@@ -298,13 +299,13 @@ const previewImage = result
                     <div class="absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/5 pointer-events-none" />
                   </div>
                   <div class="p-3 min-w-0">
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate">
+                    <p class="text-xs text-neutral-600 dark:text-neutral-400 truncate">
                       {{ previewSiteName }}
                     </p>
                     <p class="text-sm text-neutral-900 dark:text-white font-medium truncate">
                       {{ truncate(previewTitle, 70) }}
                     </p>
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
+                    <p class="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2">
                       {{ truncate(previewDescription, 120) }}
                     </p>
                   </div>
@@ -330,13 +331,13 @@ const previewImage = result
                     </div>
                   </div>
                   <div class="p-3 bg-[#F0F2F5] dark:bg-[#242526]">
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wide truncate">
+                    <p class="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wide truncate">
                       {{ previewSiteName }}
                     </p>
                     <p class="text-base text-neutral-900 dark:text-white font-semibold truncate mt-1">
                       {{ truncate(previewTitle, 70) }}
                     </p>
-                    <p class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-1">
+                    <p class="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2 mt-1">
                       {{ truncate(previewDescription, 120) }}
                     </p>
                   </div>
@@ -365,7 +366,7 @@ const previewImage = result
                     <p class="text-sm text-neutral-900 dark:text-white font-semibold truncate">
                       {{ truncate(previewTitle, 70) }}
                     </p>
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate mt-1">
+                    <p class="text-xs text-neutral-600 dark:text-neutral-400 truncate mt-1">
                       {{ previewSiteName }}
                     </p>
                   </div>
@@ -401,7 +402,7 @@ const previewImage = result
                       <p class="text-[10px] text-neutral-600 dark:text-[#8696A0] line-clamp-1 mt-0.5">
                         {{ truncate(previewDescription, 50) }}
                       </p>
-                      <p class="text-[10px] text-neutral-500 dark:text-[#8696A0] truncate mt-0.5 flex items-center gap-1">
+                      <p class="text-[10px] text-neutral-600 dark:text-[#8696A0] truncate mt-0.5 flex items-center gap-1">
                         <UIcon name="i-carbon-link" class="w-2.5 h-2.5" />
                         {{ previewSiteName }}
                       </p>
@@ -449,7 +450,7 @@ const previewImage = result
                   <p class="text-sm text-[#1264A3] dark:text-[#1D9BD1] hover:underline cursor-pointer">
                     {{ truncate(previewTitle, 70) }}
                   </p>
-                  <p class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2">
+                  <p class="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
                     {{ truncate(previewDescription, 120) }}
                   </p>
                   <div class="mt-2 rounded overflow-hidden max-w-xs bg-neutral-100 dark:bg-neutral-800 relative min-h-[100px]">
@@ -473,10 +474,10 @@ const previewImage = result
                 class="w-full max-w-lg"
               >
                 <div class="rounded border-l-4 border-[#5865F2] bg-[#F2F3F5] dark:bg-[#2F3136] p-4 shadow-lg">
-                  <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-400 mb-1">
                     {{ previewSiteName }}
                   </p>
-                  <p class="text-sm font-semibold text-[#006CE7] dark:text-[#00AFF4] hover:underline cursor-pointer">
+                  <p class="text-sm font-semibold text-[#005DBF] dark:text-[#00AFF4] hover:underline cursor-pointer">
                     {{ truncate(previewTitle, 70) }}
                   </p>
                   <p class="text-sm text-neutral-700 dark:text-neutral-300 line-clamp-3 mt-1">
@@ -499,7 +500,7 @@ const previewImage = result
             </div>
 
             <div class="flex justify-end mt-4">
-              <a href="https://takumi.kane.tw/" target="_blank" rel="noopener" class="text-xs text-muted hover:text-purple-500 transition-colors flex items-center gap-1.5">
+              <a href="https://takumi.kane.tw/" target="_blank" rel="noopener" class="text-xs text-muted hover:text-purple-700 dark:hover:text-purple-300 transition-colors flex items-center gap-1.5">
                 <UIcon name="i-carbon-flash" class="w-3 h-3" />
                 Powered by Takumi
               </a>

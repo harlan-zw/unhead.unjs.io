@@ -72,10 +72,10 @@ const footerColumns = computed(() =>
         <div class="md:grid flex flex-col gap-5 grid-cols-3 xl:grid-cols-6 mx-auto">
           <div v-for="(category, cKey) in footerColumns" :key="cKey" class="flex">
             <div class="inline">
-              <h3 class="font-bold mb-3 text-xs">
+              <h2 class="font-bold mb-3 text-xs">
                 {{ category.label }}
-              </h3>
-              <nav>
+              </h2>
+              <nav :aria-label="`${category.label} footer navigation`">
                 <ul class="grid gap-4">
                   <li v-for="(link, key) in category.items" :key="key">
                     <ULink :to="link.to" class="flex items-center gap-1 hover:underline transition">

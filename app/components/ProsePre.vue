@@ -10,9 +10,14 @@ import UCodeIcon from '#ui/components/prose/CodeIcon.vue'
 import { useLocale } from '#ui/composables/useLocale'
 import { tv } from '#ui/utils/tv'
 
+defineOptions({
+  inheritAttrs: false,
+})
+
 const props = defineProps<{
   icon?: string
   code?: string
+  lang?: string
   language?: string
   filename?: string
   highlights?: number[]
@@ -106,5 +111,5 @@ const processedContent = computed(() => {
 </template>
 
 <style>
-.shiki span.line{display:block}.shiki span.line.highlight{margin:0 -16px;padding:0 16px;@apply bg-(--ui-bg-accented)/50}
+.shiki span.line{display:block}.shiki span.line.highlight{margin:0 -16px;padding:0 16px;background-color:var(--ui-bg);box-shadow:inset 3px 0 var(--ui-primary)}
 </style>

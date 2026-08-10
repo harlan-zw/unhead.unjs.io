@@ -2,6 +2,7 @@
 import type { TabsItem } from '@nuxt/ui'
 import { formatTimeAgo } from '@vueuse/core'
 import { useStats } from '~/composables/data'
+import { normalizeReleaseBodyHeadings } from '~/utils/releases'
 
 definePageMeta({
   breadcrumb: {
@@ -176,17 +177,17 @@ const HighlightedVersion = defineComponent({
             >
               <div class="flex items-center gap-3 pb-4 mb-4 border-b border-gray-100 dark:border-gray-800">
                 <NuxtLink target="_blank" :to="`https://github.com/unjs/unhead/releases/tag/${release.name}`" :aria-label="`Release ${release.name}`">
-                  <h3 class="text-xl font-bold flex items-center gap-2">
+                  <h2 class="text-xl font-bold flex items-center gap-2">
                     <HighlightedVersion :version="release.name.slice(1)" class="font-mono" />
                     <UBadge v-if="key === 0 && activeFilter !== 'prerelease'" icon="i-carbon-star" variant="soft">
                       Latest release
                     </UBadge>
-                  </h3>
+                  </h2>
                 </NuxtLink>
               </div>
 
               <div class="prose prose-zinc dark:prose-invert prose-sm max-w-none">
-                <MDC :value="release.body" />
+                <MDC :value="normalizeReleaseBodyHeadings(release.body)" />
               </div>
 
               <div v-if="release.url" class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-end">

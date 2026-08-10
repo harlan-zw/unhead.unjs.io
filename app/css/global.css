@@ -39,7 +39,13 @@
 
 :root {
   --container-width: 90rem;
-  --ui-primary: var(--color-amber-700);
+  --ui-primary: var(--color-amber-800);
+  --ui-success: var(--color-green-800);
+  --ui-info: var(--color-blue-800);
+  --ui-warning: var(--color-amber-800);
+  --ui-color-success-600: var(--color-green-800);
+  --ui-color-info-600: var(--color-blue-800);
+  --ui-color-warning-600: var(--color-amber-800);
   --ui-text-dimmed: var(--color-neutral-600);
   --ui-text-muted: var(--color-neutral-600);
   --ui-text: oklch(0.370 0.014 75);
@@ -48,13 +54,16 @@
 
 .dark {
   --ui-primary: var(--color-amber-300);
+  --ui-success: var(--color-green-300);
+  --ui-info: var(--color-blue-300);
+  --ui-warning: var(--color-amber-300);
   --ui-bg: var(--color-neutral-950);
   --ui-bg-muted: var(--color-neutral-900);
   --ui-bg-elevated: var(--color-neutral-800);
   --ui-bg-accented: var(--color-neutral-700);
   --ui-bg-inverted: #fff;
-  --ui-text-dimmed: var(--color-neutral-500);
-  --ui-text-muted: var(--color-neutral-400);
+  --ui-text-dimmed: var(--color-neutral-300);
+  --ui-text-muted: var(--color-neutral-300);
   --ui-text-toned: var(--color-neutral-300);
   --ui-text: var(--color-neutral-300);
   --ui-text-highlighted: var(--color-neutral-100);
@@ -135,8 +144,8 @@ html.dark .shiki:not(.tool-code-block .shiki) span {
 }
 
 .shiki span.line.highlight {
-  background-color:
-    color-mix(in oklab, var(--ui-border-muted) 75%, transparent) !important;
+  background-color: var(--ui-bg) !important;
+  box-shadow: inset 3px 0 var(--ui-primary);
 }
 
 pre {
