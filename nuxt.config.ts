@@ -1,5 +1,10 @@
+import { existsSync } from 'node:fs'
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
+import { SENTRY_DSN, sentryRelease } from './shared/sentry'
+
+const hasSentryAuthToken = Boolean(process.env.SENTRY_AUTH_TOKEN)
+  || existsSync('.env.sentry-build-plugin')
 
 export default defineNuxtConfig({
   extends: ['./layers/admin', './layers/tools'],
@@ -16,6 +21,7 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     'nuxt-skew-protection',
     'nuxt-auth-utils',
+    '@sentry/nuxt/module',
     // 'nuxt-build-cache',
     async (_, nuxt) => {
       // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
@@ -112,6 +118,13 @@ export default defineNuxtConfig({
     githubAccessToken: '', // NUXT_GITHUB_ACCESS_TOKEN
     cloudflareAccountId: '', // NUXT_CLOUDFLARE_ACCOUNT_ID
     cloudflareAnalyticsApiToken: '', // NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN
+    sentry: {
+      dsn: SENTRY_DSN,
+      enabled: process.env.NODE_ENV === 'production',
+      environment: 'production',
+      release: sentryRelease() ?? '',
+      tracesSampleRate: 0.05,
+    },
   },
 
   fonts: {
@@ -363,6 +376,29 @@ export default defineNuxtConfig({
       },
 
     },
+  },
+
+  sentry: {
+    enabled: process.env.NODE_ENV === 'production',
+    org: 'harlan-zw',
+    project: 'unhead',
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    release: { name: sentryRelease() },
+    sourcemaps: {
+      disable: !hasSentryAuthToken,
+      filesToDeleteAfterUpload: ['**/*.map'],
+    },
+    bundleSizeOptimizations: {
+      excludeReplayShadowDom: true,
+      excludeReplayIframe: true,
+      excludeReplayWorker: true,
+    },
+    telemetry: false,
+  },
+
+  sourcemap: {
+    client: hasSentryAuthToken ? 'hidden' : false,
+    server: false,
   },
 
   compatibilityDate: '2026-07-20',

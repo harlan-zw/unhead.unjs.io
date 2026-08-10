@@ -56,6 +56,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           NUXT_AI_READY_RUNTIME_SYNC_SECRET: ${{ secrets.NUXT_SEO_PRO_KEY }}
           NUXT_SEO_PRO_KEY: ${{ secrets.NUXT_SEO_PRO_KEY }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           UNHEAD_DOCS_SOURCE: remote
 
       - name: Deploy to Cloudflare Pages

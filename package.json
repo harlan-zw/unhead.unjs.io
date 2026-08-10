@@ -2,7 +2,7 @@
   "name": "unhead.unjs.io",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@11.20.0",
+  "packageManager": "pnpm@11.21.0",
   "engines": {
     "node": "^24.11.0"
   },
@@ -40,6 +40,7 @@
     "@nuxt/ui": "catalog:",
     "@nuxtjs/mdc": "catalog:",
     "@nuxtjs/seo": "catalog:",
+    "@sentry/nuxt": "catalog:",
     "@shikijs/magic-move": "catalog:",
     "@takumi-rs/core": "catalog:",
     "@takumi-rs/wasm": "catalog:",

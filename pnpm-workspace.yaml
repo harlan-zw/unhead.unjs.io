@@ -83,7 +83,8 @@ catalog:
   '@nuxt/scripts': ^1.3.3
   '@nuxt/ui': ^4.10.0
   '@nuxtjs/mdc': 0.22.2
-  '@nuxtjs/seo': ^5.3.10
+  '@nuxtjs/seo': ^5.3.11
+  '@sentry/nuxt': ^10.69.0
   '@shikijs/magic-move': ^4.4.2
   '@takumi-rs/core': 2.5.0
   '@takumi-rs/wasm': 2.5.0
@@ -109,7 +110,7 @@ catalog:
   nuxt: 4.5.2
   nuxt-ai-ready: ^1.7.5
   nuxt-auth-utils: ^0.5.30
-  nuxt-skew-protection: ^1.4.0
+  nuxt-skew-protection: ^1.4.1
   octokit: ^5.0.5
   pathe: ^2.0.3
   puppeteer: ^25.5.0
@@ -132,6 +133,7 @@ catalog:
 trustPolicyIgnoreAfter: 262800
 allowBuilds:
   '@parcel/watcher': false
+  '@sentry/cli': true
   '@tailwindcss/oxide': false
   better-sqlite3: true
   esbuild: false
