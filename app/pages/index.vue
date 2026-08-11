@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import type { GitHubSponsorsResponse } from '@harlan-zw/nuxt-github-sponsors/server'
+import { onMounted, ref } from 'vue'
 import { stripHeaderAnchorLinks } from '~~/utils/content'
 import { getDocPath } from '~~/utils/urls'
 import { useStats } from '~/composables/data'
@@ -62,7 +63,13 @@ useSeoMeta({
 
 defineOgImage('Home')
 
-const { data: sponsors } = await useGitHubSponsors()
+const githubSponsorsRoute = useRuntimeConfig().public.githubSponsors.route
+const { data: sponsors, status: sponsorsStatus } = await useFetch<GitHubSponsorsResponse>(githubSponsorsRoute, {
+  key: `github-sponsors-static:${githubSponsorsRoute}`,
+  server: false,
+})
+const sponsorsClientReady = ref(false)
+onMounted(() => sponsorsClientReady.value = true)
 
 if (import.meta.server) {
   useHead({
@@ -314,7 +321,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
           </div>
         </div>
         <div class=" h-full flex items-center justify-center flex-col">
-          <div v-if="SideEffectTokens.length" class="prose shiki overflow-visible">
+          <div v-if="SideEffectTokens.length" class="prose shiki overflow-x-auto">
             <ShikiMagicMovePrecompiled
               animate
               :steps="SideEffectTokens"
@@ -365,7 +372,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
           <ProseP>
             Unhead ships with a default head tag order that is optimized for SEO and performance.
           </ProseP>
-          <div v-if="MagicMoveTokens.length" class="prose shiki">
+          <div v-if="MagicMoveTokens.length" class="prose shiki overflow-x-auto">
             <ShikiMagicMovePrecompiled
               animate
               :steps="MagicMoveTokens"
@@ -512,7 +519,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </UButton>
           </div>
         </div>
-        <div v-if="sponsors" class="max-w-xl mx-auto">
+        <div v-if="sponsorsClientReady && sponsors?._tag === 'available'" class="max-w-xl mx-auto">
           <div class="text-2xl font-semibold mb-5">
             Top Sponsors
           </div>
@@ -560,6 +567,16 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
                 </NuxtLink>
               </UTooltip>
             </div>
+          </div>
+        </div>
+        <div v-else-if="!sponsorsClientReady || sponsorsStatus === 'pending'" class="max-w-xl w-full mx-auto space-y-5" aria-hidden="true">
+          <USkeleton class="h-8 w-36" />
+          <div class="grid grid-cols-3 gap-5">
+            <USkeleton v-for="index in 3" :key="index" class="h-14 w-full" />
+          </div>
+          <USkeleton class="h-8 w-40" />
+          <div class="grid grid-cols-6 gap-3">
+            <USkeleton v-for="index in 6" :key="index" class="size-12 rounded-full" />
           </div>
         </div>
       </div>

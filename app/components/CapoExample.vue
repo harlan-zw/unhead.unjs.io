@@ -7,7 +7,7 @@ const toggleCapo = ref(false)
 
 <template>
   <div>
-    <div class="prose shiki">
+    <div class="prose shiki overflow-x-auto">
       <ShikiMagicMovePrecompiled
         animate
         :steps="MagicMoveTokens"
