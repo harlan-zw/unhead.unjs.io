@@ -23,6 +23,7 @@
     "@babel/parser": "catalog:",
     "@babel/types": "catalog:",
     "@cloudflare/workers-types": "catalog:",
+    "@harlan-zw/nuxt-dx": "catalog:",
     "@harlan-zw/nuxt-github-sponsors": "catalog:",
     "@iconify-json/carbon": "catalog:",
     "@iconify-json/heroicons": "catalog:",
