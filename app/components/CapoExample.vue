@@ -7,13 +7,13 @@ const toggleCapo = ref(false)
 
 <template>
   <div>
-    <ProsePre class="prose  shiki">
+    <div class="prose shiki">
       <ShikiMagicMovePrecompiled
         animate
         :steps="MagicMoveTokens"
         :step="Number(toggleCapo)"
       />
-    </ProsePre>
+    </div>
     <USwitch
       unchecked-icon="i-lucide-x"
       checked-icon="i-lucide-check"

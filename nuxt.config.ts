@@ -10,6 +10,7 @@ export default defineNuxtConfig({
   extends: ['./layers/admin', './layers/tools'],
 
   modules: [
+    '@harlan-zw/nuxt-github-sponsors',
     '@nuxt/ui',
     '@nuxtjs/seo',
     'radix-vue/nuxt',
@@ -45,6 +46,15 @@ export default defineNuxtConfig({
     theme: {
       transitions: true,
     },
+  },
+
+  experimental: {
+    checkOutdatedBuildInterval: 5 * 60 * 1000,
+  },
+
+  skewProtection: {
+    updateStrategy: 'polling',
+    reloadStrategy: 'prompt',
   },
 
   mdc: {
@@ -114,7 +124,6 @@ export default defineNuxtConfig({
         secure: true,
       },
     },
-    githubAuthToken: '', // NUXT_GITHUB_AUTH_TOKEN
     githubAccessToken: '', // NUXT_GITHUB_ACCESS_TOKEN
     cloudflareAccountId: '', // NUXT_CLOUDFLARE_ACCOUNT_ID
     cloudflareAnalyticsApiToken: '', // NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN
@@ -124,6 +133,20 @@ export default defineNuxtConfig({
       environment: 'production',
       release: sentryRelease() ?? '',
       tracesSampleRate: 0.05,
+    },
+  },
+
+  githubSponsors: {
+    login: 'harlan-zw',
+    mode: 'prerender',
+    route: '/api/github/sponsors.json',
+    tiers: [
+      { key: 'top', minimumMonthlyDollars: 50 },
+      { key: 'gold', minimumMonthlyDollars: 25 },
+    ],
+    overrides: {
+      'Kintell-labs': { name: 'Kintell', websiteUrl: 'https://kintell.com' },
+      'Massive Monster': { websiteUrl: 'https://massivemonster.co' },
     },
   },
 

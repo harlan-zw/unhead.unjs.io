@@ -39,7 +39,6 @@ const routeCacheRules: RouteCacheRule[] = [
   { matches: path => /^\/api\/npm\/[^/]+\/downloads$/.test(path), maxAge: day, staleMaxAge: 7 * day },
   { matches: path => /^\/api\/get-tweet\/[^/]+$/.test(path), maxAge: day, staleMaxAge: 7 * day },
   { matches: path => path === '/api/stats.json', maxAge: day, staleMaxAge: 7 * day },
-  { matches: path => path === '/api/github/sponsors.json', maxAge: day, staleMaxAge: 7 * day },
   { matches: path => /^\/api\/github\/[^/]+\/commit-count$/.test(path), maxAge: 7 * day, staleMaxAge: 7 * day },
   { matches: path => /^\/api\/github\/[^/]+\/contributors$/.test(path), maxAge: hour, staleMaxAge: day },
   { matches: path => /^\/api\/github\/[^/]+\/issues-closed$/.test(path), maxAge: 7 * day, staleMaxAge: 7 * day },

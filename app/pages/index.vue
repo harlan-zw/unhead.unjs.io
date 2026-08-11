@@ -62,19 +62,7 @@ useSeoMeta({
 
 defineOgImage('Home')
 
-function emptySponsors() {
-  return {
-    others: [],
-    $25: [],
-    $50: [],
-  }
-}
-
-const { data: sponsors } = await useAsyncData('github-sponsors', () => $fetch('/api/github/sponsors.json').catch(() => emptySponsors()), {
-  lazy: !isBot.value,
-  server: !isBot.value,
-  default: emptySponsors,
-})
+const { data: sponsors } = await useGitHubSponsors()
 
 if (import.meta.server) {
   useHead({
@@ -326,13 +314,13 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
           </div>
         </div>
         <div class=" h-full flex items-center justify-center flex-col">
-          <ProsePre v-if="SideEffectTokens.length" class="prose shiki overflow-visible">
+          <div v-if="SideEffectTokens.length" class="prose shiki overflow-visible">
             <ShikiMagicMovePrecompiled
               animate
               :steps="SideEffectTokens"
               :step="Number(mounted)"
             />
-          </ProsePre>
+          </div>
           <UBadge variant="outline" :color="mounted ? 'success' : 'neutral'" :label="mounted ? 'Component Mounted' : 'Component Not Mounted'" />
         </div>
       </div>
@@ -377,13 +365,13 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
           <ProseP>
             Unhead ships with a default head tag order that is optimized for SEO and performance.
           </ProseP>
-          <ProsePre v-if="MagicMoveTokens.length" class="prose  shiki">
+          <div v-if="MagicMoveTokens.length" class="prose shiki">
             <ShikiMagicMovePrecompiled
               animate
               :steps="MagicMoveTokens"
               :step="Number(toggleCapo)"
             />
-          </ProsePre>
+          </div>
           <USwitch
             unchecked-icon="i-lucide-x"
             checked-icon="i-lucide-check"
@@ -529,15 +517,15 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             Top Sponsors
           </div>
           <div class="sm:grid space-y-5 md:space-y-0 grid-cols-3 gap-5 mb-10">
-            <div v-for="(entry, key) in sponsors.$50" :key="key">
-              <NuxtLink :to="entry.sponsor.websiteUrl" :aria-label="entry.sponsor.name" class="flex items-center gap-2">
-                <img loading="lazy" :alt="entry.sponsor.name" width="56" height="56" :src="entry.sponsor.avatarUrl" class="w-14 h-14 rounded-full">
+            <div v-for="entry in sponsors.tiers.top" :key="entry.login">
+              <NuxtLink :to="entry.websiteUrl || entry.profileUrl" :aria-label="entry.name" class="flex items-center gap-2">
+                <img loading="lazy" :alt="entry.name" width="56" height="56" :src="entry.avatarUrl" class="w-14 h-14 rounded-full">
                 <div>
                   <div class="font-bold text-xl whitespace-nowrap">
-                    {{ entry.sponsor.name }}
+                    {{ entry.name }}
                   </div>
-                  <div v-if="entry.sponsor.websiteUrl" class="text-dimmed">
-                    {{ entry.sponsor.websiteUrl.replace('https://', '') }}
+                  <div v-if="entry.websiteUrl" class="text-dimmed">
+                    {{ entry.websiteUrl.replace('https://', '') }}
                   </div>
                 </div>
               </NuxtLink>
@@ -547,15 +535,15 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             Gold Sponsors
           </div>
           <div class="sm:grid space-y-5 md:space-y-0 grid-cols-3 gap-5 mb-10">
-            <div v-for="(entry, key) in sponsors.$25" :key="key">
-              <NuxtLink :to="entry.sponsor.websiteUrl" :aria-label="entry.sponsor.name || entry.sponsor.login" class="flex items-center gap-2">
-                <img loading="lazy" :alt="entry.sponsor.name || entry.sponsor.login" width="48" height="48" :src="entry.sponsor.avatarUrl" class="w-12 h-12 rounded-full">
+            <div v-for="entry in sponsors.tiers.gold" :key="entry.login">
+              <NuxtLink :to="entry.websiteUrl || entry.profileUrl" :aria-label="entry.name || entry.login" class="flex items-center gap-2">
+                <img loading="lazy" :alt="entry.name || entry.login" width="48" height="48" :src="entry.avatarUrl" class="w-12 h-12 rounded-full">
                 <div>
                   <div class="font-bold text-sm whitespace-nowrap">
-                    {{ entry.sponsor.name || entry.sponsor.login }}
+                    {{ entry.name || entry.login }}
                   </div>
-                  <div v-if="entry.sponsor.websiteUrl" class="text-xs text-dimmed">
-                    {{ entry.sponsor.websiteUrl.replace('https://', '') }}
+                  <div v-if="entry.websiteUrl" class="text-xs text-dimmed">
+                    {{ entry.websiteUrl.replace('https://', '') }}
                   </div>
                 </div>
               </NuxtLink>
@@ -565,10 +553,10 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             Backers
           </div>
           <div class="grid grid-cols-6 sm:grid-cols-10 gap-3 mb-10">
-            <div v-for="(entry, key) in sponsors.others" :key="key">
-              <UTooltip :text="entry.sponsor.name || entry.sponsor.login">
-                <NuxtLink :to="(entry.monthlyDollars > 5 ? entry.sponsor.websiteUrl : entry.sponsor.linkUrl) || entry.sponsor.linkUrl" :aria-label="entry.sponsor.name || entry.sponsor.login" class="flex items-center gap-2">
-                  <img loading="lazy" :alt="entry.sponsor.name || entry.sponsor.login" width="48" height="48" :src="entry.sponsor.avatarUrl" class="w-12 h-12 rounded-full" :class="entry.monthlyDollars > 5 ? ['ring-green-500 ring-2'] : []">
+            <div v-for="entry in sponsors.ungrouped" :key="entry.login">
+              <UTooltip :text="entry.name || entry.login">
+                <NuxtLink :to="(entry.monthlyDollars > 5 ? entry.websiteUrl : entry.profileUrl) || entry.profileUrl" :aria-label="entry.name || entry.login" class="flex items-center gap-2">
+                  <img loading="lazy" :alt="entry.name || entry.login" width="48" height="48" :src="entry.avatarUrl" class="w-12 h-12 rounded-full" :class="entry.monthlyDollars > 5 ? ['ring-green-500 ring-2'] : []">
                 </NuxtLink>
               </UTooltip>
             </div>
