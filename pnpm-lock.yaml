@@ -18,6 +18,9 @@ catalogs:
     '@cloudflare/workers-types':
       specifier: ^5.20260810.1
       version: 5.20260810.1
+    '@harlan-zw/nuxt-cloudflare':
+      specifier: 0.0.12
+      version: 0.0.12
     '@harlan-zw/nuxt-github-sponsors':
       specifier: 0.0.1
       version: 0.0.1
@@ -248,6 +251,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
         version: 5.20260810.1
+      '@harlan-zw/nuxt-cloudflare':
+        specifier: 'catalog:'
+        version: 0.0.12(@parcel/watcher@2.5.6)(better-sqlite3@13.0.3)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4(better-sqlite3@13.0.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3)))(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3))(ioredis@5.11.1(supports-color@10.2.2))(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(79ebe491395eecafbcd946ce0b2a0506))(oxc-parser@0.140.0)(rolldown@1.2.3)(srvx@0.11.22)(supports-color@10.2.2)(unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0))(wrangler@4.120.0(@cloudflare/workers-types@5.20260810.1))
       '@harlan-zw/nuxt-github-sponsors':
         specifier: 'catalog:'
         version: 0.0.1(@parcel/watcher@2.5.6)(better-sqlite3@13.0.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3))(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(79ebe491395eecafbcd946ce0b2a0506))(oxc-parser@0.140.0)(rolldown@1.2.3)(srvx@0.11.22)(supports-color@10.2.2)(unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0))
@@ -1344,6 +1350,14 @@ packages:
 
   '@formatjs/intl-localematcher@0.6.2':
     resolution: {integrity: sha512-XOMO2Hupl0wdd172Y06h6kLpBz6Dv+J4okPLl4LPtzbr8f66WbIoy4ev98EBuZ6ZK4h5ydTN6XneT4QVpD7cdA==}
+
+  '@harlan-zw/nuxt-cloudflare@0.0.12':
+    resolution: {integrity: sha512-jPi3g0YmNzyWTGM7R6+RcBqZnPkmtUeHG29a3eRUaCbIxTEnGAvbekeu3cGpVdQpoLpv2kA8Pl9k8scTs4wsEw==}
+    engines: {node: '>=22.12.0'}
+    hasBin: true
+    peerDependencies:
+      nuxt: '>=4.5.0 <5.0.0'
+      wrangler: '>=4.120.0 <5.0.0'
 
   '@harlan-zw/nuxt-github-sponsors@0.0.1':
     resolution: {integrity: sha512-AwHffCvx1/DnD2/Jgn16RqS0ExfdYTyZYg5i/yH7mpjm9+xOIWCMcFX2UGI+GIMwegJbhsBLZ/x1OyI9ZyqsGg==}
@@ -6341,6 +6355,16 @@ packages:
       crossws:
         optional: true
 
+  h3@2.0.1-rc.25:
+    resolution: {integrity: sha512-uIK++Up28xDt4n0+bSWfVssRivNXpUmMmA6CCiK6j9+utLcBMcFK97Gn9PlSZwAPW9oLy3CjGJ4ag40CY9YYtQ==}
+    engines: {node: '>=20.11.1'}
+    hasBin: true
+    peerDependencies:
+      crossws: ^0.4.9
+    peerDependenciesMeta:
+      crossws:
+        optional: true
+
   has-property-descriptors@1.0.2:
     resolution: {integrity: sha512-55JNKuIW+vq4Ke1BjOTjM2YctQIvCT7GFzHwmfZPGo5wnrgkid0YQtnAleFSqumZm4az3n2BS+erby5ipJdgrg==}
 
@@ -10659,6 +10683,65 @@ snapshots:
   '@formatjs/intl-localematcher@0.6.2':
     dependencies:
       tslib: 2.8.1
+
+  '@harlan-zw/nuxt-cloudflare@0.0.12(@parcel/watcher@2.5.6)(better-sqlite3@13.0.3)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4(better-sqlite3@13.0.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3)))(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3))(ioredis@5.11.1(supports-color@10.2.2))(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(79ebe491395eecafbcd946ce0b2a0506))(oxc-parser@0.140.0)(rolldown@1.2.3)(srvx@0.11.22)(supports-color@10.2.2)(unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0))(wrangler@4.120.0(@cloudflare/workers-types@5.20260810.1))':
+    dependencies:
+      '@nuxt/kit': 4.5.2(magic-string@1.1.0)(magicast@0.5.4)(oxc-parser@0.140.0)(rolldown@1.2.3)(unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))
+      citty: 0.2.2
+      confbox: 0.2.4
+      consola: 3.4.2
+      h3: 2.0.1-rc.25(crossws@0.4.10(srvx@0.11.22))
+      nitropack: 2.13.4(@parcel/watcher@2.5.6)(better-sqlite3@13.0.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3))(oxc-parser@0.140.0)(rolldown@1.2.3)(srvx@0.11.22)(supports-color@10.2.2)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0))
+      nuxt: 4.5.2(79ebe491395eecafbcd946ce0b2a0506)
+      pathe: 2.0.3
+      unstorage: 1.17.5(db0@0.3.4(better-sqlite3@13.0.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3)))(ioredis@5.11.1(supports-color@10.2.2))
+      wrangler: 4.120.0(@cloudflare/workers-types@5.20260810.1)
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@electric-sql/pglite'
+      - '@farmfe/core'
+      - '@libsql/client'
+      - '@netlify/blobs'
+      - '@parcel/watcher'
+      - '@planetscale/database'
+      - '@rspack/core'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/functions'
+      - '@vercel/kv'
+      - aws4fetch
+      - bare-abort-controller
+      - bare-buffer
+      - better-sqlite3
+      - bun-types-no-globals
+      - crossws
+      - db0
+      - drizzle-orm
+      - encoding
+      - idb-keyval
+      - ioredis
+      - magic-string
+      - magicast
+      - mysql2
+      - oxc-parser
+      - react-native-b4a
+      - rolldown
+      - sqlite3
+      - srvx
+      - supports-color
+      - unloader
+      - unplugin
+      - uploadthing
+      - vite
+      - webpack
+      - xml2js
 
   '@harlan-zw/nuxt-github-sponsors@0.0.1(@parcel/watcher@2.5.6)(better-sqlite3@13.0.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3))(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(79ebe491395eecafbcd946ce0b2a0506))(oxc-parser@0.140.0)(rolldown@1.2.3)(srvx@0.11.22)(supports-color@10.2.2)(unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0))':
     dependencies:
@@ -16402,6 +16485,13 @@ snapshots:
     optionalDependencies:
       crossws: 0.4.10(srvx@0.11.22)
     optional: true
+
+  h3@2.0.1-rc.25(crossws@0.4.10(srvx@0.11.22)):
+    dependencies:
+      rou3: 0.9.1
+      srvx: 0.11.22
+    optionalDependencies:
+      crossws: 0.4.10(srvx@0.11.22)
 
   has-property-descriptors@1.0.2:
     dependencies:

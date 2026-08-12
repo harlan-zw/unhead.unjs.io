@@ -1,5 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 
+import { setCloudflareBindings } from '@harlan-zw/nuxt-cloudflare/bindings'
 import wsAdapter from 'crossws/adapters/cloudflare'
 import { useNitroApp } from 'nitropack/runtime'
 import { requestHasBody, runCronTasks } from 'nitropack/runtime/internal'
@@ -27,7 +28,7 @@ export default {
     if (requestHasBody(request))
       body = Buffer.from(await request.arrayBuffer())
 
-    globalThis.__env__ = env
+    setCloudflareBindings(env)
     const render = () => nitroApp.localFetch(url.pathname + url.search, {
       body,
       context: {
@@ -62,7 +63,7 @@ export default {
   },
   scheduled(event: ScheduledController, env: Cloudflare.Env, context: ExecutionContext) {
     if (import.meta._tasks) {
-      globalThis.__env__ = env
+      setCloudflareBindings(env)
       context.waitUntil(
         runCronTasks(event.cron, {
           context: {
