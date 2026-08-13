@@ -1,9 +1,11 @@
 import type { UpstreamCacheStore } from '../server/utils/upstream-cache'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import { readThroughUpstreamCache } from '../server/utils/upstream-cache'
 
 const schema = z.object({ value: z.string() })
+
+afterEach(() => vi.restoreAllMocks())
 
 function createStore() {
   const values = new Map<string, unknown>()
@@ -96,6 +98,31 @@ describe('upstream KV cache', () => {
       options(store, createWaitUntil().waitUntil, 400_000),
       async () => { throw new Error('upstream unavailable') },
     )).rejects.toThrow('upstream unavailable')
+  })
+
+  it('logs stale fallback without exposing the upstream error', async () => {
+    const { store, values } = createStore()
+    const output = vi.spyOn(console, 'log').mockImplementation(() => {})
+    values.set('upstream:v1:test:key', {
+      cachedAt: 1_000,
+      value: { value: 'stale' },
+      version: 1,
+    })
+
+    await readThroughUpstreamCache(
+      options(store, createWaitUntil().waitUntil, 62_000),
+      async () => { throw new Error('secret upstream detail') },
+    )
+
+    const record = JSON.parse(String(output.mock.calls[0]?.[0]))
+    expect(record).toMatchObject({
+      'cache.kind': 'upstream-kv',
+      'cache.name': 'test:data',
+      'cache.operation': 'refresh',
+      'cache.outcome': 'stale-served',
+      'level': 'warn',
+    })
+    expect(JSON.stringify(record)).not.toContain('secret upstream detail')
   })
 
   it('ignores cached values that fail runtime validation', async () => {
