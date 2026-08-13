@@ -65,7 +65,9 @@ const handler = defineOAuthGitHubEventHandler({
     return sendRedirect(event, '/admin')
   },
   onError(event, error) {
-    console.error('[github auth] OAuth error:', error)
+    addWideEventFields(event, {
+      'auth.github.failed': true,
+    })
     return sendRedirect(event, `/admin?error=${encodeURIComponent(error.message || 'auth_failed')}`)
   },
 })
