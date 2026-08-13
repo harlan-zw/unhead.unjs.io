@@ -1,5 +1,7 @@
 /// <reference types="@cloudflare/workers-types" />
 
+import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
+
 export const CLOUDFLARE_RESPONSE_CACHE_NAME = 'unhead:responses:v2'
 
 const CACHE_CREATED_AT_HEADER = 'x-unhead-cache-created-at'
@@ -88,8 +90,8 @@ export async function handleCloudflareResponseCache(options: CloudflareResponseC
   try {
     cachedResponse = await cache.match(cacheKey)
   }
-  catch (error) {
-    logCacheError('match', request, error)
+  catch {
+    logCacheError('match')
     return withCacheStatus(await render(), 'BYPASS')
   }
 
@@ -105,7 +107,7 @@ export async function handleCloudflareResponseCache(options: CloudflareResponseC
     if (age <= rule.maxAge + rule.staleMaxAge) {
       context.waitUntil(
         renderAndStore(cache, cacheKey, render, rule, now)
-          .catch(error => logCacheError('revalidate', request, error)),
+          .catch(() => logCacheError('revalidate')),
       )
       return restoreClientResponse(cachedResponse, 'STALE')
     }
@@ -115,7 +117,7 @@ export async function handleCloudflareResponseCache(options: CloudflareResponseC
   if (isCacheableResponse(response)) {
     context.waitUntil(
       storeResponse(cache, cacheKey, response.clone(), rule, now)
-        .catch(error => logCacheError('put', request, error)),
+        .catch(() => logCacheError('put')),
     )
   }
 
@@ -199,11 +201,12 @@ function withCacheStatus(response: Response, status: 'BYPASS' | 'MISS'): Respons
   })
 }
 
-function logCacheError(operation: string, request: Request, error: unknown) {
-  console.warn(JSON.stringify({
-    message: 'Cloudflare response cache operation failed',
-    operation,
-    path: new URL(request.url).pathname,
-    error: error instanceof Error ? error.message : String(error),
-  }))
+function logCacheError(operation: string) {
+  const event = createWideEvent({
+    'cache.kind': 'response',
+    'cache.operation': operation,
+    'cache.outcome': 'failed',
+  })
+  event.setLevel('warn')
+  event.emit()
 }

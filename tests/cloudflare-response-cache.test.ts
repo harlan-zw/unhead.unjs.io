@@ -1,5 +1,5 @@
 import type { CloudflareResponseCacheRule } from '../server/utils/cloudflare-response-cache'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   getCloudflareResponseCacheRule,
   handleCloudflareResponseCache,
@@ -10,6 +10,8 @@ const rule: CloudflareResponseCacheRule = {
   maxAge: 60,
   staleMaxAge: 300,
 }
+
+afterEach(() => vi.restoreAllMocks())
 
 function mockCache() {
   const entries = new Map<string, Response>()
@@ -128,5 +130,30 @@ describe('cloudflare response cache', () => {
       rule,
     })
     expect(cache.put).not.toHaveBeenCalled()
+  })
+
+  it('logs cache failures without exposing the request or error', async () => {
+    const { cache } = mockCache()
+    const output = vi.spyOn(console, 'log').mockImplementation(() => {})
+    cache.match.mockRejectedValueOnce(new Error('secret cache detail'))
+
+    const response = await handleCloudflareResponseCache({
+      cache,
+      context: mockContext().context,
+      render: async () => new Response('fresh'),
+      request: new Request('https://unhead.unjs.io/docs/private-path'),
+      rule,
+    })
+
+    expect(await response.text()).toBe('fresh')
+    const record = JSON.parse(String(output.mock.calls[0]?.[0]))
+    expect(record).toMatchObject({
+      'cache.kind': 'response',
+      'cache.operation': 'match',
+      'cache.outcome': 'failed',
+      'level': 'warn',
+    })
+    expect(JSON.stringify(record)).not.toContain('private-path')
+    expect(JSON.stringify(record)).not.toContain('secret cache detail')
   })
 })

@@ -2,6 +2,7 @@
 
 import type { H3Event } from 'h3'
 import type { ZodType } from 'zod'
+import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
 import { z } from 'zod'
 
 const CACHE_KEY_PREFIX = 'upstream:v1'
@@ -94,8 +95,8 @@ export async function readThroughUpstreamCache<T>(
       }
     }
   }
-  catch (error) {
-    logUpstreamCacheError('get', options.name, error)
+  catch {
+    logUpstreamCacheError('get', options.name)
   }
 
   try {
@@ -105,11 +106,14 @@ export async function readThroughUpstreamCache<T>(
   }
   catch (error) {
     if (staleValue !== undefined) {
-      console.warn(JSON.stringify({
-        message: 'Serving stale upstream cache after refresh failure',
-        cache: options.name,
-        error: error instanceof Error ? error.message : String(error),
-      }))
+      const event = createWideEvent({
+        'cache.kind': 'upstream-kv',
+        'cache.name': options.name,
+        'cache.operation': 'refresh',
+        'cache.outcome': 'stale-served',
+      })
+      event.setLevel('warn')
+      event.emit()
       return staleValue
     }
     throw error
@@ -140,8 +144,8 @@ function scheduleCacheWrite<T>(
       version: CACHE_ENTRY_VERSION,
     })
   }
-  catch (error) {
-    logUpstreamCacheError('serialize', options.name, error)
+  catch {
+    logUpstreamCacheError('serialize', options.name)
     return
   }
 
@@ -149,7 +153,7 @@ function scheduleCacheWrite<T>(
     options.cacheKey,
     serialized,
     options.maxAge + options.staleMaxAge,
-  ).catch(error => logUpstreamCacheError('put', options.name, error))
+  ).catch(() => logUpstreamCacheError('put', options.name))
 
   options.waitUntil(write)
 }
@@ -198,11 +202,13 @@ function validateCachePolicy(options: Pick<UpstreamCacheOptions<unknown>, 'maxAg
     throw new Error('Upstream cache staleMaxAge must be a non-negative integer')
 }
 
-function logUpstreamCacheError(operation: string, cache: string, error: unknown) {
-  console.warn(JSON.stringify({
-    message: 'Upstream KV cache operation failed',
-    operation,
-    cache,
-    error: error instanceof Error ? error.message : String(error),
-  }))
+function logUpstreamCacheError(operation: string, cache: string) {
+  const event = createWideEvent({
+    'cache.kind': 'upstream-kv',
+    'cache.name': cache,
+    'cache.operation': operation,
+    'cache.outcome': 'failed',
+  })
+  event.setLevel('warn')
+  event.emit()
 }

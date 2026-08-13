@@ -18,6 +18,7 @@ export default defineNuxtConfig({
 
   modules: [
     '@harlan-zw/nuxt-dx',
+    '@harlan-zw/nuxt-wide-events',
     '@harlan-zw/nuxt-github-sponsors',
     '@nuxt/ui',
     '@nuxtjs/seo',
@@ -47,6 +48,21 @@ export default defineNuxtConfig({
       })
     },
   ],
+
+  wideEvents: {
+    request: true,
+    service: 'unhead.unjs.io',
+    fields: [
+      'auth.github.failed',
+      'cache.kind',
+      'cache.name',
+      'cache.operation',
+      'cache.outcome',
+      'toolAnalytics.fetchFailed',
+      'toolTracking.analyticsEngineWriteFailed',
+      'toolTracking.d1WriteFailed',
+    ],
+  },
 
   ui: {
     mdc: true,
