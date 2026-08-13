@@ -52,6 +52,7 @@ watch(selectedFramework, () => {
 })
 
 const { open: openSearch } = useContentSearch()
+const isMounted = useMounted()
 
 onKeyStroke('Divide', () => {
   openSearch.value = true
@@ -133,7 +134,7 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
           </NavigationMenuItem>
         </NavigationMenuList>
 
-        <Teleport to="body">
+        <Teleport v-if="isMounted" to="body">
           <NavigationMenuViewport
             class="fixed top-[60px] left-1/2 -translate-x-1/2 overflow-hidden bg-elevated shadow-xl rounded-md ring-1 ring-[var(--ui-border-accented)] h-(--reka-navigation-menu-viewport-height) w-(--reka-navigation-menu-viewport-width) transition-[width,height] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[100]"
           />

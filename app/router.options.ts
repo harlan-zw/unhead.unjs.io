@@ -1,17 +1,15 @@
 import type { RouterConfig } from '@nuxt/schema'
+import { resolveHashScrollPosition } from './utils/hash-scroll'
 
-function findHashPosition(hash): { el: any, behavior: ScrollBehavior, top: number } {
-  const el = document.querySelector(hash)
-  // vue-router does not incorporate scroll-margin-top on its own.
-  if (el) {
-    const top = Number.parseFloat(getComputedStyle(el).scrollMarginTop)
-
-    return {
-      el: hash,
-      behavior: 'smooth',
-      top,
-    }
-  }
+function findHashPosition(hash: string) {
+  return resolveHashScrollPosition(hash, {
+    getElementById: id => document.getElementById(id),
+    // vue-router does not incorporate scroll-margin-top on its own.
+    getScrollMarginTop: (element) => {
+      const margin = Number.parseFloat(getComputedStyle(element).scrollMarginTop)
+      return Number.isFinite(margin) ? margin : 0
+    },
+  })
 }
 
 // https://router.vuejs.org/api/#routeroptions
