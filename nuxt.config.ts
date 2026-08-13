@@ -9,7 +9,15 @@ const hasSentryAuthToken = Boolean(process.env.SENTRY_AUTH_TOKEN)
 export default defineNuxtConfig({
   extends: ['./layers/admin', './layers/tools'],
 
+  nuxtDx: {
+    report: true,
+    sizeBudget: {
+      overridesKb: { 'server/plugins/sentry.ts': 326 },
+    },
+  },
+
   modules: [
+    '@harlan-zw/nuxt-dx',
     '@harlan-zw/nuxt-wide-events',
     '@harlan-zw/nuxt-github-sponsors',
     '@nuxt/ui',

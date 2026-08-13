@@ -24,6 +24,7 @@
     "@babel/types": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@harlan-zw/nuxt-cloudflare": "catalog:",
+    "@harlan-zw/nuxt-dx": "catalog:",
     "@harlan-zw/nuxt-github-sponsors": "catalog:",
     "@harlan-zw/nuxt-wide-events": "catalog:",
     "@iconify-json/carbon": "catalog:",
