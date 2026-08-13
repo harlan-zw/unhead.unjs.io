@@ -1,0 +1,37 @@
+name: CI
+
+# The pull request gate. Until now this repository had none: lint, typecheck, and
+# test ran only inside deploy-cloudflare.yml, which fires after the merge, so a
+# red branch was discovered by a failed production deploy.
+#
+# The jobs live in harlan-zw/harlan-nuxt so every site shares one pinned copy.
+# Build stays out: it needs this repository's own secrets, which a reusable
+# workflow cannot take, and deploy-cloudflare.yml already builds.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    uses: harlan-zw/harlan-nuxt/.github/workflows/nuxt-site-ci.yml@main
+    with:
+      # GitHub-hosted on purpose. This repository is public, and a self-hosted
+      # runner on a public repository lets a fork pull request run code on the
+      # workstation.
+      runs-on: '["ubuntu-24.04-arm"]'
+      # `postinstall` runs `nuxt prepare`, which typecheck and vitest both
+      # resolve aliases through.
+      install-args: ''
+      # No `test:run` script here; `test` is already `vitest run`.
+      test-command: pnpm test
+      typecheck-node-options: --max-old-space-size=14000
+      timeout-minutes: 30

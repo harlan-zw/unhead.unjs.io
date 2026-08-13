@@ -1,9 +1,15 @@
 name: Deploy to Cloudflare
 
+# Runs only after CI passes on main. Before, this workflow was the first thing to
+# lint, typecheck, or test a commit, which meant a lint failure surfaced part-way
+# into a production deploy. Those steps now live in ci.yml and are gone from here.
+#
+# `repository_dispatch` stays: a docs update in the unhead repository rebuilds
+# this site against a commit CI has already passed.
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
   repository_dispatch:
     types: [docs-update]
   workflow_dispatch:
@@ -12,24 +18,30 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-cloudflare-${{ github.ref }}
-  cancel-in-progress: true
+  group: deploy-cloudflare-${{ github.event.workflow_run.head_branch || github.ref }}
+  # A deploy in flight must finish. Cancelling between the Pages upload and the
+  # D1 content sync below leaves the site live against a half-written database.
+  cancel-in-progress: false
 
 jobs:
   deploy:
+    # `github.sha` is the default branch tip for a `workflow_run` event, not the
+    # commit the run covered, so it cannot be compared against `head_sha` and
+    # cannot be checked out. Use `head_sha` throughout.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 24
-          cache: pnpm
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
-      - run: pnpm install --frozen-lockfile
+      - uses: harlan-zw/harlan-nuxt/.github/actions/setup@main
+        with:
+          install-args: ''
 
       - name: Cache for Nuxt SEO
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -38,15 +50,6 @@ jobs:
           key: nuxt-seo-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'nuxt.config.ts', 'content.config.ts') }}
           restore-keys: |
             nuxt-seo-${{ runner.os }}-
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Test
-        run: pnpm test
 
       - run: pnpm build
         timeout-minutes: 30
