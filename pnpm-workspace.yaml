@@ -1,4 +1,5 @@
 minimumReleaseAgeExclude:
+  - '@harlan-zw/nuxt-dx@0.0.6'
   - '@iconify-json/material-symbols@1.2.86'
   - '@iconify-json/simple-icons@1.2.91'
   - '@nuxtjs/robots@6.1.3'
@@ -69,6 +70,7 @@ catalog:
   '@babel/parser': ^8.0.4
   '@babel/types': ^8.0.4
   '@cloudflare/workers-types': ^5.20260810.1
+  '@harlan-zw/nuxt-dx': 0.0.6
   '@harlan-zw/nuxt-github-sponsors': 0.0.1
   '@harlan-zw/nuxt-wide-events': 0.0.1
   '@iconify-json/carbon': ^1.2.25
