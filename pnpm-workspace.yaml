@@ -24,7 +24,7 @@ minimumReleaseAgeExclude:
   - nuxtseo-shared@5.3.3
   - unhead@3.2.1
   - '@harlan-zw/nuxt-github-sponsors@0.0.1'
-  - '@harlan-zw/nuxt-wide-events@0.0.1'
+  - '@harlan-zw/nuxt-wide-events'
 shamefullyHoist: true
 shellEmulator: true
 trustPolicy: no-downgrade
@@ -70,7 +70,7 @@ catalog:
   '@babel/types': ^8.0.4
   '@cloudflare/workers-types': ^5.20260810.1
   '@harlan-zw/nuxt-github-sponsors': 0.0.1
-  '@harlan-zw/nuxt-wide-events': 0.0.1
+  '@harlan-zw/nuxt-wide-events': 0.0.2
   '@iconify-json/carbon': ^1.2.25
   '@iconify-json/heroicons': ^1.2.3
   '@iconify-json/logos': ^1.2.12
