@@ -2,7 +2,7 @@
 import type { GitHubSponsorsResponse } from '@harlan-zw/nuxt-github-sponsors/server'
 import { onMounted, ref } from 'vue'
 import { stripHeaderAnchorLinks } from '~~/utils/content'
-import { getDocPath } from '~~/utils/urls'
+import { getDocPath, getHomepageDocPath } from '~~/utils/urls'
 import { useStats } from '~/composables/data'
 import { humanNumber } from '~/composables/format'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
@@ -28,10 +28,6 @@ definePageMeta({
 
 const { selectedFramework } = useFrameworkSelector()
 const { isBot } = useBotDetection()
-
-function sharedDocPath(path: string) {
-  return getDocPath(path, { _tag: 'shared', version: 'v3' })
-}
 
 function frameworkDocPath(path: string) {
   return getDocPath(path, {
@@ -168,7 +164,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </p>
 
             <div class="flex mb-5 items-center gap-4 mt-5 md:mt-10  justify-start">
-              <UButton size="lg" :to="sharedDocPath('/head/guides/get-started/overview')" class="font-bold bg-gradient-to-r from-amber-400 to-amber-300 text-inverted hover:text-inverted/80">
+              <UButton size="lg" :to="getHomepageDocPath('get-started')" class="font-bold bg-gradient-to-r from-amber-400 to-amber-300 text-inverted hover:text-inverted/80">
                 Get Started
               </UButton>
               <UButton size="lg" color="neutral" icon="i-carbon-download" variant="ghost" :to="frameworkDocPath('/head/guides/get-started/installation')">
@@ -205,22 +201,22 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </h3>
             <ul class="list-disc list-inside space-y-2 text-toned">
               <li>
-                <NuxtLink :to="sharedDocPath('/head/api/composables/use-head')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
+                <NuxtLink :to="getHomepageDocPath('use-head')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
                   <span class="text-[#6F42C1] dark:text-[#82AAFF]">useHead</span><span class="text-[#24292E] dark:text-[#BABED8]">()</span>
                 </NuxtLink> with type narrowing, deduping, and tag merging
               </li>
               <li>
-                Flat <NuxtLink :to="sharedDocPath('/head/api/composables/use-seo-meta')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
+                Flat <NuxtLink :to="getHomepageDocPath('use-seo-meta')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
                   <span class="text-[#6F42C1] dark:text-[#82AAFF]">useSeoMeta</span><span class="text-[#24292E] dark:text-[#BABED8]">()</span>
                 </NuxtLink> for 100+ meta tags
               </li>
               <li>
-                <NuxtLink :to="sharedDocPath('/head/api/composables/use-script')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
+                <NuxtLink :to="getHomepageDocPath('use-script')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
                   <span class="text-[#6F42C1] dark:text-[#82AAFF]">useScript</span><span class="text-[#24292E] dark:text-[#BABED8]">()</span>
                 </NuxtLink> for performant third party loading
               </li>
               <li>
-                <NuxtLink :to="sharedDocPath('/schema-org/api/composables/use-schema-org')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
+                <NuxtLink :to="getHomepageDocPath('use-schema-org')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
                   <span class="text-[#6F42C1] dark:text-[#82AAFF]">useSchemaOrg</span><span class="text-[#24292E] dark:text-[#BABED8]">()</span>
                 </NuxtLink> for automatic Schema.org graphs
               </li>
@@ -264,7 +260,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
               <li>Vue, React, Solid.js, Svelte, and Angular</li>
               <li>Vite, Webpack, Rollup, and more</li>
               <li>
-                Built in <NuxtLink :to="sharedDocPath('/head/guides/debugging')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
+                Built in <NuxtLink :to="getHomepageDocPath('devtools')" class="underline underline-offset-4 decoration-[var(--ui-text-secondary)] hover:text-highlighted transition-colors">
                   Vite Devtools
                 </NuxtLink> integration
               </li>

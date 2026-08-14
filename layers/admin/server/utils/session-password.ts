@@ -1,7 +1,7 @@
 export const SESSION_PASSWORD_MIN_LENGTH = 32
 
 const SESSION_ENDPOINT = '/api/_auth/session'
-const SESSION_ROUTE_PATTERN = /^\/(?:api\/_auth|auth)(?:\/|$)/
+const SESSION_ROUTE_PATTERN = /^\/(?:api\/(?:_auth|admin)|auth|admin)(?:\/|$)/
 
 type SessionPassword
   = | { _tag: 'ready' }

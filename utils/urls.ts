@@ -10,10 +10,25 @@ export type DocPathTarget
   = | { _tag: 'shared', version: 'v2' | 'v3' }
     | { _tag: 'framework', version: 'v2' | 'v3', framework: DocFramework }
 
+const HomepageDocPaths = {
+  'devtools': '/head/guides/build-plugins/devtools',
+  'get-started': '/head/guides/get-started/overview',
+  'use-head': '/head/api/composables/use-head',
+  'use-schema-org': '/schema-org/api/composables/use-schema-org',
+  'use-script': '/head/api/composables/use-script',
+  'use-seo-meta': '/head/api/composables/use-seo-meta',
+} as const
+
+export type HomepageDoc = keyof typeof HomepageDocPaths
+
 export function getDocPath(path: string, target: DocPathTarget): string {
   const versionPrefix = target.version === 'v2' ? '/docs/v2' : '/docs'
   const frameworkPrefix = target._tag === 'framework' ? `/${target.framework}` : ''
   return `${versionPrefix}${frameworkPrefix}/${path.replace(/^\/+/, '')}`
+}
+
+export function getHomepageDocPath(page: HomepageDoc): string {
+  return getDocPath(HomepageDocPaths[page], { _tag: 'shared', version: 'v3' })
 }
 
 export function getPathWithoutVersion(path: string): string {

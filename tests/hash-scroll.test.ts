@@ -17,14 +17,14 @@ describe('resolveHashScrollPosition', () => {
     expect(getElementById).toHaveBeenCalledWith('4-server-defaults')
   })
 
-  it('decodes an encoded fragment before finding its heading', () => {
+  it('preserves the normalized hash supplied by Vue Router', () => {
     const getElementById = vi.fn(() => undefined)
 
-    resolveHashScrollPosition('#server%20defaults', {
+    resolveHashScrollPosition('#%26', {
       getElementById,
       getScrollMarginTop: () => 0,
     })
 
-    expect(getElementById).toHaveBeenCalledWith('server defaults')
+    expect(getElementById).toHaveBeenCalledWith('%26')
   })
 })

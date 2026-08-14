@@ -19,6 +19,13 @@ describe('resolveSessionGuard', () => {
     expect(resolveSessionGuard('/auth/github', '')._tag).toBe('unavailable')
   })
 
+  it.each([
+    '/admin',
+    '/api/admin/tool-analytics',
+  ])('protects session-consuming admin route %s', (path) => {
+    expect(resolveSessionGuard(path, '')._tag).toBe('unavailable')
+  })
+
   it('passes session requests when the secret meets the encryption minimum', () => {
     expect(resolveSessionGuard('/api/_auth/session', validPassword)).toEqual({ _tag: 'pass' })
   })
