@@ -1,5 +1,7 @@
 /// <reference types="@cloudflare/workers-types" />
 
+import { setCloudflareBindings } from '@harlan-zw/nuxt-cloudflare/bindings'
+import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
 import wsAdapter from 'crossws/adapters/cloudflare'
 import { useNitroApp } from 'nitropack/runtime'
 import { requestHasBody, runCronTasks } from 'nitropack/runtime/internal'
@@ -27,7 +29,7 @@ export default {
     if (requestHasBody(request))
       body = Buffer.from(await request.arrayBuffer())
 
-    globalThis.__env__ = env
+    setCloudflareBindings(env)
     const render = () => nitroApp.localFetch(url.pathname + url.search, {
       body,
       context: {
@@ -51,18 +53,20 @@ export default {
       const cache = await caches.open(CLOUDFLARE_RESPONSE_CACHE_NAME)
       return handleCloudflareResponseCache({ cache, context, render, request, rule })
     }
-    catch (error) {
-      console.warn(JSON.stringify({
-        message: 'Cloudflare response cache unavailable',
-        path: new URL(request.url).pathname,
-        error: error instanceof Error ? error.message : String(error),
-      }))
+    catch {
+      const event = createWideEvent({
+        'cache.kind': 'response',
+        'cache.operation': 'open',
+        'cache.outcome': 'unavailable',
+      })
+      event.setLevel('warn')
+      event.emit()
       return render()
     }
   },
   scheduled(event: ScheduledController, env: Cloudflare.Env, context: ExecutionContext) {
     if (import.meta._tasks) {
-      globalThis.__env__ = env
+      setCloudflareBindings(env)
       context.waitUntil(
         runCronTasks(event.cron, {
           context: {

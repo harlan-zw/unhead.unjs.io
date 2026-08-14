@@ -1,3 +1,4 @@
+import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
 import { z } from 'zod'
 import { getOrCreateAnalyticsSession, trackToolLookup, trackToolUsage } from '~~/server/utils/analytics'
 import { checkFreeToolRateLimit } from '~~/server/utils/rate-limit'
@@ -25,13 +26,19 @@ export default defineEventHandler(async (event) => {
   try {
     trackToolUsage(event, tool, action, { label, error: outcome === 'error' }, sessionId)
   }
-  catch (error) {
-    console.error('Failed to write tool event to Analytics Engine', error)
+  catch {
+    addWideEventFields(event, {
+      'toolTracking.analyticsEngineWriteFailed': true,
+    })
   }
 
   // Track to D1 database (queryable)
-  event.waitUntil(trackToolLookup(event, tool, action, label, sessionId).catch((error) => {
-    console.error('Failed to write tool event to D1', error)
+  event.waitUntil(trackToolLookup(event, tool, action, label, sessionId).catch(() => {
+    const failure = createWideEvent({
+      'toolTracking.d1WriteFailed': true,
+    })
+    failure.setLevel('error')
+    failure.emit()
   }))
 
   return { ok: true }

@@ -58,8 +58,10 @@ export default defineEventHandler(async (event): Promise<ToolAnalyticsSummary> =
       throw new TypeError('Cloudflare API returned an invalid analytics payload')
     response = payload
   }
-  catch (error) {
-    console.error('[tool-analytics] Cloudflare API error', error)
+  catch {
+    addWideEventFields(event, {
+      'toolAnalytics.fetchFailed': true,
+    })
     throw createError({ statusCode: 502, statusMessage: 'Failed to load analytics data' })
   }
 
