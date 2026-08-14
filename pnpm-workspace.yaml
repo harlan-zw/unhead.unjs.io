@@ -26,7 +26,7 @@ minimumReleaseAgeExclude:
   - unhead@3.2.1
   - '@harlan-zw/nuxt-github-sponsors@0.0.1'
   - '@harlan-zw/nuxt-cloudflare'
-  - '@harlan-zw/nuxt-wide-events@0.0.1'
+  - '@harlan-zw/nuxt-wide-events'
 shamefullyHoist: true
 shellEmulator: true
 trustPolicy: no-downgrade
@@ -74,7 +74,7 @@ catalog:
   '@harlan-zw/nuxt-cloudflare': 0.0.12
   '@harlan-zw/nuxt-dx': 0.0.6
   '@harlan-zw/nuxt-github-sponsors': 0.0.1
-  '@harlan-zw/nuxt-wide-events': 0.0.1
+  '@harlan-zw/nuxt-wide-events': 0.0.2
   '@iconify-json/carbon': ^1.2.25
   '@iconify-json/heroicons': ^1.2.3
   '@iconify-json/logos': ^1.2.12

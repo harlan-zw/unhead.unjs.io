@@ -28,8 +28,8 @@ catalogs:
       specifier: 0.0.1
       version: 0.0.1
     '@harlan-zw/nuxt-wide-events':
-      specifier: 0.0.1
-      version: 0.0.1
+      specifier: 0.0.2
+      version: 0.0.2
     '@iconify-json/carbon':
       specifier: ^1.2.25
       version: 1.2.25
@@ -268,7 +268,7 @@ importers:
         version: 0.0.1(@parcel/watcher@2.5.6)(better-sqlite3@13.0.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3))(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(0069293aa6b55a41cdbcab8e5d477ae6))(oxc-parser@0.140.0)(rolldown@1.2.3)(srvx@0.11.22)(supports-color@10.2.2)(unplugin@3.3.0(esbuild@0.27.7)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0))
       '@harlan-zw/nuxt-wide-events':
         specifier: 'catalog:'
-        version: 0.0.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(0069293aa6b55a41cdbcab8e5d477ae6))(oxc-parser@0.140.0)(rolldown@1.2.3)(terser@5.49.2)(tsx@4.23.11)(unplugin@3.3.0(esbuild@0.27.7)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(yaml@2.9.0)
+        version: 0.0.2(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(0069293aa6b55a41cdbcab8e5d477ae6))(oxc-parser@0.140.0)(rolldown@1.2.3)(terser@5.49.2)(tsx@4.23.11)(unplugin@3.3.0(esbuild@0.27.7)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(yaml@2.9.0)
       '@iconify-json/carbon':
         specifier: 'catalog:'
         version: 1.2.25
@@ -1362,8 +1362,8 @@ packages:
     peerDependencies:
       nuxt: '>=4.5.0 <5.0.0'
 
-  '@harlan-zw/nuxt-wide-events@0.0.1':
-    resolution: {integrity: sha512-v4aZ1wLvLBkgDonskRTmGfsgbWyn//QanyMazOhak3tgQDXfuF8DjcFwEAH2ndVTmM9uekIMNUIvjYaa82SUSQ==}
+  '@harlan-zw/nuxt-wide-events@0.0.2':
+    resolution: {integrity: sha512-YsNcjuydZC6zBwk7S+HFyuMqJntR6M6+nz5pF4Of3mT8u61OTG3cwsTR4x0/vd1rGdeY/bSZ7L8uTSzCOahAyQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       nuxt: '>=4.5.0 <5.0.0'
@@ -10496,7 +10496,7 @@ snapshots:
       - webpack
       - xml2js
 
-  '@harlan-zw/nuxt-wide-events@0.0.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(0069293aa6b55a41cdbcab8e5d477ae6))(oxc-parser@0.140.0)(rolldown@1.2.3)(terser@5.49.2)(tsx@4.23.11)(unplugin@3.3.0(esbuild@0.27.7)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(yaml@2.9.0)':
+  '@harlan-zw/nuxt-wide-events@0.0.2(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(magic-string@1.1.0)(magicast@0.5.4)(nuxt@4.5.2(0069293aa6b55a41cdbcab8e5d477ae6))(oxc-parser@0.140.0)(rolldown@1.2.3)(terser@5.49.2)(tsx@4.23.11)(unplugin@3.3.0(esbuild@0.27.7)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))(yaml@2.9.0)':
     dependencies:
       '@nuxt/kit': 4.5.2(magic-string@1.1.0)(magicast@0.5.4)(oxc-parser@0.140.0)(rolldown@1.2.3)(unplugin@3.3.0(esbuild@0.27.7)(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0)))
       nuxt: 4.5.2(0069293aa6b55a41cdbcab8e5d477ae6)
