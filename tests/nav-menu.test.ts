@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getDocPath } from '../utils/urls'
+import { getDocPath, getHomepageDocPath } from '../utils/urls'
 
 describe('getDocPath', () => {
   it('links shared docs through their framework-neutral canonical path', () => {
@@ -22,5 +22,9 @@ describe('getDocPath', () => {
       _tag: 'shared',
       version: 'v2',
     })).toBe('/docs/v2/head/guides/get-started/overview')
+  })
+
+  it('links the homepage Devtools item to its current guide', () => {
+    expect(getHomepageDocPath('devtools')).toBe('/docs/head/guides/build-plugins/devtools')
   })
 })

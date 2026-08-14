@@ -1,0 +1,14 @@
+diff --git a/dist/runtime/components/MDCRenderer.vue b/dist/runtime/components/MDCRenderer.vue
+index 822057f..b01c8df 100644
+--- a/dist/runtime/components/MDCRenderer.vue
++++ b/dist/runtime/components/MDCRenderer.vue
+@@ -384,7 +384,8 @@ function findMappedTag(node, tags) {
+   if (!tag || typeof node.props?.__ignoreMap !== "undefined") {
+     return tag;
+   }
+-  return tags[tag] || tags[pascalCase(tag)] || tags[kebabCase(node.tag)] || tag;
++  const componentTags = tags ?? {};
++  return componentTags[tag] || componentTags[pascalCase(tag)] || componentTags[kebabCase(node.tag)] || tag;
+ }
+ function ignoreTag(tag) {
+   const isCustomEl = typeof tag === "string" ? customElements.has(tag) : false;
