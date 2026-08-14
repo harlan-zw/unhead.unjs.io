@@ -11,7 +11,13 @@ type SessionPassword
 export type SessionGuard
   = | { _tag: 'pass' }
     | { _tag: 'emptySession', message: string }
+    | { _tag: 'clearSession' }
     | { _tag: 'unavailable', message: string }
+
+export interface SessionRequest {
+  method: string
+  path: string
+}
 
 function parseSessionPassword(value: unknown): SessionPassword {
   if (typeof value !== 'string' || value.length === 0)
@@ -28,8 +34,8 @@ function failureMessage(password: Exclude<SessionPassword, { _tag: 'ready' }>): 
   return `Sessions are unavailable. ${cause}`
 }
 
-export function resolveSessionGuard(path: string, rawPassword: unknown): SessionGuard {
-  const pathname = path.split('?')[0] || '/'
+export function resolveSessionGuard(request: SessionRequest, rawPassword: unknown): SessionGuard {
+  const pathname = request.path.split('?')[0] || '/'
   if (!SESSION_ROUTE_PATTERN.test(pathname))
     return { _tag: 'pass' }
 
@@ -38,7 +44,10 @@ export function resolveSessionGuard(path: string, rawPassword: unknown): Session
     return { _tag: 'pass' }
 
   const message = failureMessage(password)
-  if (pathname === SESSION_ENDPOINT)
+  if (pathname === SESSION_ENDPOINT) {
+    if (request.method === 'DELETE')
+      return { _tag: 'clearSession' }
     return { _tag: 'emptySession', message }
+  }
   return { _tag: 'unavailable', message }
 }
