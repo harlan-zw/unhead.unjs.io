@@ -25,6 +25,7 @@ minimumReleaseAgeExclude:
   - nuxtseo-shared@5.3.3
   - unhead@3.2.1
   - '@harlan-zw/nuxt-github-sponsors@0.0.1'
+  - '@harlan-zw/nuxt-cloudflare'
   - '@harlan-zw/nuxt-wide-events@0.0.1'
 shamefullyHoist: true
 shellEmulator: true
@@ -70,6 +71,7 @@ catalog:
   '@babel/parser': ^8.0.4
   '@babel/types': ^8.0.4
   '@cloudflare/workers-types': ^5.20260810.1
+  '@harlan-zw/nuxt-cloudflare': 0.0.12
   '@harlan-zw/nuxt-dx': 0.0.6
   '@harlan-zw/nuxt-github-sponsors': 0.0.1
   '@harlan-zw/nuxt-wide-events': 0.0.1
