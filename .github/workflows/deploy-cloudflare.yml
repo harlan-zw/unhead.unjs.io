@@ -61,13 +61,30 @@ jobs:
           NUXT_GITHUB_SPONSORS_TOKEN: ${{ secrets.NUXT_GITHUB_AUTH_TOKEN }}
           NUXT_SEO_PRO_KEY: ${{ secrets.NUXT_SEO_PRO_KEY }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          # `GITHUB_SHA` is the default branch tip on a `workflow_run` event, so
+          # the release tag named a commit this build does not contain. Sentry
+          # then blamed live errors on code that was never deployed.
+          SENTRY_RELEASE: ${{ github.event.workflow_run.head_sha || github.sha }}
           UNHEAD_DOCS_SOURCE: remote
 
+      # `--branch` is required. Wrangler otherwise reads the branch from git, and
+      # the checkout above is by SHA, which leaves a detached HEAD. Wrangler read
+      # that as the branch `head` and uploaded every build as a preview.
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: pnpm exec wrangler pages deploy dist --project-name=unhead-unjs-io
+        run: >-
+          pnpm exec wrangler pages deploy dist
+          --project-name=unhead-unjs-io
+          --branch=main
+          --commit-hash=${{ github.event.workflow_run.head_sha || github.sha }}
+
+      # A green upload is not a deploy. Read the build manifest back from the
+      # production hostname so a preview upload fails the job instead of leaving
+      # merged fixes unreachable.
+      - name: Verify production serves this build
+        run: node scripts/verify-production-deploy.mjs --url https://unhead.unjs.io --max-age-minutes 30
 
       # Nuxt Content's lazy D1 import can exceed the request lifetime and leave
       # checksum rows at ready=false. Resume generated dumps after deploy, then

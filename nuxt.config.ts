@@ -1,10 +1,12 @@
 import { existsSync } from 'node:fs'
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
-import { SENTRY_DSN, sentryRelease } from './shared/sentry'
+import { SENTRY_DSN, sentryBuildTarget } from './shared/sentry'
 
 const hasSentryAuthToken = Boolean(process.env.SENTRY_AUTH_TOKEN)
   || existsSync('.env.sentry-build-plugin')
+
+const sentryTarget = sentryBuildTarget()
 
 export default defineNuxtConfig({
   extends: ['./layers/admin', './layers/tools'],
@@ -153,9 +155,9 @@ export default defineNuxtConfig({
     cloudflareAnalyticsApiToken: '', // NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN
     sentry: {
       dsn: SENTRY_DSN,
-      enabled: process.env.NODE_ENV === 'production',
-      environment: 'production',
-      release: sentryRelease() ?? '',
+      enabled: sentryTarget._tag === 'enabled',
+      environment: sentryTarget._tag === 'enabled' ? sentryTarget.environment : 'development',
+      release: sentryTarget._tag === 'enabled' ? sentryTarget.release : '',
       tracesSampleRate: 0.05,
     },
   },
@@ -430,7 +432,7 @@ export default defineNuxtConfig({
     org: 'harlan-zw',
     project: 'unhead',
     authToken: process.env.SENTRY_AUTH_TOKEN,
-    release: { name: sentryRelease() },
+    release: { name: sentryTarget._tag === 'enabled' ? sentryTarget.release : undefined },
     sourcemaps: {
       disable: !hasSentryAuthToken,
       filesToDeleteAfterUpload: ['**/*.map'],
