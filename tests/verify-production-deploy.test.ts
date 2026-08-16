@@ -1,18 +1,23 @@
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   evaluateProductionBuild,
-  parseBuildTimestamp,
+  parseBuildManifest,
   parseVerifyArgs,
   pollProductionBuild,
+  readLocalBuildManifest,
 } from '../scripts/verify-production-deploy.mjs'
 
 const now = Date.parse('2026-08-16T02:00:00Z')
 const maxAgeMs = 30 * 60 * 1000
 
 describe('evaluateProductionBuild', () => {
-  it('accepts a build published moments ago', () => {
+  it('accepts the build this job uploaded, served moments ago', () => {
     const result = evaluateProductionBuild({
-      buildTimestamp: now - 60_000,
+      served: { id: 'this-deploy', timestamp: now - 60_000 },
+      expected: { id: 'this-deploy' },
       now,
       maxAgeMs,
     })
@@ -22,40 +27,98 @@ describe('evaluateProductionBuild', () => {
   it('rejects the build production kept while the deploy went to a preview branch', () => {
     // unhead.unjs.io served the 2026-08-11 build for five days of green deploys.
     const result = evaluateProductionBuild({
-      buildTimestamp: Date.parse('2026-08-11T05:28:25Z'),
+      served: { id: '2026-08-11-build', timestamp: Date.parse('2026-08-11T05:28:25Z') },
+      expected: { id: 'this-deploy' },
       now,
       maxAgeMs,
     })
-    expect(result).toEqual({ _tag: 'stale', ageMs: now - Date.parse('2026-08-11T05:28:25Z') })
+    expect(result).toEqual({ _tag: 'mismatch', expectedId: 'this-deploy', servedId: '2026-08-11-build' })
+  })
+
+  it('rejects another fresh build when this build is not the one being served', () => {
+    // A previous deploy landing within the freshness window must not make a
+    // preview upload of THIS build pass. Freshness alone cannot prove this
+    // deploy reached production; only the build id can.
+    const result = evaluateProductionBuild({
+      served: { id: 'older-fresh-deploy', timestamp: now - 60_000 },
+      expected: { id: 'this-deploy' },
+      now,
+      maxAgeMs,
+    })
+    expect(result).toEqual({ _tag: 'mismatch', expectedId: 'this-deploy', servedId: 'older-fresh-deploy' })
+  })
+
+  it('falls back to the freshness window when no build identity is available', () => {
+    expect(evaluateProductionBuild({
+      served: { timestamp: now - 60_000 },
+      expected: null,
+      now,
+      maxAgeMs,
+    })).toEqual({ _tag: 'fresh', ageMs: 60_000 })
   })
 
   it('rejects a build manifest with no usable timestamp', () => {
-    expect(evaluateProductionBuild({ buildTimestamp: Number.NaN, now, maxAgeMs })).toEqual({
-      _tag: 'unreadable',
-    })
+    expect(evaluateProductionBuild({
+      served: { id: 'this-deploy', timestamp: Number.NaN },
+      expected: { id: 'this-deploy' },
+      now,
+      maxAgeMs,
+    })).toEqual({ _tag: 'unreadable' })
   })
 })
 
-describe('parseBuildTimestamp', () => {
-  it('reads the timestamp Nuxt writes into the build manifest', () => {
-    expect(parseBuildTimestamp({ id: 'b5b5b643', timestamp: 1786426105375 })).toBe(1786426105375)
+describe('parseBuildManifest', () => {
+  it('reads the id and timestamp Nuxt writes into the build manifest', () => {
+    expect(parseBuildManifest({ id: 'b5b5b643', timestamp: 1786426105375 })).toEqual({
+      id: 'b5b5b643',
+      timestamp: 1786426105375,
+    })
   })
 
-  it.each([null, undefined, {}, { timestamp: 'yesterday' }])('returns NaN for %s', (manifest) => {
-    expect(parseBuildTimestamp(manifest)).toBeNaN()
+  it.each([null, undefined, {}, { timestamp: 'yesterday' }])('returns an unreadable timestamp for %s', (manifest) => {
+    const parsed = parseBuildManifest(manifest)
+    expect(parsed.id).toBeUndefined()
+    expect(parsed.timestamp).toBeNaN()
+  })
+})
+
+describe('readLocalBuildManifest', () => {
+  it('reads the manifest produced by this build', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'verify-deploy-'))
+    await mkdir(join(dir, '_nuxt', 'builds'), { recursive: true })
+    await writeFile(join(dir, '_nuxt', 'builds', 'latest.json'), JSON.stringify({ id: 'this-deploy', timestamp: now - 60_000 }))
+    expect(await readLocalBuildManifest(dir)).toEqual({ id: 'this-deploy', timestamp: now - 60_000 })
+    await rm(dir, { recursive: true, force: true })
+  })
+
+  it('returns null when the local manifest is missing', async () => {
+    expect(await readLocalBuildManifest(join(tmpdir(), 'does-not-exist'))).toBeNull()
+  })
+
+  it('returns null for a corrupt local manifest', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'verify-deploy-'))
+    await writeFile(join(dir, 'latest.json'), 'not json')
+    expect(await readLocalBuildManifest(dir)).toBeNull()
+    await rm(dir, { recursive: true, force: true })
   })
 })
 
 describe('pollProductionBuild', () => {
   it('retries a transient fetch failure and accepts the build once reachable', async () => {
-    const responses = [new Error('502 from the edge'), now - 60_000]
+    const responses = [new Error('502 from the edge'), { id: 'this-deploy', timestamp: now - 60_000 }]
     const fetcher = async () => {
       const next = responses.shift()
       if (next instanceof Error)
         throw next
       return next
     }
-    const result = await pollProductionBuild(fetcher, { maxAgeMs, attempts: 3, delayMs: 0, now: () => now })
+    const result = await pollProductionBuild(fetcher, {
+      maxAgeMs,
+      expectedId: 'this-deploy',
+      attempts: 3,
+      delayMs: 0,
+      now: () => now,
+    })
     expect(result).toEqual({ _tag: 'fresh', ageMs: 60_000 })
   })
 
@@ -69,9 +132,46 @@ describe('pollProductionBuild', () => {
 
   it('keeps polling while the served build stays stale', async () => {
     const timestamps = [Date.parse('2026-08-11T05:28:25Z'), now - 60_000]
-    const fetcher = async () => timestamps.shift() ?? now
-    const result = await pollProductionBuild(fetcher, { maxAgeMs, attempts: 3, delayMs: 0, now: () => now })
+    const fetcher = async () => {
+      const next = timestamps.shift() ?? now
+      return { id: 'this-deploy', timestamp: next }
+    }
+    const result = await pollProductionBuild(fetcher, {
+      maxAgeMs,
+      expectedId: 'this-deploy',
+      attempts: 3,
+      delayMs: 0,
+      now: () => now,
+    })
     expect(result).toEqual({ _tag: 'fresh', ageMs: 60_000 })
+  })
+
+  it('accepts the build once propagation switches the manifest to it', async () => {
+    const servedBuilds = [
+      { id: 'previous-deploy', timestamp: now - 60_000 },
+      { id: 'this-deploy', timestamp: now - 60_000 },
+    ]
+    const fetcher = async () => servedBuilds.shift() ?? { id: 'this-deploy', timestamp: now - 60_000 }
+    const result = await pollProductionBuild(fetcher, {
+      maxAgeMs,
+      expectedId: 'this-deploy',
+      attempts: 3,
+      delayMs: 0,
+      now: () => now,
+    })
+    expect(result).toEqual({ _tag: 'fresh', ageMs: 60_000 })
+  })
+
+  it('fails the deploy when production keeps serving a different build', async () => {
+    const fetcher = async () => ({ id: 'older-fresh-deploy', timestamp: now - 60_000 })
+    const result = await pollProductionBuild(fetcher, {
+      maxAgeMs,
+      expectedId: 'this-deploy',
+      attempts: 3,
+      delayMs: 0,
+      now: () => now,
+    })
+    expect(result).toEqual({ _tag: 'mismatch', expectedId: 'this-deploy', servedId: 'older-fresh-deploy' })
   })
 })
 
