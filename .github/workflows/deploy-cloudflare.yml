@@ -18,7 +18,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-cloudflare-${{ github.event.workflow_run.head_branch || github.ref }}
+  # Every trigger that reaches the deploy writes to the same Pages production
+  # branch, so they must share one group or a dispatch and a CI deploy race onto
+  # it. `cancel-in-progress: false` keeps an in-flight deploy intact; the next
+  # run waits.
+  group: deploy-cloudflare-${{ github.event.workflow_run.head_branch || github.ref_name }}
   # A deploy in flight must finish. Cancelling between the Pages upload and the
   # D1 content sync below leaves the site live against a half-written database.
   cancel-in-progress: false
@@ -28,10 +32,17 @@ jobs:
     # `github.sha` is the default branch tip for a `workflow_run` event, not the
     # commit the run covered, so it cannot be compared against `head_sha` and
     # cannot be checked out. Use `head_sha` throughout.
+    #
+    # The deploy now targets the Pages production branch directly (`--branch=main`
+    # below), so every trigger must prove the commit it builds is main. A manual
+    # dispatch on a feature branch would otherwise push that branch's build to
+    # production and the verify step would bless it.
     if: >-
-      github.event_name != 'workflow_run' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main')
+      (github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main') ||
+      github.event_name == 'repository_dispatch' ||
+      (github.event_name == 'workflow_dispatch' && github.ref_name == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
