@@ -56,11 +56,18 @@ export function evaluateProductionBuild({ served, expected = null, now, maxAgeMs
   if (!Number.isFinite(served?.timestamp))
     return { _tag: 'unreadable' }
 
-  // The build id is what proves THIS upload is live. Freshness alone cannot:
-  // a previous deploy inside the freshness window would mask a preview upload
-  // of this build, which is the exact failure this check exists to catch.
-  if (expected?.id && served?.id !== expected.id)
-    return { _tag: 'mismatch', expectedId: expected.id, servedId: served.id }
+  // The build id is what proves THIS upload is live. A build id is unique to a
+  // build, so a served manifest whose id matches the expected one IS this
+  // deploy. The manifest timestamp is the build start time, and the deploy job
+  // allows a thirty-minute build, so an id match must not be gated on the
+  // freshness window or a slow build fails a healthy deploy. The window only
+  // applies to the no-id fallback, where it is the sole signal but cannot by
+  // itself tell a preview upload from a production deploy.
+  if (expected?.id) {
+    if (served?.id !== expected.id)
+      return { _tag: 'mismatch', expectedId: expected.id, servedId: served.id }
+    return { _tag: 'fresh', ageMs: now - served.timestamp }
+  }
 
   const ageMs = now - served.timestamp
   if (ageMs > maxAgeMs)
@@ -116,12 +123,23 @@ export async function pollProductionBuild(fetcher, {
   return result
 }
 
-async function verify() {
-  const { url, maxAgeMs } = parseVerifyArgs(process.argv.slice(2))
-  const localManifest = await readLocalBuildManifest()
-  const result = await pollProductionBuild(() => fetchBuildManifest(url), {
+export async function verifyProductionBuild({
+  argv = process.argv.slice(2),
+  readLocal = readLocalBuildManifest,
+  poll = pollProductionBuild,
+  fetchManifest = fetchBuildManifest,
+} = {}) {
+  const { url, maxAgeMs } = parseVerifyArgs(argv)
+  const localManifest = await readLocal()
+  if (!localManifest?.id) {
+    throw new Error(
+      'The local build manifest has no build id, so this run cannot prove its upload reached production. '
+      + 'A freshness-only check is exactly the check that let preview uploads pass as deploys.',
+    )
+  }
+  const result = await poll(() => fetchManifest(url), {
     maxAgeMs,
-    expectedId: localManifest?.id,
+    expectedId: localManifest.id,
   })
 
   if (result._tag === 'fresh') {
@@ -145,7 +163,7 @@ async function verify() {
 
 async function main() {
   try {
-    await verify()
+    await verifyProductionBuild()
     return 0
   }
   catch (error) {

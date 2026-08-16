@@ -8,6 +8,7 @@ import {
   parseVerifyArgs,
   pollProductionBuild,
   readLocalBuildManifest,
+  verifyProductionBuild,
 } from '../scripts/verify-production-deploy.mjs'
 
 const now = Date.parse('2026-08-16T02:00:00Z')
@@ -22,6 +23,19 @@ describe('evaluateProductionBuild', () => {
       maxAgeMs,
     })
     expect(result).toEqual({ _tag: 'fresh', ageMs: 60_000 })
+  })
+
+  it('accepts an id match even when the build took longer than the freshness window', () => {
+    // The manifest timestamp is the build start time, and the deploy job allows
+    // a thirty-minute build. A matching id already proves THIS upload is live;
+    // gating it on the freshness window fails a healthy deploy on a slow build.
+    const result = evaluateProductionBuild({
+      served: { id: 'this-deploy', timestamp: now - 31 * 60 * 1000 },
+      expected: { id: 'this-deploy' },
+      now,
+      maxAgeMs,
+    })
+    expect(result).toEqual({ _tag: 'fresh', ageMs: 31 * 60 * 1000 })
   })
 
   it('rejects the build production kept while the deploy went to a preview branch', () => {
@@ -55,6 +69,15 @@ describe('evaluateProductionBuild', () => {
       now,
       maxAgeMs,
     })).toEqual({ _tag: 'fresh', ageMs: 60_000 })
+  })
+
+  it('still applies the freshness window when there is no expected id', () => {
+    expect(evaluateProductionBuild({
+      served: { timestamp: now - 31 * 60 * 1000 },
+      expected: null,
+      now,
+      maxAgeMs,
+    })).toEqual({ _tag: 'stale', ageMs: 31 * 60 * 1000 })
   })
 
   it('rejects a build manifest with no usable timestamp', () => {
@@ -130,15 +153,14 @@ describe('pollProductionBuild', () => {
     expect(result).toEqual({ _tag: 'unreadable' })
   })
 
-  it('keeps polling while the served build stays stale', async () => {
+  it('keeps polling while the served build stays stale in the no-id fallback', async () => {
     const timestamps = [Date.parse('2026-08-11T05:28:25Z'), now - 60_000]
     const fetcher = async () => {
       const next = timestamps.shift() ?? now
-      return { id: 'this-deploy', timestamp: next }
+      return { timestamp: next }
     }
     const result = await pollProductionBuild(fetcher, {
       maxAgeMs,
-      expectedId: 'this-deploy',
       attempts: 3,
       delayMs: 0,
       now: () => now,
@@ -172,6 +194,36 @@ describe('pollProductionBuild', () => {
       now: () => now,
     })
     expect(result).toEqual({ _tag: 'mismatch', expectedId: 'this-deploy', servedId: 'older-fresh-deploy' })
+  })
+})
+
+describe('verifyProductionBuild', () => {
+  it('refuses to run the deploy check when the local build id is unavailable', async () => {
+    // A missing local manifest must fail the job, not fall back to a
+    // freshness-only check that cannot tell a preview upload from a deploy.
+    await expect(verifyProductionBuild({
+      argv: ['--url', 'https://unhead.unjs.io'],
+      readLocal: async () => null,
+      poll: async () => {
+        throw new Error('must not poll without a build id')
+      },
+    })).rejects.toThrow('no build id')
+  })
+
+  it('passes a deploy that production is serving', async () => {
+    await expect(verifyProductionBuild({
+      argv: ['--url', 'https://unhead.unjs.io'],
+      readLocal: async () => ({ id: 'this-deploy', timestamp: now - 60_000 }),
+      poll: async () => ({ _tag: 'fresh', ageMs: 60_000 }),
+    })).resolves.toBeUndefined()
+  })
+
+  it('fails when production keeps serving a different build', async () => {
+    await expect(verifyProductionBuild({
+      argv: ['--url', 'https://unhead.unjs.io'],
+      readLocal: async () => ({ id: 'this-deploy', timestamp: now - 60_000 }),
+      poll: async () => ({ _tag: 'mismatch', expectedId: 'this-deploy', servedId: 'older-deploy' }),
+    })).rejects.toThrow('somewhere other than the production branch')
   })
 })
 
