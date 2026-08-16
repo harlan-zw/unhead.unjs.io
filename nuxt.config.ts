@@ -1,10 +1,12 @@
 import { existsSync } from 'node:fs'
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
-import { SENTRY_DSN, sentryRelease } from './shared/sentry'
+import { SENTRY_DSN, sentryBuildTarget } from './shared/sentry'
 
 const hasSentryAuthToken = Boolean(process.env.SENTRY_AUTH_TOKEN)
   || existsSync('.env.sentry-build-plugin')
+
+const sentryTarget = sentryBuildTarget()
 
 export default defineNuxtConfig({
   extends: ['./layers/admin', './layers/tools'],
@@ -153,9 +155,9 @@ export default defineNuxtConfig({
     cloudflareAnalyticsApiToken: '', // NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN
     sentry: {
       dsn: SENTRY_DSN,
-      enabled: process.env.NODE_ENV === 'production',
-      environment: 'production',
-      release: sentryRelease() ?? '',
+      enabled: sentryTarget._tag === 'enabled',
+      environment: sentryTarget._tag === 'enabled' ? sentryTarget.environment : 'development',
+      release: sentryTarget._tag === 'enabled' ? sentryTarget.release : '',
       tracesSampleRate: 0.05,
     },
   },
@@ -426,11 +428,15 @@ export default defineNuxtConfig({
   },
 
   sentry: {
-    enabled: process.env.NODE_ENV === 'production',
+    // `wrangler dev` and `nuxt preview` build with NODE_ENV=production too, so a
+    // release identity is what separates a deploy from a local sandbox. Without
+    // it the module must not inject the client entry, or a review sandbox's
+    // browser errors report against the production project.
+    enabled: sentryTarget._tag === 'enabled',
     org: 'harlan-zw',
     project: 'unhead',
     authToken: process.env.SENTRY_AUTH_TOKEN,
-    release: { name: sentryRelease() },
+    release: { name: sentryTarget._tag === 'enabled' ? sentryTarget.release : undefined },
     sourcemaps: {
       disable: !hasSentryAuthToken,
       filesToDeleteAfterUpload: ['**/*.map'],

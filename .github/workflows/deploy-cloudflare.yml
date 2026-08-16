@@ -18,7 +18,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-cloudflare-${{ github.event.workflow_run.head_branch || github.ref }}
+  # Every trigger that reaches the deploy writes to the same Pages production
+  # branch, so they must share one group or a dispatch and a CI deploy race onto
+  # it. `cancel-in-progress: false` keeps an in-flight deploy intact; the next
+  # run waits.
+  group: deploy-cloudflare-${{ github.event.workflow_run.head_branch || github.ref_name }}
   # A deploy in flight must finish. Cancelling between the Pages upload and the
   # D1 content sync below leaves the site live against a half-written database.
   cancel-in-progress: false
@@ -28,10 +32,17 @@ jobs:
     # `github.sha` is the default branch tip for a `workflow_run` event, not the
     # commit the run covered, so it cannot be compared against `head_sha` and
     # cannot be checked out. Use `head_sha` throughout.
+    #
+    # The deploy now targets the Pages production branch directly (`--branch=main`
+    # below), so every trigger must prove the commit it builds is main. A manual
+    # dispatch on a feature branch would otherwise push that branch's build to
+    # production and the verify step would bless it.
     if: >-
-      github.event_name != 'workflow_run' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main')
+      (github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main') ||
+      github.event_name == 'repository_dispatch' ||
+      (github.event_name == 'workflow_dispatch' && github.ref_name == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -61,13 +72,30 @@ jobs:
           NUXT_GITHUB_SPONSORS_TOKEN: ${{ secrets.NUXT_GITHUB_AUTH_TOKEN }}
           NUXT_SEO_PRO_KEY: ${{ secrets.NUXT_SEO_PRO_KEY }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          # `GITHUB_SHA` is the default branch tip on a `workflow_run` event, so
+          # the release tag named a commit this build does not contain. Sentry
+          # then blamed live errors on code that was never deployed.
+          SENTRY_RELEASE: ${{ github.event.workflow_run.head_sha || github.sha }}
           UNHEAD_DOCS_SOURCE: remote
 
+      # `--branch` is required. Wrangler otherwise reads the branch from git, and
+      # the checkout above is by SHA, which leaves a detached HEAD. Wrangler read
+      # that as the branch `head` and uploaded every build as a preview.
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: pnpm exec wrangler pages deploy dist --project-name=unhead-unjs-io
+        run: >-
+          pnpm exec wrangler pages deploy dist
+          --project-name=unhead-unjs-io
+          --branch=main
+          --commit-hash=${{ github.event.workflow_run.head_sha || github.sha }}
+
+      # A green upload is not a deploy. Read the build manifest back from the
+      # production hostname so a preview upload fails the job instead of leaving
+      # merged fixes unreachable.
+      - name: Verify production serves this build
+        run: node scripts/verify-production-deploy.mjs --url https://unhead.unjs.io --max-age-minutes 30
 
       # Nuxt Content's lazy D1 import can exceed the request lifetime and leave
       # checksum rows at ready=false. Resume generated dumps after deploy, then
