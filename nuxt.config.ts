@@ -428,7 +428,11 @@ export default defineNuxtConfig({
   },
 
   sentry: {
-    enabled: process.env.NODE_ENV === 'production',
+    // `wrangler dev` and `nuxt preview` build with NODE_ENV=production too, so a
+    // release identity is what separates a deploy from a local sandbox. Without
+    // it the module must not inject the client entry, or a review sandbox's
+    // browser errors report against the production project.
+    enabled: sentryTarget._tag === 'enabled',
     org: 'harlan-zw',
     project: 'unhead',
     authToken: process.env.SENTRY_AUTH_TOKEN,

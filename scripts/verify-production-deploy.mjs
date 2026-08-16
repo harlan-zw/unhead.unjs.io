@@ -58,21 +58,47 @@ async function fetchBuildTimestamp(url) {
   return parseBuildTimestamp(await response.json())
 }
 
-async function verify() {
-  const { url, maxAgeMs } = parseVerifyArgs(process.argv.slice(2))
+// Poll until the production hostname serves a fresh build. A transient fetch
+// failure is retryable too: an edge 5xx during propagation should not fail a
+// deploy that is on its way up. Only running out of attempts is a failure.
+export async function pollProductionBuild(fetcher, {
+  maxAgeMs,
+  attempts = POLL_ATTEMPTS,
+  delayMs = POLL_DELAY_MS,
+  now = Date.now,
+}) {
   let result = { _tag: 'unreadable' }
 
-  for (let attempt = 1; attempt <= POLL_ATTEMPTS; attempt += 1) {
-    const buildTimestamp = await fetchBuildTimestamp(url)
-    result = evaluateProductionBuild({ buildTimestamp, now: Date.now(), maxAgeMs })
-    if (result._tag === 'fresh') {
-      console.log(`[verify-deploy] ${url} serves a build from ${minutes(result.ageMs)} minute(s) ago.`)
-      return
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    let buildTimestamp
+    try {
+      buildTimestamp = await fetcher()
     }
-    if (attempt < POLL_ATTEMPTS)
-      await new Promise(resolve => setTimeout(resolve, POLL_DELAY_MS))
+    catch (error) {
+      console.warn(`[verify-deploy] attempt ${attempt}: ${error instanceof Error ? error.message : String(error)}`)
+    }
+
+    if (buildTimestamp !== undefined) {
+      result = evaluateProductionBuild({ buildTimestamp, now: now(), maxAgeMs })
+      if (result._tag === 'fresh')
+        return result
+    }
+
+    if (attempt < attempts)
+      await new Promise(resolve => setTimeout(resolve, delayMs))
   }
 
+  return result
+}
+
+async function verify() {
+  const { url, maxAgeMs } = parseVerifyArgs(process.argv.slice(2))
+  const result = await pollProductionBuild(() => fetchBuildTimestamp(url), { maxAgeMs })
+
+  if (result._tag === 'fresh') {
+    console.log(`[verify-deploy] ${url} serves a build from ${minutes(result.ageMs)} minute(s) ago.`)
+    return
+  }
   if (result._tag === 'unreadable')
     throw new Error(`${url} did not return a readable build manifest.`)
 

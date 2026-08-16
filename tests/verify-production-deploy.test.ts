@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { evaluateProductionBuild, parseBuildTimestamp, parseVerifyArgs } from '../scripts/verify-production-deploy.mjs'
+import {
+  evaluateProductionBuild,
+  parseBuildTimestamp,
+  parseVerifyArgs,
+  pollProductionBuild,
+} from '../scripts/verify-production-deploy.mjs'
 
 const now = Date.parse('2026-08-16T02:00:00Z')
 const maxAgeMs = 30 * 60 * 1000
@@ -38,6 +43,35 @@ describe('parseBuildTimestamp', () => {
 
   it.each([null, undefined, {}, { timestamp: 'yesterday' }])('returns NaN for %s', (manifest) => {
     expect(parseBuildTimestamp(manifest)).toBeNaN()
+  })
+})
+
+describe('pollProductionBuild', () => {
+  it('retries a transient fetch failure and accepts the build once reachable', async () => {
+    const responses = [new Error('502 from the edge'), now - 60_000]
+    const fetcher = async () => {
+      const next = responses.shift()
+      if (next instanceof Error)
+        throw next
+      return next
+    }
+    const result = await pollProductionBuild(fetcher, { maxAgeMs, attempts: 3, delayMs: 0, now: () => now })
+    expect(result).toEqual({ _tag: 'fresh', ageMs: 60_000 })
+  })
+
+  it('reports unreadable when every attempt fails', async () => {
+    const fetcher = async () => {
+      throw new Error('the site is unreachable')
+    }
+    const result = await pollProductionBuild(fetcher, { maxAgeMs, attempts: 2, delayMs: 0, now: () => now })
+    expect(result).toEqual({ _tag: 'unreadable' })
+  })
+
+  it('keeps polling while the served build stays stale', async () => {
+    const timestamps = [Date.parse('2026-08-11T05:28:25Z'), now - 60_000]
+    const fetcher = async () => timestamps.shift() ?? now
+    const result = await pollProductionBuild(fetcher, { maxAgeMs, attempts: 3, delayMs: 0, now: () => now })
+    expect(result).toEqual({ _tag: 'fresh', ageMs: 60_000 })
   })
 })
 
