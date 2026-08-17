@@ -1,5 +1,14 @@
 export const SESSION_PASSWORD_MIN_LENGTH = 32
 
+/**
+ * A missing secret is a deployment choice, not a server fault. Sentry's Nitro
+ * error handler reports every H3 error from 500 up, so answering a session route
+ * with 503 filed a production error on every request, including bot probes for
+ * paths such as `/admin/.env`. The literal type keeps this state below the
+ * reporting threshold for good.
+ */
+export const SESSION_UNAVAILABLE_STATUS = 404
+
 const SESSION_ENDPOINT = '/api/_auth/session'
 const SESSION_ROUTE_PATTERN = /^\/(?:api\/(?:_auth|admin)|auth|admin)(?:\/|$)/
 
@@ -12,7 +21,7 @@ export type SessionGuard
   = | { _tag: 'pass' }
     | { _tag: 'emptySession', message: string }
     | { _tag: 'clearSession' }
-    | { _tag: 'unavailable', message: string }
+    | { _tag: 'unavailable', message: string, status: typeof SESSION_UNAVAILABLE_STATUS }
 
 export interface SessionRequest {
   method: string
@@ -49,5 +58,5 @@ export function resolveSessionGuard(request: SessionRequest, rawPassword: unknow
       return { _tag: 'clearSession' }
     return { _tag: 'emptySession', message }
   }
-  return { _tag: 'unavailable', message }
+  return { _tag: 'unavailable', message, status: SESSION_UNAVAILABLE_STATUS }
 }

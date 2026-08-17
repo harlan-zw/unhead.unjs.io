@@ -33,6 +33,21 @@ describe('resolveSessionGuard', () => {
     expect(resolveSessionGuard({ method: 'GET', path }, '')._tag).toBe('unavailable')
   })
 
+  // A missing secret is a deployment choice, not a server fault. Sentry's Nitro
+  // handler reports any H3 error from 500 up, so a scanner hitting /admin/.env
+  // used to file a production error on every probe.
+  it.each([
+    '/admin/.env',
+    '/admin',
+    '/auth/github',
+    '/api/admin/tool-analytics',
+  ])('answers %s with a status Sentry does not report', (path) => {
+    const guard = resolveSessionGuard({ method: 'GET', path }, '')
+    if (guard._tag !== 'unavailable')
+      throw new Error(`expected ${path} to be unavailable`)
+    expect(guard.status).toBe(404)
+  })
+
   it('passes session requests when the secret meets the encryption minimum', () => {
     expect(resolveSessionGuard({ method: 'GET', path: '/api/_auth/session' }, validPassword)).toEqual({ _tag: 'pass' })
   })
