@@ -2,26 +2,24 @@ import antfu from '@antfu/eslint-config'
 import harlanzw from 'eslint-plugin-harlanzw'
 
 export default antfu(
-  {
-    rules: {
-      'no-use-before-define': 'off',
-      'node/prefer-global/process': 'off',
-      'node/prefer-global/buffer': 'off',
+  {},
+  ...harlanzw({
+    base: {
+      type: 'app',
+      ignores: [
+        'examples/*',
+        'snippets/**',
+        'app/components/ui/Breadcrumb.vue',
+        'app/components/ui/ContentNavigation.vue',
+        'app/components/Logo.vue',
+      ],
     },
-  },
+    link: true,
+    nuxt: true,
+    vue: true,
+  }),
   {
-    ignores: [
-      'examples/*',
-      '.claude/**',
-      'snippets/**',
-      'app/components/ui/Breadcrumb.vue',
-      'app/components/ui/ContentNavigation.vue',
-      'app/components/Logo.vue',
-    ],
-  },
-  ...harlanzw({ link: true, nuxt: true, vue: true }),
-  {
-    files: ['test/**', 'scripts/**', 'server/api/**'],
+    files: ['scripts/**', 'server/api/**'],
     rules: {
       'no-console': 'off',
     },
