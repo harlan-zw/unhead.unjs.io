@@ -1,21 +1,16 @@
-import { existsSync } from 'node:fs'
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
-import { SENTRY_DSN, sentryBuildTarget } from './shared/sentry'
-
-const hasSentryAuthToken = Boolean(process.env.SENTRY_AUTH_TOKEN)
-  || existsSync('.env.sentry-build-plugin')
-
-const sentryTarget = sentryBuildTarget()
 
 export default defineNuxtConfig({
   extends: ['./layers/admin', './layers/tools'],
 
   nuxtDx: {
     report: true,
-    sizeBudget: {
-      overridesKb: { 'server/plugins/sentry.ts': 326 },
-    },
+  },
+
+  nuxtSentry: {
+    dsn: 'https://f3ae6ad9827cb10d4527a1a47d3fc4de@o4510507748163584.ingest.us.sentry.io/4511887362686976',
+    project: 'unhead',
   },
 
   modules: [
@@ -34,6 +29,7 @@ export default defineNuxtConfig({
     'nuxt-skew-protection',
     'nuxt-auth-utils',
     '@sentry/nuxt/module',
+    '@harlan-zw/nuxt-sentry',
     // 'nuxt-build-cache',
     async (_, nuxt) => {
       // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
@@ -153,23 +149,15 @@ export default defineNuxtConfig({
     githubAccessToken: '', // NUXT_GITHUB_ACCESS_TOKEN
     cloudflareAccountId: '', // NUXT_CLOUDFLARE_ACCOUNT_ID
     cloudflareAnalyticsApiToken: '', // NUXT_CLOUDFLARE_ANALYTICS_API_TOKEN
-    sentry: {
-      dsn: SENTRY_DSN,
-      enabled: sentryTarget._tag === 'enabled',
-      environment: sentryTarget._tag === 'enabled' ? sentryTarget.environment : 'development',
-      release: sentryTarget._tag === 'enabled' ? sentryTarget.release : '',
-      tracesSampleRate: 0.05,
-    },
   },
 
   githubSponsors: {
     login: 'harlan-zw',
-    mode: 'prerender',
+    // The sponsor list is below the fold and changes between deploys, so it is
+    // fetched in the browser instead of prerendered into the HTML.
+    mode: 'client',
     route: '/api/github/sponsors.json',
-    tiers: [
-      { key: 'top', minimumMonthlyDollars: 50 },
-      { key: 'gold', minimumMonthlyDollars: 25 },
-    ],
+    tokenEnv: 'NUXT_GITHUB_AUTH_TOKEN',
     overrides: {
       'Kintell-labs': { name: 'Kintell', websiteUrl: 'https://kintell.com' },
       'Massive Monster': { websiteUrl: 'https://massivemonster.co' },
@@ -427,32 +415,12 @@ export default defineNuxtConfig({
     },
   },
 
-  sentry: {
-    // `wrangler dev` and `nuxt preview` build with NODE_ENV=production too, so a
-    // release identity is what separates a deploy from a local sandbox. Without
-    // it the module must not inject the client entry, or a review sandbox's
-    // browser errors report against the production project.
-    enabled: sentryTarget._tag === 'enabled',
-    org: 'harlan-zw',
-    project: 'unhead',
-    authToken: process.env.SENTRY_AUTH_TOKEN,
-    release: { name: sentryTarget._tag === 'enabled' ? sentryTarget.release : undefined },
-    sourcemaps: {
-      disable: !hasSentryAuthToken,
-      filesToDeleteAfterUpload: ['**/*.map'],
-    },
-    bundleSizeOptimizations: {
-      excludeReplayShadowDom: true,
-      excludeReplayIframe: true,
-      excludeReplayWorker: true,
-    },
-    telemetry: false,
-  },
-
+  compatibilityDate: '2026-07-20',
+  // `@harlan-zw/nuxt-sentry` sets `sourcemap.client` when a Sentry auth token is
+  // present, and deliberately leaves the server alone, where Nuxt defaults to true.
+  // Without this the server bundle ships its own source maps.
   sourcemap: {
-    client: hasSentryAuthToken ? 'hidden' : false,
     server: false,
   },
 
-  compatibilityDate: '2026-07-20',
 })
