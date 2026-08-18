@@ -13,9 +13,6 @@ export default defineNuxtConfig({
 
   nuxtDx: {
     report: true,
-    sizeBudget: {
-      overridesKb: { 'server/plugins/sentry.ts': 326 },
-    },
   },
 
   modules: [
@@ -164,12 +161,11 @@ export default defineNuxtConfig({
 
   githubSponsors: {
     login: 'harlan-zw',
-    mode: 'prerender',
+    // The sponsor list is below the fold and changes between deploys, so it is
+    // fetched in the browser instead of prerendered into the HTML.
+    mode: 'client',
     route: '/api/github/sponsors.json',
-    tiers: [
-      { key: 'top', minimumMonthlyDollars: 50 },
-      { key: 'gold', minimumMonthlyDollars: 25 },
-    ],
+    tokenEnv: 'NUXT_GITHUB_AUTH_TOKEN',
     overrides: {
       'Kintell-labs': { name: 'Kintell', websiteUrl: 'https://kintell.com' },
       'Massive Monster': { websiteUrl: 'https://massivemonster.co' },

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { GitHubSponsorsResponse } from '@harlan-zw/nuxt-github-sponsors/server'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { stripHeaderAnchorLinks } from '~~/utils/content'
 import { getDocPath, getHomepageDocPath } from '~~/utils/urls'
 import { useStats } from '~/composables/data'
@@ -59,13 +58,8 @@ useSeoMeta({
 
 defineOgImage('Home')
 
-const githubSponsorsRoute = useRuntimeConfig().public.githubSponsors.route
-const { data: sponsors, status: sponsorsStatus } = await useFetch<GitHubSponsorsResponse>(githubSponsorsRoute, {
-  key: `github-sponsors-static:${githubSponsorsRoute}`,
-  server: false,
-})
-const sponsorsClientReady = ref(false)
-onMounted(() => sponsorsClientReady.value = true)
+// `githubSponsors.mode: 'client'` keeps this fetch out of server rendering.
+const { data: sponsors, status: sponsorsStatus } = await useGitHubSponsors()
 
 if (import.meta.server) {
   useHead({
@@ -515,7 +509,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </UButton>
           </div>
         </div>
-        <div v-if="sponsorsClientReady && sponsors?._tag === 'available'" class="max-w-xl mx-auto">
+        <div v-if="sponsors?._tag === 'available'" class="max-w-xl mx-auto">
           <div class="text-2xl font-semibold mb-5">
             Top Sponsors
           </div>
@@ -565,7 +559,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </div>
           </div>
         </div>
-        <div v-else-if="!sponsorsClientReady || sponsorsStatus === 'pending'" class="max-w-xl w-full mx-auto space-y-5" aria-hidden="true">
+        <div v-else-if="sponsorsStatus === 'idle' || sponsorsStatus === 'pending'" class="max-w-xl w-full mx-auto space-y-5" aria-hidden="true">
           <USkeleton class="h-8 w-36" />
           <div class="grid grid-cols-3 gap-5">
             <USkeleton v-for="index in 3" :key="index" class="h-14 w-full" />
@@ -574,6 +568,12 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
           <div class="grid grid-cols-6 gap-3">
             <USkeleton v-for="index in 6" :key="index" class="size-12 rounded-full" />
           </div>
+        </div>
+        <div v-else class="max-w-xl w-full mx-auto text-dimmed">
+          The sponsor list is unavailable right now. See it on
+          <NuxtLink to="https://github.com/sponsors/harlan-zw" class="underline">
+            GitHub Sponsors
+          </NuxtLink>.
         </div>
       </div>
     </UContainer>
