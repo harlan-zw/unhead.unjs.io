@@ -1,0 +1,17 @@
+diff --git a/dist/index.js b/dist/index.js
+index 772a5e9fa5e551c7f8a81a0f7750ee6fc6cea02d..9d55c9dd09453b848931110e0e91e012bfa3e9e0 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -3082,7 +3082,11 @@ function useResizeObserver(target, callback, options = {}) {
+ 		cleanup();
+ 		if (isSupported.value && window) {
+ 			observer = new ResizeObserver(callback);
+-			for (const _el of els) if (_el) observer.observe(_el, observerOptions);
++			// `unrefElement` resolves a component instance to its `$el`. That `$el` is a
++			// comment or a text node when the component renders no element. `observe`
++			// throws on such a node. The throw then reaches the Vue error handler and
++			// fails the render. Observe an element only.
++			for (const _el of els) if (_el && _el.nodeType === 1) observer.observe(_el, observerOptions);
+ 		}
+ 	}, {
+ 		immediate: true,

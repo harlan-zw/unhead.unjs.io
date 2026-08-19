@@ -70,6 +70,7 @@ overrides:
   vite: ^8.2.1
 patchedDependencies:
   '@nuxtjs/mdc@0.22.2': patches/@nuxtjs__mdc@0.22.2.patch
+  '@vueuse/core@14.4.0': patches/@vueuse__core@14.4.0.patch
 catalog:
   '@antfu/eslint-config': ^9.3.0
   '@babel/parser': ^8.0.4
