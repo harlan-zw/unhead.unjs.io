@@ -43,14 +43,31 @@ describe('ensure-d1-database', () => {
 })
 
 describe('deploy workflow AI_READY_DB bootstrap', () => {
+  function loadSteps(raw: string) {
+    return (parse(raw) as { jobs: { deploy: { steps: { run?: string }[] } } }).jobs.deploy.steps
+  }
+
   it('creates the D1 database before uploading to Pages', async () => {
     const raw = await readFile(resolve(process.cwd(), '.github/workflows/deploy-cloudflare.yml'), 'utf-8')
-    const workflow = parse(raw) as { jobs: { deploy: { steps: { run?: string }[] } } }
-    const steps = workflow.jobs.deploy.steps
+    const steps = loadSteps(raw)
     const ensureIndex = steps.findIndex(step => step.run?.includes('ensure-d1-database.mjs'))
     const deployIndex = steps.findIndex(step => step.run?.includes('wrangler pages deploy'))
     expect(ensureIndex).toBeGreaterThan(-1)
     expect(deployIndex).toBeGreaterThan(-1)
     expect(ensureIndex).toBeLessThan(deployIndex)
+  })
+
+  it('attaches AI_READY_DB to the Pages project before uploading', async () => {
+    const raw = await readFile(resolve(process.cwd(), '.github/workflows/deploy-cloudflare.yml'), 'utf-8')
+    const steps = loadSteps(raw)
+    const attachIndex = steps.findIndex(step => step.run?.includes('attach-pages-d1-binding.mjs'))
+    const deployIndex = steps.findIndex(step => step.run?.includes('wrangler pages deploy'))
+    expect(attachIndex).toBeGreaterThan(-1)
+    expect(deployIndex).toBeGreaterThan(-1)
+    expect(attachIndex).toBeLessThan(deployIndex)
+    const run = steps[attachIndex].run ?? ''
+    expect(run).toContain('--project unhead-unjs-io')
+    expect(run).toContain('--database unhead-ai-ready')
+    expect(run).toContain('--binding AI_READY_DB')
   })
 })
