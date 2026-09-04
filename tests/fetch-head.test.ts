@@ -1,9 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   fetchHeadHtml,
+  isFetchHeadUpstreamError,
   normalizePublicHttpUrl,
   readLimitedText,
 } from '../layers/tools/server/utils/fetch-head'
+
+function htmlResponse(body = '<html><head><title>Safe</title></head></html>'): Response {
+  return new Response(body, { headers: { 'content-type': 'text/html; charset=utf-8' } })
+}
 
 describe('normalizePublicHttpUrl', () => {
   it('normalizes public hostnames and strips fragments', () => {
@@ -52,6 +57,45 @@ describe('fetchHeadHtml', () => {
     )
 
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 415 })
+  })
+})
+
+describe('isFetchHeadUpstreamError', () => {
+  it('marks a non-OK upstream response as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('', { status: 500 }))
+    const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(true)
+  })
+
+  it('marks an aborted upstream request as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new DOMException('The operation was aborted', 'AbortError'))
+    const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(true)
+  })
+
+  it('marks empty upstream HTML as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('', { headers: { 'content-type': 'text/html' } }))
+    const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(true)
+  })
+
+  it('does not mark invalid user input as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(htmlResponse())
+    const error = await fetchHeadHtml('https://user:secret@example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(false)
+  })
+
+  it('does not mark an unsafe redirect target as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(null, { status: 302, headers: { location: 'http://127.0.0.1/admin' } }),
+    )
+    const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(false)
+  })
+
+  it('rejects values that are not errors', () => {
+    expect(isFetchHeadUpstreamError(undefined)).toBe(false)
+    expect(isFetchHeadUpstreamError('boom')).toBe(false)
   })
 })
 
