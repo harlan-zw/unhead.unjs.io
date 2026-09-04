@@ -11,6 +11,15 @@ export default defineNuxtConfig({
   nuxtSentry: {
     dsn: 'https://f3ae6ad9827cb10d4527a1a47d3fc4de@o4510507748163584.ingest.us.sentry.io/4511887362686976',
     project: 'unhead',
+    // Stale docs URLs throw an expected fatal 404 from useCurrentDocPage, so
+    // the client and server beforeSend drop them before they become reports.
+    // The message rule also catches a report that lost its original error and
+    // can no longer be matched by status.
+    policy: {
+      dropServerStatus: [404],
+      dropClientStatus: [401, 403, 404],
+      ignoreErrors: ['Page not found: '],
+    },
   },
 
   modules: [
