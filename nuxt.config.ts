@@ -11,6 +11,11 @@ export default defineNuxtConfig({
   nuxtSentry: {
     dsn: 'https://f3ae6ad9827cb10d4527a1a47d3fc4de@o4510507748163584.ingest.us.sentry.io/4511887362686976',
     project: 'unhead',
+    policy: {
+      // The fetch-head tool and the analytics endpoint fail on remote sites by
+      // design. Sentry must not file those outcomes as production errors.
+      dropServerStatus: [404, 502, 504],
+    },
   },
 
   modules: [
