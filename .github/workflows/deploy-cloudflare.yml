@@ -78,6 +78,15 @@ jobs:
           SENTRY_RELEASE: ${{ github.event.workflow_run.head_sha || github.sha }}
           UNHEAD_DOCS_SOURCE: remote
 
+      # `AI_READY_DB` is declared in the built Wrangler config and resolved by
+      # name at deploy time. The database must exist before the upload, so
+      # create it the first time; later runs see it and move on.
+      - name: Ensure AI-ready D1 database exists
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/ensure-d1-database.mjs --name unhead-ai-ready
+
       # `--branch` is required. Wrangler otherwise reads the branch from git, and
       # the checkout above is by SHA, which leaves a detached HEAD. Wrangler read
       # that as the branch `head` and uploaded every build as a preview.

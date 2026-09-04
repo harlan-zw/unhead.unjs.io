@@ -109,7 +109,9 @@ export default defineNuxtConfig({
     debug: true,
     database: {
       type: 'd1',
-      bindingName: 'DB',
+      // Cron, runtimeSync, and IndexNow writes get their own database so they
+      // never contend with docs content queries on `DB`.
+      bindingName: 'AI_READY_DB',
     },
     cron: true,
     runtimeSync: true,
@@ -223,6 +225,14 @@ export default defineNuxtConfig({
           {
             binding: 'TOOL_ANALYTICS',
             dataset: 'unhead_tool_usage',
+          },
+        ],
+        // No `database_id`: Wrangler resolves the database by name at deploy
+        // time, and the deploy workflow creates it when missing.
+        d1_databases: [
+          {
+            binding: 'AI_READY_DB',
+            database_name: 'unhead-ai-ready',
           },
         ],
         // Nitro's generated Wrangler type currently lags Wrangler's rate-limit binding schema.
