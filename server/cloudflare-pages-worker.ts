@@ -11,10 +11,18 @@ import {
   getCloudflareResponseCacheRule,
   handleCloudflareResponseCache,
 } from './utils/cloudflare-response-cache'
+import { wrapD1WithRetry } from './utils/d1-retry'
 import '#nitro-internal-pollyfills'
 
 const nitroApp = useNitroApp()
 const ws = import.meta._websocket ? wsAdapter(nitroApp.h3App.websocket) : undefined
+
+function withD1Retry(env: Cloudflare.Env): Cloudflare.Env {
+  const db = (env as { DB?: D1Database }).DB
+  if (!db)
+    return env
+  return { ...env, DB: wrapD1WithRetry(db) } as Cloudflare.Env
+}
 
 export default {
   async fetch(request: Request, env: Cloudflare.Env, context: ExecutionContext) {
@@ -29,14 +37,15 @@ export default {
     if (requestHasBody(request))
       body = Buffer.from(await request.arrayBuffer())
 
-    setCloudflareBindings(env)
+    const bindings = withD1Retry(env)
+    setCloudflareBindings(bindings)
     const render = () => nitroApp.localFetch(url.pathname + url.search, {
       body,
       context: {
         waitUntil: (promise: Promise<unknown>) => context.waitUntil(promise),
         _platform: {
           cf: request.cf,
-          cloudflare: { request, env, context },
+          cloudflare: { request, env: bindings, context },
         },
       },
       headers: request.headers,
@@ -66,11 +75,12 @@ export default {
   },
   scheduled(event: ScheduledController, env: Cloudflare.Env, context: ExecutionContext) {
     if (import.meta._tasks) {
-      setCloudflareBindings(env)
+      const bindings = withD1Retry(env)
+      setCloudflareBindings(bindings)
       context.waitUntil(
         runCronTasks(event.cron, {
           context: {
-            cloudflare: { env, context },
+            cloudflare: { env: bindings, context },
           },
           payload: {},
         }),
