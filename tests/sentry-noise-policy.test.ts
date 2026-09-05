@@ -51,6 +51,14 @@ describe('sentry noise policy', () => {
     expect(event?.exception?.values?.[0]?.value).toBe(error.message)
   })
 
+  it('drops expected upstream gateway failures (502, 504)', () => {
+    for (const statusCode of [502, 504]) {
+      const error = createError({ statusCode, statusMessage: 'Upstream returned 520' })
+      const hint: ErrorReportHint = { originalException: error }
+      expect(serverBeforeSend(errorReport(error), hint)).toBeNull()
+    }
+  })
+
   it('keeps server errors that are not expected noise', () => {
     const error = createError({ statusCode: 500, statusMessage: 'Database unavailable' })
     const event = serverBeforeSend(errorReport(error), { originalException: error })
