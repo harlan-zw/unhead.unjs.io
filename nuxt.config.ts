@@ -16,9 +16,11 @@ export default defineNuxtConfig({
     // The message rule also catches a report that lost its original error and
     // can no longer be matched by status.
     policy: {
-      dropServerStatus: [404],
+      dropServerStatus: [404, 502, 504],
       dropClientStatus: [401, 403, 404],
       ignoreErrors: ['Page not found: '],
+      // The fetch-head tool and the analytics endpoint fail on remote sites by
+      // design. Sentry must not file those outcomes as production errors.
     },
   },
 
