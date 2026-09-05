@@ -342,6 +342,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/sitemap.xml': { swr: 3600 },
     // auth endpoints must not be cached (cookies need to be set fresh)
     '/auth/**': { prerender: false, cache: false, headers: { 'cache-control': 'no-store' } },
     '/admin/**': { prerender: false },
