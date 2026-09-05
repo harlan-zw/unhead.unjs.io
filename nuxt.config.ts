@@ -118,7 +118,9 @@ export default defineNuxtConfig({
     debug: true,
     database: {
       type: 'd1',
-      bindingName: 'DB',
+      // Cron, runtimeSync, and IndexNow writes get their own database so they
+      // never contend with docs content queries on `DB`.
+      bindingName: 'AI_READY_DB',
     },
     cron: true,
     runtimeSync: true,
@@ -232,6 +234,15 @@ export default defineNuxtConfig({
           {
             binding: 'TOOL_ANALYTICS',
             dataset: 'unhead_tool_usage',
+          },
+        ],
+        // Declares the local binding name and target database. `wrangler pages
+        // deploy` ignores this entry, so the deploy workflow attaches
+        // `AI_READY_DB` to the Pages project over the REST API before deploying.
+        d1_databases: [
+          {
+            binding: 'AI_READY_DB',
+            database_name: 'unhead-ai-ready',
           },
         ],
         // Nitro's generated Wrangler type currently lags Wrangler's rate-limit binding schema.

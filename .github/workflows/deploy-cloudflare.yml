@@ -78,6 +78,27 @@ jobs:
           SENTRY_RELEASE: ${{ github.event.workflow_run.head_sha || github.sha }}
           UNHEAD_DOCS_SOURCE: remote
 
+      # `wrangler pages deploy` uploads assets and the worker bundle only; it
+      # never applies the built Wrangler config's `d1_databases` to the Pages
+      # project. Create the database first, then attach `AI_READY_DB` to the
+      # project config over the REST API. Both must happen before the upload,
+      # or every aiReady write fails with `D1 binding "AI_READY_DB" not found`.
+      - name: Ensure AI-ready D1 database exists
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/ensure-d1-database.mjs --name unhead-ai-ready
+
+      - name: Attach AI_READY_DB to the Pages project
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: >-
+          node scripts/attach-pages-d1-binding.mjs
+          --project unhead-unjs-io
+          --database unhead-ai-ready
+          --binding AI_READY_DB
+
       # `--branch` is required. Wrangler otherwise reads the branch from git, and
       # the checkout above is by SHA, which leaves a detached HEAD. Wrangler read
       # that as the branch `head` and uploaded every build as a preview.
