@@ -142,7 +142,7 @@ export async function fetchHeadHtml(
       catch (error) {
         const timedOut = error instanceof DOMException && error.name === 'AbortError'
         throw createError({
-          statusCode: timedOut ? 504 : 502,
+          statusCode: timedOut ? 408 : 400,
           statusMessage: timedOut ? 'Upstream request timed out' : 'Failed to fetch URL',
         })
       }
@@ -151,16 +151,16 @@ export async function fetchHeadHtml(
         break
 
       if (redirects === MAX_REDIRECTS)
-        throw createError({ statusCode: 502, statusMessage: 'Too many redirects' })
+        throw createError({ statusCode: 400, statusMessage: 'Too many redirects' })
 
       const location = response.headers.get('location')
       if (!location)
-        throw createError({ statusCode: 502, statusMessage: 'Invalid upstream redirect' })
+        throw createError({ statusCode: 400, statusMessage: 'Invalid upstream redirect' })
       url = normalizePublicHttpUrl(location, url)
     }
 
     if (!response?.ok)
-      throw createError({ statusCode: 502, statusMessage: `Upstream returned ${response?.status || 'an invalid response'}` })
+      throw createError({ statusCode: 400, statusMessage: `Upstream returned ${response?.status || 'an invalid response'}` })
 
     const contentType = response.headers.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase()
     if (!contentType || !['text/html', 'application/xhtml+xml'].includes(contentType))
@@ -168,7 +168,7 @@ export async function fetchHeadHtml(
 
     const html = await readLimitedText(response)
     if (!html)
-      throw createError({ statusCode: 502, statusMessage: 'No HTML content received' })
+      throw createError({ statusCode: 422, statusMessage: 'No HTML content received' })
     return html
   }
   finally {

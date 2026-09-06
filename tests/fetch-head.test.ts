@@ -53,6 +53,40 @@ describe('fetchHeadHtml', () => {
 
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 415 })
   })
+
+  it('rejects non-ok upstream responses as client errors', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('nope', { status: 520 }))
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 400 })
+  })
+
+  it('rejects failed fetches as client errors', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new TypeError('fetch failed'))
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 400 })
+  })
+
+  it('rejects aborted fetches with a request timeout status', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new DOMException('The operation was aborted.', 'AbortError'))
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 408 })
+  })
+
+  it('rejects redirect loops as client errors', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(null, { status: 301, headers: { location: 'https://example.com/loop' } }),
+    )
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 400 })
+  })
+
+  it('rejects empty bodies as unusable content', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response('', { headers: { 'content-type': 'text/html' } }),
+    )
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 422 })
+  })
 })
 
 describe('readLimitedText', () => {
