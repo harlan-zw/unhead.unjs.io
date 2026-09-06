@@ -343,6 +343,9 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/sitemap.xml': { swr: 3600 },
+    // Docs pages render from D1-backed content queries. swr caches the rendered
+    // HTML so request bursts stop hitting D1 on every render.
+    '/docs/**': { swr: 3600 },
     // auth endpoints must not be cached (cookies need to be set fresh)
     '/auth/**': { prerender: false, cache: false, headers: { 'cache-control': 'no-store' } },
     '/admin/**': { prerender: false },
@@ -350,6 +353,10 @@ export default defineNuxtConfig({
     '/api/tools/**': { prerender: false, cache: false },
     '/api/debug/**': { prerender: false, cache: false },
     '/tools/og-image-generator': { prerender: false },
+    // @nuxt/content serves queries via POST /__nuxt_content/<collection>/query.
+    // Nitro route cache keys on the URL alone, so a cached response would serve
+    // one query's rows for every other query to the same collection.
+    '/__nuxt_content/**': { cache: false },
     '/releases/v3': { redirect: { to: '/docs/releases/v3', statusCode: 301 } },
     '/usage/composables/use-head': { redirect: { to: '/api/use-head', statusCode: 301 } },
     '/usage/composables/use-seo-meta': { redirect: { to: '/api/use-seo-meta', statusCode: 301 } },
