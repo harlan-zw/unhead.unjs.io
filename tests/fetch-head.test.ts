@@ -72,6 +72,21 @@ describe('fetchHeadHtml', () => {
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 408 })
   })
 
+  it('rejects timeouts during body streaming with a request timeout status', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockImplementation((_url, init) => {
+      const body = new ReadableStream<Uint8Array>({
+        start(streamController) {
+          init?.signal?.addEventListener('abort', () => {
+            streamController.error(new DOMException('The operation was aborted.', 'AbortError'))
+          }, { once: true })
+        },
+      })
+      return Promise.resolve(new Response(body, { headers: { 'content-type': 'text/html' } }))
+    })
+
+    await expect(fetchHeadHtml('https://example.com', fetcher, 10)).rejects.toMatchObject({ statusCode: 408 })
+  })
+
   it('rejects redirect loops as client errors', async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
       new Response(null, { status: 301, headers: { location: 'https://example.com/loop' } }),
