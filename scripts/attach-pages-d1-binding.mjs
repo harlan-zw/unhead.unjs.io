@@ -14,9 +14,9 @@ export function parseArgs(argv) {
     return value
   }
   return {
-    project: readFlag(argv, '--project'),
-    database: readFlag(argv, '--database'),
-    binding: readFlag(argv, '--binding'),
+    project: readFlag('--project'),
+    database: readFlag('--database'),
+    binding: readFlag('--binding'),
   }
 }
 
@@ -25,9 +25,7 @@ export function patchBody(deploymentConfigs, binding, databaseId) {
   const productionD1 = configs.production?.d1_databases ?? {}
   return {
     deployment_configs: {
-      ...configs,
       production: {
-        ...configs.production,
         d1_databases: {
           ...productionD1,
           [binding]: { id: databaseId },
@@ -82,13 +80,14 @@ export async function attachPagesD1Binding({ accountId, apiToken, project, datab
   const projectUrl = `${baseUrl}/accounts/${accountId}/pages/projects/${project}`
 
   const current = await apiRequest({ method: 'GET', url: projectUrl, apiToken })
-  const configs = current.result?.deployment_configs ?? {}
+  const configs = current.result?.deployment_configs
+  if (!configs?.production || typeof configs.production !== 'object' || Array.isArray(configs.production))
+    throw new Error('Unexpected Pages project response; expected production deployment settings')
   if (configs.production?.d1_databases?.[binding]?.id === databaseId)
     return { attached: false }
 
   await apiRequest({ method: 'PATCH', url: projectUrl, apiToken, body: patchBody(configs, binding, databaseId) })
 
-  // A 2xx PATCH is not proof. Read the project back and require the binding.
   const verified = await apiRequest({ method: 'GET', url: projectUrl, apiToken })
   const verifiedId = verified.result?.deployment_configs?.production?.d1_databases?.[binding]?.id
   if (verifiedId !== databaseId)

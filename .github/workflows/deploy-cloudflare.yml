@@ -78,11 +78,8 @@ jobs:
           SENTRY_RELEASE: ${{ github.event.workflow_run.head_sha || github.sha }}
           UNHEAD_DOCS_SOURCE: remote
 
-      # `wrangler pages deploy` uploads assets and the worker bundle only; it
-      # never applies the built Wrangler config's `d1_databases` to the Pages
-      # project. Create the database first, then attach `AI_READY_DB` to the
-      # project config over the REST API. Both must happen before the upload,
-      # or every aiReady write fails with `D1 binding "AI_READY_DB" not found`.
+      # This upload uses Pages project settings without a Wrangler config.
+      # Attach AI_READY_DB before upload so the new deployment receives it.
       - name: Ensure AI-ready D1 database exists
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

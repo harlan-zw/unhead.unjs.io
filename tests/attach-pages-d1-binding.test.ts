@@ -1,8 +1,8 @@
 import type { IncomingMessage, Server, ServerResponse } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { createServer } from 'node:http'
-import { afterEach, describe, expect, it } from 'vitest'
-import { attachPagesD1Binding } from '../scripts/attach-pages-d1-binding.mjs'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { attachPagesD1Binding, main, parseArgs } from '../scripts/attach-pages-d1-binding.mjs'
 
 interface D1Database {
   uuid: string
@@ -13,9 +13,11 @@ interface DeploymentConfigs {
   production: {
     d1_databases?: Record<string, { id: string }>
     analytics_engine_datasets?: Record<string, { dataset: string }>
+    env_vars?: Record<string, { type: string, value?: string }>
   }
   preview?: {
     d1_databases?: Record<string, { id: string }>
+    env_vars?: Record<string, { type: string, value?: string }>
   }
 }
 
@@ -33,6 +35,7 @@ interface FixtureState {
   databasePages: D1Database[][]
   project: { deployment_configs: DeploymentConfigs }
   patchApplies: boolean
+  responseOverride?: { pathname: string, status: number, body: unknown }
 }
 
 interface Fixture {
@@ -43,6 +46,9 @@ interface Fixture {
 const servers: Server[] = []
 
 afterEach(async () => {
+  vi.restoreAllMocks()
+  vi.unstubAllEnvs()
+  vi.unstubAllGlobals()
   await Promise.all(servers.splice(0).map(server =>
     new Promise<void>((resolve) => {
       server.close(() => resolve())
@@ -50,8 +56,6 @@ afterEach(async () => {
   ))
 })
 
-// A real HTTP fixture standing in for the Cloudflare REST API, so the script
-// is exercised through actual fetch round trips.
 function startFixture(state: FixtureState): Promise<Fixture> {
   const requests: CapturedRequest[] = []
   const server = createServer((request: IncomingMessage, response: ServerResponse) => {
@@ -65,6 +69,13 @@ function startFixture(state: FixtureState): Promise<Fixture> {
         pathname: `${url.pathname}${url.search}`,
         body: raw ? JSON.parse(raw) as PatchBody : undefined,
       })
+
+      if (state.responseOverride?.pathname === url.pathname) {
+        response.statusCode = state.responseOverride.status
+        response.setHeader('content-type', 'application/json')
+        response.end(JSON.stringify(state.responseOverride.body))
+        return
+      }
 
       const respond = (result: unknown, totalPages = 1) => {
         response.statusCode = 200
@@ -89,6 +100,10 @@ function startFixture(state: FixtureState): Promise<Fixture> {
             state.project.deployment_configs = {
               ...state.project.deployment_configs,
               ...body.deployment_configs,
+              production: {
+                ...state.project.deployment_configs.production,
+                ...body.deployment_configs.production,
+              },
             }
           }
           respond(state.project)
@@ -127,19 +142,63 @@ function makeDocsProject(): FixtureState['project'] {
       production: {
         d1_databases: { DB: { id: 'docs-db-id' } },
         analytics_engine_datasets: { TOOL_ANALYTICS: { dataset: 'unhead_tool_usage' } },
+        env_vars: { NUXT_SESSION_PASSWORD: { type: 'secret_text' } },
       },
       preview: {
         d1_databases: { DB: { id: 'docs-db-id' } },
+        env_vars: { MODE: { type: 'plain_text', value: 'preview' } },
       },
     },
   }
 }
 
-describe('attachPagesD1Binding', () => {
-  it('patches AI_READY_DB onto the production config and keeps the existing bindings', async () => {
+const workflowArgs = ['--project', 'unhead-unjs-io', '--database', 'unhead-ai-ready', '--binding', 'AI_READY_DB']
+
+describe('parseArgs', () => {
+  it('accepts the deploy workflow arguments', () => {
+    expect(parseArgs(workflowArgs)).toEqual({
+      project: 'unhead-unjs-io',
+      database: 'unhead-ai-ready',
+      binding: 'AI_READY_DB',
+    })
+  })
+
+  it.each(['--project', '--database', '--binding'])('rejects a missing value for %s', (flag) => {
+    const args = workflowArgs.filter((_, index) => index !== workflowArgs.indexOf(flag) + 1)
+    expect(() => parseArgs(args)).toThrow(`${flag} requires a value`)
+  })
+})
+
+describe('main', () => {
+  it('attaches the binding with the deploy workflow arguments', async () => {
+    const project = makeDocsProject()
     const fixture = await startFixture({
       databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
-      project: makeDocsProject(),
+      project,
+      patchApplies: true,
+    })
+    const realFetch = globalThis.fetch
+    vi.stubGlobal('fetch', (url: string, options: RequestInit) => {
+      return realFetch(url.replace('https://api.cloudflare.com/client/v4', fixture.baseUrl), options)
+    })
+    vi.stubEnv('CLOUDFLARE_ACCOUNT_ID', 'acc-1')
+    vi.stubEnv('CLOUDFLARE_API_TOKEN', 'fixture-token')
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    expect(await main(workflowArgs)).toBe(0)
+    expect(project.deployment_configs.production.d1_databases?.AI_READY_DB).toEqual({ id: 'ai-ready-id' })
+    expect(log).toHaveBeenCalledWith('[attach-pages-d1] attached AI_READY_DB to unhead-unjs-io (unhead-ai-ready)')
+    expect(error).not.toHaveBeenCalled()
+  })
+})
+
+describe('attachPagesD1Binding', () => {
+  it('patches only production D1 bindings and preserves unrelated project settings', async () => {
+    const project = makeDocsProject()
+    const fixture = await startFixture({
+      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      project,
       patchApplies: true,
     })
 
@@ -147,11 +206,19 @@ describe('attachPagesD1Binding', () => {
 
     const patches = fixture.requests.filter(request => request.method === 'PATCH')
     expect(patches).toHaveLength(1)
-    const configs = patches[0].body?.deployment_configs
-    expect(configs?.production.d1_databases?.AI_READY_DB).toEqual({ id: 'ai-ready-id' })
-    expect(configs?.production.d1_databases?.DB).toEqual({ id: 'docs-db-id' })
-    expect(configs?.production.analytics_engine_datasets?.TOOL_ANALYTICS).toEqual({ dataset: 'unhead_tool_usage' })
-    expect(configs?.preview?.d1_databases?.DB).toEqual({ id: 'docs-db-id' })
+    expect(patches[0].body).toEqual({
+      deployment_configs: {
+        production: {
+          d1_databases: {
+            DB: { id: 'docs-db-id' },
+            AI_READY_DB: { id: 'ai-ready-id' },
+          },
+        },
+      },
+    })
+    const expectedProject = makeDocsProject()
+    expectedProject.deployment_configs.production.d1_databases!.AI_READY_DB = { id: 'ai-ready-id' }
+    expect(project).toEqual(expectedProject)
   })
 
   it('follows the D1 list pagination before patching', async () => {
@@ -200,6 +267,38 @@ describe('attachPagesD1Binding', () => {
     })
 
     await expect(attach(fixture)).rejects.toThrow(/unhead-ai-ready/)
+    expect(fixture.requests.filter(request => request.method === 'PATCH')).toHaveLength(0)
+  })
+
+  it('rejects a malformed project response before patching', async () => {
+    const fixture = await startFixture({
+      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      project: makeDocsProject(),
+      patchApplies: true,
+      responseOverride: {
+        pathname: '/accounts/acc-1/pages/projects/unhead-unjs-io',
+        status: 200,
+        body: { success: true, result: {} },
+      },
+    })
+
+    await expect(attach(fixture)).rejects.toThrow('Unexpected Pages project response')
+    expect(fixture.requests.filter(request => request.method === 'PATCH')).toHaveLength(0)
+  })
+
+  it.each([
+    { status: 403, body: { success: false, errors: [{ code: 10000, message: 'Authentication error' }] }, error: /HTTP 403/ },
+    { status: 200, body: { success: false, errors: [{ code: 10000, message: 'Authentication error' }] }, error: /Authentication error/ },
+    { status: 200, body: { success: true, result: {} }, error: /expected a JSON array/ },
+  ])('stops after a failed database response: $error', async ({ status, body, error }) => {
+    const fixture = await startFixture({
+      databasePages: [],
+      project: makeDocsProject(),
+      patchApplies: true,
+      responseOverride: { pathname: '/accounts/acc-1/d1/database', status, body },
+    })
+
+    await expect(attach(fixture)).rejects.toThrow(error)
     expect(fixture.requests.filter(request => request.method === 'PATCH')).toHaveLength(0)
   })
 })

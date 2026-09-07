@@ -236,9 +236,7 @@ export default defineNuxtConfig({
             dataset: 'unhead_tool_usage',
           },
         ],
-        // Declares the local binding name and target database. `wrangler pages
-        // deploy` ignores this entry, so the deploy workflow attaches
-        // `AI_READY_DB` to the Pages project over the REST API before deploying.
+        // Keep this binding aligned with the Pages project update in the deploy workflow.
         d1_databases: [
           {
             binding: 'AI_READY_DB',
