@@ -1,3 +1,4 @@
+import { createError, defineEventHandler, getQuery, send, setResponseStatus } from 'h3'
 import { z } from 'zod'
 import { checkFreeToolRateLimit } from '~~/server/utils/rate-limit'
 import { fetchHeadHtml, isFetchHeadUpstreamError } from '../../utils/fetch-head'
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
     if (!isFetchHeadUpstreamError(error))
       throw error
     setResponseStatus(event, error.statusCode, error.statusMessage)
-    return { statusCode: error.statusCode, statusMessage: error.statusMessage }
+    return send(event, JSON.stringify({ statusCode: error.statusCode, statusMessage: error.statusMessage }), 'application/json')
   }
   const head = html.match(HeadPattern)?.[1]
 

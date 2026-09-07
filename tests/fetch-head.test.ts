@@ -58,6 +58,51 @@ describe('fetchHeadHtml', () => {
 
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 415 })
   })
+
+  it('reports a timeout while reading the response body as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockImplementation((_url, init) => {
+      const body = new ReadableStream<Uint8Array>({
+        start(controller) {
+          init?.signal?.addEventListener('abort', () => {
+            controller.error(new DOMException('The operation was aborted', 'AbortError'))
+          }, { once: true })
+        },
+      })
+      return Promise.resolve(new Response(body, { headers: { 'content-type': 'text/html' } }))
+    })
+
+    await expect(fetchHeadHtml('https://example.com', fetcher, 10)).rejects.toMatchObject({
+      _tag: 'fetch-head-upstream-error',
+      statusCode: 504,
+      statusMessage: 'Upstream request timed out',
+    })
+  })
+
+  it('reports a broken response stream as an upstream error', async () => {
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode('<html><head>'))
+        controller.error(new TypeError('terminated'))
+      },
+    })
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(body, { headers: { 'content-type': 'text/html' } }),
+    )
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({
+      _tag: 'fetch-head-upstream-error',
+      statusCode: 502,
+      statusMessage: 'Failed to fetch URL',
+    })
+  })
+
+  it('preserves the response byte limit when fetching HTML', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('too large', {
+      headers: { 'content-type': 'text/html', 'content-length': String(3 * 1024 * 1024) },
+    }))
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 413 })
+  })
 })
 
 describe('isFetchHeadUpstreamError', () => {

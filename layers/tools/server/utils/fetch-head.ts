@@ -180,7 +180,15 @@ export async function fetchHeadHtml(
     if (!contentType || !['text/html', 'application/xhtml+xml'].includes(contentType))
       throw createError({ statusCode: 415, statusMessage: 'URL did not return HTML' })
 
-    const html = await readLimitedText(response)
+    const html = await readLimitedText(response).catch((error: unknown) => {
+      const timedOut = error instanceof DOMException && error.name === 'AbortError'
+      if (!timedOut && !(error instanceof TypeError))
+        throw error
+      throw upstreamError(
+        timedOut ? 504 : 502,
+        timedOut ? 'Upstream request timed out' : 'Failed to fetch URL',
+      )
+    })
     if (!html)
       throw upstreamError(502, 'No HTML content received')
     return html
