@@ -11,6 +11,22 @@ export default defineNuxtConfig({
   nuxtSentry: {
     dsn: 'https://f3ae6ad9827cb10d4527a1a47d3fc4de@o4510507748163584.ingest.us.sentry.io/4511887362686976',
     project: 'unhead',
+    // Stale docs URLs throw an expected fatal 404 from useCurrentDocPage, so
+    // the client and server beforeSend drop them before they become reports.
+    // The message rule also catches a report that lost its original error and
+    // can no longer be matched by status.
+    policy: {
+      dropServerStatus: [404],
+      dropClientStatus: [401, 403, 404],
+      ignoreErrors: ['Page not found: '],
+      // A dev server on a private origin is never a deployment, so a report
+      // whose whole stack comes from one is local noise: drop localhost, the
+      // loopback and RFC 1918 ranges, ::1, and *.local hosts, as bare origins
+      // or full http(s) dev URLs. One production frame keeps the report.
+      denyUrls: [
+        /^(?:[a-z][a-z\d+.-]*:\/\/)?(?:localhost|\[?::1\]?|127(?:\.\d{1,3}){3}|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|[^/?#]+\.local)(?::\d+)?(?:[/?#]|$)/i,
+      ],
+    },
   },
 
   modules: [
@@ -333,6 +349,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/sitemap.xml': { swr: 3600 },
     // auth endpoints must not be cached (cookies need to be set fresh)
     '/auth/**': { prerender: false, cache: false, headers: { 'cache-control': 'no-store' } },
     '/admin/**': { prerender: false },
