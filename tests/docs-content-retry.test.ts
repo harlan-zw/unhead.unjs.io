@@ -33,6 +33,63 @@ describe('createResilientDocsQuery', () => {
     expect(sleep.mock.calls).toEqual([[5]])
   })
 
+  it.each([
+    new Error('D1_ERROR: near "SELECT": syntax error: SQLITE_ERROR'),
+    new Error('D1_ERROR: UNIQUE constraint failed: docs.path: SQLITE_CONSTRAINT'),
+    new TypeError('Cannot read properties of undefined'),
+    ...[400, 401, 403, 404].map(statusCode => Object.assign(new Error('Request failed'), { statusCode })),
+    Object.assign(new Error('Internal Server Error'), {
+      statusCode: 500,
+      cause: new Error('D1_ERROR: no such table: docs: SQLITE_ERROR'),
+    }),
+    Object.assign(new Error('[POST] "/__nuxt_content/docsUnhead/query": 500 Internal Server Error'), {
+      name: 'FetchError',
+      statusCode: 500,
+      data: { message: 'D1_ERROR: UNIQUE constraint failed: docs.path: SQLITE_CONSTRAINT' },
+    }),
+    Object.assign(new Error('[POST] "/__nuxt_content/docsUnhead/query": <no response> The operation was aborted'), {
+      name: 'FetchError',
+      cause: new DOMException('The operation was aborted', 'AbortError'),
+    }),
+  ])('rejects permanent failures immediately despite cached content: %s', async (error) => {
+    const sleep = vi.fn(async () => {})
+    const onStaleFallback = vi.fn()
+    const query = createResilientDocsQuery({ sleep, onStaleFallback })
+    const key = 'docsUnhead:page:/docs/head'
+    const run = vi.fn(async () => {
+      throw error
+    })
+    await query(key, async () => ({ path: '/docs/head' }))
+
+    await expect(query(key, run)).rejects.toBe(error)
+
+    expect(run).toHaveBeenCalledOnce()
+    expect(sleep).not.toHaveBeenCalled()
+    expect(onStaleFallback).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ...[500, 502, 503, 504].map(statusCode => Object.assign(new Error('Request failed'), {
+      name: 'FetchError',
+      statusCode,
+    })),
+    Object.assign(new Error('[POST] "/__nuxt_content/docsUnhead/query": <no response> Failed to fetch'), {
+      name: 'FetchError',
+      cause: new TypeError('Failed to fetch'),
+    }),
+    new Error('D1_ERROR', { cause: new Error('Database overloaded. Too many requests queued.') }),
+  ])('retries transient endpoint and database failures: %s', async (error) => {
+    const sleep = vi.fn(async () => {})
+    const query = createResilientDocsQuery({ sleep, baseDelayMs: 5 })
+    const data = { path: '/docs/head' }
+    const run = vi.fn().mockRejectedValueOnce(error).mockResolvedValueOnce(data)
+
+    await expect(query('docsUnhead:page:/docs/head', run)).resolves.toEqual({ data, stale: false })
+
+    expect(run).toHaveBeenCalledTimes(2)
+    expect(sleep.mock.calls).toEqual([[5]])
+  })
+
   it('serves stale cached content when a previously fetched page starts failing', async () => {
     const sleep = vi.fn(async () => {})
     const onStaleFallback = vi.fn()
@@ -56,7 +113,7 @@ describe('createResilientDocsQuery', () => {
     const query = createResilientDocsQuery({ retries: 1, baseDelayMs: 5, sleep })
     let version = 1
     const failRun = async () => {
-      throw new Error('D1_ERROR')
+      throw new Error('D1_ERROR: requests queued too long')
     }
 
     await query('docsUnhead:page:/docs/head', async () => ({ path: '/docs/head', version: version++ }))
@@ -75,9 +132,23 @@ describe('createResilientDocsQuery', () => {
     expect(miss).toEqual({ data: null, stale: false })
 
     const failRun = async () => {
-      throw new Error('D1_ERROR')
+      throw new Error('D1_ERROR: requests queued too long')
     }
     await expect(query('docsUnhead:page:/docs/missing', failRun)).rejects.toThrow('D1_ERROR')
+  })
+
+  it('invalidates cached content when a successful query reports a missing page', async () => {
+    const sleep = vi.fn(async () => {})
+    const query = createResilientDocsQuery({ retries: 1, sleep })
+    const key = 'docsUnhead:page:/docs/removed'
+    const overload = new Error('D1_ERROR: requests queued too long')
+
+    await query(key, async () => ({ path: '/docs/removed' }))
+    await expect(query(key, async () => null)).resolves.toEqual({ data: null, stale: false })
+
+    await expect(query(key, async () => {
+      throw overload
+    })).rejects.toBe(overload)
   })
 
   it('caches empty surrounding arrays so surround queries get a stale fallback', async () => {
@@ -87,7 +158,7 @@ describe('createResilientDocsQuery', () => {
     await query('docsUnhead:surround:/docs/head', async () => [])
 
     const result = await query('docsUnhead:surround:/docs/head', async () => {
-      throw new Error('D1_ERROR')
+      throw new Error('D1_ERROR: requests queued too long')
     })
 
     expect(result).toEqual({ data: [], stale: true })
@@ -97,7 +168,7 @@ describe('createResilientDocsQuery', () => {
     const sleep = vi.fn(async () => {})
     const query = createResilientDocsQuery({ retries: 1, baseDelayMs: 5, sleep, maxCacheEntries: 2 })
     const fail = async () => {
-      throw new Error('D1_ERROR')
+      throw new Error('D1_ERROR: requests queued too long')
     }
 
     await query('a', async () => 'a1')
