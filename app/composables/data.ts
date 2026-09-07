@@ -1,5 +1,6 @@
 import type { ContentNavigationItem } from '@nuxt/content'
 import { titleCase } from 'scule'
+import { createResilientDocsQuery } from '~~/utils/docs-retry'
 import {
   getLastPathSegment,
   getPathSection,
@@ -38,6 +39,14 @@ export async function useStats(options?: { lazy?: boolean, server?: boolean }) {
   return stats
 }
 
+// Module-level so the cache survives across requests on the server and across
+// client navigations, giving D1 overload windows a stale fallback.
+const queryDocs = createResilientDocsQuery({
+  onStaleFallback: (error, key) => {
+    console.warn('[docs] Serving stale content after query failure', key, error)
+  },
+})
+
 export async function useCurrentDocPage() {
   const nuxtApp = useNuxtApp()
   const route = useRouter().currentRoute.value
@@ -52,20 +61,30 @@ export async function useCurrentDocPage() {
 
   const { isBot: isBotRef } = useBotDetection()
 
-  const q = queryCollection(collection).path(contentPath).first()
   const p = (async () => {
-    let pageData = await q
-    if (!pageData) {
-      pageData = await queryCollection(collection).path(fallbackPath).first()
+    let pageResult = await queryDocs(
+      `${collection}:page:${contentPath}`,
+      () => queryCollection(collection).path(contentPath).first(),
+    )
+    if (!pageResult.data) {
+      pageResult = await queryDocs(
+        `${collection}:page:${fallbackPath}`,
+        () => queryCollection(collection).path(fallbackPath).first(),
+      )
     }
+    const pageData = pageResult.data
 
     if (!pageData?.body?.value) {
       throw createError({ statusCode: 404, statusMessage: `Page not found: ${route.path}`, fatal: true })
     }
 
-    const surroundData = await queryCollectionItemSurroundings(collection, pageData.path, {
-      fields: ['title', 'description', 'path'],
-    })
+    const surroundResult = await queryDocs(
+      `${collection}:surround:${pageData.path}`,
+      () => queryCollectionItemSurroundings(collection, pageData.path, {
+        fields: ['title', 'description', 'path'],
+      }),
+    )
+    const surroundData = surroundResult.data
 
     const page = ref(pageData)
     const surround = ref(surroundData.filter(m => m).map(m => ({
