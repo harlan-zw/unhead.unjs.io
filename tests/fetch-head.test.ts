@@ -1,13 +1,25 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   fetchHeadHtml,
+  isFetchHeadUpstreamError,
   normalizePublicHttpUrl,
   readLimitedText,
 } from '../layers/tools/server/utils/fetch-head'
 
+function htmlResponse(body = '<html><head><title>Safe</title></head></html>'): Response {
+  return new Response(body, { headers: { 'content-type': 'text/html; charset=utf-8' } })
+}
+
 describe('normalizePublicHttpUrl', () => {
   it('normalizes public hostnames and strips fragments', () => {
     expect(normalizePublicHttpUrl('example.com/page#secret').href).toBe('https://example.com/page')
+  })
+
+  it('rejects malformed URLs as invalid input', () => {
+    expect(() => normalizePublicHttpUrl('http://[')).toThrowError(expect.objectContaining({
+      statusCode: 400,
+      statusMessage: 'Invalid URL format',
+    }))
   })
 
   it.each([
@@ -52,6 +64,96 @@ describe('fetchHeadHtml', () => {
     )
 
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 415 })
+  })
+
+  it('reports a timeout while reading the response body as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockImplementation((_url, init) => {
+      const body = new ReadableStream<Uint8Array>({
+        start(controller) {
+          init?.signal?.addEventListener('abort', () => {
+            controller.error(new DOMException('The operation was aborted', 'AbortError'))
+          }, { once: true })
+        },
+      })
+      return Promise.resolve(new Response(body, { headers: { 'content-type': 'text/html' } }))
+    })
+
+    await expect(fetchHeadHtml('https://example.com', fetcher, 10)).rejects.toMatchObject({
+      _tag: 'fetch-head-upstream-error',
+      statusCode: 504,
+      statusMessage: 'Upstream request timed out',
+    })
+  })
+
+  it('reports a broken response stream as an upstream error', async () => {
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode('<html><head>'))
+        controller.error(new TypeError('terminated'))
+      },
+    })
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(body, { headers: { 'content-type': 'text/html' } }),
+    )
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({
+      _tag: 'fetch-head-upstream-error',
+      statusCode: 502,
+      statusMessage: 'Failed to fetch URL',
+    })
+  })
+
+  it('preserves the response byte limit when fetching HTML', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('too large', {
+      headers: { 'content-type': 'text/html', 'content-length': String(3 * 1024 * 1024) },
+    }))
+
+    await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 413 })
+  })
+})
+
+describe('isFetchHeadUpstreamError', () => {
+  it('marks a non-OK upstream response as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('', { status: 500 }))
+    const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(true)
+  })
+
+  it('marks an aborted upstream request as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new DOMException('The operation was aborted', 'AbortError'))
+    const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(true)
+  })
+
+  it('marks empty upstream HTML as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('', { headers: { 'content-type': 'text/html' } }))
+    const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(true)
+  })
+
+  it('does not mark invalid user input as an upstream error', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(htmlResponse())
+    const error = await fetchHeadHtml('https://user:secret@example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(false)
+  })
+
+  it.each([
+    'http://127.0.0.1/admin',
+    'https://user:secret@example.com',
+    'https://example.com:8443',
+  ])('does not mark an unsafe redirect target as an upstream error: %s', async (location) => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(null, { status: 302, headers: { location } }),
+    )
+    const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
+    expect(isFetchHeadUpstreamError(error)).toBe(false)
+    expect(error).toMatchObject({ statusCode: 400 })
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+
+  it('rejects values that are not errors', () => {
+    expect(isFetchHeadUpstreamError(undefined)).toBe(false)
+    expect(isFetchHeadUpstreamError('boom')).toBe(false)
   })
 })
 
