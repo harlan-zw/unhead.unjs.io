@@ -1,7 +1,21 @@
+import type { H3Error } from 'h3'
 import { createError } from 'h3'
 
 const MAX_REDIRECTS = 5
 export const MAX_HEAD_RESPONSE_BYTES = 2 * 1024 * 1024
+
+export type FetchHeadUpstreamError = H3Error & { readonly _tag: 'fetch-head-upstream-error' }
+
+function upstreamError(statusCode: 502 | 504, statusMessage: string): FetchHeadUpstreamError {
+  const error = createError({ statusCode, statusMessage })
+  return Object.assign(error, { _tag: 'fetch-head-upstream-error' as const })
+}
+
+export function isFetchHeadUpstreamError(error: unknown): error is FetchHeadUpstreamError {
+  return typeof error === 'object'
+    && error !== null
+    && (error as { _tag?: unknown })._tag === 'fetch-head-upstream-error'
+}
 
 function isPrivateIpv4(hostname: string): boolean {
   const parts = hostname.split('.').map(Number)
@@ -38,9 +52,20 @@ function isPrivateIpv6(hostname: string): boolean {
 
 export function normalizePublicHttpUrl(input: string, base?: URL): URL {
   const value = input.trim()
-  const candidate = base
-    ? new URL(value, base)
-    : new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`)
+  let candidate: URL
+  try {
+    candidate = base
+      ? new URL(value, base)
+      : new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`)
+  }
+  catch (error) {
+    if (!(error instanceof TypeError))
+      throw error
+    // Redirects supply a base URL. Malformed redirect targets are upstream failures.
+    if (base)
+      throw upstreamError(502, 'Invalid upstream redirect')
+    throw createError({ statusCode: 400, statusMessage: 'Invalid URL format' })
+  }
 
   if (!['http:', 'https:'].includes(candidate.protocol))
     throw createError({ statusCode: 400, statusMessage: 'Only HTTP/HTTPS URLs are supported' })
@@ -115,15 +140,7 @@ export async function fetchHeadHtml(
   const timeout = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    let url: URL
-    try {
-      url = normalizePublicHttpUrl(input)
-    }
-    catch (error) {
-      if (error && typeof error === 'object' && 'statusCode' in error)
-        throw error
-      throw createError({ statusCode: 400, statusMessage: 'Invalid URL format' })
-    }
+    let url = normalizePublicHttpUrl(input)
 
     let response: Response | undefined
     for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects++) {
@@ -141,34 +158,42 @@ export async function fetchHeadHtml(
       }
       catch (error) {
         const timedOut = error instanceof DOMException && error.name === 'AbortError'
-        throw createError({
-          statusCode: timedOut ? 504 : 502,
-          statusMessage: timedOut ? 'Upstream request timed out' : 'Failed to fetch URL',
-        })
+        throw upstreamError(
+          timedOut ? 504 : 502,
+          timedOut ? 'Upstream request timed out' : 'Failed to fetch URL',
+        )
       }
 
       if (response.status < 300 || response.status >= 400)
         break
 
       if (redirects === MAX_REDIRECTS)
-        throw createError({ statusCode: 502, statusMessage: 'Too many redirects' })
+        throw upstreamError(502, 'Too many redirects')
 
       const location = response.headers.get('location')
       if (!location)
-        throw createError({ statusCode: 502, statusMessage: 'Invalid upstream redirect' })
+        throw upstreamError(502, 'Invalid upstream redirect')
       url = normalizePublicHttpUrl(location, url)
     }
 
     if (!response?.ok)
-      throw createError({ statusCode: 502, statusMessage: `Upstream returned ${response?.status || 'an invalid response'}` })
+      throw upstreamError(502, `Upstream returned ${response?.status || 'an invalid response'}`)
 
     const contentType = response.headers.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase()
     if (!contentType || !['text/html', 'application/xhtml+xml'].includes(contentType))
       throw createError({ statusCode: 415, statusMessage: 'URL did not return HTML' })
 
-    const html = await readLimitedText(response)
+    const html = await readLimitedText(response).catch((error: unknown) => {
+      const timedOut = error instanceof DOMException && error.name === 'AbortError'
+      if (!timedOut && !(error instanceof TypeError))
+        throw error
+      throw upstreamError(
+        timedOut ? 504 : 502,
+        timedOut ? 'Upstream request timed out' : 'Failed to fetch URL',
+      )
+    })
     if (!html)
-      throw createError({ statusCode: 502, statusMessage: 'No HTML content received' })
+      throw upstreamError(502, 'No HTML content received')
     return html
   }
   finally {
