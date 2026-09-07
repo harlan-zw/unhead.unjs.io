@@ -18,7 +18,11 @@ function resolvePolicy(policy: ModuleOptions['policy'] | undefined, scope: Repor
     ),
     dropTransient: policy?.dropTransient ?? true,
     ignoreErrors: (policy?.ignoreErrors ?? []).map(value => ({ _tag: 'literal' as const, value })),
-    denyUrls: [],
+    denyUrls: (policy?.denyUrls ?? []).map(pattern => ({
+      _tag: 'pattern' as const,
+      source: pattern.source,
+      flags: pattern.flags.replace(/[gy]/g, ''),
+    })),
     secretKeys: [],
   }
 }
@@ -29,6 +33,18 @@ const serverBeforeSend = createBeforeSend(resolvePolicy(declaredPolicy, 'server'
 
 function errorReport(error: { name: string, message: string }): ErrorReport {
   return { exception: { values: [{ type: error.name, value: error.message }] } }
+}
+
+function reportWithStackFrames(filenames: string[]): ErrorReport {
+  return {
+    exception: {
+      values: [{
+        type: 'Error',
+        value: 'Session verification failed',
+        stacktrace: { frames: filenames.map(filename => ({ filename })) },
+      }],
+    },
+  }
 }
 
 describe('sentry noise policy', () => {
@@ -55,5 +71,43 @@ describe('sentry noise policy', () => {
     const error = createError({ statusCode: 500, statusMessage: 'Database unavailable' })
     const event = serverBeforeSend(errorReport(error), { originalException: error })
     expect(event?.exception?.values?.[0]?.value).toBe(error.message)
+  })
+
+  it('drops a report whose whole stack is served by a local dev origin', () => {
+    const localFrameUrls = [
+      'http://localhost:3000/_nuxt/entry.js',
+      'http://127.0.0.1:3000/_nuxt/entry.js',
+      'http://10.0.0.5:3000/_nuxt/entry.js',
+      'http://192.168.1.10:3000/_nuxt/entry.js',
+      'http://172.16.5.4:3000/_nuxt/entry.js',
+      'http://[::1]:3000/_nuxt/entry.js',
+      'http://harlan-macbook.local:3000/_nuxt/entry.js',
+      'localhost:3000/app/pages/index.vue',
+      '192.168.1.10:3000/app/pages/index.vue',
+    ]
+    for (const filename of localFrameUrls) {
+      const report = reportWithStackFrames([filename])
+      expect(clientBeforeSend(report), filename).toBeNull()
+      expect(serverBeforeSend(report), filename).toBeNull()
+    }
+  })
+
+  it('keeps a report with any production frame', () => {
+    const productionReport = reportWithStackFrames(['https://unhead.unjs.io/_nuxt/entry.js'])
+    expect(clientBeforeSend(productionReport)?.exception?.values?.[0]?.value).toBe('Session verification failed')
+    expect(serverBeforeSend(productionReport)?.exception?.values?.[0]?.value).toBe('Session verification failed')
+  })
+
+  it('keeps a mixed stack that has one production frame', () => {
+    const mixedReport = reportWithStackFrames([
+      'http://192.168.1.10:3000/_nuxt/entry.js',
+      'https://unhead.unjs.io/_nuxt/entry.js',
+    ])
+    expect(clientBeforeSend(mixedReport)?.exception?.values?.[0]?.value).toBe('Session verification failed')
+  })
+
+  it('keeps a frame from a host outside the private 172 range', () => {
+    const publicReport = reportWithStackFrames(['http://172.15.5.4:3000/_nuxt/entry.js'])
+    expect(clientBeforeSend(publicReport)?.exception?.values?.[0]?.value).toBe('Session verification failed')
   })
 })
