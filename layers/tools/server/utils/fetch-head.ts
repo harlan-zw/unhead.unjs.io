@@ -52,9 +52,20 @@ function isPrivateIpv6(hostname: string): boolean {
 
 export function normalizePublicHttpUrl(input: string, base?: URL): URL {
   const value = input.trim()
-  const candidate = base
-    ? new URL(value, base)
-    : new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`)
+  let candidate: URL
+  try {
+    candidate = base
+      ? new URL(value, base)
+      : new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`)
+  }
+  catch (error) {
+    if (!(error instanceof TypeError))
+      throw error
+    // Redirects supply a base URL. Malformed redirect targets are upstream failures.
+    if (base)
+      throw upstreamError(502, 'Invalid upstream redirect')
+    throw createError({ statusCode: 400, statusMessage: 'Invalid URL format' })
+  }
 
   if (!['http:', 'https:'].includes(candidate.protocol))
     throw createError({ statusCode: 400, statusMessage: 'Only HTTP/HTTPS URLs are supported' })
@@ -129,15 +140,7 @@ export async function fetchHeadHtml(
   const timeout = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    let url: URL
-    try {
-      url = normalizePublicHttpUrl(input)
-    }
-    catch (error) {
-      if (error && typeof error === 'object' && 'statusCode' in error)
-        throw error
-      throw createError({ statusCode: 400, statusMessage: 'Invalid URL format' })
-    }
+    let url = normalizePublicHttpUrl(input)
 
     let response: Response | undefined
     for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects++) {

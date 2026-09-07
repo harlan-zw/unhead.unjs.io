@@ -38,6 +38,27 @@ describe('fetch-head route', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  it('rejects a malformed URL before fetching', async () => {
+    const { response } = requestHead('http://[')
+    const result = await response
+
+    expect(result.status).toBe(400)
+    expect(await result.json()).toMatchObject({ statusCode: 400, statusMessage: 'Invalid URL format' })
+    expect(fetcher).not.toHaveBeenCalled()
+  })
+
+  it('answers a malformed upstream redirect without invoking the error hook', async () => {
+    fetcher.mockResolvedValue(new Response(null, { status: 302, headers: { location: 'http://[' } }))
+
+    const { response, onError } = requestHead()
+    const result = await response
+
+    expect(result.status).toBe(502)
+    expect(await result.json()).toEqual({ statusCode: 502, statusMessage: 'Invalid upstream redirect' })
+    expect(onError).not.toHaveBeenCalled()
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+
   it.each([
     [new TypeError('fetch failed'), 502, 'Failed to fetch URL'],
     [new DOMException('The operation was aborted', 'AbortError'), 504, 'Upstream request timed out'],

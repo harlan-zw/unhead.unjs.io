@@ -15,6 +15,13 @@ describe('normalizePublicHttpUrl', () => {
     expect(normalizePublicHttpUrl('example.com/page#secret').href).toBe('https://example.com/page')
   })
 
+  it('rejects malformed URLs as invalid input', () => {
+    expect(() => normalizePublicHttpUrl('http://[')).toThrowError(expect.objectContaining({
+      statusCode: 400,
+      statusMessage: 'Invalid URL format',
+    }))
+  })
+
   it.each([
     'http://localhost',
     'http://127.0.0.1',
@@ -130,12 +137,18 @@ describe('isFetchHeadUpstreamError', () => {
     expect(isFetchHeadUpstreamError(error)).toBe(false)
   })
 
-  it('does not mark an unsafe redirect target as an upstream error', async () => {
+  it.each([
+    'http://127.0.0.1/admin',
+    'https://user:secret@example.com',
+    'https://example.com:8443',
+  ])('does not mark an unsafe redirect target as an upstream error: %s', async (location) => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response(null, { status: 302, headers: { location: 'http://127.0.0.1/admin' } }),
+      new Response(null, { status: 302, headers: { location } }),
     )
     const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
     expect(isFetchHeadUpstreamError(error)).toBe(false)
+    expect(error).toMatchObject({ statusCode: 400 })
+    expect(fetcher).toHaveBeenCalledTimes(1)
   })
 
   it('rejects values that are not errors', () => {
