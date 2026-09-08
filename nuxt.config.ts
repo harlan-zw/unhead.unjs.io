@@ -22,9 +22,13 @@ export default defineNuxtConfig({
       // A dev server on a private origin is never a deployment, so a report
       // whose whole stack comes from one is local noise: drop localhost, the
       // loopback and RFC 1918 ranges, ::1, and *.local hosts, as bare origins
-      // or full http(s) dev URLs. One production frame keeps the report.
+      // or full http(s) dev URLs. A stack filed against a local checkout is
+      // the same noise: drop bare POSIX filesystem paths (dev machine, CI
+      // runner, container) and their file:// form. One production frame
+      // keeps the report.
       denyUrls: [
         /^(?:[a-z][a-z\d+.-]*:\/\/)?(?:localhost|\[?::1\]?|127(?:\.\d{1,3}){3}|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|[^/?#]+\.local)(?::\d+)?(?:[/?#]|$)/i,
+        /^(?:file:\/\/)?\/(?:app|build|builds|data|etc|home|media|mnt|opt|private|root|srv|tmp|usr|Users|var|workspace|workspaces)(?:\/|$)/i,
       ],
     },
   },
