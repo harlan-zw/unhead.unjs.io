@@ -92,8 +92,37 @@ describe('sentry noise policy', () => {
     }
   })
 
+  it('drops a report whose whole stack is bare local filesystem paths', () => {
+    const bareFramePaths = [
+      '/home/harlan/.local/share/harlan-github-agent/worktrees/issue-50/app/app.vue',
+      '/home/runner/work/unhead.unjs.io/unhead.unjs.io/dist/server.mjs',
+      '/Users/harlan/sites/unhead.unjs.io/app/app.vue',
+      '/root/project/.output/server/chunks/build/server.mjs',
+      '/app/server/chunks/nitro/node-server.mjs',
+      '/var/task/handler.mjs',
+      '/builds/project/dist/server.mjs',
+      '/workspaces/unhead.unjs.io/app/app.vue',
+      'file:///home/harlan/agent/worktrees/site/app/app.vue',
+      'file:///Users/harlan/dev/site/app/app.vue',
+    ]
+    for (const filename of bareFramePaths) {
+      const report = reportWithStackFrames([filename])
+      expect(clientBeforeSend(report), filename).toBeNull()
+      expect(serverBeforeSend(report), filename).toBeNull()
+    }
+  })
+
   it('keeps a report with any production frame', () => {
     const productionReport = reportWithStackFrames(['https://unhead.unjs.io/_nuxt/entry.js'])
+    expect(clientBeforeSend(productionReport)?.exception?.values?.[0]?.value).toBe('Session verification failed')
+    expect(serverBeforeSend(productionReport)?.exception?.values?.[0]?.value).toBe('Session verification failed')
+  })
+
+  it('keeps production URLs even though their path part looks like a filesystem path', () => {
+    const productionReport = reportWithStackFrames([
+      'https://unhead.unjs.io/home/guide',
+      'https://unhead.unjs.io/docs/head/api',
+    ])
     expect(clientBeforeSend(productionReport)?.exception?.values?.[0]?.value).toBe('Session verification failed')
     expect(serverBeforeSend(productionReport)?.exception?.values?.[0]?.value).toBe('Session verification failed')
   })
