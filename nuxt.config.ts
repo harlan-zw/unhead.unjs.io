@@ -157,6 +157,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    checkinToken: '',
     checkinDeployment: process.env.CF_PAGES_COMMIT_SHA || process.env.GITHUB_SHA || '',
     oauth: {
       github: {

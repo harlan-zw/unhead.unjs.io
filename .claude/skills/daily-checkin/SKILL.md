@@ -5,9 +5,18 @@ description: Read Unhead documentation health and Sentry evidence in one daily c
 
 # Daily Check-in
 
-Run `pnpm checkin` from the repository root.
-Configure `CHECKIN_ADMIN_COOKIE`, `CHECKIN_DEPLOYMENT`, `SENTRY_ORG=harlan-zw`, and `SENTRY_AUTH_TOKEN` externally.
-Use an existing admin session. Never log or commit its cookie.
+Load the private token before running the shared CLI:
+
+```sh
+set -a
+. "$HOME/.config/harlan-checkin/unhead.unjs.io.env"
+set +a
+pnpm checkin
+```
+
+Run from the repository root. Never print or commit the token.
+Configure `CHECKIN_DEPLOYMENT`, `SENTRY_ORG=harlan-zw`, and `SENTRY_AUTH_TOKEN` externally.
+The token authorizes only the read-only report. Keep existing admin authentication for admin operations.
 Match the expected deployment to the active Pages build commit.
 The script combines authenticated documentation checks and complete unresolved Sentry pagination.
 The report requires both supported documentation versions and the AI Ready database.
