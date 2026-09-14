@@ -1,7 +1,9 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
+import { externalCheckin } from './shared/checkin-external'
 
 export default defineNuxtConfig({
+  checkin: { external: externalCheckin },
   extends: ['./layers/admin', './layers/tools'],
 
   nuxtDx: {

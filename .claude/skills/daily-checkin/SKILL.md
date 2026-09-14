@@ -5,7 +5,7 @@ description: Read Unhead documentation health and Sentry evidence in one daily c
 
 # Daily Check-in
 
-Run `node --env-file-if-exists=.env scripts/checkin/daily.ts` from the repository root.
+Run `pnpm checkin` from the repository root.
 Configure `CHECKIN_ADMIN_COOKIE`, `CHECKIN_DEPLOYMENT`, `SENTRY_ORG=harlan-zw`, and `SENTRY_AUTH_TOKEN` externally.
 Use an existing admin session. Never log or commit its cookie.
 Match the expected deployment to the active Pages build commit.
@@ -28,3 +28,6 @@ Never deploy, mutate production data, or send messages without existing authoriz
 The combined daily routine preserves 06:40 Australia/Sydney from the former Sentry schedule.
 It activates only after package release, deployment, and draft merge.
 No separate Sentry schedule remains.
+
+The module discovers external checks in `checks/external` during preparation.
+Keep required external IDs in `shared/checkin-external.ts`.
