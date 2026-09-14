@@ -23,6 +23,8 @@ function resolvePolicy(policy: ModuleOptions['policy'] | undefined, scope: Repor
       source: pattern.source,
       flags: pattern.flags.replace(/[gy]/g, ''),
     })),
+    dropStacklessErrors: [],
+    dropBreadcrumbMessages: [],
     secretKeys: [],
   }
 }

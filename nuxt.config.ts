@@ -35,6 +35,7 @@ export default defineNuxtConfig({
 
   modules: [
     '@harlan-zw/nuxt-dx',
+    '@harlan-zw/nuxt-checkin',
     '@harlan-zw/nuxt-wide-events',
     '@harlan-zw/nuxt-github-sponsors',
     '@nuxt/ui',
@@ -154,6 +155,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    checkinDeployment: process.env.CF_PAGES_COMMIT_SHA || process.env.GITHUB_SHA || '',
     oauth: {
       github: {
         clientId: '', // NUXT_OAUTH_GITHUB_CLIENT_ID
