@@ -1,7 +1,9 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
+import { externalCheckin } from './shared/checkin-external'
 
 export default defineNuxtConfig({
+  checkin: { external: externalCheckin },
   extends: ['./layers/admin', './layers/tools'],
 
   nuxtDx: {
@@ -35,6 +37,7 @@ export default defineNuxtConfig({
 
   modules: [
     '@harlan-zw/nuxt-dx',
+    '@harlan-zw/nuxt-checkin',
     '@harlan-zw/nuxt-wide-events',
     '@harlan-zw/nuxt-github-sponsors',
     '@nuxt/ui',
@@ -154,6 +157,8 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    checkinToken: '',
+    checkinDeployment: process.env.NUXT_CHECKIN_DEPLOYMENT || process.env.CF_PAGES_COMMIT_SHA || '',
     oauth: {
       github: {
         clientId: '', // NUXT_OAUTH_GITHUB_CLIENT_ID

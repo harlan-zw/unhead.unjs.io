@@ -16,13 +16,15 @@
     "lint:docs:fix": "markdownlint ./snippets --disable MD013 MD041 --fix -- && case-police 'snippets/**/*.md' *.md --fix",
     "test": "vitest run",
     "test:e2e:og": "vitest run --config vitest.e2e.config.ts tests/og-image.e2e.test.ts",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "checkin": "nuxt-checkin prepare && nuxt-checkin"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
     "@babel/parser": "catalog:",
     "@babel/types": "catalog:",
     "@cloudflare/workers-types": "catalog:",
+    "@harlan-zw/nuxt-checkin": "catalog:",
     "@harlan-zw/nuxt-cloudflare": "catalog:",
     "@harlan-zw/nuxt-dx": "catalog:",
     "@harlan-zw/nuxt-github-sponsors": "catalog:",
