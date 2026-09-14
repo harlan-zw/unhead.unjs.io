@@ -158,7 +158,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     checkinToken: '',
-    checkinDeployment: process.env.CF_PAGES_COMMIT_SHA || process.env.GITHUB_SHA || '',
+    checkinDeployment: process.env.NUXT_CHECKIN_DEPLOYMENT || process.env.CF_PAGES_COMMIT_SHA || '',
     oauth: {
       github: {
         clientId: '', // NUXT_OAUTH_GITHUB_CLIENT_ID

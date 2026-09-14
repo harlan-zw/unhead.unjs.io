@@ -76,6 +76,7 @@ jobs:
           # the release tag named a commit this build does not contain. Sentry
           # then blamed live errors on code that was never deployed.
           SENTRY_RELEASE: ${{ github.event.workflow_run.head_sha || github.sha }}
+          NUXT_CHECKIN_DEPLOYMENT: ${{ github.event.workflow_run.head_sha || github.sha }}
           UNHEAD_DOCS_SOURCE: remote
 
       # This upload uses Pages project settings without a Wrangler config.
