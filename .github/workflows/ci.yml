@@ -5,13 +5,31 @@ name: CI
 # red branch was discovered by a failed production deploy.
 #
 # The jobs live in harlan-zw/harlan-nuxt so every site shares one pinned copy.
-# Build stays out: it needs this repository's own secrets, which a reusable
-# workflow cannot take, and deploy-cloudflare.yml already builds.
 
 on:
   pull_request:
+    paths:
+      - '**'
+      - '!**/*.md'
+      - '!docs/**'
+      - '!.editorconfig'
+      - '!.gitignore'
+      - '!.idea/**'
+      - '!.vscode/**'
+      - 'content/**/*.md'
+      - 'snippets/**/*.md'
   push:
     branches: [main]
+    paths:
+      - '**'
+      - '!**/*.md'
+      - '!docs/**'
+      - '!.editorconfig'
+      - '!.gitignore'
+      - '!.idea/**'
+      - '!.vscode/**'
+      - 'content/**/*.md'
+      - 'snippets/**/*.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,3 +53,21 @@ jobs:
       test-command: pnpm test
       typecheck-node-options: --max-old-space-size=14000
       timeout-minutes: 30
+
+  build:
+    # Main builds in the deploy workflow. Keep the build check on pull requests.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env:
+          NODE_OPTIONS: --max-old-space-size=12288
+          UNHEAD_DOCS_SOURCE: remote
