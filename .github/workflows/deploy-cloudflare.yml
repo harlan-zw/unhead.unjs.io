@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   # Every trigger that reaches the deploy writes to the same Pages production
@@ -124,3 +125,22 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: node scripts/sync-nuxt-content-d1.mjs --database unhead-unjs-io
+
+      # Reuse the deploy build. Reporting errors must not change deployment status.
+      - name: Report Nuxt DX budget
+        id: dx_budget
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true
+        timeout-minutes: 2
+        uses: harlan-zw/harlan-nuxt/.github/actions/nuxt-dx-budget@95e49acf4a8f38b76cd374e2531039b280b869bc
+        with:
+          artifact-name: nuxt-dx-size-budget-v3-prod
+          report-path: .nuxt/dx/size-budget.json
+          threshold-kb: 10
+          comment: 'false'
+      - name: Surface unavailable size report
+        if: steps.dx_budget.outcome == 'failure'
+        run: |
+          echo '::warning::Nuxt DX reporting failed. See the report step.'
+          echo '### Nuxt DX report unavailable' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Reporting failed. The deployment result is unchanged.' >> "$GITHUB_STEP_SUMMARY"
