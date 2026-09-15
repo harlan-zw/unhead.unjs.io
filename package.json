@@ -17,7 +17,7 @@
     "test": "vitest run",
     "test:e2e:og": "vitest run --config vitest.e2e.config.ts tests/og-image.e2e.test.ts",
     "typecheck": "nuxt typecheck",
-    "checkin": "nuxt-checkin prepare && nuxt-checkin"
+    "checkin": "nuxt-checkin prepare && nuxt-checkin --save"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",

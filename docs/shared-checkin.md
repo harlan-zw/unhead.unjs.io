@@ -10,7 +10,7 @@ Missing credentials and missing evidence never prove health.
 
 ## Release
 
-Use Nuxt Check-in 0.2.0, Cloudflare 0.4.2, and Sentry 0.1.6 from the npm registry.
+Use Nuxt Check-in 0.2.1, Cloudflare 0.4.2, and Sentry 0.1.6 from the npm registry.
 The lockfile pins the published shared CLI release.
 Deploy the report route before activating the updated routine.
 Configure external credentials as described in the daily skill.
@@ -31,7 +31,11 @@ Verify deployed route authentication and live Sentry access before completing ro
 
 ## Shared CLI
 
-Run `pnpm checkin` to prepare the registered checks and execute the shared CLI.
+Run `pnpm checkin` to prepare the registered checks and save the shared CLI report.
+Set `DAILY_CHECKIN_DIR` to preserve reports and `state.json` outside disposable worktrees.
+The daily skill provides a stable default directory.
+Complete reports advance the daily baseline, including warnings and failures.
+Same-day reruns preserve the first complete baseline. Incomplete reports never advance it.
 Add external checks in `checks/external/*.ts`.
 Keep required external IDs in `shared/checkin-external.ts`.
 The module owns report validation, response limits, deadlines, JSON output, and exit codes.
