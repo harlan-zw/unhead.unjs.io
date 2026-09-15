@@ -11,8 +11,17 @@ Load the private token before running the shared CLI:
 set -a
 . "$HOME/.config/harlan-checkin/unhead.unjs.io.env"
 set +a
-pnpm checkin
+export DAILY_CHECKIN_DIR="${DAILY_CHECKIN_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/daily-checkin/harlan-zw/unhead.unjs.io}"
+mkdir -p "$DAILY_CHECKIN_DIR"
+collector_exit=0
+pnpm checkin > "$DAILY_CHECKIN_DIR/collector.log" 2>&1 || collector_exit=$?
+cat "$DAILY_CHECKIN_DIR/collector.log"
+printf 'Collector exit: %s\n' "$collector_exit"
 ```
+
+Preserve an existing `DAILY_CHECKIN_DIR`. It keeps reports and `state.json` outside disposable worktrees.
+Complete reports advance the daily baseline, including warnings and failures.
+Same-day reruns preserve the first complete baseline. Incomplete reports never advance it.
 
 Run from the repository root. Never print or commit the token.
 Configure `CHECKIN_DEPLOYMENT`, `SENTRY_ORG=harlan-zw`, and `SENTRY_AUTH_TOKEN` externally.
@@ -22,7 +31,8 @@ The script combines authenticated documentation checks and complete unresolved S
 The report requires both supported documentation versions and the AI Ready database.
 Missing credentials, missing checks, stale reports, and wrong deployments remain unavailable.
 Read severity and coverage together. Incomplete coverage never proves health.
-Exit codes are 0 for complete passing evidence, 1 for warning or incomplete, and 2 for failure.
+Exit code 0 means complete passing evidence. Exit code 1 means complete warnings or failures.
+Exit code 2 means incomplete coverage.
 
 Use existing documentation routes to confirm rendering after a collection failure.
 Check Pages deployment and content synchronization before changing documentation sources.
