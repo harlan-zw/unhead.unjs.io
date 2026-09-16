@@ -26,3 +26,6 @@ docs/.nuxt
 
 # PR Lens writes its previews here. They are rebuilt on demand.
 .pr-lens/
+
+# nuxt-checkin fallback archive when DAILY_CHECKIN_DIR is not set
+docs/ops/checkins/
