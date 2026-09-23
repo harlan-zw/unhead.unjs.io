@@ -49,7 +49,7 @@ Titles get attention, but **descriptions are worse across every framework**. Eve
 
 Developers treat descriptions as optional. Frameworks don't warn when a page ships without one. CMS integrations populate titles but leave descriptions empty. Unlike a missing title (which shows as a blank browser tab), a missing description fails silently.
 
-But descriptions directly affect search click-through rates. Google uses `<meta name="description">`{lang="html"} as the snippet text. Without one, Google pulls a random sentence from the page body - usually a poor choice.
+But descriptions directly affect search click-through rates. Google often uses `<meta name="description">`{lang="html"} as the snippet text. Without one, Google pulls a random sentence from the page body - usually a poor choice. To find the pages where a weak snippet costs clicks, compare each query's CTR with the norm for its position. The free [CTR opportunity finder](https://gscdump.com/tools/opportunity) does this from your Search Console data.
 
 ::Callout{icon="i-ph-megaphone-duotone" title="For framework authors"}
 Consider treating a missing `<meta name="description">`{lang="html"} as a build warning, not a silent omission.
