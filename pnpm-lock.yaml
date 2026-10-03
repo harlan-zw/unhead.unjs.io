@@ -198,6 +198,9 @@ catalogs:
     unstorage:
       specifier: ^1.17.5
       version: 1.17.5
+    vitest:
+      specifier: ^5.0.0
+      version: 5.0.0
     vue-tsc:
       specifier: ^3.3.9
       version: 3.3.9
@@ -444,7 +447,7 @@ importers:
         specifier: 'catalog:'
         version: 1.17.5(db0@0.3.4(better-sqlite3@13.0.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260810.1)(@opentelemetry/api@1.9.1)(@types/pg@8.6.1)(better-sqlite3@13.0.3)))(ioredis@5.11.1(supports-color@10.2.2))
       vitest:
-        specifier: 5.0.0
+        specifier: 'catalog:'
         version: 5.0.0(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(jsdom@29.1.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.11)(yaml@2.9.0))
       vue-tsc:
         specifier: 'catalog:'
