@@ -56,6 +56,27 @@ export default defineNuxtConfig({
     // 'nuxt-build-cache',
     async (_, nuxt) => {
       // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
+      nuxt.hooks.hook('nitro:config', (config) => {
+        // Cache the docs content query routes inside Nitro so internal SSR
+        // dispatch and external POSTs share one cache. This runs after
+        // @nuxt/content registered its handlers, which fire their own
+        // nitro:config hook first.
+        const wrapperPath = resolve('./server/handlers/content-query-cache.ts')
+        const capturedHandlers: string[] = []
+        for (const collection of ['docsUnhead', 'docsUnheadV2']) {
+          const route = `/__nuxt_content/${collection}/query`
+          const registered = (config.handlers ||= []).filter(handler => handler.route === route)
+          if (registered.length !== 1)
+            throw new Error(`Expected exactly one Nitro handler registered for ${route}, found ${registered.length}. The content query cache needs a single @nuxt/content registration to wrap.`)
+          capturedHandlers.push(registered[0]!.handler)
+          registered[0]!.handler = wrapperPath
+        }
+        const [originalHandler] = new Set(capturedHandlers)
+        if (!originalHandler || capturedHandlers.some(handlerPath => handlerPath !== originalHandler))
+          throw new Error('The docs content query handlers resolve to different modules, refusing to wrap them with a single cache.')
+        config.alias ||= {}
+        config.alias['#unhead-content-query-original'] = originalHandler
+      })
       nuxt.hooks.hook('nitro:init', (nitro) => {
         // from sponsorkit
         nitro.options.alias.sharp = 'unenv/mock/empty'
