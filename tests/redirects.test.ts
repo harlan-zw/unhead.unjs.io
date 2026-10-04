@@ -11,15 +11,6 @@ function redirectFor(path: string) {
 }
 
 describe('redirects middleware', () => {
-  it.each([
-    '/docs/head/guides/core-concepts/streaming',
-    '/docs/head/guides/core-concepts/streaming/',
-  ])('redirects the shared streaming URL to the authored guide: %s', async (path) => {
-    const res = await redirectFor(`${path}?utm_source=docs`)
-    expect(res.status).toBe(301)
-    expect(res.headers.get('location')).toBe('/docs/typescript/head/guides/core-concepts/streaming?utm_source=docs')
-  })
-
   it('redirects the removed debugging guide to the guides overview', async () => {
     const res = await redirectFor('/docs/head/guides/debugging')
     expect(res.status).toBe(301)

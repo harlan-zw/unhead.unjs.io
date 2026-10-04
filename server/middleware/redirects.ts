@@ -4,11 +4,6 @@ export default defineEventHandler((event) => {
   const url = getRequestURL(event)
   const path = url.pathname
 
-  // Streaming guides are framework-authored. The shared URL was never published.
-  if (/^\/docs\/head\/guides\/core-concepts\/streaming\/?$/.test(path)) {
-    return sendRedirect(event, `/docs/typescript/head/guides/core-concepts/streaming${url.search}`, 301)
-  }
-
   // TypeScript no longer has a framework-authored upgrade page at this old
   // route. Other frameworks do, so they must be allowed through and indexed.
   const match = path.match(/^\/docs\/([\w-]+)\/head\/guides\/get-started\/migration\/?$/)
