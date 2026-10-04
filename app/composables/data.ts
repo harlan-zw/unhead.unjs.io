@@ -60,8 +60,6 @@ export async function useCurrentDocPage() {
   const isV2 = route.path.startsWith('/docs/v2')
   const collection = isV2 ? 'docsUnheadV2' : 'docsUnhead'
 
-  const { isBot: isBotRef } = useBotDetection()
-
   const p = (async () => {
     // Reuse server content during hydration instead of loading browser SQLite.
     const { data: docResult, error: docError } = await useAsyncData(`docs:${collection}:${contentPath}`, async () => {
@@ -103,36 +101,9 @@ export async function useCurrentDocPage() {
       _path: m.path,
     })))
 
-    // Skip commit metadata for bots, not needed for indexing
-    const filePath = pageData.id.split('/').slice(2).join('/')
-    const payloadKey = `commit-${filePath}`
-    const cachedData = !import.meta.server ? nuxtApp.payload.data[payloadKey] : undefined
-    const lastCommit = ref(cachedData ?? null)
-    if (isBotRef.value) {
-      // no-op
-    }
-    else if (import.meta.server) {
-      lastCommit.value = await $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`, {
-        timeout: 6_000,
-      }).catch((error) => {
-        console.warn('[docs] Failed to load commit metadata', error)
-        return null
-      })
-      nuxtApp.payload.data[payloadKey] = lastCommit.value
-    }
-    else if (!cachedData) {
-      // client-side nav without cache, fetch lazily so we don't block navigation
-      $fetch(`/api/github/unjs@unhead/last-file-commit?file=docs/${filePath}`)
-        .then((data) => { lastCommit.value = data })
-        .catch((error) => {
-          console.warn('[docs] Failed to load commit metadata', error)
-        })
-    }
-
     return {
       page,
       surround,
-      lastCommit,
       isV2,
     }
   })()

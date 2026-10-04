@@ -16,10 +16,24 @@ definePageMeta({
 
 const route = useRoute()
 
-const { page, surround, lastCommit, isV2 } = await useCurrentDocPage()
+const { page, surround, isV2 } = await useCurrentDocPage()
 if (!page?.value?.id) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
+
+// Optional footer metadata must not hold up server rendering or navigation.
+const filePath = page.value.id.split('/').slice(2).join('/')
+const { data: lastCommit, error: commitError } = useFetch('/api/github/unjs@unhead/last-file-commit', {
+  key: `commit-${filePath}`,
+  query: { file: `docs/${filePath}` },
+  server: false,
+  lazy: true,
+  timeout: 6_000,
+})
+watch(commitError, (error) => {
+  if (error)
+    console.warn('[docs] Failed to load commit metadata', error)
+})
 
 const { selectedFramework } = useFrameworkSelector()
 const opportunity = computed(() => isV2 ? undefined : getDocsOpportunity(route.path))
@@ -122,25 +136,7 @@ const transformedPage = computed(() => {
           { label: 'Copy for LLMs', to: repoLinks[1]?.to, icon: 'i-catppuccin-markdown', target: '_blank' },
         ] : []"
         :ui="{ title: 'leading-normal' }"
-      >
-        <div class="mt-3">
-          <DocsCommitMeta
-            v-if="lastCommit"
-            :date="lastCommit.date"
-            :date-human="lastCommit.dateHuman"
-            :author-name="lastCommit.author.name"
-            :author-username="lastCommit.author.committer"
-            :commit-message="lastCommit.message"
-            :commit-url="lastCommit.url"
-          />
-          <div v-else class="flex items-center gap-1.5 text-sm">
-            <USkeleton class="h-4 w-[280px]" />
-            <USkeleton class="h-5 w-[100px] rounded-md" />
-            <USkeleton class="h-4 w-[16px]" />
-            <USkeleton class="h-5 w-[140px] rounded-md" />
-          </div>
-        </div>
-      </UPageHeader>
+      />
 
       <div class="block xl:hidden">
         <div class="mt-5 flex items-center gap-2 text-[var(--ui-text-accented)]">
@@ -157,6 +153,16 @@ const transformedPage = computed(() => {
       <UPageBody prose class="pb-0">
         <DocsOpportunity v-if="opportunity" :opportunity="opportunity" />
         <ContentRenderer v-if="page.body" :value="transformedPage" />
+        <DocsCommitMeta
+          v-if="lastCommit"
+          class="my-6 not-prose"
+          :date="lastCommit.date"
+          :date-human="lastCommit.dateHuman"
+          :author-name="lastCommit.author.name"
+          :author-username="lastCommit.author.committer"
+          :commit-message="lastCommit.message"
+          :commit-url="lastCommit.url"
+        />
         <div class="justify-center flex items-center gap-5 font-semibold">
           <div class="flex items-center gap-2">
             <UIcon name="i-simple-icons-github" class="w-5 h-5" />
