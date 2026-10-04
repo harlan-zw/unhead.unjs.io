@@ -12,6 +12,10 @@ function redirectFor(path: string) {
 
 describe('redirects middleware', () => {
   it.each([
+    ['/api/use-head', '/docs/head/api/composables/use-head'],
+    ['/api/use-seo-meta', '/docs/head/api/composables/use-seo-meta'],
+    ['/api/use-head-safe', '/docs/head/api/composables/use-head-safe'],
+    ['/api/use-script', '/docs/head/api/composables/use-script'],
     ['/integrations/vue/vitesse', '/docs/vue/head/guides/get-started/installation'],
     ['/guide/getting-started/how-it-works', '/docs/head/guides/get-started/intro-to-unhead'],
     ['/setup/unhead/introduction', '/docs/head/guides/get-started/intro-to-unhead'],
