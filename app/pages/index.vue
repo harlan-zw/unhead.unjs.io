@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
 import { ref } from 'vue'
 import { stripHeaderAnchorLinks } from '~~/utils/content'
 import { getDocPath, getHomepageDocPath } from '~~/utils/urls'
@@ -6,17 +7,36 @@ import { useStats } from '~/composables/data'
 import { humanNumber } from '~/composables/format'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 
-// Lazy-load heavy magic-move dependencies (~5,700 lines of token data + component)
+// Load animation code and data only when its example approaches the viewport.
 const ShikiMagicMovePrecompiled = defineAsyncComponent(() =>
   import('@shikijs/magic-move/vue').then(m => m.ShikiMagicMovePrecompiled),
 )
-const MagicMoveTokens = ref<any[]>([])
-const SideEffectTokens = ref<any[]>([])
-if (import.meta.client) {
-  import('../magic-move').then(m => MagicMoveTokens.value = m.MagicMoveTokens)
-  import('../magic-move-mount').then(m => SideEffectTokens.value = m.MagicMoveTokens)
-  import('@shikijs/magic-move/style.css')
-}
+const MagicMoveTokens = shallowRef<any[]>([])
+const SideEffectTokens = shallowRef<any[]>([])
+const capoExample = useTemplateRef<HTMLElement>('capoExample')
+const sideEffectExample = useTemplateRef<HTMLElement>('sideEffectExample')
+
+const { stop: stopCapoObserver } = useIntersectionObserver(capoExample, async ([entry]) => {
+  if (!entry?.isIntersecting)
+    return
+  stopCapoObserver()
+  const [tokens] = await Promise.all([
+    import('../magic-move'),
+    import('@shikijs/magic-move/style.css'),
+  ])
+  MagicMoveTokens.value = tokens.MagicMoveTokens
+}, { rootMargin: '200px' })
+
+const { stop: stopSideEffectObserver } = useIntersectionObserver(sideEffectExample, async ([entry]) => {
+  if (!entry?.isIntersecting)
+    return
+  stopSideEffectObserver()
+  const [tokens] = await Promise.all([
+    import('../magic-move-mount'),
+    import('@shikijs/magic-move/style.css'),
+  ])
+  SideEffectTokens.value = tokens.MagicMoveTokens
+}, { rootMargin: '200px' })
 
 definePageMeta({
   breadcrumb: {
@@ -310,7 +330,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             </UButton>
           </div>
         </div>
-        <div class=" h-full flex items-center justify-center flex-col">
+        <div ref="sideEffectExample" class=" h-full flex items-center justify-center flex-col">
           <div v-if="SideEffectTokens.length" class="prose shiki overflow-x-auto">
             <ShikiMagicMovePrecompiled
               animate
@@ -355,7 +375,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
       }"
     >
       <template #wrap>
-        <div class="max-w-2xl mx-auto">
+        <div ref="capoExample" class="max-w-2xl mx-auto">
           <ProseH3 class="font-semibold mb-3">
             Optimized Head tag ordering
           </ProseH3>
