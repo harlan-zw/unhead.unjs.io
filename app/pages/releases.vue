@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui'
+import type { Stats } from '~/composables/data'
 import { formatTimeAgo } from '@vueuse/core'
-import { useStats } from '~/composables/data'
 import { normalizeReleaseBodyHeadings } from '~/utils/releases'
 
 definePageMeta({
@@ -28,7 +28,10 @@ defineOgImage('Unhead', {
   description: releasesDescription,
 })
 
-const stats = await useStats()
+const { data: stats } = await useFetch<Stats>('/api/stats.json', {
+  key: 'stats-releases',
+  pick: ['fetchedAt', 'releases'],
+})
 
 const filterItems: TabsItem[] = [
   { label: 'Stable', value: 'stable', icon: 'i-carbon-checkmark-filled' },

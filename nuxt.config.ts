@@ -225,18 +225,6 @@ export default defineNuxtConfig({
     },
     cloudflare: {
       nodeCompat: true,
-      pages: {
-        routes: {
-          exclude: [
-            // '/guides/*',
-            // '/schema-org/*',
-            // '/docs/*',
-            // '/plugins/*',
-            // '/usage/*',
-            '/llms.txt',
-          ],
-        },
-      },
       wrangler: {
         compatibility_flags: ['nodejs_compat'],
         observability: {

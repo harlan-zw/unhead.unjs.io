@@ -33,7 +33,8 @@ export interface Stats {
 
 export async function useStats(options?: { lazy?: boolean, server?: boolean }) {
   const { data: stats } = await useFetch<Stats>('/api/stats.json', {
-    key: 'stats',
+    key: 'stats-summary',
+    pick: ['fetchedAt', 'modules', 'versions', 'stars', 'commitCount', 'issuesClosed', 'contributors'],
     ...options,
   })
   return stats
