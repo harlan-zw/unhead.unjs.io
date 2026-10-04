@@ -63,29 +63,39 @@ export async function useCurrentDocPage() {
   const { isBot: isBotRef } = useBotDetection()
 
   const p = (async () => {
-    let pageResult = await queryDocs(
-      `${collection}:page:${contentPath}`,
-      () => queryCollection(collection).path(contentPath).first(),
-    )
-    if (!pageResult.data) {
-      pageResult = await queryDocs(
-        `${collection}:page:${fallbackPath}`,
-        () => queryCollection(collection).path(fallbackPath).first(),
+    // Reuse server content during hydration instead of loading browser SQLite.
+    const { data: docResult, error: docError } = await useAsyncData(`docs:${collection}:${contentPath}`, async () => {
+      let result = await queryDocs(
+        `${collection}:page:${contentPath}`,
+        () => queryCollection(collection).path(contentPath).first(),
       )
-    }
-    const pageData = pageResult.data
+      if (!result.data) {
+        result = await queryDocs(
+          `${collection}:page:${fallbackPath}`,
+          () => queryCollection(collection).path(fallbackPath).first(),
+        )
+      }
+      const pageData = result.data
+      if (!pageData?.body?.value)
+        return { page: pageData, surround: [] }
+
+      const surroundResult = await queryDocs(
+        `${collection}:surround:${pageData.path}`,
+        () => queryCollectionItemSurroundings(collection, pageData.path, {
+          fields: ['title', 'description', 'path'],
+        }),
+      )
+      return { page: pageData, surround: surroundResult.data }
+    })
+    if (docError.value)
+      throw docError.value
+    const pageData = docResult.value?.page
 
     if (!pageData?.body?.value) {
       throw createError({ statusCode: 404, statusMessage: `Page not found: ${route.path}`, fatal: true })
     }
 
-    const surroundResult = await queryDocs(
-      `${collection}:surround:${pageData.path}`,
-      () => queryCollectionItemSurroundings(collection, pageData.path, {
-        fields: ['title', 'description', 'path'],
-      }),
-    )
-    const surroundData = surroundResult.data
+    const surroundData = docResult.value?.surround ?? []
 
     const page = ref(pageData)
     const surround = ref(surroundData.filter(m => m).map(m => ({
