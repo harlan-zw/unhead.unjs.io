@@ -116,6 +116,10 @@ export default defineNuxtConfig({
   ui: {
     mdc: true,
     content: true,
+    experimental: {
+      // Markdown renders UPageCard without a matching Vue template reference.
+      componentDetection: ['PageCard'],
+    },
     theme: {
       transitions: true,
     },
