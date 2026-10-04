@@ -192,6 +192,10 @@ function restoreClientResponse(response: Response, status: 'HIT' | 'STALE'): Res
 }
 
 function withCacheStatus(response: Response, status: 'BYPASS' | 'MISS'): Response {
+  // POST queries can use Nitro's content cache while bypassing this GET cache.
+  if (status === 'BYPASS' && response.headers.has(CACHE_STATUS_HEADER))
+    return response
+
   const headers = new Headers(response.headers)
   headers.set(CACHE_STATUS_HEADER, status)
   return new Response(response.body, {
