@@ -42,6 +42,22 @@ function mockContext() {
 }
 
 describe('cloudflare response cache', () => {
+  it.each(['MISS', 'HIT', 'STALE'])('preserves a nested query cache %s when POST bypasses the response cache', async (status) => {
+    const { cache } = mockCache()
+    const { context } = mockContext()
+    const request = new Request('https://unhead.unjs.io/__nuxt_content/docsUnhead/query', { method: 'POST' })
+    const render = async () => new Response('[{"path":"/docs/head"}]', {
+      headers: { 'x-unhead-cache': status, 'content-type': 'application/json' },
+    })
+
+    const response = await handleCloudflareResponseCache({ cache, context, render, request, rule })
+
+    expect(response.headers.get('x-unhead-cache')).toBe(status)
+    expect(await response.json()).toEqual([{ path: '/docs/head' }])
+    expect(cache.match).not.toHaveBeenCalled()
+    expect(cache.put).not.toHaveBeenCalled()
+  })
+
   it('matches only the intended public routes', () => {
     expect(getCloudflareResponseCacheRule('/docs/getting-started')).toMatchObject({ maxAge: 60 })
     expect(getCloudflareResponseCacheRule('/api/github/unjs@unhead/stars')).toMatchObject({ maxAge: 3600 })
