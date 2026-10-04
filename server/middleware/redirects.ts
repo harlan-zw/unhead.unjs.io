@@ -2,6 +2,11 @@ import { defineEventHandler, getRequestURL, sendRedirect } from 'h3'
 
 // Keep inbound links from older docs layouts pointed at their current pages.
 const legacyPages: Record<string, string> = {
+  '/integrations/vue/vitesse': '/docs/vue/head/guides/get-started/installation',
+  '/guide/getting-started/how-it-works': '/docs/head/guides/get-started/intro-to-unhead',
+  '/setup/unhead/introduction': '/docs/head/guides/get-started/intro-to-unhead',
+  '/docs/head/guides/reactivity': '/docs/vue/head/guides/core-concepts/reactivity-and-context',
+  '/docs/typescript/head/api/hooks/dom-rendered': '/docs/head/api/composables/use-head',
   '/v2': '/docs/releases/v2',
   '/v3': '/docs/releases/v3',
   '/setup/vue/installation': '/docs/vue/head/guides/get-started/installation',
