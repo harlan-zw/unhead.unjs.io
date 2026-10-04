@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { StackblitzPlaygrounds } from '~~/const'
 import { getPathSection, getPathWithoutFramework } from '~~/utils/urls'
-import { useStats } from '~/composables/data'
 import { useFrameworkSelector } from '~/composables/frameworkSelector'
 import { useVersionSelector } from '~/composables/versionSelector'
 
@@ -10,8 +9,6 @@ const { selectedVersion } = useVersionSelector()
 
 const route = useRoute()
 
-const stats = await useStats()
-const module = useModule(stats)
 const nav = useDocsNav()
 
 const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
@@ -58,7 +55,7 @@ const topLinks = computed(() => [
 </script>
 
 <template>
-  <div v-if="module && nav">
+  <div v-if="nav">
     <nav :key="selectedFramework?.slug" aria-label="Documentation Navigation" class="flex flex-col gap-7">
       <UDropdownMenu :items="sectionMenuItems" class="-mx-2.5 -mb-2">
         <button

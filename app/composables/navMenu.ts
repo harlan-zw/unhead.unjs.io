@@ -71,7 +71,7 @@ export function useNavMenu() {
           description: 'Core concepts',
           items: [
             { label: 'Titles', icon: 'i-heroicons-document-text', to: docPath('/head/guides/core-concepts/titles') },
-            { label: 'Streaming SSR', icon: 'i-heroicons-bolt', to: docPath('/head/guides/core-concepts/streaming') },
+            { label: 'Streaming SSR', icon: 'i-heroicons-bolt', to: getDocPath('/head/guides/core-concepts/streaming', { _tag: 'framework', framework: 'typescript', version: 'v3' }) },
             { label: 'DOM Events', icon: 'i-heroicons-cursor-arrow-rays', to: docPath('/head/guides/core-concepts/dom-event-handling') },
             { label: 'Plugins', icon: 'i-heroicons-puzzle-piece', to: docPath('/head/guides/plugins/template-params') },
           ],
