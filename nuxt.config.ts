@@ -55,6 +55,13 @@ export default defineNuxtConfig({
     '@harlan-zw/nuxt-sentry',
     // 'nuxt-build-cache',
     async (_, nuxt) => {
+      nuxt.hooks.hook('build:manifest', (manifest) => {
+        // These animation datasets load on visibility, including their download.
+        for (const [id, chunk] of Object.entries(manifest)) {
+          if (chunk.name === 'magic-move' || /(?:^|\/)magic-move(?:-mount)?\.ts$/.test(chunk.src || id))
+            chunk.prefetch = false
+        }
+      })
       // addBuildPlugin(UnheadImportsPlugin({ sourcemap: true }))
       nuxt.hooks.hook('nitro:config', (config) => {
         // Cache the docs content query routes inside Nitro so internal SSR
