@@ -28,7 +28,6 @@ const {
   brand,
 } = useOgImageGenerator()
 
-const isReady = ref(false)
 const isRendering = ref(false)
 const result = ref<string | null>(null)
 const error = ref<string | null>(null)
@@ -40,10 +39,8 @@ const imageHeight = ref(630)
 const { copy, copied } = useClipboard()
 
 function downloadImage() {
-  if (!result.value)
-    return
   const link = document.createElement('a')
-  link.href = result.value
+  link.href = previewImage.value
   link.download = 'og-image.png'
   link.click()
   track('download')
@@ -68,7 +65,7 @@ function truncate(text: string, max: number): string {
 const previewTitle = computed(() => title.value || 'Your Page Title')
 const previewDescription = computed(() => description.value || 'Your page description will appear here.')
 const previewSiteName = computed(() => siteName.value || 'example.com')
-const previewImage = result
+const previewImage = computed(() => result.value || '/images/og-image-default.png')
 </script>
 
 <template>
@@ -79,7 +76,6 @@ const previewImage = result
     />
 
     <ToolOgImageRenderer
-      v-model:ready="isReady"
       v-model:rendering="isRendering"
       v-model:result="result"
       v-model:error="error"
@@ -88,11 +84,11 @@ const previewImage = result
       :height="imageHeight"
     >
       <div
-        class="grid gap-8 lg:gap-10 max-w-7xl transition-all duration-300"
+        class="grid grid-cols-1 gap-8 lg:gap-10 max-w-7xl transition-all duration-300"
         :class="selectedTemplate === 'code' ? 'lg:grid-cols-2' : 'lg:grid-cols-[minmax(320px,400px)_1fr]'"
       >
         <!-- Left Column: Controls -->
-        <div class="order-2 lg:order-1">
+        <div class="min-w-0 order-2 lg:order-1">
           <ToolInputGlow>
             <div class="space-y-6">
               <UFormField label="Template">
@@ -228,9 +224,9 @@ const previewImage = result
         </div>
 
         <!-- Right Column: Preview -->
-        <div class="space-y-6 order-1 lg:order-2">
+        <div class="min-w-0 space-y-6 order-1 lg:order-2">
           <div class="relative bg-elevated rounded-2xl p-5 sm:p-8 border border-default">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
               <div class="flex items-center gap-3">
                 <div class="p-2.5 rounded-xl bg-accented">
                   <UIcon name="i-carbon-share" class="w-5 h-5 text-muted" />
@@ -241,7 +237,6 @@ const previewImage = result
                 <UIcon v-show="isRendering" name="i-carbon-circle-dash" class="w-4 h-4 text-muted animate-spin" />
               </div>
               <UButton
-                v-if="result"
                 icon="i-carbon-download"
                 size="sm"
                 variant="soft"
@@ -289,9 +284,6 @@ const previewImage = result
                     <div v-if="error" class="absolute inset-0 flex items-center justify-center text-red-600 dark:text-red-400 p-2 text-center text-xs">
                       {{ error }}
                     </div>
-                    <div v-else-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
-                    </div>
                     <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" :width="imageWidth" :height="imageHeight" class="w-full h-full object-cover">
                     <div v-else class="absolute inset-0 flex items-center justify-center">
                       <UIcon name="i-carbon-image" class="w-8 h-8 text-neutral-400 opacity-50" />
@@ -322,9 +314,6 @@ const previewImage = result
                     <div v-if="error" class="absolute inset-0 flex items-center justify-center text-red-600 dark:text-red-400 p-2 text-center text-xs">
                       {{ error }}
                     </div>
-                    <div v-else-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
-                    </div>
                     <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" :width="imageWidth" :height="imageHeight" class="w-full h-full object-cover">
                     <div v-else class="absolute inset-0 flex items-center justify-center">
                       <UIcon name="i-carbon-image" class="w-12 h-12 text-neutral-400" />
@@ -353,9 +342,6 @@ const previewImage = result
                   <div class="aspect-[1.91/1] w-full bg-neutral-200 dark:bg-neutral-700 relative overflow-hidden">
                     <div v-if="error" class="absolute inset-0 flex items-center justify-center text-red-600 dark:text-red-400 p-2 text-center text-xs">
                       {{ error }}
-                    </div>
-                    <div v-else-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                     </div>
                     <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" :width="imageWidth" :height="imageHeight" class="w-full h-full object-cover">
                     <div v-else class="absolute inset-0 flex items-center justify-center">
@@ -387,9 +373,6 @@ const previewImage = result
                       <div v-if="error" class="absolute inset-0 flex items-center justify-center text-red-600 dark:text-red-400 p-1 text-center text-[10px]">
                         {{ error }}
                       </div>
-                      <div v-else-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                        <UIcon name="i-carbon-circle-dash" class="w-4 h-4 animate-spin text-muted" />
-                      </div>
                       <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" :width="imageWidth" :height="imageHeight" class="w-full h-full object-cover">
                       <div v-else class="w-full h-full flex items-center justify-center">
                         <UIcon name="i-carbon-image" class="w-5 h-5 text-neutral-400" />
@@ -417,9 +400,6 @@ const previewImage = result
                     <div class="aspect-[2/1] w-full bg-neutral-200 dark:bg-neutral-700 relative">
                       <div v-if="error" class="absolute inset-0 flex items-center justify-center text-red-600 dark:text-red-400 p-2 text-center text-xs">
                         {{ error }}
-                      </div>
-                      <div v-else-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                        <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                       </div>
                       <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" :width="imageWidth" :height="imageHeight" class="w-full h-full object-cover">
                       <div v-else class="w-full h-full flex items-center justify-center">
@@ -457,9 +437,6 @@ const previewImage = result
                     <div v-if="error" class="absolute inset-0 flex items-center justify-center text-red-600 dark:text-red-400 p-2 text-center text-xs">
                       {{ error }}
                     </div>
-                    <div v-else-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
-                    </div>
                     <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" :width="imageWidth" :height="imageHeight" class="w-full h-auto max-h-40 object-cover">
                     <div v-else class="w-full h-[100px] flex items-center justify-center">
                       <UIcon name="i-carbon-image" class="w-8 h-8 text-neutral-400 opacity-50" />
@@ -486,9 +463,6 @@ const previewImage = result
                   <div class="mt-3 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700 relative min-h-[100px]">
                     <div v-if="error" class="absolute inset-0 flex items-center justify-center text-red-600 dark:text-red-400 p-2 text-center text-xs">
                       {{ error }}
-                    </div>
-                    <div v-else-if="!isReady" class="absolute inset-0 flex items-center justify-center">
-                      <UIcon name="i-carbon-circle-dash" class="w-6 h-6 animate-spin text-muted" />
                     </div>
                     <img v-else-if="previewImage" :src="previewImage" :alt="previewTitle" :width="imageWidth" :height="imageHeight" class="max-w-full max-h-60 rounded object-cover">
                     <div v-else class="w-full h-[100px] flex items-center justify-center">

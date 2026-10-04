@@ -55,12 +55,6 @@ describe('og image generator accessibility and loading', () => {
     expect(previewImages.length).toBeGreaterThan(0)
     expect(previewImages.every(image => image.includes(':width="imageWidth"') && image.includes(':height="imageHeight"'))).toBe(true)
   })
-
-  it('shows renderer errors before loading state in every preview', () => {
-    expect(source.match(/v-if="error"/g)).toHaveLength(7)
-    expect(source.match(/v-else-if="!isReady"/g)).toHaveLength(7)
-    expect(source).not.toContain('v-if="!isReady"')
-  })
 })
 
 describe('shared tool device toggle', () => {
