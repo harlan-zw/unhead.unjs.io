@@ -11,6 +11,28 @@ function redirectFor(path: string) {
 }
 
 describe('redirects middleware', () => {
+  it.each([
+    ['/v2', '/docs/releases/v2'],
+    ['/v3', '/docs/releases/v3'],
+    ['/setup/vue/installation', '/docs/vue/head/guides/get-started/installation'],
+    ['/setup/unhead/installation', '/docs/typescript/head/guides/get-started/installation'],
+    ['/usage/composables/use-script', '/docs/head/api/composables/use-script'],
+    ['/usage/composables/use-head', '/docs/head/api/composables/use-head'],
+    ['/usage/composables/use-seo-meta', '/docs/head/api/composables/use-seo-meta'],
+    ['/usage/composables/use-head-safe', '/docs/head/api/composables/use-head-safe'],
+    ['/schema-org/schema/article', '/docs/schema-org/api/schema/article'],
+    ['/schema-org/getting-started/setup', '/docs/vue/schema-org/guides/get-started/installation'],
+    ['/guide/getting-started/installation', '/docs/vue/head/guides/get-started/installation'],
+    ['/guide/guides/identity', '/docs/schema-org/guides/recipes/identity'],
+    ['/docs/api/use-head', '/docs/head/api/composables/use-head'],
+    ['/usage/guides/sorting', '/docs/head/guides/core-concepts/positions'],
+    ['/docs/head/guides/core-concepts/streaming', '/docs/typescript/head/guides/core-concepts/streaming'],
+  ])('recovers the legacy URL %s in one permanent redirect', async (from, to) => {
+    const res = await redirectFor(`${from}/?utm_source=docs`)
+    expect(res.status).toBe(301)
+    expect(res.headers.get('location')).toBe(`${to}?utm_source=docs`)
+  })
+
   it('redirects the removed debugging guide to the guides overview', async () => {
     const res = await redirectFor('/docs/head/guides/debugging')
     expect(res.status).toBe(301)

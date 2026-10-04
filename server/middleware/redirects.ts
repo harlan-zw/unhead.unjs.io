@@ -1,8 +1,31 @@
 import { defineEventHandler, getRequestURL, sendRedirect } from 'h3'
 
+// Keep inbound links from older docs layouts pointed at their current pages.
+const legacyPages: Record<string, string> = {
+  '/v2': '/docs/releases/v2',
+  '/v3': '/docs/releases/v3',
+  '/setup/vue/installation': '/docs/vue/head/guides/get-started/installation',
+  '/setup/unhead/installation': '/docs/typescript/head/guides/get-started/installation',
+  '/usage/composables/use-script': '/docs/head/api/composables/use-script',
+  '/usage/composables/use-head': '/docs/head/api/composables/use-head',
+  '/usage/composables/use-seo-meta': '/docs/head/api/composables/use-seo-meta',
+  '/usage/composables/use-head-safe': '/docs/head/api/composables/use-head-safe',
+  '/schema-org/schema/article': '/docs/schema-org/api/schema/article',
+  '/schema-org/getting-started/setup': '/docs/vue/schema-org/guides/get-started/installation',
+  '/guide/getting-started/installation': '/docs/vue/head/guides/get-started/installation',
+  '/guide/guides/identity': '/docs/schema-org/guides/recipes/identity',
+  '/docs/api/use-head': '/docs/head/api/composables/use-head',
+  '/usage/guides/sorting': '/docs/head/guides/core-concepts/positions',
+  '/docs/head/guides/core-concepts/streaming': '/docs/typescript/head/guides/core-concepts/streaming',
+}
+
 export default defineEventHandler((event) => {
   const url = getRequestURL(event)
   const path = url.pathname
+
+  const legacyTarget = legacyPages[path.replace(/\/$/, '')]
+  if (legacyTarget)
+    return sendRedirect(event, `${legacyTarget}${url.search}`, 301)
 
   // TypeScript no longer has a framework-authored upgrade page at this old
   // route. Other frameworks do, so they must be allowed through and indexed.

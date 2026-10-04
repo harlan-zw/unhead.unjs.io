@@ -233,7 +233,6 @@ export default defineNuxtConfig({
             // '/docs/*',
             // '/plugins/*',
             // '/usage/*',
-            '/llms.txt',
           ],
         },
       },
@@ -376,9 +375,6 @@ export default defineNuxtConfig({
     '/api/debug/**': { prerender: false, cache: false },
     '/tools/og-image-generator': { prerender: false },
     '/releases/v3': { redirect: { to: '/docs/releases/v3', statusCode: 301 } },
-    '/usage/composables/use-head': { redirect: { to: '/api/use-head', statusCode: 301 } },
-    '/usage/composables/use-seo-meta': { redirect: { to: '/api/use-seo-meta', statusCode: 301 } },
-    '/usage/composables/use-head-safe': { redirect: { to: '/api/use-head-safe', statusCode: 301 } },
     '/api/core/hooks': { redirect: { to: '/guides/hooks', statusCode: 301 } },
   },
 
