@@ -150,7 +150,7 @@ catalog:
   '@nuxt/ui': ^4.10.0
   '@nuxtjs/mdc': 0.22.2
   '@nuxtjs/seo': ^5.3.11
-  '@sentry/nuxt': ^10.69.0
+  '@sentry/nuxt': ^10.70.0
   '@shikijs/magic-move': ^4.4.3
   '@takumi-rs/core': 2.5.0
   '@takumi-rs/wasm': 2.5.0
