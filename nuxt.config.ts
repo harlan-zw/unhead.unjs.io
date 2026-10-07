@@ -1,6 +1,6 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from 'pathe'
-import { externalCheckin } from './shared/checkin-external'
+import { externalCheckin } from './shared/checkin-external.ts'
 
 export default defineNuxtConfig({
   checkin: { external: externalCheckin },
