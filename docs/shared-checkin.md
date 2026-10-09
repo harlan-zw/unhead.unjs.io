@@ -1,6 +1,6 @@
 # Daily Check-in
 
-The daily routine combines site checks and Sentry at 06:40 Australia/Sydney.
+The daily routine combines site checks and [Sentry](https://sentry.io) at 06:40 Australia/Sydney.
 It replaces the existing Sentry routine and preserves its cadence and propose mode.
 
 Site checks cover Both supported documentation collections and the separate AI Ready database.
@@ -10,7 +10,7 @@ Missing credentials and missing evidence never prove health.
 
 ## Release
 
-Use Nuxt Check-in 0.3.0, Cloudflare 0.4.3, and Sentry 0.1.7 from the npm registry.
+Use Nuxt Check-in 0.3.0, [Cloudflare](https://cloudflare.com) 0.4.3, and Sentry 0.1.7 from the [npm](https://npmjs.com) registry.
 The lockfile pins the published shared CLI release.
 Deploy the report route before activating the updated routine.
 Configure external credentials as described in the daily skill.
@@ -24,9 +24,9 @@ Never include either token or Sentry credentials in report evidence.
 This first adoption checks the existing site contracts listed above.
 It does not prove every user workflow or upstream provider connection.
 Check-in never sends emails, sync jobs, indexing requests, or feedback.
-There is no existing system-health email to migrate.
+No existing system-health email needs migration.
 The report deadline bounds waiting. Database reads may continue if their adapter cannot cancel.
-No production query-cost improvement has been measured.
+No measurement has yet shown a production query-cost improvement.
 Verify deployed route authentication and live Sentry access before completing rollout.
 
 ## Shared CLI
