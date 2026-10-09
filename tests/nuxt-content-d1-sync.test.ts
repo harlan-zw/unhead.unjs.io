@@ -1,3 +1,4 @@
+import { DatabaseSync } from 'node:sqlite'
 import { gzipSync } from 'node:zlib'
 import { describe, expect, it } from 'vitest'
 import {
@@ -101,6 +102,47 @@ describe('nuxt content D1 sync planning', () => {
 
     expect(plan).toMatchObject({ mode: 'rebuild', missing: 3 })
     expect(plan.statements.join('\n')).toContain('DROP TABLE IF EXISTS _content_docs')
+  })
+
+  it('tolerates rows a concurrent writer committed after the hash snapshot', () => {
+    const docs = dump()
+    const database = new DatabaseSync(':memory:')
+    for (const statement of docs.statements)
+      database.exec(statement)
+
+    const plan = planContentSync(docs, { ready: 1, structureVersion: 'structure-a', version: 'v3--older' }, ['hash-a'])
+    expect(plan).toMatchObject({ mode: 'incremental', missing: 2, stale: 0 })
+
+    expect(() => {
+      for (const statement of plan.statements)
+        database.exec(statement)
+    }).not.toThrow()
+
+    expect(database.prepare(`SELECT id, stem, "__hash__" AS hash FROM ${docs.table} ORDER BY id`).all()).toEqual([
+      { id: 'a', stem: 'a', hash: 'hash-a' },
+      { id: 'b', stem: 'b', hash: 'hash-b' },
+      { id: 'c', stem: 'c-part-1-part-2', hash: 'hash-c' },
+    ])
+    expect(database.prepare(`SELECT ready, version FROM _content_info WHERE id = 'checksum_docs'`).get())
+      .toEqual({ ready: 1, version: 'v3--version-a' })
+  })
+
+  it('tolerates a rechunked oversized row a concurrent writer already committed', () => {
+    const docs = oversizedDump()
+    const database = new DatabaseSync(':memory:')
+    for (const statement of docs.statements)
+      database.exec(statement)
+
+    const plan = planContentSync(docs, { ready: 1, structureVersion: 'structure-a', version: 'v3--older' }, [])
+    expect(plan).toMatchObject({ mode: 'incremental', missing: 1, stale: 0 })
+
+    expect(() => {
+      for (const statement of plan.statements)
+        database.exec(statement)
+    }).not.toThrow()
+
+    expect(database.prepare(`SELECT "body", "__hash__" AS hash FROM ${docs.table} WHERE id = 'large'`).get())
+      .toEqual({ body: `😀'content`.repeat(12_000), hash: 'hash-large' })
   })
 
   it('detects missing final hashes after import', () => {

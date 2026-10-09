@@ -225,7 +225,15 @@ export function planContentSync(dump, current, existingHashes = []) {
     }
   }
 
-  const missingStatements = missingGroups.flatMap(([, group]) => group)
+  // Hashes are read before the plan runs, so the deployed site's lazy import can commit the
+  // same rows while the statements are in flight. Conflicting inserts must be no-ops; the
+  // continuation UPDATEs already skip rows that no longer carry their provisional hash.
+  const contentInsert = `INSERT INTO ${dump.table} `
+  const missingStatements = missingGroups
+    .flatMap(([, group]) => group)
+    .map(statement => statement.startsWith(contentInsert)
+      ? statement.replace('INSERT INTO ', 'INSERT OR IGNORE INTO ')
+      : statement)
   const deleteStale = staleHashes.length
     ? `DELETE FROM ${dump.table} WHERE "__hash__" IN (${staleHashes.map(sqlString).join(', ')});`
     : null
