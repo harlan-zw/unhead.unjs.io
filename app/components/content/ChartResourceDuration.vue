@@ -50,11 +50,11 @@ const typeColors: Record<string, string> = {
   defer: '#a1a1aa',
 }
 
-const typeLabels: Record<string, string> = {
+const typeLabels = {
   sync: 'Parser-blocking',
   css: 'Stylesheet',
   defer: 'Deferred',
-}
+} satisfies Record<string, string>
 
 const ticks = [0, 400, 800, 1200, 1600]
 
