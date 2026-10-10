@@ -51,8 +51,10 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     'nuxt-skew-protection',
     'nuxt-auth-utils',
-    '@sentry/nuxt/module',
+    // Installs before @sentry/nuxt/module so its nuxt.options.sentry write
+    // hands org, project, release, and auth token to the upload plugin.
     '@harlan-zw/nuxt-sentry',
+    '@sentry/nuxt/module',
     // 'nuxt-build-cache',
     async (_, nuxt) => {
       nuxt.hooks.hook('build:manifest', (manifest) => {
