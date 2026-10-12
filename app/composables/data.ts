@@ -60,6 +60,15 @@ export async function useCurrentDocPage() {
   const isV2 = route.path.startsWith('/docs/v2')
   const collection = isV2 ? 'docsUnheadV2' : 'docsUnhead'
 
+  const navigation = inject<NavRef | undefined>('navigation')
+  const loadNavigation = inject<(() => Promise<unknown>) | undefined>('loadNavigation')
+
+  // app.vue provides its navigation ref and loader. We await the loader before
+  // reading rows, so an SSR render issues one navigation listing. The
+  // surroundings API itself rebuilds that same tree, so reading the injected
+  // value removes the second full-collection listing.
+  const navigationTree = await resolveInjectedNavigationTree(navigation, loadNavigation)
+
   const p = (async () => {
     // Reuse server content during hydration instead of loading browser SQLite.
     const { data: docResult, error: docError } = await useAsyncData(`docs:${collection}:${contentPath}`, async () => {
@@ -77,13 +86,39 @@ export async function useCurrentDocPage() {
       if (!pageData?.body?.value)
         return { page: pageData, surround: [] }
 
-      const surroundResult = await queryDocs(
-        `${collection}:surround:${pageData.path}`,
-        () => queryCollectionItemSurroundings(collection, pageData.path, {
-          fields: ['title', 'description', 'path'],
-        }),
+      const pageListing = findFlatPagePaths(navigationTree)
+      const pageIndex = pageListing.indexOf(pageData.path)
+      if (pageIndex === -1)
+        return { page: pageData, surround: [] }
+
+      const neighbourPaths = [
+        pageListing[pageIndex - 1] ?? null,
+        pageListing[pageIndex + 1] ?? null,
+      ].filter(path => path !== null)
+      if (!neighbourPaths.length)
+        return { page: pageData, surround: [] }
+
+      // Titles come from the navigation tree; descriptions need one tiny
+      // two-row select (the navigation listing columns do not carry them).
+      const { data: neighbourRows } = await queryDocs(
+        `${collection}:neighbours:${pageData.path}`,
+        () => queryCollection(collection)
+          .where('path', 'IN', neighbourPaths)
+          .select('path', 'title', 'description')
+          .all(),
       )
-      return { page: pageData, surround: surroundResult.data }
+
+      return {
+        page: pageData,
+        surround: neighbourPaths.map((neighbourPath) => {
+          const row = neighbourRows.find(row => row.path === neighbourPath)
+          return {
+            path: neighbourPath,
+            title: row?.title ?? getNavNodeTitle(navigationTree, neighbourPath) ?? neighbourPath.replaceAll('-', ' '),
+            description: row?.description ?? '',
+          }
+        }),
+      }
     })
     if (docError.value)
       throw docError.value
@@ -128,6 +163,73 @@ function mapPath(data) {
 
 function flattenNavigation(items: NavItem[]): NavItem[] {
   return items.flatMap(item => [item, ...flattenNavigation(item.children || [])])
+}
+
+interface NavNode {
+  title: string
+  path: string
+  page?: false
+  children?: NavNode[]
+}
+
+interface NavRef {
+  value: NavNode[] | null
+}
+
+/**
+ * Visits a @nuxt/content navigation tree pre-order depth-first, mirroring the
+ * traversal in @nuxt/content's own surroundings implementation, and keeps the
+ * paths of leaf nodes (drop non-page nodes like folder separators; index pages
+ * whose only child shares their path count as the folder itself).
+ */
+function findFlatPagePaths(items: NavNode[]): string[] {
+  const paths: string[] = []
+  function visit(node: NavNode) {
+    const childPaths = new Set((node.children ?? []).filter(c => c.path).map(c => c.path))
+    const isLeafPage = !node.children?.length
+      && typeof node.path === 'string'
+      && node.path.length > 1
+      && !childPaths.has(node.path)
+    if (isLeafPage) {
+      paths.push(node.path)
+      return
+    }
+    for (const child of node.children || [])
+      visit(child)
+  }
+
+  for (const node of items)
+    visit(node)
+  return paths
+}
+
+function getNavNodeTitle(items: NavNode[], path: string): string | undefined {
+  for (const node of items) {
+    if (node.path === path)
+      return node.title
+    if (node.children?.length) {
+      const childTitle = getNavNodeTitle(node.children, path)
+      if (childTitle !== undefined)
+        return childTitle
+    }
+  }
+  return undefined
+}
+
+/**
+ * Returns the injected navigation tree, filling it in by running the loader
+ * app.vue provides when a navigation listing has not happened yet. Without a
+ * provider (a page outside the docs layout) this resolves to an empty list
+ * and the rendered docs page simply carries no surround link.
+ */
+async function resolveInjectedNavigationTree(
+  navigation: NavRef | undefined,
+  loadNavigation: (() => Promise<unknown>) | undefined,
+): Promise<NavNode[]> {
+  if (!navigation || !loadNavigation)
+    return []
+  await loadNavigation()
+  return navigation.value ?? []
 }
 
 export function enhanceTitlesAndIcons(n: NavItem) {
