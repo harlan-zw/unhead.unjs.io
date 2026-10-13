@@ -63,11 +63,15 @@ export async function useCurrentDocPage() {
   const navigation = inject<NavRef | undefined>('navigation')
   const loadNavigation = inject<(() => Promise<unknown>) | undefined>('loadNavigation')
 
-  // app.vue provides its navigation ref and loader. We await the loader before
-  // reading rows, so an SSR render issues one navigation listing. The
-  // surroundings API itself rebuilds that same tree, so reading the injected
-  // value removes the second full-collection listing.
-  const navigationTree = await resolveInjectedNavigationTree(navigation, loadNavigation)
+  // app.vue provides its navigation ref and loader. The surroundings API
+  // rebuilds that same tree, so reading the injected value removes a second
+  // full-collection listing from each SSR render.
+  //
+  // Start the listing here and await it only inside the handler. A composable
+  // called from `<script setup>` loses the Nuxt app context at its first
+  // `await`. An `await` before `useAsyncData` makes it throw E1001 on the
+  // server, and every docs page then returns a 500.
+  const navigationTree = resolveInjectedNavigationTree(navigation, loadNavigation)
 
   const p = (async () => {
     // Reuse server content during hydration instead of loading browser SQLite.
@@ -86,7 +90,8 @@ export async function useCurrentDocPage() {
       if (!pageData?.body?.value)
         return { page: pageData, surround: [] }
 
-      const pageListing = findFlatPagePaths(navigationTree)
+      const tree = await navigationTree
+      const pageListing = findFlatPagePaths(tree)
       const pageIndex = pageListing.indexOf(pageData.path)
       if (pageIndex === -1)
         return { page: pageData, surround: [] }
@@ -114,7 +119,7 @@ export async function useCurrentDocPage() {
           const row = neighbourRows.find(row => row.path === neighbourPath)
           return {
             path: neighbourPath,
-            title: row?.title ?? getNavNodeTitle(navigationTree, neighbourPath) ?? neighbourPath.replaceAll('-', ' '),
+            title: row?.title ?? getNavNodeTitle(tree, neighbourPath) ?? neighbourPath.replaceAll('-', ' '),
             description: row?.description ?? '',
           }
         }),

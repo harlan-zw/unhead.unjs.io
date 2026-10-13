@@ -17,7 +17,7 @@ vi.mock('#imports', () => ({
   toValue: (value: any) => (value && typeof value === 'object' && 'value' in value ? value.value : value),
   queryCollection: (...args: any[]) => queryCollectionMock(...args),
   queryCollectionNavigation: (...args: any[]) => queryCollectionNavigationMock(...args),
-  inject: (...args: any[]) => injectMock(...args),
+  inject: (...args: any[]) => injectInSetup(...args),
 }))
 
 interface NavNode {
@@ -40,22 +40,69 @@ const surroundingsCalls: Array<{ collection: string, path: string }> = []
 let currentRoutePath = ''
 let nuxtAppStaticData: Record<string, unknown> = {}
 
+// Without native async context, Nuxt and Vue expose the app and component
+// instance only during the synchronous part of a call. A composable called
+// from `<script setup>` loses both at its first `await`. A server render
+// then throws E1001 from the next Nuxt composable and returns a 500.
+// The stubs below enforce that window, so a test fails the same way.
+let setupActive = false
+let nuxtContextActive = false
+
+function runInSetup<T>(fn: () => T): T {
+  setupActive = true
+  nuxtContextActive = true
+  try {
+    return fn()
+  }
+  finally {
+    setupActive = false
+    nuxtContextActive = false
+  }
+}
+
+function runWithNuxtContext<T>(fn: () => T): T {
+  const previous = nuxtContextActive
+  nuxtContextActive = true
+  try {
+    return fn()
+  }
+  finally {
+    nuxtContextActive = previous
+  }
+}
+
+function requireNuxtContext() {
+  if (!nuxtContextActive)
+    throw new Error('[nuxt] [E1001] Nuxt composable called outside the Nuxt app context')
+}
+
+// Vue warns and returns undefined when inject() runs outside setup().
+function injectInSetup(...args: any[]) {
+  return setupActive ? injectMock(...args) : undefined
+}
+
 Object.defineProperty(globalThis, 'ref', { value: vueRef, configurable: true, writable: true })
 Object.defineProperty(globalThis, 'computed', { value: vueComputed, configurable: true, writable: true })
 Object.defineProperty(globalThis, 'toRaw', { value: (v: any) => v, configurable: true, writable: true })
 Object.defineProperty(globalThis, 'useNuxtApp', {
-  value: () => ({ static: { data: nuxtAppStaticData } }),
+  value: () => {
+    requireNuxtContext()
+    return { static: { data: nuxtAppStaticData } }
+  },
   configurable: true,
   writable: true,
 })
 Object.defineProperty(globalThis, 'useRouter', {
-  value: () => ({ currentRoute: { value: { path: currentRoutePath } } }),
+  value: () => {
+    requireNuxtContext()
+    return { currentRoute: { value: { path: currentRoutePath } } }
+  },
   configurable: true,
   writable: true,
 })
 Object.defineProperty(globalThis, 'useAsyncData', { value: useAsyncDataMock, configurable: true, writable: true })
 Object.defineProperty(globalThis, 'queryCollection', { value: queryCollectionMock, configurable: true, writable: true })
-Object.defineProperty(globalThis, 'inject', { value: injectMock, configurable: true, writable: true })
+Object.defineProperty(globalThis, 'inject', { value: injectInSetup, configurable: true, writable: true })
 Object.defineProperty(globalThis, 'queryCollectionItemSurroundings', {
   value: (...args: any[]) => queryCollectionItemSurroundingsMock(...args),
   configurable: true,
@@ -157,8 +204,12 @@ beforeEach(() => {
   })
   stubQueryCollectionPage({ path: '/docs/head/getting-started/overview', title: 'Overview', body: { value: 'content' } })
 
+  // Like Nuxt, read the app synchronously, then start the handler in a later
+  // microtask with the app context restored for its synchronous part only.
   useAsyncDataMock.mockImplementation(async (_key: string, handler: () => Promise<unknown>) => {
-    const data = await handler()
+    requireNuxtContext()
+    await Promise.resolve()
+    const data = await runWithNuxtContext(handler)
     return { data: { value: data }, error: { value: null } }
   })
 
@@ -182,7 +233,7 @@ describe('useCurrentDocPage SSR render queries', () => {
 
     injectNuxt({ navigation: navigationRef, loadNavigation })
 
-    const { page, surround } = await useCurrentDocPage()
+    const { page, surround } = await runInSetup(() => useCurrentDocPage())
 
     expect(page.value.title).toBe('Overview')
     expect(countNavigationListings()).toBe(1)
@@ -203,7 +254,7 @@ describe('useCurrentDocPage SSR render queries', () => {
 
     injectNuxt({ navigation: navigationRef, loadNavigation })
 
-    const { surround } = await useCurrentDocPage()
+    const { surround } = await runInSetup(() => useCurrentDocPage())
 
     // The last page carries only its predecessor.
     expect(surround.value?.map(item => item.path)).toEqual(['/docs/head/getting-started/installation'])
