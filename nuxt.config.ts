@@ -269,11 +269,12 @@ export default defineNuxtConfig({
   },
 
   fonts: {
-    experimental: {
-      processCSSVariables: true,
-    },
+    processCSSVariables: true,
     families: [
-      { name: 'Hubot Sans', stretch: '75% 125%', global: true },
+      // Google serves Hubot Sans as a variable font. The local provider would
+      // register `public/fonts/HubotSans-Regular.ttf`, which the Takumi worker
+      // loads, as the whole family, and only weight 400 would exist.
+      { name: 'Hubot Sans', provider: 'google', stretch: '75% 125%', global: true },
       { name: 'Nunito Sans' },
     ],
   },
