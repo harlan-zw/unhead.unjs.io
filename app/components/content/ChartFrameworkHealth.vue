@@ -41,6 +41,17 @@ function tooltipTemplate(d: typeof data[number]) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="Framework Head Health (2026 Audit)"
+        :data="data"
+        :columns="[
+          { key: 'framework', label: 'Framework' },
+          { key: 'changed', label: 'Changed (%)' },
+          { key: 'missing', label: 'Missing (%)' },
+        ]"
+      />
+    </template>
     <figure class="chart-container my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <figcaption class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <span class="text-sm font-medium text-default">

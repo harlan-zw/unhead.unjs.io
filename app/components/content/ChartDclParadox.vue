@@ -41,6 +41,17 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="The DCL Paradox: Painting vs Loading"
+        :data="data"
+        :columns="[
+          { key: 'name', label: 'Ordering' },
+          { key: 'fcp', label: 'FCP (ms)' },
+          { key: 'dcl', label: 'DCL (ms)' },
+        ]"
+      />
+    </template>
     <div class="my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <div class="flex items-baseline justify-between mb-4">
         <h4 class="text-sm font-semibold text-default tracking-tight">

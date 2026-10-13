@@ -144,6 +144,9 @@ catalogs:
     markdownlint-cli:
       specifier: ^0.49.1
       version: 0.49.1
+    minimark:
+      specifier: 0.2.0
+      version: 0.2.0
     nitro-cloudflare-dev:
       specifier: ^0.2.2
       version: 0.2.2
@@ -410,6 +413,9 @@ importers:
       markdownlint-cli:
         specifier: 'catalog:'
         version: 0.49.1(supports-color@10.2.2)
+      minimark:
+        specifier: 'catalog:'
+        version: 0.2.0
       nitro-cloudflare-dev:
         specifier: 'catalog:'
         version: 0.2.2

@@ -18,6 +18,16 @@ function tooltipTemplate(d: typeof data[number]) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="The Head-Breaker Prevalence"
+        :data="data"
+        :columns="[
+          { key: 'name', label: 'Head' },
+          { key: 'value', label: 'Mobile pages (%)' },
+        ]"
+      />
+    </template>
     <div class="my-8 flex flex-col items-center justify-center rounded-xl border border-default bg-elevated p-5 not-prose sm:flex-row sm:gap-8">
       <div class="relative h-40 w-40 shrink-0">
         <VisXYContainer :data="data" :height="160" :width="160">

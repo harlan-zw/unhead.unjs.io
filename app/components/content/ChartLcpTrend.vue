@@ -45,6 +45,18 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="LCP Trend: 8 Months"
+        :data="data.map(row => ({ ...row, name: months[row.i] }))"
+        :columns="[
+          { key: 'name', label: 'Month' },
+          { key: 'nuxt', label: 'Nuxt.js (ms)' },
+          { key: 'next', label: 'Next.js (ms)' },
+          { key: 'wordpress', label: 'WordPress (ms)' },
+        ]"
+      />
+    </template>
     <div class="my-8 rounded-lg border border-muted bg-elevated p-4 sm:p-6">
       <div class="flex items-baseline justify-between mb-4">
         <h4 class="text-sm font-semibold text-default tracking-tight">

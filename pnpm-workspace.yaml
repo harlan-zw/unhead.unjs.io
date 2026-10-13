@@ -201,6 +201,7 @@ catalog:
   lighthouse: ^13.4.1
   lint-staged: ^17.3.0
   markdownlint-cli: ^0.49.1
+  minimark: 0.2.0
   nitro-cloudflare-dev: ^0.2.2
   nostics: ^1.2.0
   nuxt: 4.6.1

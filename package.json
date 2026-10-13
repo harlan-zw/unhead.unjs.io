@@ -68,6 +68,7 @@
     "h3": "catalog:",
     "lint-staged": "catalog:",
     "markdownlint-cli": "catalog:",
+    "minimark": "catalog:",
     "nitro-cloudflare-dev": "catalog:",
     "nostics": "catalog:",
     "nuxt": "catalog:",

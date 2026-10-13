@@ -63,6 +63,18 @@ const criticalDelta = scenarios[1].criticalEnd - scenarios[0].criticalEnd
 
 <template>
   <div class="my-8 rounded-xl border border-default bg-elevated p-4 sm:p-6 not-prose">
+    <ChartDataTable
+      class="sr-only"
+      caption="Resource Loading Waterfall"
+      :data="scenarios.flatMap(scenario => scenario.resources.map(resource => ({ ...resource, ordering: scenario.label })))"
+      :columns="[
+        { key: 'ordering', label: 'Ordering' },
+        { key: 'name', label: 'Resource' },
+        { key: 'type', label: 'Type' },
+        { key: 'start', label: 'Start (ms)' },
+        { key: 'end', label: 'End (ms)' },
+      ]"
+    />
     <div class="flex items-baseline justify-between mb-1">
       <h4 class="text-sm font-semibold text-default tracking-tight">
         Resource Loading Waterfall
