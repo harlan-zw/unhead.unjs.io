@@ -21,6 +21,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Trigger AI Ready cron
+        if: ${{ !inputs.refresh_research }}
         run: curl --fail --show-error --silent --retry 3 --retry-all-errors "https://unhead.unjs.io/__ai-ready/cron?secret=${{ secrets.NUXT_SEO_PRO_KEY }}"
       - name: Refresh research Markdown
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.refresh_research }}
