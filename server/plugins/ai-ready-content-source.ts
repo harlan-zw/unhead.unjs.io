@@ -1,6 +1,8 @@
 import type { H3Event } from 'h3'
 import { queryCollection } from '@nuxt/content/server'
 import { stringify } from 'minimark/stringify'
+import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/utils/content'
+import { getPathFramework, getPathWithoutFramework } from '~~/utils/urls'
 
 async function getContentSource(event: H3Event, route: string) {
   const collection = /^\/docs\/v2(?:\/|$)/.test(route)
@@ -12,11 +14,23 @@ async function getContentSource(event: H3Event, route: string) {
         : null
   if (!collection)
     return null
-  const page = await queryCollection(event, collection).path(route).first()
+  let page = await queryCollection(event, collection).path(route).first()
+  if (!page && route.startsWith('/docs/') && getPathFramework(route))
+    page = await queryCollection(event, collection).path(getPathWithoutFramework(route)).first()
   if (!page)
     return null
+  const body = structuredClone(page.body)
+  if (route.startsWith('/docs/')) {
+    const framework = getPathFramework(route) || 'typescript'
+    const specifier = framework === 'nuxt' ? '#imports' : framework === 'typescript' ? 'unhead' : `@unhead/${framework}`
+    replaceImportSpecifier(body.value, {
+      '@unhead/dynamic-import': specifier,
+      '@unhead/schema-org/@framework': framework === 'nuxt' ? '#imports' : framework === 'typescript' ? '@unhead/schema-org' : `@unhead/schema-org/${framework}`,
+    }, !page.stem?.includes('typescript/'))
+    modifyRelativeDocLinksWithFramework(body.value, framework)
+  }
   return {
-    markdown: stringify({ ...page.body, type: 'minimark' }, { format: 'markdown/html' }),
+    markdown: stringify({ ...body, type: 'minimark' }, { format: 'markdown/html' }),
     title: page.title,
     description: page.description,
     updatedAt: page.seo?.articleModifiedTime || page.updatedAt,

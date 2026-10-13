@@ -8,6 +8,10 @@ on:
         description: Refresh the two research articles from rendered HTML
         type: boolean
         default: false
+      refresh_framework_docs:
+        description: Refresh docs with changed framework code examples
+        type: boolean
+        default: false
 
 permissions: {}
 
@@ -21,7 +25,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Trigger AI Ready cron
-        if: ${{ !inputs.refresh_research }}
+        if: ${{ !inputs.refresh_research && !inputs.refresh_framework_docs }}
         run: curl --fail --show-error --silent --retry 3 --retry-all-errors "https://unhead.unjs.io/__ai-ready/cron?secret=${{ secrets.NUXT_SEO_PRO_KEY }}"
       - name: Refresh research Markdown
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.refresh_research }}
@@ -29,6 +33,44 @@ jobs:
           AI_READY_SECRET: ${{ secrets.NUXT_SEO_PRO_KEY }}
         run: |
           for route in /learn/research/capo-performance-research /learn/research/state-of-head-2026; do
+            curl --fail --show-error --silent --retry 3 --retry-all-errors \
+              --request POST --header "Authorization: Bearer $AI_READY_SECRET" \
+              "https://unhead.unjs.io/__ai-ready/reindex?route=$route"
+          done
+      - name: Refresh framework documentation Markdown
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.refresh_framework_docs }}
+        env:
+          AI_READY_SECRET: ${{ secrets.NUXT_SEO_PRO_KEY }}
+        run: |
+          for route in \
+            /docs/head/api/composables/use-head \
+            /docs/head/api/composables/use-head-safe \
+            /docs/head/api/composables/use-script \
+            /docs/head/api/composables/use-seo-meta \
+            /docs/head/api/plugins \
+            /docs/head/guides/build-plugins/minify-transform \
+            /docs/head/guides/build-plugins/seo-meta-transform \
+            /docs/head/guides/core-concepts/class-attr \
+            /docs/head/guides/core-concepts/dom-event-handling \
+            /docs/head/guides/core-concepts/handling-duplicates \
+            /docs/head/guides/core-concepts/inner-content \
+            /docs/head/guides/core-concepts/loading-scripts \
+            /docs/head/guides/core-concepts/positions \
+            /docs/head/guides/core-concepts/security \
+            /docs/head/guides/core-concepts/titles \
+            /docs/head/guides/get-started/single-page-applications \
+            /docs/head/guides/get-started/starter-recipes \
+            /docs/head/guides/plugins/alias-sorting \
+            /docs/head/guides/plugins/infer-seo-meta-tags \
+            /docs/head/guides/plugins/template-params \
+            /docs/migration-guide/v2 \
+            /docs/migration-guide/v3 \
+            /docs/releases/v2 \
+            /docs/releases/v3 \
+            /docs/schema-org/api/composables/use-schema-org \
+            /docs/schema-org/guides/core-concepts/google-search-fields \
+            /docs/schema-org/guides/core-concepts/params \
+            /docs/schema-org/guides/get-started/overview; do
             curl --fail --show-error --silent --retry 3 --retry-all-errors \
               --request POST --header "Authorization: Bearer $AI_READY_SECRET" \
               "https://unhead.unjs.io/__ai-ready/reindex?route=$route"
