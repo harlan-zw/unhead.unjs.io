@@ -1,4 +1,19 @@
 minimumReleaseAgeExclude:
+  - mdream@2.0.3
+  - '@mdream/js@2.0.3'
+  - '@mdream/rust-darwin-x64@2.0.3'
+  - '@mdream/rust-freebsd-x64@2.0.3'
+  - '@mdream/rust-wasm32-wasi@2.0.3'
+  - '@mdream/rust-darwin-arm64@2.0.3'
+  - '@mdream/rust-android-arm64@2.0.3'
+  - '@mdream/rust-linux-x64-gnu@2.0.3'
+  - '@mdream/rust-linux-x64-musl@2.0.3'
+  - '@mdream/rust-win32-x64-msvc@2.0.3'
+  - '@mdream/rust-linux-arm64-gnu@2.0.3'
+  - '@mdream/rust-android-arm-eabi@2.0.3'
+  - '@mdream/rust-linux-arm64-musl@2.0.3'
+  - '@mdream/rust-win32-arm64-msvc@2.0.3'
+  - '@mdream/rust-linux-arm-gnueabihf@2.0.3'
   - '@nuxt/cli@4.0.0'
   - '@harlan-zw/nuxt-checkin@0.4.0'
   - '@harlan-zw/nuxt-cloudflare@0.5.0'
@@ -31,7 +46,7 @@ minimumReleaseAgeExclude:
   - nuxt-site-config@5.0.3
   - nuxt-site-config-kit@5.0.3
   - site-config-stack@5.0.3
-  - nuxt-ai-ready@3.3.0
+  - nuxt-ai-ready@3.3.1
   - nuxt-skew-protection@2.0.2
   - nuxtseo-shared@6.0.2
   - nuxtseo-layer-devtools@6.0.2
@@ -125,7 +140,8 @@ overrides:
   esbuild: ^0.28.1
   lighthouse>ws: 7.5.11
   maplibre-gl: ^6.4.1
-  nuxt-ai-ready: 3.3.0
+  mdream: 2.0.3
+  nuxt-ai-ready: 3.3.1
   oxc-parser: 0.140.0
   sharp: ^0.35.4
   tar: ^7.5.21
@@ -157,7 +173,7 @@ catalog:
   '@iconify-json/uil': ^1.2.3
   '@iconify-json/unjs': ^1.2.4
   '@iconify-json/vscode-icons': ^1.2.70
-  '@mdream/js': ^2.0.1
+  '@mdream/js': 2.0.3
   '@nuxt/content': 3.15.2
   '@nuxt/fonts': ^0.14.0
   '@nuxt/scripts': ^1.3.3
