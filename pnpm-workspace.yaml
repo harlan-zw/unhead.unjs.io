@@ -23,7 +23,7 @@ minimumReleaseAgeExclude:
   - '@harlan-zw/nuxt-github-sponsors@0.1.2'
   - '@nuxtjs/seo@6.0.1'
   - '@nuxtjs/robots@7.0.2'
-  - '@nuxtjs/sitemap@9.0.2'
+  - '@nuxtjs/sitemap@9.1.0'
   - nuxt-og-image@7.0.3
   - nuxt-schema-org@7.0.1
   - nuxt-seo-utils@9.0.0
