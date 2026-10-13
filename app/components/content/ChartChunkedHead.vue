@@ -28,6 +28,17 @@ const legend = [
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="Tag Presence in First 5KB — Next.js"
+        :data="data"
+        :columns="[
+          { key: 'name', label: 'Tag' },
+          { key: 'nonChunked', label: 'Non-Chunked (%)' },
+          { key: 'chunked', label: 'Chunked (%)' },
+        ]"
+      />
+    </template>
     <figure class="chart-container my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <figcaption class="flex items-center justify-between mb-4">
         <span class="text-sm font-medium text-default">

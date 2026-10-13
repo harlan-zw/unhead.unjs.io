@@ -41,6 +41,18 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="Duplicate &amp; Conflicting Tags by Framework"
+        :data="data"
+        :columns="[
+          { key: 'framework', label: 'Framework' },
+          { key: 'dupTitle', label: 'Duplicate title (%)' },
+          { key: 'dupDesc', label: 'Duplicate description (%)' },
+          { key: 'dupCanonical', label: 'Duplicate canonical (%)' },
+        ]"
+      />
+    </template>
     <figure class="chart-container my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <figcaption class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <span class="text-sm font-medium text-default">

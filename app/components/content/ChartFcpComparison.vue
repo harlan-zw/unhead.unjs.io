@@ -54,6 +54,19 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="FCP by Head Ordering"
+        :data="data"
+        :columns="[
+          { key: 'name', label: 'Complexity / Throttle' },
+          { key: 'optimal', label: 'Optimal (ms)' },
+          { key: 'commonBad', label: 'Common-Bad (ms)' },
+          { key: 'random', label: 'Random (ms)' },
+          { key: 'worst', label: 'Worst (ms)' },
+        ]"
+      />
+    </template>
     <div class="my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <div class="flex items-baseline justify-between mb-4">
         <h4 class="text-sm font-semibold text-default tracking-tight">

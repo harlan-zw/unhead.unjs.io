@@ -35,6 +35,19 @@ const legend = [
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="% Page Loads in &quot;Good&quot; Threshold"
+        :data="data"
+        :columns="[
+          { key: 'name', label: 'Framework' },
+          { key: 'fcp', label: 'FCP (%)' },
+          { key: 'lcp', label: 'LCP (%)' },
+          { key: 'cls', label: 'CLS (%)' },
+          { key: 'inp', label: 'INP (%)' },
+        ]"
+      />
+    </template>
     <figure class="chart-container my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <figcaption class="flex items-center justify-between mb-4">
         <span class="text-sm font-medium text-default">

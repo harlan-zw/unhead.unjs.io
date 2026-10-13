@@ -44,6 +44,18 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="Average Head Tags: First-Party vs Third-Party"
+        :data="data"
+        :columns="[
+          { key: 'framework', label: 'Framework' },
+          { key: 'firstParty', label: 'First-Party' },
+          { key: 'thirdParty', label: 'Third-Party' },
+          { key: 'total', label: 'Total' },
+        ]"
+      />
+    </template>
     <figure class="chart-container my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <figcaption class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <span class="text-sm font-medium text-default">

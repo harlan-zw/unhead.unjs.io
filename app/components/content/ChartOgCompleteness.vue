@@ -41,6 +41,18 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="Open Graph Tag Presence by Framework"
+        :data="data"
+        :columns="[
+          { key: 'framework', label: 'Framework' },
+          { key: 'ogTitle', label: 'og:title (%)' },
+          { key: 'ogImage', label: 'og:image (%)' },
+          { key: 'twitterCard', label: 'twitter:card (%)' },
+        ]"
+      />
+    </template>
     <figure class="chart-container my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <figcaption class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <span class="text-sm font-medium text-default">

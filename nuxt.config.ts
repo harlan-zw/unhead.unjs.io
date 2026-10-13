@@ -200,6 +200,7 @@ export default defineNuxtConfig({
 
   aiReady: {
     debug: true,
+    contentSource: false,
     llmsTxt: {
       directive: { html: true },
     },
@@ -418,7 +419,7 @@ export default defineNuxtConfig({
   hooks: {
     'components:extend': function (components) {
       for (const component of components) {
-        if (component.pascalName === 'UAlert' || component.pascalName.startsWith('Prose')) {
+        if (component.pascalName === 'UAlert' || component.pascalName.startsWith('Prose') || component.pascalName.startsWith('Chart')) {
           component.global = true
         }
       }

@@ -39,6 +39,19 @@ function tooltipTemplate(d: D) {
 
 <template>
   <ClientOnly>
+    <template #fallback>
+      <ChartDataTable
+        caption="The Nuxt Paradox: LCP vs Head Optimization"
+        :data="data"
+        :columns="[
+          { key: 'name', label: 'Framework' },
+          { key: 'headOptimization', label: 'Head Optimization' },
+          { key: 'lcp', label: 'LCP (ms)' },
+          { key: 'ttfb', label: 'TTFB (ms)' },
+          { key: 'goodLcp', label: 'Good LCP (%)' },
+        ]"
+      />
+    </template>
     <div class="my-8 rounded-xl border border-default bg-elevated p-5 not-prose">
       <div class="flex items-baseline justify-between mb-4">
         <h4 class="text-sm font-semibold text-default tracking-tight">
