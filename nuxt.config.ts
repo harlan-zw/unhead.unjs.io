@@ -200,6 +200,9 @@ export default defineNuxtConfig({
 
   aiReady: {
     debug: true,
+    llmsTxt: {
+      directive: { html: true },
+    },
     database: {
       type: 'd1',
       // Cron, runtimeSync, and IndexNow writes get their own database so they
