@@ -1,8 +1,13 @@
 /// <reference types="@cloudflare/workers-types" />
 
 import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
+import { negotiateContent } from '@mdream/js/negotiate'
 
-export const CLOUDFLARE_RESPONSE_CACHE_NAME = 'unhead:responses:v2'
+// v3 keys pages on their negotiated representation. v2 entries were keyed on
+// the URL alone, so they could hand cached HTML to a Markdown request, and they
+// hold OG image URLs signed with the OG Image v6 key. Renaming the cache drops
+// them all at once.
+export const CLOUDFLARE_RESPONSE_CACHE_NAME = 'unhead:responses:v3'
 
 const CACHE_CREATED_AT_HEADER = 'x-unhead-cache-created-at'
 const CACHE_CONTROL_PRESENT_HEADER = 'x-unhead-cache-control-present'
@@ -10,6 +15,11 @@ const CACHE_CONTROL_VALUE_HEADER = 'x-unhead-cache-control-value'
 const CACHE_STATUS_HEADER = 'x-unhead-cache'
 
 export interface CloudflareResponseCacheRule {
+  /**
+   * A `page` runs AI Ready's Markdown negotiation, so one URL answers HTML or
+   * Markdown depending on the request. A `data` route has one representation.
+   */
+  kind: 'page' | 'data'
   maxAge: number
   staleMaxAge: number
 }
@@ -33,31 +43,50 @@ const day = 24 * hour
 
 const routeCacheRules: RouteCacheRule[] = [
   // Framework-generated data endpoints.
-  { matches: path => path === '/api/_mdc/highlight', maxAge: minute, staleMaxAge: day },
-  { matches: path => path.startsWith('/__nuxt_content/'), maxAge: minute, staleMaxAge: day },
-  { matches: path => path === '/api/_nuxt_icon', maxAge: 7 * day, staleMaxAge: 7 * day },
+  { kind: 'data', matches: path => path === '/api/_mdc/highlight', maxAge: minute, staleMaxAge: day },
+  { kind: 'data', matches: path => path.startsWith('/__nuxt_content/'), maxAge: minute, staleMaxAge: day },
+  { kind: 'data', matches: path => path === '/api/_nuxt_icon', maxAge: 7 * day, staleMaxAge: 7 * day },
 
   // Public data endpoints.
-  { matches: path => /^\/api\/npm\/[^/]+\/downloads$/.test(path), maxAge: day, staleMaxAge: 7 * day },
-  { matches: path => /^\/api\/get-tweet\/[^/]+$/.test(path), maxAge: day, staleMaxAge: 7 * day },
-  { matches: path => path === '/api/stats.json', maxAge: day, staleMaxAge: 7 * day },
-  { matches: path => /^\/api\/github\/[^/]+\/commit-count$/.test(path), maxAge: 7 * day, staleMaxAge: 7 * day },
-  { matches: path => /^\/api\/github\/[^/]+\/contributors$/.test(path), maxAge: hour, staleMaxAge: day },
-  { matches: path => /^\/api\/github\/[^/]+\/issues-closed$/.test(path), maxAge: 7 * day, staleMaxAge: 7 * day },
-  { matches: path => /^\/api\/github\/[^/]+\/last-file-commit$/.test(path), maxAge: day, staleMaxAge: 7 * day },
-  { matches: path => /^\/api\/github\/[^/]+\/releases$/.test(path), maxAge: hour, staleMaxAge: day },
-  { matches: path => /^\/api\/github\/[^/]+\/stars$/.test(path), maxAge: hour, staleMaxAge: day },
+  { kind: 'data', matches: path => /^\/api\/npm\/[^/]+\/downloads$/.test(path), maxAge: day, staleMaxAge: 7 * day },
+  { kind: 'data', matches: path => /^\/api\/get-tweet\/[^/]+$/.test(path), maxAge: day, staleMaxAge: 7 * day },
+  { kind: 'data', matches: path => path === '/api/stats.json', maxAge: day, staleMaxAge: 7 * day },
+  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/commit-count$/.test(path), maxAge: 7 * day, staleMaxAge: 7 * day },
+  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/contributors$/.test(path), maxAge: hour, staleMaxAge: day },
+  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/issues-closed$/.test(path), maxAge: 7 * day, staleMaxAge: 7 * day },
+  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/last-file-commit$/.test(path), maxAge: day, staleMaxAge: 7 * day },
+  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/releases$/.test(path), maxAge: hour, staleMaxAge: day },
+  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/stars$/.test(path), maxAge: hour, staleMaxAge: day },
 
   // Public SSR pages. Authenticated requests bypass the shared cache below.
-  { matches: path => path === '/', maxAge: minute, staleMaxAge: day },
-  { matches: path => path === '/docs' || path.startsWith('/docs/'), maxAge: minute, staleMaxAge: day },
-  { matches: path => path === '/learn' || path.startsWith('/learn/'), maxAge: minute, staleMaxAge: day },
-  { matches: path => path === '/tools/meta-tag-generator', maxAge: minute, staleMaxAge: day },
-  { matches: path => path === '/tools/schema-generator', maxAge: minute, staleMaxAge: day },
+  { kind: 'page', matches: path => path === '/', maxAge: minute, staleMaxAge: day },
+  { kind: 'page', matches: path => path === '/docs' || path.startsWith('/docs/'), maxAge: minute, staleMaxAge: day },
+  { kind: 'page', matches: path => path === '/learn' || path.startsWith('/learn/'), maxAge: minute, staleMaxAge: day },
+  { kind: 'page', matches: path => path === '/tools/meta-tag-generator', maxAge: minute, staleMaxAge: day },
+  { kind: 'page', matches: path => path === '/tools/schema-generator', maxAge: minute, staleMaxAge: day },
 ]
 
 export function getCloudflareResponseCacheRule(pathname: string): CloudflareResponseCacheRule | undefined {
   return routeCacheRules.find(rule => rule.matches(pathname))
+}
+
+const REPRESENTATION_KEY_PARAM = '__unhead_representation'
+
+/**
+ * The cache key for a request. The Cache API ignores `Vary`, so a page that
+ * negotiates Markdown carries its representation in the key. The decision is
+ * AI Ready's own: it negotiates with `negotiateContent()` on the Accept header
+ * alone while `aiReady.botNegotiation` is off. Turning bot negotiation on
+ * would make the User-Agent an input too, and this key would need it.
+ */
+export function getCloudflareResponseCacheKey(request: Request, rule: Pick<CloudflareResponseCacheRule, 'kind'>): Request {
+  const url = new URL(request.url)
+  if (rule.kind === 'page' && !url.pathname.endsWith('.md')) {
+    const representation = negotiateContent(request.headers.get('accept') ?? undefined)
+    if (representation !== 'html')
+      url.searchParams.set(REPRESENTATION_KEY_PARAM, representation)
+  }
+  return new Request(url, { method: 'GET' })
 }
 
 export function shouldBypassCloudflareResponseCache(request: Request): boolean {
@@ -84,7 +113,7 @@ export async function handleCloudflareResponseCache(options: CloudflareResponseC
   if (shouldBypassCloudflareResponseCache(request))
     return withCacheStatus(await render(), 'BYPASS')
 
-  const cacheKey = new Request(request.url, { method: 'GET' })
+  const cacheKey = getCloudflareResponseCacheKey(request, rule)
   let cachedResponse: Response | undefined
 
   try {
