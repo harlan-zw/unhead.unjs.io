@@ -27,6 +27,22 @@ describe('ordinary Content bodies during page indexing', () => {
     expect(await convert('/docs/vue/schema-org/guides/get-started/installation')).toContain('pnpm add @unhead/schema-org')
   })
 
+  it.each([
+    ['/docs/head/api/composables/use-head-safe', 'unhead', 'useHeadSafe(unheadInstance, { title: \'safe\' })'],
+    ['/docs/vue/head/api/composables/use-head-safe', '@unhead/vue', 'useHeadSafe({ title: \'safe\' })'],
+    ['/docs/nuxt/head/api/composables/use-head-safe', '#imports', 'useHeadSafe({ title: \'safe\' })'],
+  ])('resolves code templates at %s', async (route, specifier, call) => {
+    query.mockReturnValue({ path: () => ({ first: async () => ({
+      title: 'useHeadSafe()',
+      stem: 'head/api/composables/use-head-safe',
+      body: { value: [['pre', { language: 'ts', code: 'import { useHeadSafe } from \'@unhead/dynamic-import\'\nuseHeadSafe({ title: \'safe\' })' }, ['code', {}, ['span', {}, ['span', {}, 'import { useHeadSafe } from '], ['span', {}, '\'@unhead/dynamic-import\'']], '\n', ['span', {}, ['span', {}, 'useHeadSafe'], ['span', {}, '('], ['span', {}, '{ title: \'safe\' })']]]]] },
+    }) }) })
+    const markdown = await convert(route)
+    expect(markdown).toContain(`from '${specifier}'`)
+    expect(markdown).toContain(call)
+    expect(markdown).not.toContain('@unhead/dynamic-import')
+  })
+
   it('keeps rendered research tables instead of raw component references', async () => {
     expect(await convert('/learn/research/state-of-head-2026')).toBe('Only the visible installation tab')
   })
