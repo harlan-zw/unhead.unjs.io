@@ -126,6 +126,12 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: node scripts/sync-nuxt-content-d1.mjs --database unhead-unjs-io
 
+      # A matching build manifest does not prove the pages render. Docs pages
+      # answered 500 for 26 hours behind green deploys (#125). Request a few
+      # docs pages on the production hostname and fail on any 5xx.
+      - name: Check docs pages render
+        run: node scripts/check-docs-pages.ts --url https://unhead.unjs.io
+
       # Reuse the deploy build. Reporting errors must not change deployment status.
       - name: Report Nuxt DX budget
         id: dx_budget

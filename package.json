@@ -42,6 +42,7 @@
     "@iconify-json/uil": "catalog:",
     "@iconify-json/unjs": "catalog:",
     "@iconify-json/vscode-icons": "catalog:",
+    "@mdream/js": "catalog:",
     "@nuxt/content": "catalog:",
     "@nuxt/fonts": "catalog:",
     "@nuxt/scripts": "catalog:",
@@ -70,9 +71,8 @@
     "nitro-cloudflare-dev": "catalog:",
     "nostics": "catalog:",
     "nuxt": "catalog:",
-    "nuxt-ai-ready": "catalog:",
     "nuxt-auth-utils": "catalog:",
-    "nuxt-skew-protection": "catalog:",
+    "nuxtseo-devtools-host": "catalog:",
     "octokit": "catalog:",
     "pathe": "catalog:",
     "radix-vue": "catalog:",
@@ -88,6 +88,7 @@
     "vitest": "catalog:",
     "vue-tsc": "catalog:",
     "wrangler": "catalog:",
+    "yaml": "catalog:",
     "zod": "catalog:"
   },
   "simple-git-hooks": {

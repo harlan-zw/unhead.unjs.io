@@ -7,6 +7,7 @@ import {
 } from '../server/utils/cloudflare-response-cache'
 
 const rule: CloudflareResponseCacheRule = {
+  kind: 'page',
   maxAge: 60,
   staleMaxAge: 300,
 }
@@ -171,5 +172,72 @@ describe('cloudflare response cache', () => {
     })
     expect(JSON.stringify(record)).not.toContain('private-path')
     expect(JSON.stringify(record)).not.toContain('secret cache detail')
+  })
+
+  describe('markdown negotiation', () => {
+    const GPTBOT = 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.3; +https://openai.com/gptbot)'
+    const page = (accept: string, headers: Record<string, string> = {}) => new Request('https://unhead.unjs.io/docs/head/api/use-head', {
+      headers: { accept, ...headers },
+    })
+    const renderHtml = async () => new Response('<!doctype html>', { headers: { 'content-type': 'text/html;charset=utf-8' } })
+    const renderMarkdown = async () => new Response('# useHead', { headers: { 'content-type': 'text/markdown;charset=utf-8' } })
+
+    it('never answers a Markdown request with the cached HTML page', async () => {
+      const { cache } = mockCache()
+      const browser = mockContext()
+      await handleCloudflareResponseCache({ cache, context: browser.context, render: renderHtml, request: page('text/html,application/xhtml+xml,*/*;q=0.8'), rule })
+      await browser.settle()
+
+      for (const accept of ['text/markdown', 'text/markdown, text/html;q=0.9, */*;q=0.8']) {
+        const agent = mockContext()
+        const response = await handleCloudflareResponseCache({ cache, context: agent.context, render: renderMarkdown, request: page(accept), rule })
+        await agent.settle()
+        expect(await response.text()).toBe('# useHead')
+      }
+    })
+
+    it('never answers a browser with a Markdown body cached for an agent', async () => {
+      const { cache } = mockCache()
+      const agent = mockContext()
+      await handleCloudflareResponseCache({ cache, context: agent.context, render: renderMarkdown, request: page('text/markdown'), rule })
+      await agent.settle()
+
+      const browser = await handleCloudflareResponseCache({ cache, context: mockContext().context, render: renderHtml, request: page('text/html'), rule })
+      expect(browser.headers.get('x-unhead-cache')).toBe('MISS')
+      expect(await browser.text()).toBe('<!doctype html>')
+
+      const nextAgent = await handleCloudflareResponseCache({ cache, context: mockContext().context, render: renderHtml, request: page('text/markdown'), rule })
+      expect(nextAgent.headers.get('x-unhead-cache')).toBe('HIT')
+      expect(await nextAgent.text()).toBe('# useHead')
+    })
+
+    it('shares the HTML entry with a crawler whose Accept header takes anything', async () => {
+      // AI Ready 3 negotiates from the Accept header alone, so GPTBot sending
+      // `Accept: */*` receives the same HTML page as a browser.
+      const { cache } = mockCache()
+      const browser = mockContext()
+      const render = vi.fn(renderHtml)
+      await handleCloudflareResponseCache({ cache, context: browser.context, render, request: page('text/html'), rule })
+      await browser.settle()
+
+      const crawler = await handleCloudflareResponseCache({ cache, context: mockContext().context, render, request: page('*/*', { 'user-agent': GPTBOT }), rule })
+      expect(crawler.headers.get('x-unhead-cache')).toBe('HIT')
+      expect(render).toHaveBeenCalledTimes(1)
+    })
+
+    it('keys data routes on the URL alone, whatever the Accept header', async () => {
+      const { cache } = mockCache()
+      const first = mockContext()
+      const render = vi.fn(async () => new Response('{"stars":1}', { headers: { 'content-type': 'application/json' } }))
+      const data = (accept: string) => new Request('https://unhead.unjs.io/api/github/unjs@unhead/stars', { headers: { accept } })
+      const dataRule: CloudflareResponseCacheRule = { kind: 'data', maxAge: 60, staleMaxAge: 300 }
+
+      await handleCloudflareResponseCache({ cache, context: first.context, render, request: data('application/json'), rule: dataRule })
+      await first.settle()
+      const hit = await handleCloudflareResponseCache({ cache, context: mockContext().context, render, request: data('text/markdown'), rule: dataRule })
+
+      expect(hit.headers.get('x-unhead-cache')).toBe('HIT')
+      expect(render).toHaveBeenCalledTimes(1)
+    })
   })
 })

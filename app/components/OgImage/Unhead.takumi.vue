@@ -3,11 +3,18 @@
  * @credits Nuxt SEO <https://nuxtseo.com/>
  */
 
-defineProps<{
+const props = defineProps<{
   title?: string
   description?: string
   frameworkIcon?: string
 }>()
+
+// Tool and learn titles run past 40 characters. At 78px a long title pushes
+// the footer off the card, so the title steps down by length.
+const titleFontSize = computed(() => {
+  const length = props.title?.length ?? 0
+  return length > 60 ? 52 : length > 36 ? 64 : 78
+})
 </script>
 
 <template>
@@ -35,7 +42,7 @@ defineProps<{
 
     <div class="flex flex-row justify-between items-start w-full">
       <div class="flex flex-col" style="max-width: 820px;">
-        <h1 class="m-0 font-bold text-zinc-50" style="font-size: 78px; line-height: 1.05; margin-bottom: 28px;">
+        <h1 class="m-0 font-bold text-zinc-50" :style="{ fontSize: `${titleFontSize}px`, lineHeight: 1.05, marginBottom: '28px' }">
           {{ title }}
         </h1>
         <p
