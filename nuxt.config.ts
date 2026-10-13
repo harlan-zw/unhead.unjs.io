@@ -1,6 +1,44 @@
+import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { defineNuxtConfig } from 'nuxt/config'
-import { resolve } from 'pathe'
+import { dirname, resolve } from 'pathe'
+import { parse as parseYaml } from 'yaml'
 import { externalCheckin } from './shared/checkin-external.ts'
+
+/**
+ * The Agent Skill that ships inside the installed `@unhead/vue`, so the skill
+ * agents download always matches the Unhead version these docs run. Resolve
+ * it through Nuxt: `@nuxt/ui` also installs `@unhead/vue` 2, which has no
+ * skill.
+ *
+ * The file is served as a static asset and listed as an external entry. A
+ * local entry embeds the file in the server bundle, where Nitro rewrites the
+ * skill's own `import.meta.env.SSR` examples, so the served bytes stop
+ * matching the digest in the discovery index.
+ */
+function unheadVueSkill() {
+  const fromNuxt = createRequire(createRequire(import.meta.url).resolve('nuxt/package.json'))
+  const dir = resolve(dirname(fromNuxt.resolve('@unhead/vue')), '../skills')
+  const bytes = readFileSync(resolve(dir, 'unhead-vue/SKILL.md'))
+  const frontmatter = new TextDecoder().decode(bytes).match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1]
+  const { name, description } = (frontmatter ? parseYaml(frontmatter) : null) ?? {}
+  if (typeof name !== 'string' || typeof description !== 'string')
+    throw new Error(`${dir}/unhead-vue/SKILL.md has no name and description frontmatter, so the Unhead Agent Skill cannot be published.`)
+  return {
+    publicAssets: { dir, baseURL: '/skills', maxAge: 60 * 60 },
+    entry: {
+      source: 'external' as const,
+      type: 'skill-md' as const,
+      name,
+      description,
+      url: `/skills/${name}/SKILL.md`,
+      digest: `sha256:${createHash('sha256').update(bytes).digest('hex')}` as const,
+    },
+  }
+}
+
+const unheadSkill = unheadVueSkill()
 
 export default defineNuxtConfig({
   checkin: { external: externalCheckin },
@@ -47,9 +85,7 @@ export default defineNuxtConfig({
     'nitro-cloudflare-dev',
     '@nuxt/fonts',
     '@nuxt/content',
-    'nuxt-ai-ready',
     '@nuxt/scripts',
-    'nuxt-skew-protection',
     'nuxt-auth-utils',
     // Installs before @sentry/nuxt/module so its nuxt.options.sentry write
     // hands org, project, release, and auth token to the upload plugin.
@@ -172,7 +208,14 @@ export default defineNuxtConfig({
     },
     cron: true,
     runtimeSync: true,
-    indexNow: true,
+    contentSignal: {
+      search: true,
+      aiInput: true,
+      aiTrain: true,
+    },
+    agentSkills: {
+      skills: [unheadSkill.entry],
+    },
   },
 
   sitemap: {
@@ -237,6 +280,7 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
+    publicAssets: [unheadSkill.publicAssets],
     rollupConfig: {
       plugins: [{
         name: 'preserve-unhead-stream-runtime',

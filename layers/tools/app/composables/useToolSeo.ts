@@ -19,10 +19,9 @@ export function useToolSeo(opts: ToolSeoOptions) {
     twitterCard: 'summary_large_image',
   })
 
-  defineOgImage('NuxtSeo' as any, {
+  defineOgImage('Unhead', {
     title: opts.title,
     description: opts.description,
-    theme: '#18181b',
   })
 
   useSchemaOrg([

@@ -12,5 +12,5 @@ export function getDB(event: H3Event) {
     throw new Error('D1 database binding not available')
   }
 
-  return drizzle(db, { schema })
+  return drizzle(db)
 }
