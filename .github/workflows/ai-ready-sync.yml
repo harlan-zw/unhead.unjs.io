@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '*/30 * * * *'
   workflow_dispatch:
+    inputs:
+      refresh_research:
+        description: Refresh the two research articles from rendered HTML
+        type: boolean
+        default: false
 
 permissions: {}
 
@@ -17,3 +22,13 @@ jobs:
     steps:
       - name: Trigger AI Ready cron
         run: curl --fail --show-error --silent --retry 3 --retry-all-errors "https://unhead.unjs.io/__ai-ready/cron?secret=${{ secrets.NUXT_SEO_PRO_KEY }}"
+      - name: Refresh research Markdown
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.refresh_research }}
+        env:
+          AI_READY_SECRET: ${{ secrets.NUXT_SEO_PRO_KEY }}
+        run: |
+          for route in /learn/research/capo-performance-research /learn/research/state-of-head-2026; do
+            curl --fail --show-error --silent --retry 3 --retry-all-errors \
+              --request POST --header "Authorization: Bearer $AI_READY_SECRET" \
+              "https://unhead.unjs.io/__ai-ready/reindex?route=$route"
+          done
