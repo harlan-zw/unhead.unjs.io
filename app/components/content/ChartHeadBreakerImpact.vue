@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisDonut, VisTooltip, VisXYContainer } from '@unovis/vue'
+import { VisDonut, VisSingleContainer, VisTooltip } from '@unovis/vue'
 
 const data = [
   { name: 'Invalid Heads (Breakers)', value: 22, color: '#dc2626' },
@@ -30,7 +30,7 @@ function tooltipTemplate(d: typeof data[number]) {
     </template>
     <div class="my-8 flex flex-col items-center justify-center rounded-xl border border-default bg-elevated p-5 not-prose sm:flex-row sm:gap-8">
       <div class="relative h-40 w-40 shrink-0">
-        <VisXYContainer :data="data" :height="160" :width="160">
+        <VisSingleContainer :data="data" :height="160" :width="160">
           <VisDonut
             :value="value"
             :arc-width="25"
@@ -38,7 +38,7 @@ function tooltipTemplate(d: typeof data[number]) {
             :color="color"
           />
           <VisTooltip :triggers="{ [VisDonut as any]: tooltipTemplate }" />
-        </VisXYContainer>
+        </VisSingleContainer>
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
           <span class="text-2xl font-bold text-[var(--ui-text-error)]">22%</span>
           <span class="text-[10px] uppercase tracking-wider text-dimmed">Broken</span>
