@@ -1,4 +1,5 @@
 import { resolve } from 'node:path'
+import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vitest/config'
 
 // Some unit tests import app composables directly. These aliases resolve the
@@ -6,6 +7,7 @@ import { defineConfig } from 'vitest/config'
 const rootDir = import.meta.dirname
 
 export default defineConfig({
+  plugins: [vue()],
   resolve: {
     alias: [
       { find: /^~~(?=\/|$)/, replacement: rootDir },
