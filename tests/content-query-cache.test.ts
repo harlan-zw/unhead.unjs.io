@@ -13,6 +13,8 @@ const CHECKSUM = 'checksum-a'
 const DEPLOYMENT = 'deploy-1'
 const QUERY_ROUTE = `/__nuxt_content/${COLLECTION}/query`
 const SQL = 'SELECT * FROM docsUnhead'
+// The fresh window pins cached queries for a full deployment day.
+const DAY_MS = 24 * 60 * 60 * 1000
 
 function createQueryEvent(options: {
   method?: string
@@ -114,6 +116,23 @@ describe('content query cache', () => {
     expect(await hit.text()).toBe('[{"path":"/docs/head"}]')
   })
 
+  it('serves two renders a day apart from one cached listing', async () => {
+    // Cache keys bind the deployment id and content checksum, so results
+    // cannot change within one deployment: both renders must reuse the
+    // first query instead of touching the database again.
+    const harness = createHarness()
+    const { handler, options } = harness
+
+    const first = await handler(createQueryEvent())
+    expect(await first.text()).toBe('[{"path":"/docs/head"}]')
+
+    harness.travelTo(DAY_MS - 1_000)
+    const second = await handler(createQueryEvent())
+    expect(options.original).toHaveBeenCalledOnce()
+    expect(second.headers.get('x-unhead-cache')).toBe('HIT')
+    expect(await second.text()).toBe('[{"path":"/docs/head"}]')
+  })
+
   it('serves stale content while refreshing through waitUntil', async () => {
     let version = 0
     const harness = createHarness({
@@ -122,7 +141,7 @@ describe('content query cache', () => {
     const { cache, handler, options } = harness
 
     await handler(createQueryEvent())
-    harness.travelTo(61_000)
+    harness.travelTo(DAY_MS + 1_000)
 
     const stale = await handler(createQueryEvent())
     expect(options.original).toHaveBeenCalledTimes(2)
@@ -132,7 +151,7 @@ describe('content query cache', () => {
     await harness.settle()
     expect(cache.put).toHaveBeenCalledTimes(2)
 
-    harness.travelTo(62_000)
+    harness.travelTo(DAY_MS + 2_000)
     const refreshed = await handler(createQueryEvent())
     expect(options.original).toHaveBeenCalledTimes(2)
     expect(refreshed.headers.get('x-unhead-cache')).toBe('HIT')
@@ -181,7 +200,7 @@ describe('content query cache', () => {
     await handler(createQueryEvent())
     await harness.settle()
 
-    harness.travelTo(61_000)
+    harness.travelTo(DAY_MS + 1_000)
     const stale = await handler(createQueryEvent())
     expect(stale.headers.get('x-unhead-cache')).toBe('STALE')
     await harness.settle()
@@ -193,7 +212,7 @@ describe('content query cache', () => {
       'cache.outcome': 'failed',
     })
 
-    harness.travelTo(62_000)
+    harness.travelTo(DAY_MS + 2_000)
     const stillStale = await handler(createQueryEvent())
     expect(stillStale.headers.get('x-unhead-cache')).toBe('STALE')
     expect(await stillStale.text()).toBe('[{"path":"/docs/head","version":0}]')

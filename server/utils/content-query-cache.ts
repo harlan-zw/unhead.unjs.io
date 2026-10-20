@@ -11,7 +11,10 @@ const CACHE_STATUS_HEADER = 'x-unhead-cache'
 
 const minute = 60
 const day = 24 * 60 * minute
-const FRESH_MAX_AGE_SECONDS = minute
+// Cache keys bind the deployment id and the content checksum, so a stored
+// result cannot change within one deployment. Serve it fresh for a full
+// day; only requests after that pay for a background refresh.
+const FRESH_MAX_AGE_SECONDS = day
 const STALE_MAX_AGE_SECONDS = day
 const STORED_CACHE_CONTROL = `public, max-age=${FRESH_MAX_AGE_SECONDS + STALE_MAX_AGE_SECONDS}`
 const MAX_REQUEST_BODY_BYTES = 64 * 1024
