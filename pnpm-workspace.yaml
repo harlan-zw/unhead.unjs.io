@@ -204,7 +204,7 @@ catalog:
   minimark: 0.2.0
   nitro-cloudflare-dev: ^0.2.2
   nostics: ^1.2.0
-  nuxt: 4.6.1
+  nuxt: 4.6.2
   nuxt-auth-utils: ^0.5.30
   nuxtseo-devtools-host: ^1.0.2
   octokit: ^5.0.5
