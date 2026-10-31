@@ -193,6 +193,7 @@ export function parseContentDump(encoded, collectionHint) {
   return {
     collection: collectionHint,
     table,
+    columns,
     statements,
     infoCreateStatement: statements.find(statement => statement.startsWith('CREATE TABLE IF NOT EXISTS _content_info ')),
     metaIndex,
@@ -204,12 +205,21 @@ export function parseContentDump(encoded, collectionHint) {
   }
 }
 
+// Per-render docs lookups filter on the path column, which the generated dump
+// never indexes. Only collections that actually carry the column get the index.
+function contentPathIndexStatement(dump) {
+  if (!dump.columns.includes('path'))
+    return null
+  return `CREATE INDEX IF NOT EXISTS ${dump.table}_path_idx ON ${dump.table} ("path");`
+}
+
 export function planContentSync(dump, current, existingHashes = []) {
   const sameStructure = current?.structureVersion === dump.structureVersion
   const present = new Set(existingHashes)
   const wanted = new Set(dump.contentByHash.keys())
   const staleHashes = existingHashes.filter(hash => !wanted.has(hash))
   const missingGroups = [...dump.contentByHash].filter(([hash]) => !present.has(hash))
+  const contentPathIndex = contentPathIndexStatement(dump)
 
   if (sameStructure && current?.version === dump.version && Boolean(current.ready) && !missingGroups.length && !staleHashes.length)
     return { mode: 'ready', statements: [], missing: 0, stale: 0 }
@@ -217,9 +227,13 @@ export function planContentSync(dump, current, existingHashes = []) {
   const resetInfo = `DELETE FROM _content_info WHERE id = ${sqlString(`checksum_${dump.collection}`)};`
 
   if (!sameStructure) {
+    const replay = dump.statements.slice(dump.metaIndex)
     return {
       mode: 'rebuild',
-      statements: [dump.infoCreateStatement, resetInfo, ...dump.statements.slice(dump.metaIndex)].filter(Boolean),
+      // The index is created after the inserts but before the ready flag flips,
+      // so a partially applied plan always resumes instead of being left ready
+      // and unindexed.
+      statements: [dump.infoCreateStatement, resetInfo, ...replay.slice(0, -1), contentPathIndex, ...replay.slice(-1)].filter(Boolean),
       missing: dump.contentByHash.size,
       stale: existingHashes.length,
     }
@@ -246,6 +260,7 @@ export function planContentSync(dump, current, existingHashes = []) {
       dump.metaStatement,
       deleteStale,
       ...missingStatements,
+      contentPathIndex,
       dump.finalStatement,
     ].filter(Boolean),
     missing: missingGroups.length,
