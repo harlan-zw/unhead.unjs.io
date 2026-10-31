@@ -26,14 +26,16 @@ function dump(collection = 'docs') {
   return parseContentDump(gzipSync(JSON.stringify(rows)).toString('base64'), collection)
 }
 
-function oversizedDump(collection = 'docs') {
+function oversizedDump(collection = 'docs', continuations: string[] = []) {
   const body = `😀'content`.repeat(12_000)
+  const storedHash = continuations.length ? 'hash-large-70000' : 'hash-large'
   const rows = [
     'CREATE TABLE IF NOT EXISTS _content_info (id TEXT PRIMARY KEY, "ready" BOOLEAN, "structureVersion" VARCHAR, "version" VARCHAR, "__hash__" TEXT UNIQUE); -- structure',
     `INSERT INTO _content_info VALUES ('checksum_${collection}', false, 'structure-a', 'v3--version-a', 'meta-hash'); -- meta`,
     `DROP TABLE IF EXISTS _content_${collection}; -- structure`,
     `CREATE TABLE IF NOT EXISTS _content_${collection} (id TEXT PRIMARY KEY, "body" TEXT, "__hash__" TEXT UNIQUE); -- structure`,
-    `INSERT INTO _content_${collection} VALUES ('large', '${body.replaceAll('\'', '\'\'')}', 'hash-large'); -- hash-large`,
+    `INSERT INTO _content_${collection} VALUES ('large', '${body.replaceAll('\'', '\'\'')}', '${storedHash}'); -- hash-large`,
+    ...continuations.map((chunk, index) => `UPDATE _content_${collection} SET body = CONCAT(body, '${chunk.replaceAll('\'', '\'\'')}')${index === continuations.length - 1 ? ', "__hash__" = \'hash-large\'' : ''} WHERE id = 'large' AND "__hash__" = '${storedHash}'; -- hash-large`),
     `UPDATE _content_info SET ready = true WHERE id = 'checksum_${collection}'; -- meta`,
   ]
   return parseContentDump(gzipSync(JSON.stringify(rows)).toString('base64'), collection)
@@ -80,6 +82,63 @@ describe('nuxt content D1 sync planning', () => {
     expect(statements.length).toBeGreaterThan(1)
     expect(statements.every(statement => Buffer.byteLength(statement) <= 100_000)).toBe(true)
     expect(statements.at(1)).toContain('CONCAT("body"')
+  })
+
+  it.each([
+    undefined,
+    { ready: 1, structureVersion: 'structure-old', version: 'v3--older' },
+  ])('rebuilds oversized rows within the D1 byte limit with current metadata %j', (current) => {
+    const docs = oversizedDump()
+    const plan = planContentSync(docs, current)
+    const database = new DatabaseSync(':memory:')
+
+    try {
+      expect(plan.mode).toBe('rebuild')
+      for (const statement of plan.statements) {
+        expect(Buffer.byteLength(statement)).toBeLessThanOrEqual(100_000)
+        database.exec(statement)
+      }
+
+      expect(database.prepare(`SELECT body, "__hash__" AS hash FROM ${docs.table} WHERE id = 'large'`).get())
+        .toEqual({ body: `😀'content`.repeat(12_000), hash: 'hash-large' })
+      expect(database.prepare(`SELECT ready, structureVersion, version FROM _content_info WHERE id = 'checksum_docs'`).get())
+        .toEqual({ ready: 1, structureVersion: 'structure-a', version: 'v3--version-a' })
+    }
+    finally {
+      database.close()
+    }
+  })
+
+  it.each([
+    undefined,
+    { ready: 0, structureVersion: 'structure-a', version: 'v3--version-a' },
+    { ready: 1, structureVersion: 'structure-a', version: 'v3--older' },
+  ])('preserves original continuations after rechunking an oversized insert with metadata %j', (current) => {
+    const continuations = ['-original-continuation', '-final\'😀']
+    const docs = oversizedDump('docs', continuations)
+    const plan = planContentSync(docs, current)
+    const database = new DatabaseSync(':memory:')
+
+    try {
+      if (current) {
+        database.exec(docs.infoCreateStatement)
+        database.exec(`CREATE TABLE ${docs.table} (id TEXT PRIMARY KEY, body TEXT, "__hash__" TEXT UNIQUE)`)
+      }
+      for (const statement of plan.statements) {
+        expect(Buffer.byteLength(statement)).toBeLessThanOrEqual(100_000)
+        database.exec(statement)
+      }
+
+      const row = database.prepare(`SELECT body, "__hash__" AS hash FROM ${docs.table} WHERE id = 'large'`).get()
+      const originalBody = `😀'content`.repeat(12_000)
+      expect(String(row?.body).slice(originalBody.length)).toBe(continuations.join(''))
+      expect(row).toEqual({ body: originalBody + continuations.join(''), hash: 'hash-large' })
+      expect(database.prepare(`SELECT ready FROM _content_info WHERE id = 'checksum_docs'`).get())
+        .toEqual({ ready: 1 })
+    }
+    finally {
+      database.close()
+    }
   })
 
   it('removes a provisional split hash and imports the final row', () => {

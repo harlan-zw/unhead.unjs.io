@@ -133,11 +133,13 @@ function rechunkInsert(statement, table, columns) {
 
   const column = quotedIdentifier(columns[selected.index])
   const id = values[idIndex]
+  // Restore the stored hash so the dump's original continuations can still match.
+  const storedHash = values[hashIndex]
   const provisionalHash = `${hash}-d1-sync`
   const insertValues = [...values]
   insertValues[hashIndex] = sqlString(provisionalHash)
   const buildInsert = chunk => `INSERT INTO ${table} VALUES (${insertValues.map((value, index) => index === selected.index ? sqlString(chunk) : value).join(', ')}); -- ${hash}`
-  const buildUpdate = (chunk, final) => `UPDATE ${table} SET ${column} = CONCAT(${column}, ${sqlString(chunk)})${final ? `, "__hash__" = ${sqlString(hash)}` : ''} WHERE "id" = ${id} AND "__hash__" = ${sqlString(provisionalHash)}; -- ${hash}`
+  const buildUpdate = (chunk, final) => `UPDATE ${table} SET ${column} = CONCAT(${column}, ${sqlString(chunk)})${final ? `, "__hash__" = ${storedHash}` : ''} WHERE "id" = ${id} AND "__hash__" = ${sqlString(provisionalHash)}; -- ${hash}`
 
   if (Buffer.byteLength(buildInsert('')) > D1_TARGET_STATEMENT_BYTES)
     throw new Error(`Oversized row in ${table} has more than ${D1_TARGET_STATEMENT_BYTES} bytes outside its largest text column`)
@@ -172,9 +174,11 @@ export function parseContentDump(encoded, collectionHint) {
 
   // Large serialized rows are split into one INSERT plus continuation UPDATEs.
   // Every statement in that row shares its final hash, so replay the whole group.
-  const contentStatements = statements
-    .filter(statement => statement.startsWith(`INSERT INTO ${table} `) || statement.startsWith(`UPDATE ${table} `))
+  // Keep rebuilds and incremental imports on the same byte-limited statements.
+  const normalizedStatements = statements
     .flatMap(statement => statement.startsWith(`INSERT INTO ${table} `) ? rechunkInsert(statement, table, columns) : statement)
+  const contentStatements = normalizedStatements
+    .filter(statement => statement.startsWith(`INSERT INTO ${table} `) || statement.startsWith(`UPDATE ${table} `))
   const oversizedStatement = contentStatements.find(statement => Buffer.byteLength(statement) > D1_MAX_STATEMENT_BYTES)
   if (oversizedStatement)
     throw new Error(`D1 statement in ${collectionHint} still exceeds ${D1_MAX_STATEMENT_BYTES} bytes`)
@@ -194,9 +198,9 @@ export function parseContentDump(encoded, collectionHint) {
     collection: collectionHint,
     table,
     columns,
-    statements,
+    statements: normalizedStatements,
     infoCreateStatement: statements.find(statement => statement.startsWith('CREATE TABLE IF NOT EXISTS _content_info ')),
-    metaIndex,
+    metaIndex: normalizedStatements.indexOf(metaStatement),
     metaStatement,
     finalStatement,
     structureVersion: meta[2],
