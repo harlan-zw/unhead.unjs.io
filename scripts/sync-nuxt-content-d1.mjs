@@ -367,8 +367,11 @@ function runWrangler(database, args, { inherit = false } = {}) {
   })
   if (result.error)
     throw result.error
-  if (result.status !== 0)
-    throw new Error(result.stderr?.trim() || `Wrangler exited ${result.status}`)
+  if (result.status !== 0) {
+    // Wrangler's --json failures can be written to stdout instead of stderr.
+    const diagnostics = [result.stderr, result.stdout].map(output => output?.trim()).filter(Boolean).join('\n')
+    throw new Error(diagnostics || `Wrangler exited ${result.status}`)
+  }
   return result.stdout ?? ''
 }
 
@@ -414,6 +417,14 @@ function currentInfo(database, dumps) {
   )
 }
 
+function existingTables(database, dumps) {
+  const names = ['_content_info', ...dumps.map(dump => dump.table)].map(sqlString).join(', ')
+  return new Set(
+    queryD1(database, `SELECT name FROM sqlite_schema WHERE type = 'table' AND name IN (${names})`)
+      .map(row => row.name),
+  )
+}
+
 function existingHashes(database, dump, current) {
   if (current?.structureVersion !== dump.structureVersion)
     return []
@@ -433,11 +444,12 @@ export async function main(argv = process.argv.slice(2)) {
     const dumps = await loadDumps(options)
     if (!dumps.length)
       throw new Error('No Nuxt Content dumps found')
-    const before = currentInfo(options.database, dumps)
+    const tables = existingTables(options.database, dumps)
+    const before = tables.has('_content_info') ? currentInfo(options.database, dumps) : new Map()
 
     tempDir = mkdtempSync(resolve(tmpdir(), 'nuxt-content-sync-'))
     for (const dump of dumps) {
-      const current = before.get(`checksum_${dump.collection}`)
+      const current = tables.has(dump.table) ? before.get(`checksum_${dump.collection}`) : undefined
       const hashes = existingHashes(options.database, dump, current)
       const plan = planContentSync(dump, current, hashes)
       console.log(`[nuxt-content-sync] ${dump.collection}: ${plan.mode} (${plan.missing} missing, ${plan.stale} stale)`)
