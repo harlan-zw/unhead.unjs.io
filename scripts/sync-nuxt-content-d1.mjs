@@ -172,9 +172,11 @@ export function parseContentDump(encoded, collectionHint) {
 
   // Large serialized rows are split into one INSERT plus continuation UPDATEs.
   // Every statement in that row shares its final hash, so replay the whole group.
-  const contentStatements = statements
-    .filter(statement => statement.startsWith(`INSERT INTO ${table} `) || statement.startsWith(`UPDATE ${table} `))
+  // Keep rebuilds and incremental imports on the same byte-limited statements.
+  const normalizedStatements = statements
     .flatMap(statement => statement.startsWith(`INSERT INTO ${table} `) ? rechunkInsert(statement, table, columns) : statement)
+  const contentStatements = normalizedStatements
+    .filter(statement => statement.startsWith(`INSERT INTO ${table} `) || statement.startsWith(`UPDATE ${table} `))
   const oversizedStatement = contentStatements.find(statement => Buffer.byteLength(statement) > D1_MAX_STATEMENT_BYTES)
   if (oversizedStatement)
     throw new Error(`D1 statement in ${collectionHint} still exceeds ${D1_MAX_STATEMENT_BYTES} bytes`)
@@ -194,9 +196,9 @@ export function parseContentDump(encoded, collectionHint) {
     collection: collectionHint,
     table,
     columns,
-    statements,
+    statements: normalizedStatements,
     infoCreateStatement: statements.find(statement => statement.startsWith('CREATE TABLE IF NOT EXISTS _content_info ')),
-    metaIndex,
+    metaIndex: normalizedStatements.indexOf(metaStatement),
     metaStatement,
     finalStatement,
     structureVersion: meta[2],

@@ -82,6 +82,31 @@ describe('nuxt content D1 sync planning', () => {
     expect(statements.at(1)).toContain('CONCAT("body"')
   })
 
+  it.each([
+    undefined,
+    { ready: 1, structureVersion: 'structure-old', version: 'v3--older' },
+  ])('rebuilds oversized rows within the D1 byte limit with current metadata %j', (current) => {
+    const docs = oversizedDump()
+    const plan = planContentSync(docs, current)
+    const database = new DatabaseSync(':memory:')
+
+    try {
+      expect(plan.mode).toBe('rebuild')
+      for (const statement of plan.statements) {
+        expect(Buffer.byteLength(statement)).toBeLessThanOrEqual(100_000)
+        database.exec(statement)
+      }
+
+      expect(database.prepare(`SELECT body, "__hash__" AS hash FROM ${docs.table} WHERE id = 'large'`).get())
+        .toEqual({ body: `😀'content`.repeat(12_000), hash: 'hash-large' })
+      expect(database.prepare(`SELECT ready, structureVersion, version FROM _content_info WHERE id = 'checksum_docs'`).get())
+        .toEqual({ ready: 1, structureVersion: 'structure-a', version: 'v3--version-a' })
+    }
+    finally {
+      database.close()
+    }
+  })
+
   it('removes a provisional split hash and imports the final row', () => {
     const plan = planContentSync(dump(), {
       ready: 0,
