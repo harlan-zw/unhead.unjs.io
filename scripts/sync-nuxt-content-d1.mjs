@@ -133,11 +133,13 @@ function rechunkInsert(statement, table, columns) {
 
   const column = quotedIdentifier(columns[selected.index])
   const id = values[idIndex]
+  // Restore the stored hash so the dump's original continuations can still match.
+  const storedHash = values[hashIndex]
   const provisionalHash = `${hash}-d1-sync`
   const insertValues = [...values]
   insertValues[hashIndex] = sqlString(provisionalHash)
   const buildInsert = chunk => `INSERT INTO ${table} VALUES (${insertValues.map((value, index) => index === selected.index ? sqlString(chunk) : value).join(', ')}); -- ${hash}`
-  const buildUpdate = (chunk, final) => `UPDATE ${table} SET ${column} = CONCAT(${column}, ${sqlString(chunk)})${final ? `, "__hash__" = ${sqlString(hash)}` : ''} WHERE "id" = ${id} AND "__hash__" = ${sqlString(provisionalHash)}; -- ${hash}`
+  const buildUpdate = (chunk, final) => `UPDATE ${table} SET ${column} = CONCAT(${column}, ${sqlString(chunk)})${final ? `, "__hash__" = ${storedHash}` : ''} WHERE "id" = ${id} AND "__hash__" = ${sqlString(provisionalHash)}; -- ${hash}`
 
   if (Buffer.byteLength(buildInsert('')) > D1_TARGET_STATEMENT_BYTES)
     throw new Error(`Oversized row in ${table} has more than ${D1_TARGET_STATEMENT_BYTES} bytes outside its largest text column`)
