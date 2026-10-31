@@ -29,7 +29,7 @@ it.each([
   vi.mocked(spawnSync).mockReturnValue({
     pid: 1,
     output: [null, '', ''],
-    stdout: JSON.stringify({ error: { text: 'D1_ERROR: no such table: _content_info' } }),
+    stdout: JSON.stringify({ error: { text: 'D1 API query denied (7403)' } }),
     stderr: '',
     status: 1,
     signal: null,
@@ -45,10 +45,10 @@ it.each([
     'content-fixture',
     '--remote',
     '--command',
-    expect.stringContaining('FROM _content_info'),
+    expect.stringContaining('FROM sqlite_schema'),
     '--json',
   ]), expect.any(Object))
-  expect(error).toHaveBeenCalledWith(expect.stringContaining('D1_ERROR: no such table: _content_info'))
+  expect(error).toHaveBeenCalledWith(expect.stringContaining('D1 API query denied (7403)'))
 })
 
 it('checks remote metadata during a successful dry run without applying SQL', async () => {
@@ -70,7 +70,7 @@ it('checks remote metadata during a successful dry run without applying SQL', as
   expect(commands).toContainEqual(expect.arrayContaining([
     '--remote',
     '--command',
-    expect.stringContaining('FROM _content_info'),
+    expect.stringContaining('FROM sqlite_schema'),
   ]))
   expect(commands.some(args => args?.includes('--file'))).toBe(false)
 })
