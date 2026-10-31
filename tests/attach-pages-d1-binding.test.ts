@@ -36,6 +36,8 @@ interface FixtureState {
   project: { deployment_configs: DeploymentConfigs }
   patchApplies: boolean
   responseOverride?: { pathname: string, status: number, body: unknown }
+  omitTotalPages?: boolean
+  omitTotalCount?: boolean
 }
 
 interface Fixture {
@@ -77,15 +79,27 @@ function startFixture(state: FixtureState): Promise<Fixture> {
         return
       }
 
-      const respond = (result: unknown, totalPages = 1) => {
+      const respond = (result: unknown, resultInfo: Record<string, number> = {}) => {
         response.statusCode = 200
         response.setHeader('content-type', 'application/json')
-        response.end(JSON.stringify({ success: true, result, result_info: { page: 1, per_page: 100, total_pages: totalPages } }))
+        response.end(JSON.stringify({ success: true, result, result_info: resultInfo }))
       }
 
       if (request.method === 'GET' && url.pathname === '/accounts/acc-1/d1/database') {
         const page = Number(url.searchParams.get('page') ?? '1')
-        respond(state.databasePages[page - 1] ?? [], state.databasePages.length)
+        const databases = state.databasePages[page - 1] ?? []
+        const resultInfo: Record<string, number> = {
+          page,
+          per_page: 100,
+          count: databases.length,
+          total_count: state.databasePages.reduce((total, entry) => total + entry.length, 0),
+          total_pages: state.databasePages.length,
+        }
+        if (state.omitTotalPages)
+          delete resultInfo.total_pages
+        if (state.omitTotalCount)
+          delete resultInfo.total_count
+        respond(databases, resultInfo)
         return
       }
 
@@ -222,11 +236,38 @@ describe('attachPagesD1Binding', () => {
   })
 
   it('follows the D1 list pagination before patching', async () => {
-    const filler = Array.from({ length: 2 }, (_, index) => ({ uuid: `filler-${index}`, name: `db-${index}` }))
+    const filler = Array.from({ length: 100 }, (_, index) => ({ uuid: `filler-${index}`, name: `db-${index}` }))
     const fixture = await startFixture({
       databasePages: [filler, [{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
       project: makeDocsProject(),
       patchApplies: true,
+    })
+
+    await expect(attach(fixture)).resolves.toEqual({ attached: true })
+    expect(fixture.requests.some(request => request.pathname.includes('page=2'))).toBe(true)
+  })
+
+  it('paginates by total_count when the response omits total_pages', async () => {
+    const filler = Array.from({ length: 100 }, (_, index) => ({ uuid: `filler-${index}`, name: `db-${index}` }))
+    const fixture = await startFixture({
+      databasePages: [filler, [{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      project: makeDocsProject(),
+      patchApplies: true,
+      omitTotalPages: true,
+    })
+
+    await expect(attach(fixture)).resolves.toEqual({ attached: true })
+    expect(fixture.requests.some(request => request.pathname.includes('page=2'))).toBe(true)
+  })
+
+  it('paginates a full page when the response omits total_pages and total_count', async () => {
+    const filler = Array.from({ length: 100 }, (_, index) => ({ uuid: `filler-${index}`, name: `db-${index}` }))
+    const fixture = await startFixture({
+      databasePages: [filler, [{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      project: makeDocsProject(),
+      patchApplies: true,
+      omitTotalPages: true,
+      omitTotalCount: true,
     })
 
     await expect(attach(fixture)).resolves.toEqual({ attached: true })

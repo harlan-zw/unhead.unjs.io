@@ -64,8 +64,14 @@ export async function findD1DatabaseId({ baseUrl = DEFAULT_API_BASE, accountId, 
     if (!Array.isArray(payload.result))
       throw new Error('Unexpected D1 database list response; expected a JSON array')
     databases.push(...payload.result)
-    const totalPages = payload.result_info?.total_pages ?? 1
-    if (page >= totalPages)
+    // Cloudflare may omit result_info.total_pages. Wrangler decides with
+    // page * per_page < total_count; without total_count, a page shorter
+    // than per_page is the last one.
+    const { per_page: perPage = 100, total_count: totalCount } = payload.result_info ?? {}
+    const hasMorePages = totalCount === undefined
+      ? payload.result.length >= perPage
+      : page * perPage < totalCount
+    if (!hasMorePages)
       break
     page += 1
   }
