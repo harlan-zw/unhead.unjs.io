@@ -98,6 +98,14 @@ jobs:
           --database unhead-ai-ready
           --binding AI_READY_DB
 
+      # Stop before upload if remote content queries or sync planning fail.
+      # Keep this read-only while the previous build still serves the shared D1.
+      - name: Check Nuxt Content D1 before upload
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/sync-nuxt-content-d1.mjs --database unhead-unjs-io --dry-run
+
       # `--branch` is required. Wrangler otherwise reads the branch from git, and
       # the checkout above is by SHA, which leaves a detached HEAD. Wrangler read
       # that as the branch `head` and uploaded every build as a preview.

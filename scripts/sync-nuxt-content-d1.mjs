@@ -367,8 +367,11 @@ function runWrangler(database, args, { inherit = false } = {}) {
   })
   if (result.error)
     throw result.error
-  if (result.status !== 0)
-    throw new Error(result.stderr?.trim() || `Wrangler exited ${result.status}`)
+  if (result.status !== 0) {
+    // Wrangler's --json failures can be written to stdout instead of stderr.
+    const diagnostics = [result.stderr, result.stdout].map(output => output?.trim()).filter(Boolean).join('\n')
+    throw new Error(diagnostics || `Wrangler exited ${result.status}`)
+  }
   return result.stdout ?? ''
 }
 
