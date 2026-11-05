@@ -21,6 +21,8 @@ const legacyPages: Record<string, string> = {
   '/usage/composables/use-head-safe': '/docs/head/api/composables/use-head-safe',
   '/schema-org/schema/article': '/docs/schema-org/api/schema/article',
   '/schema-org/getting-started/setup': '/docs/vue/schema-org/guides/get-started/installation',
+  '/schema-org': '/docs/schema-org/guides/get-started/overview',
+  '/integrations/vue/setup': '/docs/vue/schema-org/guides/get-started/installation',
   '/guide/getting-started/installation': '/docs/vue/head/guides/get-started/installation',
   '/guide/guides/identity': '/docs/schema-org/guides/recipes/identity',
   '/docs/api/use-head': '/docs/head/api/composables/use-head',
