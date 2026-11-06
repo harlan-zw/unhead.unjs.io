@@ -10,7 +10,7 @@ const { frameworks } = useFrameworkSelector()
       viewBox="0 0 1440 181"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      class="absolute top-0 left-0 w-[1200px] opacity-40 pointer-events-none"
+      class="absolute top-0 left-0 w-[1200px] opacity-40"
     >
       <path
         d="M0 0H1440V181H0V0Z"
