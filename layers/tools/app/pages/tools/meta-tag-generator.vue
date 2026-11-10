@@ -43,20 +43,20 @@ const activePlatform = ref('twitter')
 const activeFormTab = ref('basic')
 
 const outputModes = [
-  { label: 'useSeoMeta', value: 'useSeoMeta' },
-  { label: 'useHead', value: 'useHead' },
-  { label: 'HTML', value: 'html' },
+  { label: 'useSeoMeta', value: 'useSeoMeta' as const },
+  { label: 'useHead', value: 'useHead' as const },
+  { label: 'HTML', value: 'html' as const },
 ]
 
 const ogTypes = [
-  { label: 'Website', value: 'website' },
-  { label: 'Article', value: 'article' },
-  { label: 'Product', value: 'product' },
+  { label: 'Website', value: 'website' as const },
+  { label: 'Article', value: 'article' as const },
+  { label: 'Product', value: 'product' as const },
 ]
 
 const twitterCards = [
-  { label: 'Summary Large Image', value: 'summary_large_image' },
-  { label: 'Summary', value: 'summary' },
+  { label: 'Summary Large Image', value: 'summary_large_image' as const },
+  { label: 'Summary', value: 'summary' as const },
 ]
 
 const platformTabs = [
@@ -382,15 +382,16 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
               </UFormField>
               <UFormField label="Color Scheme">
                 <USelect
-                  v-model="state.colorScheme"
+                  :model-value="state.colorScheme || undefined"
                   :items="[
-                    { label: 'Light', value: 'light' },
-                    { label: 'Dark', value: 'dark' },
-                    { label: 'Light & Dark', value: 'light dark' },
+                    { label: 'Light', value: 'light' as const },
+                    { label: 'Dark', value: 'dark' as const },
+                    { label: 'Light & Dark', value: 'light dark' as const },
                   ]"
                   value-key="value"
                   placeholder="None"
                   class="w-full"
+                  @update:model-value="state.colorScheme = $event ?? ''"
                 />
               </UFormField>
             </div>
@@ -776,12 +777,13 @@ const codeLang = computed(() => codeLanguage.value === 'html' ? 'html' : 'ts')
             <FrameworkSelectorMinimal size="small" ignore-redirect />
             <div class="h-4 w-px bg-[var(--ui-border)] hidden sm:block" />
             <UTabs
-              v-model="state.outputMode"
+              :model-value="state.outputMode"
               :items="outputModes"
               size="xs"
               color="neutral"
               variant="pill"
               :content="false"
+              @update:model-value="state.outputMode = outputModes.find(mode => mode.value === $event)?.value ?? state.outputMode"
             />
           </div>
           <div class="max-w-none [&_pre]:!my-0 [&_pre]:!rounded-lg sm:[&_pre]:!rounded-xl">

@@ -105,6 +105,7 @@ packages:
   - .
   - test/capo-benchmarks
   - test/streaming-benchmarks/raw
+  - tools/typecheck
 overrides:
   '@takumi-rs/core': 2.15.2
   '@takumi-rs/helpers': 2.15.2
@@ -199,6 +200,8 @@ catalog:
   eslint-plugin-harlanzw: ^0.20.0
   fuse.js: ^7.5.0
   h3: ^1.15.11
+  jsonc-parser: 3.3.1
+
   lighthouse: ^13.4.1
   lint-staged: ^17.3.0
   markdownlint-cli: ^0.49.1
@@ -227,7 +230,6 @@ catalog:
   wrangler: ^4.120.0
   yaml: ^2.9.1
   zod: ^4.6.6
-
 trustPolicyIgnoreAfter: 262800
 allowBuilds:
   '@parcel/watcher': false
@@ -241,3 +243,7 @@ allowBuilds:
   simple-git-hooks: true
   vue-demi: false
   workerd: false
+catalogs:
+  native:
+    '@vue/content-mapper': 4.0.0-alpha.3
+    typescript: 7.1.0-beta

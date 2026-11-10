@@ -44,7 +44,7 @@ const { frameworks } = useFrameworkSelector()
       <UIcon
         v-for="framework in frameworks"
         :key="framework.slug"
-        dynamic
+
         mode="svg"
         :name="framework.icon"
         class="w-[72px] h-[72px]"

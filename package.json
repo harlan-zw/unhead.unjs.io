@@ -16,8 +16,9 @@
     "lint:docs:fix": "markdownlint ./snippets --disable MD013 MD041 --fix -- && case-police 'snippets/**/*.md' *.md --fix",
     "test": "vitest run",
     "test:e2e:og": "vitest run --config vitest.e2e.config.ts tests/og-image.e2e.test.ts",
-    "typecheck": "nuxt typecheck",
-    "checkin": "nuxt-checkin prepare && nuxt-checkin --save"
+    "typecheck": "nuxt prepare && site-typecheck --noEmit --incremental false",
+    "checkin": "nuxt-checkin prepare && nuxt-checkin --save",
+    "typecheck:legacy": "nuxt typecheck"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
@@ -82,6 +83,7 @@
     "shiki": "catalog:",
     "shiki-transformer-color-highlight": "catalog:",
     "simple-git-hooks": "catalog:",
+    "site-typecheck": "workspace:*",
     "tailwind-variants": "catalog:",
     "typescript": "catalog:",
     "ufo": "catalog:",
