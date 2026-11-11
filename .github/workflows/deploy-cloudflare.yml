@@ -53,6 +53,7 @@ jobs:
 
       - uses: harlan-zw/harlan-nuxt/.github/actions/harlan-desktop-setup@main
         with:
+          node-version: 26.13.0
           install-args: ''
 
       - name: Cache for Nuxt SEO
