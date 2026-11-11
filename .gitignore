@@ -29,3 +29,6 @@ docs/.nuxt
 
 # nuxt-checkin fallback archive when DAILY_CHECKIN_DIR is not set
 docs/ops/checkins/
+
+# Keep temporary review artifacts in ~/scratch/.
+/.claude/context/jobs/

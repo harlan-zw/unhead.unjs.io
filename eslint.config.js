@@ -30,4 +30,11 @@ export default antfu(
       'harlanzw/ai-deslop-passive-voice': 'off',
     },
   },
+  {
+    files: ['pnpm-workspace.yaml'],
+    rules: {
+      // Nuxt tools retain TypeScript 6 alongside the native TypeScript 7 checker.
+      'pnpm/yaml-no-duplicate-catalog-item': ['error', { checkDuplicates: 'exact-version' }],
+    },
+  },
 )

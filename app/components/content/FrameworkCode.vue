@@ -48,7 +48,7 @@ const activeFramework = computed(() => availableFrameworks.value[selectedIndex.v
           : 'hover:bg-neutral-50 dark:hover:bg-neutral-800/50'"
         @click="selectedIndex = index"
       >
-        <UIcon :name="fw.icon" dynamic class="size-4" />
+        <UIcon :name="fw.icon" class="size-4" />
         <span>{{ fw.label }}</span>
       </button>
     </div>

@@ -150,7 +150,7 @@ const transformedPage = computed(() => {
         </div>
       </div>
 
-      <UPageBody prose class="pb-0">
+      <UPageBody class="pb-0">
         <DocsOpportunity v-if="opportunity" :opportunity="opportunity" />
         <ContentRenderer v-if="page.body" :value="transformedPage" />
         <DocsCommitMeta

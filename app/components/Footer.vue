@@ -40,7 +40,7 @@ const footerColumns = computed(() =>
             </UButton>
             <ColorModeButton verbose />
             <ULink target="_blank" external href="/llms.txt" class="flex min-h-6 items-center gap-1 hover:underline transition">
-              <UIcon dynamic name="i-noto-sparkles" class="w-4 h-4" />
+              <UIcon name="i-noto-sparkles" class="w-4 h-4" />
               /llms.txt
             </ULink>
           </div>
@@ -79,7 +79,7 @@ const footerColumns = computed(() =>
                 <ul class="grid gap-4">
                   <li v-for="(link, key) in category.items" :key="key">
                     <ULink :to="link.to" class="flex items-center gap-1 hover:underline transition">
-                      <UIcon v-if="link.icon" dynamic :name="link.icon" class="w-4 h-4 text-blue-500 dark:text-blue-300" />
+                      <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-blue-500 dark:text-blue-300" />
                       {{ link.label }}
                     </ULink>
                   </li>

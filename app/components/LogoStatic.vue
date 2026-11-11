@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { width = 24, height = 24 } = defineProps<{ width?: number | string, height?: number | string }>()
+
 const shape = {
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
@@ -10,8 +12,8 @@ const shape = {
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    :width="width"
+    :height="height"
     viewBox="0 0 24 24"
     class="mr-1"
   >

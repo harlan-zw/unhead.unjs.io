@@ -191,7 +191,7 @@ const { data: lastCommit } = await useAsyncData(`learn-commit-${route.path}`, ()
         </div>
       </div>
 
-      <UPageBody prose class="pb-0">
+      <UPageBody class="pb-0">
         <ContentRenderer v-if="page.body" :value="page" />
         <FeedbackButtons :edit-link="editLink" />
         <USeparator v-if="surround?.length" class="my-8" />

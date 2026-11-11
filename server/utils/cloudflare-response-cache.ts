@@ -3,11 +3,9 @@
 import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
 import { negotiateContent } from '@mdream/js/negotiate'
 
-// v3 keys pages on their negotiated representation. v2 entries were keyed on
-// the URL alone, so they could hand cached HTML to a Markdown request, and they
-// hold OG image URLs signed with the OG Image v6 key. Renaming the cache drops
-// them all at once.
-export const CLOUDFLARE_RESPONSE_CACHE_NAME = 'unhead:responses:v3'
+// v4 drops pages and Markdown containing image URLs signed before the application
+// secret rotation. Page keys still include their negotiated representation.
+export const CLOUDFLARE_RESPONSE_CACHE_NAME = 'unhead:responses:v4'
 
 const CACHE_CREATED_AT_HEADER = 'x-unhead-cache-created-at'
 const CACHE_CONTROL_PRESENT_HEADER = 'x-unhead-cache-control-present'

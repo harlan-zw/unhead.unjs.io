@@ -41,8 +41,8 @@ const { copy, copied } = useClipboard()
 const showJsonPreview = ref(true)
 
 const outputModes = [
-  { label: 'useSchemaOrg', value: 'useSchemaOrg' },
-  { label: 'JSON-LD', value: 'jsonld' },
+  { label: 'useSchemaOrg', value: 'useSchemaOrg' as const },
+  { label: 'JSON-LD', value: 'jsonld' as const },
 ]
 
 const codeLang = computed(() => codeLanguage.value === 'json' ? 'json' : 'ts')
@@ -301,12 +301,13 @@ function handleTypeSelect(type: SchemaType) {
             <FrameworkSelectorMinimal size="small" ignore-redirect />
             <div class="h-4 w-px bg-[var(--ui-border)] hidden sm:block" />
             <UTabs
-              v-model="state.outputMode"
+              :model-value="state.outputMode"
               :items="outputModes"
               size="xs"
               color="neutral"
               variant="pill"
               :content="false"
+              @update:model-value="state.outputMode = outputModes.find(mode => mode.value === $event)?.value ?? state.outputMode"
             />
           </div>
           <div class="max-w-none [&_pre]:!my-0 [&_pre]:!rounded-lg sm:[&_pre]:!rounded-xl">

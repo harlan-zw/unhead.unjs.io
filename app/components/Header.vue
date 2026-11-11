@@ -175,7 +175,7 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
                   <div class="flex items-center gap-2">
                     <div :class="link.children?.length ? 'text-sm font-bold' : ''" v-text="link.title" />
                   </div>
-                  <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
+                  <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" class="w-4 h-4" />
                 </div>
                 <div v-else :class="link.deprecated ? 'opacity-50' : ''">
                   <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-400 dark:text-sky-200" />
@@ -208,7 +208,7 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
                   <div class="flex items-center gap-2">
                     <div :class="link.children?.length ? 'text-sm font-bold' : ''" v-text="link.title" />
                   </div>
-                  <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" dynamic class="w-4 h-4" />
+                  <UIcon v-if="link.tag" :name="`i-logos-${link.tag}`" class="w-4 h-4" />
                 </div>
                 <div v-else :class="link.deprecated ? 'opacity-50' : ''">
                   <UIcon v-if="link.icon" :name="link.icon" class="w-4 h-4 text-(--ui-primary)-400 dark:text-sky-200" />
@@ -237,7 +237,7 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
 
     <template #right>
       <div class="flex items-center justify-end lg:-mr-1.5 gap-3">
-        <UInput type="search" aria-label="Search documentation" class="cursor-pointer hidden lg:block w-[70px]" shortcut="divide" @click="openSearch = true">
+        <UInput type="search" aria-label="Search documentation" class="cursor-pointer hidden lg:block w-[70px]" @click="openSearch = true">
           <template #leading>
             <UIcon name="i-heroicons-magnifying-glass" class="size-4 text-dimmed" />
           </template>
@@ -297,13 +297,13 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
             class="transition-transform hover:scale-110 active:scale-95"
           >
             <UButton
-              :title="`Switch to ${framework.label}`" :aria-label="framework.label" type="button"
+              v-bind="{ title: `Switch to ${framework.label}` } satisfies { title: string }" :aria-label="framework.label" type="button"
               class="cursor-pointer transition-all "
               :to="framework.to"
               :class="[framework.slug === selectedFramework.slug ? [] : ['grayscale opacity-60 hover:grayscale-0 hover:opacity-100']]"
               variant="ghost" @click="switchFramework(framework)"
             >
-              <UIcon dynamic :name="framework.icon" class="w-5 h-5" />
+              <UIcon :name="framework.icon" class="w-5 h-5" />
             </UButton>
           </li>
         </ul>

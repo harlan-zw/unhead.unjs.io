@@ -105,6 +105,7 @@ packages:
   - .
   - test/capo-benchmarks
   - test/streaming-benchmarks/raw
+  - tools/typecheck
 overrides:
   '@takumi-rs/core': 2.15.2
   '@takumi-rs/helpers': 2.15.2
@@ -147,6 +148,7 @@ overrides:
   tar: ^7.5.21
   unplugin: 3.3.0
   vite: ^8.2.1
+  vue-tsc@3.3.14>@vue/language-core: 3.3.11
 patchedDependencies:
   '@nuxtjs/mdc@0.22.2': patches/@nuxtjs__mdc@0.22.2.patch
   '@vueuse/core@14.4.0': patches/@vueuse__core@14.4.0.patch
@@ -198,6 +200,8 @@ catalog:
   eslint-plugin-harlanzw: ^0.20.0
   fuse.js: ^7.5.0
   h3: ^1.15.11
+  jsonc-parser: 3.3.1
+
   lighthouse: ^13.4.1
   lint-staged: ^17.3.0
   markdownlint-cli: ^0.49.1
@@ -222,11 +226,10 @@ catalog:
   ufo: ^1.6.4
   unstorage: ^1.17.5
   vitest: ^5.0.0
-  vue-tsc: ^3.3.9
+  vue-tsc: 3.3.14
   wrangler: ^4.120.0
   yaml: ^2.9.1
   zod: ^4.6.6
-
 trustPolicyIgnoreAfter: 262800
 allowBuilds:
   '@parcel/watcher': false
@@ -240,3 +243,7 @@ allowBuilds:
   simple-git-hooks: true
   vue-demi: false
   workerd: false
+catalogs:
+  native:
+    '@vue/content-mapper': 4.0.0-alpha.3
+    typescript: 7.1.0-beta

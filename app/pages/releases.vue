@@ -138,12 +138,13 @@ const HighlightedVersion = defineComponent({
 
         <div class="flex justify-center mt-8 mb-10">
           <UTabs
-            v-model="activeFilter"
+            :model-value="activeFilter"
             :items="filterItems"
             :content="false"
             variant="pill"
             color="neutral"
             size="sm"
+            @update:model-value="activeFilter = String($event)"
           />
         </div>
 
