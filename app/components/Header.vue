@@ -19,6 +19,23 @@ const docsNavForFrameworks = computed(() => isDocsNavigationRoute.value ? docsNa
 const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNavForFrameworks)
 const { versions, selectedVersion, getVersionedPath } = useVersionSelector()
 const { megaMenuItems } = useNavMenu()
+
+// The menus stay mounted so they open at once, and Reka keeps one dismissable
+// layer per menu. The last layer, Learn, hears every Escape on the page, and
+// its handler closes a menu and focuses the Learn trigger, even when no menu is
+// open. Escape now acts only on the open menu, and focus returns to that
+// menu's own trigger.
+const openMenu = ref('')
+function onMenuEscape(event: KeyboardEvent, value: string): void {
+  const open = openMenu.value
+  if (open === value)
+    return
+  event.preventDefault()
+  if (!open)
+    return
+  openMenu.value = ''
+  document.querySelector<HTMLElement>(`[data-menu-trigger="${open}"]`)?.focus()
+}
 const versionItems = computed(() => versions.map(v => ({
   label: v.label,
   value: v.slug,
@@ -114,12 +131,20 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
     </template>
 
     <template #default>
-      <NavigationMenuRoot aria-label="Primary navigation" class="hidden lg:flex justify-center relative py-2">
+      <!--
+        The menus must open the moment a pointer or key asks. Reka waits 200ms
+        before opening by default; 40ms still ignores a pointer that only
+        passes over the bar. The menus stay mounted after hydration, so
+        opening one only shows it and never renders its rows on the click
+        that INP measures.
+      -->
+      <NavigationMenuRoot v-model="openMenu" aria-label="Primary navigation" class="hidden lg:flex justify-center relative py-2" :delay-duration="40" :unmount-on-hide="false">
         <NavigationMenuList class="flex items-center gap-0.5">
           <NavigationMenuItem v-for="item in megaMenuItems" :key="item.value" :value="item.value">
             <NavigationMenuTrigger as-child>
               <NuxtLink
                 :to="item.to"
+                :data-menu-trigger="item.value"
                 class="group relative flex items-center gap-1.5 font-medium text-sm px-2.5 py-1.5 before:absolute before:z-[-1] before:rounded-md before:inset-x-px before:inset-y-0 data-[state=open]:before:bg-elevated data-[state=open]:text-highlighted before:transition-colors transition-colors"
               >
                 <UIcon :name="item.icon" class="shrink-0 size-4 opacity-50 group-hover:opacity-80 group-data-[state=open]:opacity-90 transition-opacity" />
@@ -127,7 +152,8 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
               </NuxtLink>
             </NavigationMenuTrigger>
             <NavigationMenuContent
-              class="absolute top-0 left-0 w-auto data-[motion=from-start]:animate-[enter-from-left_200ms_ease] data-[motion=from-end]:animate-[enter-from-right_200ms_ease] data-[motion=to-start]:animate-[exit-to-left_200ms_ease] data-[motion=to-end]:animate-[exit-to-right_200ms_ease]"
+              class="absolute top-0 left-0 w-auto data-[state=closed]:hidden"
+              @escape-key-down="onMenuEscape($event, item.value)"
             >
               <MegaMenu :categories="item.categories" :footer="item.footer" :cols="item.cols" :style="{ minWidth: item.minWidth }" />
             </NavigationMenuContent>
@@ -136,7 +162,7 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
 
         <Teleport v-if="isMounted" to="body">
           <NavigationMenuViewport
-            class="fixed top-[60px] left-1/2 -translate-x-1/2 overflow-hidden bg-elevated shadow-xl rounded-md ring-1 ring-[var(--ui-border-accented)] h-(--reka-navigation-menu-viewport-height) w-(--reka-navigation-menu-viewport-width) transition-[width,height] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[100]"
+            class="fixed top-[60px] left-1/2 -translate-x-1/2 overflow-hidden bg-elevated shadow-xl rounded-md ring-1 ring-[var(--ui-border-accented)] h-(--reka-navigation-menu-viewport-height) w-(--reka-navigation-menu-viewport-width) data-[state=closed]:hidden z-[100]"
           />
         </Teleport>
         <NavigationMenuItem as-child>
