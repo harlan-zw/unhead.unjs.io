@@ -136,7 +136,14 @@ const transformedPage = computed(() => {
           { label: 'Copy for LLMs', to: repoLinks[1]?.to, icon: 'i-catppuccin-markdown', target: '_blank' },
         ] : []"
         :ui="{ title: 'leading-normal' }"
-      />
+      >
+        <template v-if="typeof page.meta?.since === 'string' && page.meta.since" #headline>
+          {{ headline }}
+          <UBadge color="neutral" variant="subtle" size="sm" class="ms-2">
+            Since Unhead {{ page.meta.since }}
+          </UBadge>
+        </template>
+      </UPageHeader>
 
       <div class="block xl:hidden">
         <div class="mt-5 flex items-center gap-2 text-[var(--ui-text-accented)]">
