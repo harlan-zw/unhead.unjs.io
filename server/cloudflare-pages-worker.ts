@@ -12,6 +12,7 @@ import {
   handleCloudflareResponseCache,
 } from './utils/cloudflare-response-cache'
 import { wrapD1WithRetry } from './utils/d1-retry'
+import { extendRenderLifetime, getLeadingSlashRedirect } from './utils/worker-request'
 import '#nitro-internal-pollyfills'
 
 const nitroApp = useNitroApp()
@@ -30,6 +31,10 @@ export default {
       return ws!.handleUpgrade(request, env, context)
 
     const url = new URL(request.url)
+    const canonical = getLeadingSlashRedirect(url)
+    if (canonical)
+      return Response.redirect(canonical.href, 301)
+
     if (env.ASSETS && isPublicAssetURL(url.pathname))
       return env.ASSETS.fetch(request)
 
@@ -39,7 +44,7 @@ export default {
 
     const bindings = withD1Retry(env)
     setCloudflareBindings(bindings)
-    const render = () => nitroApp.localFetch(url.pathname + url.search, {
+    const render = () => extendRenderLifetime(context, () => nitroApp.localFetch(url.pathname + url.search, {
       body,
       context: {
         waitUntil: (promise: Promise<unknown>) => context.waitUntil(promise),
@@ -52,7 +57,7 @@ export default {
       host: url.hostname,
       method: request.method,
       protocol: url.protocol,
-    })
+    }))
 
     const rule = getCloudflareResponseCacheRule(url.pathname)
     if (!rule || typeof caches === 'undefined')
