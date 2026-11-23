@@ -140,7 +140,7 @@ const transformedPage = computed(() => {
         <template v-if="typeof page.meta?.since === 'string' && page.meta.since" #headline>
           {{ headline }}
           <UBadge color="neutral" variant="subtle" size="sm" class="ms-2">
-            Since Unhead {{ page.meta.since }}
+            Since {{ page.meta.since }}
           </UBadge>
         </template>
       </UPageHeader>
