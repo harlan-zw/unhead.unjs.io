@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisAxis, VisGroupedBar, VisTooltip, VisXYContainer } from '@unovis/vue'
+import { VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContainer } from '@unovis/vue'
 
 const colors = ['#3b82f6', '#64748b']
 
@@ -63,7 +63,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)}s` : `${v}ms`" :grid-line="false" :domain-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBarSelectors.bar]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="text-xs text-dimmed mt-3 leading-relaxed">
         Nuxt has the best head ordering but worst LCP. Shopify has no head optimization but best LCP. TTFB dominates.

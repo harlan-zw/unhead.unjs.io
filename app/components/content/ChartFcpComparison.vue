@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisAnnotations, VisAxis, VisGroupedBar, VisTooltip, VisXYContainer } from '@unovis/vue'
+import { VisAnnotations, VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContainer } from '@unovis/vue'
 
 const colors = ['#059669', '#d97706', '#7c3aed', '#dc2626']
 
@@ -92,7 +92,7 @@ function tooltipTemplate(d: D) {
         <VisAnnotations :items="annotations" />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}ms`" :grid-line="false" :domain-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBarSelectors.bar]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="text-xs text-dimmed mt-3 leading-relaxed">
         Heavy page on slow-3g shows the only meaningful delta. Minimal and medium pages are within noise.

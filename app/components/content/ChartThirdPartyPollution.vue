@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisAxis, VisStackedBar, VisTooltip, VisXYContainer } from '@unovis/vue'
+import { VisAxis, VisStackedBar, VisStackedBarSelectors, VisTooltip, VisXYContainer } from '@unovis/vue'
 
 const colors = {
   firstParty: '#059669',
@@ -31,7 +31,8 @@ const legend = [
   { label: 'Third-party tags', color: colors.thirdParty },
 ]
 
-function tooltipTemplate(d: D) {
+// Unovis binds each stacked bar to a record that wraps the row in `datum`.
+function tooltipTemplate({ datum: d }: { datum: D }) {
   const ratio = (d.thirdParty / d.firstParty).toFixed(1)
   return `<div style="padding:8px 12px;font-size:13px;line-height:1.6;color:var(--ui-text)">
     <div style="font-weight:600;margin-bottom:4px">${d.framework}</div>
@@ -78,7 +79,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="true" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}`" :grid-line="true" :domain-line="false" :tick-line="false" />
-        <VisTooltip :triggers="{ [VisStackedBar as any]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisStackedBarSelectors.bar]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="mt-4 text-[10px] text-dimmed text-center leading-relaxed">
         Average number of tags in <code>&lt;head&gt;</code> per framework on commercial sites. Third-party tags counted after JS execution. Feb 2026.
