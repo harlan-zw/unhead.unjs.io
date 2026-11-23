@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisAxis, VisLine, VisScatter, VisTooltip, VisXYContainer } from '@unovis/vue'
+import { VisAxis, VisLine, VisScatter, VisScatterSelectors, VisTooltip, VisXYContainer } from '@unovis/vue'
 
 const colors = ['#059669', '#3b82f6', '#94a3b8']
 
@@ -88,7 +88,7 @@ function tooltipTemplate(d: D) {
         </template>
         <VisAxis type="x" :tick-format="tickFormat" :grid-line="false" :domain-line="false" :tick-line="false" :num-ticks="8" />
         <VisAxis type="y" :tick-format="(v: number) => `${(v / 1000).toFixed(1)}s`" :grid-line="false" :domain-line="false" />
-        <VisTooltip :triggers="{ [VisScatter as any]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisScatterSelectors.point]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="text-xs text-dimmed mt-3 leading-relaxed">
         All three frameworks essentially flat. No framework-level optimization has moved the needle at population scale.

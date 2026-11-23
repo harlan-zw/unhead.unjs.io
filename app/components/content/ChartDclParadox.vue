@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisAxis, VisGroupedBar, VisTooltip, VisXYContainer } from '@unovis/vue'
+import { VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContainer } from '@unovis/vue'
 
 const colors = ['#059669', '#3b82f6'] // FCP, DCL
 
@@ -76,7 +76,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="false" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}ms`" :grid-line="false" :domain-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBarSelectors.bar]: tooltipTemplate }" />
       </VisXYContainer>
       <!-- Delta callouts to make the paradox visible without hovering -->
       <div class="mt-4 grid grid-cols-2 gap-3">

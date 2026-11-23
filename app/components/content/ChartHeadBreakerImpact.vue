@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisDonut, VisSingleContainer, VisTooltip } from '@unovis/vue'
+import { VisDonut, VisDonutSelectors, VisSingleContainer, VisTooltip } from '@unovis/vue'
 
 const data = [
   { name: 'Invalid Heads (Breakers)', value: 22, color: '#dc2626' },
@@ -9,7 +9,8 @@ const data = [
 const value = (d: typeof data[number]) => d.value
 const color = (d: typeof data[number]) => d.color
 
-function tooltipTemplate(d: typeof data[number]) {
+// Unovis binds each donut segment to a pie arc that wraps the row in `data`.
+function tooltipTemplate({ data: d }: { data: typeof data[number] }) {
   return `<div style="padding:4px 8px;font-size:12px">
     <span style="font-weight:600">${d.name}</span>: ${d.value}%
   </div>`
@@ -37,7 +38,7 @@ function tooltipTemplate(d: typeof data[number]) {
             :show-labels="false"
             :color="color"
           />
-          <VisTooltip :triggers="{ [VisDonut as any]: tooltipTemplate }" />
+          <VisTooltip :triggers="{ [VisDonutSelectors.segment]: tooltipTemplate }" />
         </VisSingleContainer>
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
           <span class="text-2xl font-bold text-[var(--ui-text-error)]">22%</span>

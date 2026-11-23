@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisAxis, VisGroupedBar, VisTooltip, VisXYContainer } from '@unovis/vue'
+import { VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContainer } from '@unovis/vue'
 
 const colors = ['#ef4444', '#f59e0b', '#8b5cf6']
 
@@ -76,7 +76,7 @@ function tooltipTemplate(d: D) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="true" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}%`" :grid-line="true" :domain-line="false" :tick-line="false" />
-        <VisTooltip :triggers="{ [VisGroupedBar as any]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisGroupedBarSelectors.bar]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="mt-4 text-[10px] text-dimmed text-center leading-relaxed">
         Percentage of origins with duplicate or conflicting tags in raw server HTML. Feb 2026.

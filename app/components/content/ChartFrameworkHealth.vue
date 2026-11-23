@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VisAxis, VisStackedBar, VisTooltip, VisXYContainer } from '@unovis/vue'
+import { VisAxis, VisStackedBar, VisStackedBarSelectors, VisTooltip, VisXYContainer } from '@unovis/vue'
 
 const colors = {
   changed: '#ef4444',
@@ -30,7 +30,8 @@ const legend = [
   { label: 'Missing Title', color: colors.missing },
 ]
 
-function tooltipTemplate(d: typeof data[number]) {
+// Unovis binds each stacked bar to a record that wraps the row in `datum`.
+function tooltipTemplate({ datum: d }: { datum: typeof data[number] }) {
   return `<div style="padding:6px 10px;font-size:13px;line-height:1.5">
     <div style="font-weight:600;margin-bottom:4px">${d.framework}</div>
     <div style="color:var(--ui-text-error)">Changed: ${d.changed}%</div>
@@ -74,7 +75,7 @@ function tooltipTemplate(d: typeof data[number]) {
         />
         <VisAxis type="x" :tick-format="tickFormat" :num-ticks="data.length" :grid-line="false" :domain-line="true" :tick-line="false" />
         <VisAxis type="y" :tick-format="(v: number) => `${v}%`" :grid-line="true" :domain-line="false" :tick-line="false" />
-        <VisTooltip :triggers="{ [VisStackedBar as any]: tooltipTemplate }" />
+        <VisTooltip :triggers="{ [VisStackedBarSelectors.bar]: tooltipTemplate }" />
       </VisXYContainer>
       <p class="mt-4 text-[10px] text-dimmed text-center leading-relaxed">
         Data sourced from HTTP Archive (Feb 2026) and CrUX (Jan 2026). <br class="sm:hidden">
