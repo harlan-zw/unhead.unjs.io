@@ -1,8 +1,11 @@
 import type { EventHandler, H3Event } from 'h3'
 import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
-import { defineEventHandler, getRequestHeaders, getRequestURL, readRawBody } from 'h3'
+import { createError, defineEventHandler, getRequestHeaders, getRequestURL, readRawBody } from 'h3'
 
 export const CONTENT_QUERY_CACHE_NAME = 'unhead:content-queries:v1'
+
+// Nuxt Content's `assertSafeQuery` starts every refusal of client SQL with this.
+const INVALID_QUERY_PREFIX = 'Invalid query:'
 
 const CACHE_SCHEMA_VERSION = 'v1'
 const CACHE_KEY_ORIGIN = 'https://content-query.cache.unhead.internal'
@@ -64,7 +67,11 @@ export interface ContentQueryCacheHandlerOptions {
   now?: () => number
 }
 
-export function createCachedContentQueryHandler(options: ContentQueryCacheHandlerOptions): EventHandler {
+export function createCachedContentQueryHandler(handlerOptions: ContentQueryCacheHandlerOptions): EventHandler {
+  const options: ContentQueryCacheHandlerOptions = {
+    ...handlerOptions,
+    original: event => handlerOptions.original(event).catch(rejectInvalidQuery),
+  }
   const now = options.now ?? Date.now
 
   return defineEventHandler(async (event) => {
@@ -168,6 +175,16 @@ async function parseContentQueryEligibility(event: H3Event): Promise<ContentQuer
 
   const callerChecksum = getRequestURL(event).searchParams.get('v') ?? undefined
   return { tag: 'eligible', callerChecksum, sql: record.sql }
+}
+
+/**
+ * Nuxt Content throws a plain `Error` when it refuses client SQL, which Nitro
+ * answers as a 500. The request is at fault, so answer 400 instead.
+ */
+function rejectInvalidQuery(error: unknown): never {
+  if (error instanceof Error && error.message.startsWith(INVALID_QUERY_PREFIX))
+    throw createError({ statusCode: 400, statusMessage: 'Bad Request', message: error.message })
+  throw error
 }
 
 function requiresFreshResponse(event: H3Event): boolean {

@@ -170,6 +170,17 @@ describe('content query cache', () => {
     expect(await hit.text()).toBe('[]')
   })
 
+  it.each([
+    { name: 'a cacheable request', request: {} },
+    { name: 'an uncached request', request: { path: QUERY_ROUTE } },
+  ])('answers 400 when Nuxt Content refuses the client SQL on $name', async ({ request }) => {
+    const refusal = 'Invalid query: Query must be a valid SELECT statement with proper syntax'
+    const { cache, handler } = createHarness({ original: vi.fn().mockRejectedValue(new Error(refusal)) })
+
+    await expect(handler(createQueryEvent(request))).rejects.toMatchObject({ statusCode: 400, message: refusal })
+    expect(cache.put).not.toHaveBeenCalled()
+  })
+
   it('preserves the original error contract and caches nothing on a cold failure', async () => {
     const failure = Object.assign(new Error('D1_ERROR: requests queued too long'), { statusCode: 500 })
     const original = vi.fn()
