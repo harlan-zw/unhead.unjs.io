@@ -161,6 +161,7 @@ catalog:
   '@antfu/eslint-config': ^9.3.0
   '@babel/parser': ^8.0.4
   '@babel/types': ^8.0.4
+  '@cloudflare/unenv-preset': 2.16.1
   '@cloudflare/workers-types': ^5.20260810.1
   '@harlan-zw/nuxt-checkin': 0.4.0
   '@harlan-zw/nuxt-cloudflare': 0.5.3

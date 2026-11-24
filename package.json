@@ -16,6 +16,7 @@
     "lint:docs:fix": "markdownlint ./snippets --disable MD013 MD041 --fix -- && case-police 'snippets/**/*.md' *.md --fix",
     "test": "vitest run",
     "test:e2e:og": "vitest run --config vitest.e2e.config.ts tests/og-image.e2e.test.ts",
+    "test:e2e:pages": "vitest run --config vitest.e2e.config.ts tests/pages-worker-runtime.e2e.test.ts",
     "typecheck": "nuxt prepare && site-typecheck --noEmit --incremental false",
     "checkin": "nuxt-checkin prepare && nuxt-checkin --save",
     "typecheck:legacy": "nuxt typecheck"
@@ -28,6 +29,7 @@
     "@antfu/eslint-config": "catalog:",
     "@babel/parser": "catalog:",
     "@babel/types": "catalog:",
+    "@cloudflare/unenv-preset": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@harlan-zw/nuxt-checkin": "catalog:",
     "@harlan-zw/nuxt-cloudflare": "catalog:",
