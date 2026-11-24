@@ -23,9 +23,11 @@ function unheadVueSkill() {
   const dir = resolve(dirname(fromNuxt.resolve('@unhead/vue')), '../skills')
   const bytes = readFileSync(resolve(dir, 'unhead-vue/SKILL.md'))
   const frontmatter = new TextDecoder().decode(bytes).match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1]
-  const { name, description } = (frontmatter ? parseYaml(frontmatter) : null) ?? {}
+  const { name, description } = (frontmatter
+    ? parseYaml(frontmatter)
+    : null) ?? {}
   if (typeof name !== 'string' || typeof description !== 'string')
-    throw new Error(`${dir}/unhead-vue/SKILL.md has no name and description frontmatter, so the Unhead Agent Skill cannot be published.`)
+    throw new TypeError(`${dir}/unhead-vue/SKILL.md has no name and description frontmatter, so the Unhead Agent Skill cannot be published.`)
   return {
     publicAssets: { dir, baseURL: '/skills', maxAge: 60 * 60 },
     entry: {
@@ -287,9 +289,7 @@ export default defineNuxtConfig({
   },
 
   fonts: {
-    experimental: {
-      processCSSVariables: true,
-    },
+    processCSSVariables: true,
     families: [
       { name: 'Hubot Sans', stretch: '75% 125%', global: true },
       { name: 'Nunito Sans' },
@@ -300,8 +300,12 @@ export default defineNuxtConfig({
     nitro: {
       // Attach Wrangler bindings to H3 requests, including in-process requests.
       devServer: { runner: 'node-worker' },
-      plugins: [resolve('./server/internal/cloudflare-dev.ts')],
-      rolldownConfig: { external: ['wrangler'] },
+      plugins: [
+        resolve('./server/internal/cloudflare-dev.ts'),
+      ],
+      rolldownConfig: {
+        external: ['wrangler'],
+      },
     },
   },
 
@@ -313,17 +317,19 @@ export default defineNuxtConfig({
     },
     publicAssets: [unheadSkill.publicAssets],
     rollupConfig: {
-      plugins: [{
-        name: 'preserve-unhead-stream-runtime',
-        transform(code, id) {
-          if (!id.replaceAll('\\', '/').endsWith('/unhead/dist/stream/iife.mjs'))
-            return null
+      plugins: [
+        {
+          name: 'preserve-unhead-stream-runtime',
+          transform(code, id) {
+            if (!id.replaceAll('\\', '/').endsWith('/unhead/dist/stream/iife.mjs'))
+              return null
 
-          // Nitro's textual `typeof window` replacement otherwise corrupts
-          // Unhead's JavaScript source string before Rollup parses the module.
-          return code.replaceAll('typeof window', 'typeof globalThis.window')
+            // Nitro's textual `typeof window` replacement otherwise corrupts
+            // Unhead's JavaScript source string before Rollup parses the module.
+            return code.replaceAll('typeof window', 'typeof globalThis.window')
+          },
         },
-      }],
+      ],
     },
     prerender: {
       autoSubfolderIndex: false,
@@ -477,14 +483,22 @@ export default defineNuxtConfig({
   routeRules: {
     '/sitemap.xml': { swr: 3600 },
     // auth endpoints must not be cached (cookies need to be set fresh)
-    '/auth/**': { prerender: false, cache: false, headers: { 'cache-control': 'no-store' } },
+    '/auth/**': {
+      prerender: false,
+      cache: false,
+      headers: { 'cache-control': 'no-store' },
+    },
     '/admin/**': { prerender: false },
     '/api/admin/**': { prerender: false, cache: false },
     '/api/tools/**': { prerender: false, cache: false },
     '/api/debug/**': { prerender: false, cache: false },
     '/tools/og-image-generator': { prerender: false },
-    '/releases/v3': { redirect: { to: '/docs/releases/v3', statusCode: 301 } },
-    '/api/core/hooks': { redirect: { to: '/guides/hooks', statusCode: 301 } },
+    '/releases/v3': {
+      redirect: { to: '/docs/releases/v3', statusCode: 301 },
+    },
+    '/api/core/hooks': {
+      redirect: { to: '/guides/hooks', statusCode: 301 },
+    },
   },
 
   css: [
@@ -496,10 +510,12 @@ export default defineNuxtConfig({
   },
 
   icon: {
-    customCollections: [{
-      prefix: 'custom',
-      dir: resolve('./app/assets/icons'),
-    }],
+    customCollections: [
+      {
+        prefix: 'custom',
+        dir: resolve('./app/assets/icons'),
+      },
+    ],
     clientBundle: {
       scan: true,
       includeCustomCollections: true,

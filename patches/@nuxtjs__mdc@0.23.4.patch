@@ -2,7 +2,7 @@ diff --git a/dist/runtime/components/MDCRenderer.vue b/dist/runtime/components/M
 index 822057f..b01c8df 100644
 --- a/dist/runtime/components/MDCRenderer.vue
 +++ b/dist/runtime/components/MDCRenderer.vue
-@@ -384,7 +384,8 @@ function findMappedTag(node, tags) {
+@@ -405,7 +405,8 @@ function findMappedTag(node, tags) {
    if (!tag || typeof node.props?.__ignoreMap !== "undefined") {
      return tag;
    }
