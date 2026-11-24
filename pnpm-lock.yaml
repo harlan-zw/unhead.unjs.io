@@ -15,9 +15,6 @@ catalogs:
     '@babel/types':
       specifier: ^8.0.4
       version: 8.0.4
-    '@cloudflare/unenv-preset':
-      specifier: 2.16.1
-      version: 2.16.1
     '@cloudflare/workers-types':
       specifier: ^5.20260810.1
       version: 5.20260810.1
@@ -313,9 +310,6 @@ importers:
       '@babel/types':
         specifier: 'catalog:'
         version: 8.0.4
-      '@cloudflare/unenv-preset':
-        specifier: 'catalog:'
-        version: 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260801.1)
       '@cloudflare/workers-types':
         specifier: 'catalog:'
         version: 5.20260810.1

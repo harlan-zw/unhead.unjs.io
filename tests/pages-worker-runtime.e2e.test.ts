@@ -50,4 +50,10 @@ describe('pages Worker on a runtime without process v2', () => {
     const response = await worker.fetch('/__ai-ready/cron', { headers: { authorization: `Bearer ${CRON_TOKEN}` } })
     expect(response.status).toBe(200)
   })
+
+  it('answers the skew protection health check, which reads process uptime', async () => {
+    const response = await worker.fetch('/__skew/health')
+    expect(response.status).toBe(200)
+    expect(await response.json()).toMatchObject({ ok: true })
+  })
 })

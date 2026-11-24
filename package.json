@@ -29,7 +29,6 @@
     "@antfu/eslint-config": "catalog:",
     "@babel/parser": "catalog:",
     "@babel/types": "catalog:",
-    "@cloudflare/unenv-preset": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@harlan-zw/nuxt-checkin": "catalog:",
     "@harlan-zw/nuxt-cloudflare": "catalog:",
