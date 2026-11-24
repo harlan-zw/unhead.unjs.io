@@ -83,7 +83,6 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     'radix-vue/nuxt',
     '@vueuse/nuxt',
-    'nitro-cloudflare-dev',
     '@nuxt/fonts',
     '@nuxt/content',
     '@nuxt/scripts',
@@ -295,9 +294,16 @@ export default defineNuxtConfig({
     ],
   },
 
+  $development: {
+    nitro: {
+      // Attach Wrangler bindings to H3 requests, including in-process requests.
+      devServer: { runner: 'node-worker' },
+      plugins: [resolve('./server/internal/cloudflare-dev.ts')],
+      rolldownConfig: { external: ['wrangler'] },
+    },
+  },
+
   nitro: {
-    // Local Cloudflare bindings come from nitro-cloudflare-dev.
-    devServer: { runner: 'node-worker' },
     preset: 'cloudflare-pages',
     alias: {
       // Docs examples use the parser at runtime, even without Vue's runtime compiler.

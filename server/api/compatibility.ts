@@ -1,7 +1,8 @@
+import { resolveCloudflareBindings } from '@harlan-zw/nuxt-cloudflare/bindings'
 import { defineEventHandler } from 'h3'
 
 export default defineEventHandler((e) => {
   return {
-    ASSETS: !!e?.context?.cloudflare?.env.ASSETS,
+    ASSETS: !!resolveCloudflareBindings<{ ASSETS?: unknown }>(e)?.ASSETS,
   }
 })

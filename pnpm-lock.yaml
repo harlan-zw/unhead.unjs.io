@@ -153,9 +153,6 @@ catalogs:
     nitro:
       specifier: 3.0.261103-rc
       version: 3.0.261103-rc
-    nitro-cloudflare-dev:
-      specifier: ^0.2.2
-      version: 0.2.2
     nostics:
       specifier: ^1.2.0
       version: 1.2.0
@@ -448,9 +445,6 @@ importers:
       minimark:
         specifier: 'catalog:'
         version: 0.2.0
-      nitro-cloudflare-dev:
-        specifier: 'catalog:'
-        version: 0.2.2
       nostics:
         specifier: 'catalog:'
         version: 1.2.0
@@ -7919,9 +7913,6 @@ packages:
     resolution: {integrity: sha512-kKHJhxwpR/Okycz4HhQKKlhWe4ASEfPgkSWNmKFHd7+ezuQlxkA5cM3+XkBPvm1gmHen3w53qsYAv+8GwRrBlg==}
     engines: {node: '>=18'}
 
-  nitro-cloudflare-dev@0.2.2:
-    resolution: {integrity: sha512-aZfNTVdgXPQeAmXW0Tw8hm3usAHr4qVG4Bg3WhHBGeZYuXr9OyT04Ztb+STkMzhyaXvfMHViAaPUPg06iAYqag==}
-
   nitro@3.0.261103-rc:
     resolution: {integrity: sha512-tLD7r5fWCtwnQEE4ZkckLUnx1wkWDaLY48dD+BCJtcQ+srSWAUpxJEK3YfTsgN3v+e4UgBYRzuR7zV7Sqns/zA==}
     engines: {node: '>=22.22.0'}
@@ -12030,7 +12021,7 @@ snapshots:
       launch-editor: 2.14.1
       local-pkg: 1.2.1
       magicast: 0.5.5
-      nypm: 0.6.10
+      nypm: 0.6.12
       ohash: 2.0.12
       pathe: 2.0.3
       perfect-debounce: 2.1.0
@@ -18521,7 +18512,7 @@ snapshots:
       html-encoding-sniffer: 6.0.0
       is-potential-custom-element-name: 1.0.1
       lru-cache: 11.5.3
-      parse5: 8.0.1
+      parse5: 8.1.1
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 6.0.1
@@ -19522,12 +19513,6 @@ snapshots:
   natural-compare@1.4.0: {}
 
   natural-orderby@5.0.0: {}
-
-  nitro-cloudflare-dev@0.2.2:
-    dependencies:
-      consola: 3.4.2
-      mlly: 1.8.2
-      pkg-types: 2.3.1
 
   nitro@3.0.261103-rc:
     dependencies:
