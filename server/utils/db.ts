@@ -6,7 +6,11 @@ import * as schema from '../database/schema'
 export { schema }
 
 export function getDB(event: H3Event) {
-  const db = (event.context.cloudflare?.env as { DB?: D1Database } | undefined)?.DB
+  const request = (event as H3Event & {
+    req?: { runtime?: { cloudflare?: { env?: { DB?: D1Database } } } }
+  }).req
+  const legacyContext = event.context.cloudflare as { env?: { DB?: D1Database } } | undefined
+  const db = request?.runtime?.cloudflare?.env?.DB ?? legacyContext?.env?.DB
 
   if (!db) {
     throw new Error('D1 database binding not available')

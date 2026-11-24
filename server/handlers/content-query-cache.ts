@@ -29,9 +29,9 @@ export default createCachedContentQueryHandler({
     return caches.open(CONTENT_QUERY_CACHE_NAME)
   },
   waitUntil: (event: H3Event, promise: Promise<unknown>) => {
-    const nitroWaitUntil = (event as unknown as { waitUntil?: (promise: Promise<unknown>) => void }).waitUntil
-    if (nitroWaitUntil) {
-      nitroWaitUntil(promise)
+    const nitroEvent = event as unknown as { waitUntil?: (promise: Promise<unknown>) => void }
+    if (nitroEvent.waitUntil) {
+      nitroEvent.waitUntil(promise)
       return
     }
     // Nitro spreads the worker's `_platform` into the event context; the
