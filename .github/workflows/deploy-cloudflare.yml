@@ -82,14 +82,14 @@ jobs:
           UNHEAD_DOCS_SOURCE: remote
 
       # This upload uses Pages project settings without a Wrangler config.
-      # Attach AI_READY_DB before upload so the new deployment receives it.
+      # Nitro reads runtime config from process.env. Enable it at the current Pages compatibility date.
       - name: Ensure AI-ready D1 database exists
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: node scripts/ensure-d1-database.mjs --name unhead-ai-ready
 
-      - name: Attach AI_READY_DB to the Pages project
+      - name: Configure the Pages database and runtime secrets
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -98,6 +98,7 @@ jobs:
           --project unhead-unjs-io
           --database unhead-ai-ready
           --binding AI_READY_DB
+          --compatibility-flag nodejs_compat_populate_process_env
 
       # Stop before upload if remote content queries or sync planning fail.
       # Keep this read-only while the previous build still serves the shared D1.

@@ -131,6 +131,8 @@ export default defineNuxtConfig({
         nitro.hooks.hook('build:before', (nitro) => {
           if (nitro.options.preset !== 'cloudflare-pages')
             return
+          // Content uses D1 on Pages. Keep its Node connector out of the Worker.
+          nitro.options.alias['db0/connectors/better-sqlite3'] = 'unenv/mock/empty'
           nitro.options.alias['#unhead-cloudflare-pages-runtime'] = nitro.options.entry
           nitro.options.entry = resolve('./server/cloudflare-pages-worker.ts')
         })

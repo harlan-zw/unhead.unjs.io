@@ -6,8 +6,10 @@ import process from 'node:process'
 const DEFAULT_API_BASE = 'https://api.cloudflare.com/client/v4'
 
 export function parseArgs(argv) {
-  const readFlag = (flag) => {
+  const readFlag = (flag, required = true) => {
     const index = argv.indexOf(flag)
+    if (index === -1 && !required)
+      return undefined
     const value = index > -1 ? argv[index + 1] : null
     if (!value || value.startsWith('--'))
       throw new Error(`${flag} requires a value`)
@@ -17,21 +19,7 @@ export function parseArgs(argv) {
     project: readFlag('--project'),
     database: readFlag('--database'),
     binding: readFlag('--binding'),
-  }
-}
-
-export function patchBody(deploymentConfigs, binding, databaseId) {
-  const configs = deploymentConfigs ?? {}
-  const productionD1 = configs.production?.d1_databases ?? {}
-  return {
-    deployment_configs: {
-      production: {
-        d1_databases: {
-          ...productionD1,
-          [binding]: { id: databaseId },
-        },
-      },
-    },
+    compatibilityFlag: readFlag('--compatibility-flag', false),
   }
 }
 
@@ -81,24 +69,36 @@ export async function findD1DatabaseId({ baseUrl = DEFAULT_API_BASE, accountId, 
   return database.uuid
 }
 
-export async function attachPagesD1Binding({ accountId, apiToken, project, database, binding, baseUrl = DEFAULT_API_BASE }) {
+export async function attachPagesD1Binding({ accountId, apiToken, project, database, binding, compatibilityFlag = '', baseUrl = DEFAULT_API_BASE }) {
   const databaseId = await findD1DatabaseId({ baseUrl, accountId, apiToken, name: database })
   const projectUrl = `${baseUrl}/accounts/${accountId}/pages/projects/${project}`
 
   const current = await apiRequest({ method: 'GET', url: projectUrl, apiToken })
-  const configs = current.result?.deployment_configs
-  if (!configs?.production || typeof configs.production !== 'object' || Array.isArray(configs.production))
+  const production = current.result?.deployment_configs?.production
+  if (!production || typeof production !== 'object' || Array.isArray(production))
     throw new Error('Unexpected Pages project response; expected production deployment settings')
-  if (configs.production?.d1_databases?.[binding]?.id === databaseId)
+  const flags = production.compatibility_flags ?? []
+  const attached = production.d1_databases?.[binding]?.id !== databaseId
+  const addFlag = compatibilityFlag && !flags.includes(compatibilityFlag)
+  if (!attached && !addFlag)
     return { attached: false }
 
-  await apiRequest({ method: 'PATCH', url: projectUrl, apiToken, body: patchBody(configs, binding, databaseId) })
+  const changes = {}
+  if (attached)
+    changes.d1_databases = { ...production.d1_databases, [binding]: { id: databaseId } }
+  if (addFlag)
+    changes.compatibility_flags = [...flags, compatibilityFlag]
+  const body = { deployment_configs: { production: changes } }
+  await apiRequest({ method: 'PATCH', url: projectUrl, apiToken, body })
 
   const verified = await apiRequest({ method: 'GET', url: projectUrl, apiToken })
-  const verifiedId = verified.result?.deployment_configs?.production?.d1_databases?.[binding]?.id
+  const settings = verified.result?.deployment_configs?.production
+  const verifiedId = settings?.d1_databases?.[binding]?.id
   if (verifiedId !== databaseId)
     throw new Error(`Pages project "${project}" still lacks ${binding} after the update; got ${verifiedId ?? 'nothing'}`)
-  return { attached: true }
+  if (compatibilityFlag && !settings?.compatibility_flags?.includes(compatibilityFlag))
+    throw new Error(`Pages project "${project}" still lacks the ${compatibilityFlag} compatibility flag after the update`)
+  return { attached }
 }
 
 export async function main(argv = process.argv.slice(2)) {
@@ -113,6 +113,8 @@ export async function main(argv = process.argv.slice(2)) {
     console.log(attached
       ? `[attach-pages-d1] attached ${args.binding} to ${args.project} (${args.database})`
       : `[attach-pages-d1] ${args.binding} already points at ${args.database} on ${args.project}`)
+    if (args.compatibilityFlag)
+      console.log(`[attach-pages-d1] ${args.project} has the ${args.compatibilityFlag} compatibility flag`)
     return 0
   }
   catch (error) {

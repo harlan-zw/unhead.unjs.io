@@ -11,6 +11,8 @@ interface D1Database {
 
 interface DeploymentConfigs {
   production: {
+    compatibility_flags?: string[]
+    compatibility_date?: string
     d1_databases?: Record<string, { id: string }>
     analytics_engine_datasets?: Record<string, { dataset: string }>
     env_vars?: Record<string, { type: string, value?: string }>
@@ -167,6 +169,7 @@ function makeDocsProject(): FixtureState['project'] {
 }
 
 const workflowArgs = ['--project', 'unhead-unjs-io', '--database', 'unhead-ai-ready', '--binding', 'AI_READY_DB']
+const populateEnvFlag = 'nodejs_compat_populate_process_env'
 
 describe('parseArgs', () => {
   it('accepts the deploy workflow arguments', () => {
@@ -208,6 +211,40 @@ describe('main', () => {
 })
 
 describe('attachPagesD1Binding', () => {
+  it('adds the requested production flag once and keeps the existing settings', async () => {
+    const project = makeDocsProject()
+    const production = project.deployment_configs.production
+    production.d1_databases!.AI_READY_DB = { id: 'ai-ready-id' }
+    production.compatibility_date = '2025-01-01'
+    production.compatibility_flags = ['nodejs_compat_v2']
+    const fixture = await startFixture({
+      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      project,
+      patchApplies: true,
+    })
+    const realFetch = globalThis.fetch
+    vi.stubGlobal('fetch', (url: string, options: RequestInit) => {
+      return realFetch(url.replace('https://api.cloudflare.com/client/v4', fixture.baseUrl), options)
+    })
+    vi.stubEnv('CLOUDFLARE_ACCOUNT_ID', 'acc-1')
+    vi.stubEnv('CLOUDFLARE_API_TOKEN', 'fixture-token')
+    vi.spyOn(console, 'log').mockImplementation(() => {})
+    const initialProject = structuredClone(project)
+    const args = [...workflowArgs, '--compatibility-flag', populateEnvFlag]
+
+    expect(await main(args)).toBe(0)
+    expect(await main(args)).toBe(0)
+
+    const patches = fixture.requests.filter(request => request.method === 'PATCH')
+    expect(patches.map(request => request.body)).toEqual([{
+      deployment_configs: {
+        production: { compatibility_flags: ['nodejs_compat_v2', populateEnvFlag] },
+      },
+    }])
+    initialProject.deployment_configs.production.compatibility_flags!.push(populateEnvFlag)
+    expect(project).toEqual(initialProject)
+  })
+
   it('patches only production D1 bindings and preserves unrelated project settings', async () => {
     const project = makeDocsProject()
     const fixture = await startFixture({
