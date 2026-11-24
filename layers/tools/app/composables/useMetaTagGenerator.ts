@@ -55,13 +55,48 @@ export interface MetaTagPreset {
 }
 
 const frameworks = [
-  { icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript', import: 'unhead' },
-  { icon: 'i-logos-vue', label: 'Vue', slug: 'vue', import: '@unhead/vue' },
-  { icon: 'i-logos-react', label: 'React', slug: 'react', import: '@unhead/react' },
-  { icon: 'i-logos-svelte-icon', label: 'Svelte', slug: 'svelte', import: '@unhead/svelte' },
-  { icon: 'i-logos-solidjs-icon', label: 'Solid.js', slug: 'solid-js', import: '@unhead/solid-js' },
-  { icon: 'i-logos-angular-icon', label: 'Angular', slug: 'angular', import: '@unhead/angular' },
-  { icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt', import: '#imports' },
+  {
+    icon: 'i-logos-typescript-icon',
+    label: 'TypeScript',
+    slug: 'typescript',
+    import: 'unhead',
+  },
+  {
+    icon: 'i-logos-vue',
+    label: 'Vue',
+    slug: 'vue',
+    import: '@unhead/vue',
+  },
+  {
+    icon: 'i-logos-react',
+    label: 'React',
+    slug: 'react',
+    import: '@unhead/react',
+  },
+  {
+    icon: 'i-logos-svelte-icon',
+    label: 'Svelte',
+    slug: 'svelte',
+    import: '@unhead/svelte',
+  },
+  {
+    icon: 'i-logos-solidjs-icon',
+    label: 'Solid.js',
+    slug: 'solid-js',
+    import: '@unhead/solid-js',
+  },
+  {
+    icon: 'i-logos-angular-icon',
+    label: 'Angular',
+    slug: 'angular',
+    import: '@unhead/angular',
+  },
+  {
+    icon: 'i-logos-nuxt-icon',
+    label: 'Nuxt',
+    slug: 'nuxt',
+    import: '#imports',
+  },
 ] as const
 
 const presets: MetaTagPreset[] = [
@@ -551,7 +586,9 @@ export function useMetaTagGenerator() {
   })
 
   const codeLanguage = computed(() => {
-    return state.outputMode === 'html' ? 'html' : 'ts'
+    return state.outputMode === 'html'
+      ? 'html'
+      : 'ts'
   })
 
   function clearState() {

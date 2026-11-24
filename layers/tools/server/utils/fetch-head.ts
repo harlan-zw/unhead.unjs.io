@@ -56,7 +56,9 @@ export function normalizePublicHttpUrl(input: string, base?: URL): URL {
   try {
     candidate = base
       ? new URL(value, base)
-      : new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`)
+      : new URL(/^https?:\/\//i.test(value)
+          ? value
+          : `https://${value}`)
   }
   catch (error) {
     if (!(error instanceof TypeError))
@@ -73,7 +75,9 @@ export function normalizePublicHttpUrl(input: string, base?: URL): URL {
   if (candidate.username || candidate.password)
     throw createError({ statusCode: 400, statusMessage: 'URL credentials are not supported' })
 
-  const expectedPort = candidate.protocol === 'http:' ? '80' : '443'
+  const expectedPort = candidate.protocol === 'http:'
+    ? '80'
+    : '443'
   if (candidate.port && candidate.port !== expectedPort)
     throw createError({ statusCode: 400, statusMessage: 'Non-standard ports are not supported' })
 

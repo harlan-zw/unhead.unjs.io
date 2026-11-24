@@ -64,7 +64,10 @@ export function createResilientDocsQuery(options: ResilientDocsQueryOptions = {}
 
   function setCached(key: string, data: unknown) {
     cache.delete(key)
-    cache.set(key, { data, cachedAt: now() })
+    cache.set(key, {
+      data,
+      cachedAt: now(),
+    })
     while (cache.size > maxCacheEntries) {
       const oldest = cache.keys().next().value
       if (oldest === undefined)

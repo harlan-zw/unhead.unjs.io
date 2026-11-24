@@ -1,15 +1,56 @@
 <script setup lang="ts">
 import { VisAnnotations, VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContainer } from '@unovis/vue'
 
-const colors = ['#059669', '#d97706', '#7c3aed', '#dc2626']
+const colors = [
+  '#059669',
+  '#d97706',
+  '#7c3aed',
+  '#dc2626',
+]
 
 const data = [
-  { name: 'Min 4G', optimal: 460, commonBad: 456, random: 456, worst: 464 },
-  { name: 'Med 4G', optimal: 468, commonBad: 468, random: 468, worst: 468 },
-  { name: 'Heavy 4G', optimal: 496, commonBad: 488, random: 504, worst: 528 },
-  { name: 'Min 3G', optimal: 984, commonBad: 992, random: 992, worst: 980 },
-  { name: 'Med 3G', optimal: 1068, commonBad: 1040, random: 1068, worst: 1080 },
-  { name: 'Heavy 3G', optimal: 1228, commonBad: 1228, random: 1228, worst: 1440 },
+  {
+    name: 'Min 4G',
+    optimal: 460,
+    commonBad: 456,
+    random: 456,
+    worst: 464,
+  },
+  {
+    name: 'Med 4G',
+    optimal: 468,
+    commonBad: 468,
+    random: 468,
+    worst: 468,
+  },
+  {
+    name: 'Heavy 4G',
+    optimal: 496,
+    commonBad: 488,
+    random: 504,
+    worst: 528,
+  },
+  {
+    name: 'Min 3G',
+    optimal: 984,
+    commonBad: 992,
+    random: 992,
+    worst: 980,
+  },
+  {
+    name: 'Med 3G',
+    optimal: 1068,
+    commonBad: 1040,
+    random: 1068,
+    worst: 1080,
+  },
+  {
+    name: 'Heavy 3G',
+    optimal: 1228,
+    commonBad: 1228,
+    random: 1228,
+    worst: 1440,
+  },
 ]
 
 type D = typeof data[number]
@@ -35,19 +76,30 @@ const annotations = [
     x: '88%' as any,
     y: '4%' as any,
     width: '120px' as any,
-    content: { text: '+212ms (17%)', fontSize: 13, fontWeight: 600, color: '#dc2626' },
+    content: {
+      text: '+212ms (17%)',
+      fontSize: 13,
+      fontWeight: 600,
+      color: '#dc2626',
+    },
   },
 ]
 
 function tooltipTemplate(d: D) {
   const delta = d.worst - d.optimal
-  const pct = d.optimal > 0 ? Math.round((delta / d.optimal) * 100) : 0
-  const sign = delta >= 0 ? '+' : ''
+  const pct = d.optimal > 0
+    ? Math.round((delta / d.optimal) * 100)
+    : 0
+  const sign = delta >= 0
+    ? '+'
+    : ''
   return `<div style="padding:6px 10px;font-size:13px;line-height:1.5">
     <div style="font-weight:600;margin-bottom:4px">${d.name}</div>
     <div style="color:${colors[0]}">Optimal: ${d.optimal}ms</div>
     <div style="color:${colors[3]}">Worst: ${d.worst}ms</div>
-    <div style="color:${delta > 20 ? '#dc2626' : 'inherit'};margin-top:2px">Delta: ${sign}${delta}ms (${sign}${pct}%)</div>
+    <div style="color:${delta > 20
+      ? '#dc2626'
+      : 'inherit'};margin-top:2px">Delta: ${sign}${delta}ms (${sign}${pct}%)</div>
   </div>`
 }
 </script>

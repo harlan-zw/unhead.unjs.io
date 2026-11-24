@@ -44,7 +44,11 @@ export default ({
       trigger: 'leading-8',
       label: 'font-medium',
       list: 'h-[48px] gap-5 p-0 ',
-      variants: { size: { md: { trigger: 'px-0 pt-0' } } },
+      variants: {
+        size: {
+          md: { trigger: 'px-0 pt-0' },
+        },
+      },
     },
     navigationMenu: {
       slots: {

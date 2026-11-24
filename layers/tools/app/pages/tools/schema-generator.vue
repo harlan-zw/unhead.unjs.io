@@ -45,7 +45,9 @@ const outputModes = [
   { label: 'JSON-LD', value: 'jsonld' as const },
 ]
 
-const codeLang = computed(() => codeLanguage.value === 'json' ? 'json' : 'ts')
+const codeLang = computed(() => codeLanguage.value === 'json'
+  ? 'json'
+  : 'ts')
 
 function handleTypeSelect(type: SchemaType) {
   setSchemaType(type)

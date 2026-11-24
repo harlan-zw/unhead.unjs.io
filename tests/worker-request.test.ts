@@ -23,7 +23,9 @@ describe('extendRenderLifetime', () => {
     const registered: Promise<unknown>[] = []
     let finish: (response: Response) => void = () => {}
     const response = extendRenderLifetime(
-      { waitUntil: promise => registered.push(promise) },
+      {
+        waitUntil: promise => registered.push(promise),
+      },
       () => new Promise<Response>((resolve) => {
         finish = resolve
       }),
@@ -46,7 +48,9 @@ describe('extendRenderLifetime', () => {
     const registered: Promise<unknown>[] = []
     const failure = new Error('render failed')
     const response = extendRenderLifetime(
-      { waitUntil: promise => registered.push(promise) },
+      {
+        waitUntil: promise => registered.push(promise),
+      },
       () => Promise.reject(failure),
     )
 

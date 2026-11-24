@@ -105,12 +105,15 @@ const HighlightedVersion = defineComponent({
       ]
       const color = colors[Math.round(highlightedIndex / 2)] || colors[3]
 
-      return h('span', ['v', ...mergedParts.map((part, i) => {
-        if (i) {
-          return h('span', { class: `${color} font-bold px-1 rounded` }, part)
-        }
-        return part
-      })])
+      return h('span', [
+        'v',
+        ...mergedParts.map((part, i) => {
+          if (i) {
+            return h('span', { class: `${color} font-bold px-1 rounded` }, part)
+          }
+          return part
+        }),
+      ])
     }
   },
 })

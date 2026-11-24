@@ -3,7 +3,9 @@ import { gzipSync } from 'node:zlib'
 import { afterEach, expect, it, vi } from 'vitest'
 import { main } from '../scripts/sync-nuxt-content-d1.mjs'
 
-vi.mock('node:child_process', () => ({ spawnSync: vi.fn() }))
+vi.mock('node:child_process', () => ({
+  spawnSync: vi.fn(),
+}))
 
 afterEach(() => {
   vi.mocked(spawnSync).mockReset()
@@ -23,20 +25,33 @@ function contentResponse() {
 
 it.each([
   { name: 'sync', flags: [] },
-  { name: 'dry run', flags: ['--dry-run'] },
+  {
+    name: 'dry run',
+    flags: ['--dry-run'],
+  },
 ])('reports a failed remote query during $name', async ({ flags }) => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(contentResponse()))
   vi.mocked(spawnSync).mockReturnValue({
     pid: 1,
     output: [null, '', ''],
-    stdout: JSON.stringify({ error: { text: 'D1 API query denied (7403)' } }),
+    stdout: JSON.stringify({
+      error: { text: 'D1 API query denied (7403)' },
+    }),
     stderr: '',
     status: 1,
     signal: null,
   })
   const error = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-  const status = await main(['--database', 'content-fixture', '--source-url', 'https://fixtures.example', '--collection', 'docs', ...flags])
+  const status = await main([
+    '--database',
+    'content-fixture',
+    '--source-url',
+    'https://fixtures.example',
+    '--collection',
+    'docs',
+    ...flags,
+  ])
 
   expect(status).toBe(1)
   expect(spawnSync).toHaveBeenCalledWith(expect.any(String), expect.arrayContaining([
@@ -56,14 +71,24 @@ it('checks remote metadata during a successful dry run without applying SQL', as
   vi.mocked(spawnSync).mockReturnValue({
     pid: 1,
     output: [null, '', ''],
-    stdout: JSON.stringify([{ results: [] }]),
+    stdout: JSON.stringify([
+      { results: [] },
+    ]),
     stderr: '',
     status: 0,
     signal: null,
   })
   vi.spyOn(console, 'log').mockImplementation(() => {})
 
-  const status = await main(['--database', 'content-fixture', '--source-url', 'https://fixtures.example', '--collection', 'docs', '--dry-run'])
+  const status = await main([
+    '--database',
+    'content-fixture',
+    '--source-url',
+    'https://fixtures.example',
+    '--collection',
+    'docs',
+    '--dry-run',
+  ])
 
   expect(status).toBe(0)
   const commands = vi.mocked(spawnSync).mock.calls.map(([, args]) => args)

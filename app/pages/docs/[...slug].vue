@@ -35,7 +35,9 @@ watch(commitError, (error) => {
 })
 
 const { selectedFramework } = useFrameworkSelector()
-const opportunity = computed(() => isV2 ? undefined : getDocsOpportunity(route.path))
+const opportunity = computed(() => isV2
+  ? undefined
+  : getDocsOpportunity(route.path))
 
 // Content-authored framework pages are distinct implementation guides and keep
 // their own canonical. Framework-prefixed fallbacks resolve to the shared
@@ -79,13 +81,17 @@ else {
 useHead({
   link: () => [
     ...(!isV2
-      ? [{ rel: 'canonical', href: canonicalUrl.value }]
+      ? [
+          { rel: 'canonical', href: canonicalUrl.value },
+        ]
       : []),
     // add prev and next using surround
     ...(surround.value?.length
       ? surround.value.map((s, i) => {
           return {
-            rel: i === 0 ? 'prev' : 'next',
+            rel: i === 0
+              ? 'prev'
+              : 'next',
             href: `https://unhead.unjs.io${s.path}`,
           }
         })
@@ -103,11 +109,13 @@ const repoLinks = computed(() => [
     target: '_blank',
   },
   ...(!isV2
-    ? [{
-        label: 'Markdown For LLMs',
-        to: `https://raw.githubusercontent.com/unjs/unhead/refs/heads/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
-        target: '_blank',
-      }]
+    ? [
+        {
+          label: 'Markdown For LLMs',
+          to: `https://raw.githubusercontent.com/unjs/unhead/refs/heads/main/docs/${page.value.id.split('/').slice(2).join('/')}`,
+          target: '_blank',
+        },
+      ]
     : []),
 ])
 

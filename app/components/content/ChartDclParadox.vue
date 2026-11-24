@@ -33,7 +33,9 @@ function tooltipTemplate(d: D) {
     <div style="color:${colors[0]}">FCP: ${d.fcp}ms</div>
     <div style="color:${colors[1]}">DCL: ${d.dcl}ms</div>
     <div style="margin-top:2px;font-size:11px;opacity:0.8">
-      ${d.name === 'Worst Ordering' ? 'DCL is 10.6ms faster, but FCP is 32ms slower!' : ''}
+      ${d.name === 'Worst Ordering'
+        ? 'DCL is 10.6ms faster, but FCP is 32ms slower!'
+        : ''}
     </div>
   </div>`
 }

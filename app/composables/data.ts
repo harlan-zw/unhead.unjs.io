@@ -34,7 +34,15 @@ export interface Stats {
 export async function useStats(options?: { lazy?: boolean, server?: boolean }) {
   const { data: stats } = await useFetch<Stats>('/api/stats.json', {
     key: 'stats-summary',
-    pick: ['fetchedAt', 'modules', 'versions', 'stars', 'commitCount', 'issuesClosed', 'contributors'],
+    pick: [
+      'fetchedAt',
+      'modules',
+      'versions',
+      'stars',
+      'commitCount',
+      'issuesClosed',
+      'contributors',
+    ],
     ...options,
   })
   return stats
@@ -148,26 +156,36 @@ export async function useCurrentDocPage() {
     }
   })()
 
-  nuxtApp.static.data.docsCurrent = { promise: p, path: toRaw(route.path) }
+  nuxtApp.static.data.docsCurrent = {
+    promise: p,
+    path: toRaw(route.path),
+  }
   return p
 }
 
 function mapPath(data) {
-  return [...data.map((item) => {
-    if (item.children?.length && !item.page) {
-      item.title = titleCase(item.title)
-      item.children = mapPath(item.children)
-    }
-    return {
-      ...item,
-      children: item.children ? [...item.children] : undefined,
-      _path: item.path,
-    }
-  })]
+  return [
+    ...data.map((item) => {
+      if (item.children?.length && !item.page) {
+        item.title = titleCase(item.title)
+        item.children = mapPath(item.children)
+      }
+      return {
+        ...item,
+        children: item.children
+          ? [...item.children]
+          : undefined,
+        _path: item.path,
+      }
+    }),
+  ]
 }
 
 function flattenNavigation(items: NavItem[]): NavItem[] {
-  return items.flatMap(item => [item, ...flattenNavigation(item.children || [])])
+  return items.flatMap(item => [
+    item,
+    ...flattenNavigation(item.children || []),
+  ])
 }
 
 interface NavNode {
@@ -269,7 +287,9 @@ export function useDocsNav(all: boolean = false) {
     const isV2 = route.path.startsWith('/docs/v2')
     const versionPrefix = isV2 ? '/docs/v2' : '/docs'
     // v2 needs 3 segments (/docs/v2/head), v3 needs 2 (/docs/head)
-    const sectionPath = isV2 ? getPathSegments(pathWithoutFramework, 3) : getPathSection(pathWithoutFramework)
+    const sectionPath = isV2
+      ? getPathSegments(pathWithoutFramework, 3)
+      : getPathSection(pathWithoutFramework)
     // For v2, nav is nested under /docs/v2 parent, so look in children
     const sectionDocs = isV2
       ? nav.find(n => n.path === '/docs/v2')?.children?.find(c => c.path?.startsWith(sectionPath))
@@ -295,13 +315,19 @@ export function useDocsNav(all: boolean = false) {
         }
       })
 
-    const subSectionDocs = sectionDocs?.children?.find(n => n.path === (isV2 ? getPathSegments(pathWithoutFramework, 4) : getPathSubSection(pathWithoutFramework)))?.children
+    const subSectionDocs = sectionDocs?.children?.find(n => n.path === (isV2
+      ? getPathSegments(pathWithoutFramework, 4)
+      : getPathSubSection(pathWithoutFramework)))?.children
 
     // For v2, sections are nested under /docs/v2 parent
     const allSections = isV2
       ? (nav.find(n => n.path === '/docs/v2')?.children || []).filter(n => n.path?.startsWith(`${versionPrefix}/head`) || n.path?.startsWith(`${versionPrefix}/schema-org`))
       : nav.filter(n => n.path?.startsWith(`${versionPrefix}/head`) || n.path?.startsWith(`${versionPrefix}/schema-org`))
-    const bottom = (all ? [...allSections] : [...(subSectionDocs || [])])
+    const bottom = (all
+      ? [...allSections]
+      : [
+          ...(subSectionDocs || []),
+        ])
       .map((section) => {
         return {
           ...section,
@@ -337,8 +363,12 @@ export function useDocsNav(all: boolean = false) {
       )
       .toSorted((a, b) => {
         // releases before migration-guide
-        const aIsReleases = a.path?.includes('/releases') ? 0 : 1
-        const bIsReleases = b.path?.includes('/releases') ? 0 : 1
+        const aIsReleases = a.path?.includes('/releases')
+          ? 0
+          : 1
+        const bIsReleases = b.path?.includes('/releases')
+          ? 0
+          : 1
         return aIsReleases - bIsReleases
       })
       .map(section => ({
@@ -356,6 +386,11 @@ export function useDocsNav(all: boolean = false) {
       ),
       ...contentSections.filter(n => n.path?.includes('/releases')),
     ]
-    return { navFlat, bottom, firstSubSectionLinks, contentSections }
+    return {
+      navFlat,
+      bottom,
+      firstSubSectionLinks,
+      contentSections,
+    }
   })
 }

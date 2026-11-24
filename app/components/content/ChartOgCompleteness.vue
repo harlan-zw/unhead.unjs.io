@@ -4,13 +4,48 @@ import { VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContai
 const colors = ['#3b82f6', '#f43f5e', '#8b5cf6']
 
 const data = [
-  { framework: 'Astro', ogTitle: 72, ogImage: 58, twitterCard: 45 },
-  { framework: 'Next.js', ogTitle: 68, ogImage: 52, twitterCard: 41 },
-  { framework: 'Nuxt', ogTitle: 65, ogImage: 50, twitterCard: 43 },
-  { framework: 'Remix', ogTitle: 63, ogImage: 48, twitterCard: 38 },
-  { framework: 'Gatsby', ogTitle: 60, ogImage: 44, twitterCard: 35 },
-  { framework: 'SvelteKit', ogTitle: 55, ogImage: 40, twitterCard: 30 },
-  { framework: 'Angular', ogTitle: 35, ogImage: 22, twitterCard: 15 },
+  {
+    framework: 'Astro',
+    ogTitle: 72,
+    ogImage: 58,
+    twitterCard: 45,
+  },
+  {
+    framework: 'Next.js',
+    ogTitle: 68,
+    ogImage: 52,
+    twitterCard: 41,
+  },
+  {
+    framework: 'Nuxt',
+    ogTitle: 65,
+    ogImage: 50,
+    twitterCard: 43,
+  },
+  {
+    framework: 'Remix',
+    ogTitle: 63,
+    ogImage: 48,
+    twitterCard: 38,
+  },
+  {
+    framework: 'Gatsby',
+    ogTitle: 60,
+    ogImage: 44,
+    twitterCard: 35,
+  },
+  {
+    framework: 'SvelteKit',
+    ogTitle: 55,
+    ogImage: 40,
+    twitterCard: 30,
+  },
+  {
+    framework: 'Angular',
+    ogTitle: 35,
+    ogImage: 22,
+    twitterCard: 15,
+  },
 ]
 
 type D = typeof data[number]

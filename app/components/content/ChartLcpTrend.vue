@@ -3,11 +3,47 @@ import { VisAxis, VisLine, VisScatter, VisScatterSelectors, VisTooltip, VisXYCon
 
 const colors = ['#059669', '#3b82f6', '#94a3b8']
 
-const months = ['Jun \'25', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan \'26']
+const months = [
+  'Jun \'25',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+  'Jan \'26',
+]
 
-const nuxt = [3059, 3042, 3028, 3091, 3049, 3070, 3086, 3051]
-const next = [2806, 2811, 2821, 2848, 2784, 2801, 2851, 2790]
-const wordpress = [2696, 2695, 2681, 2707, 2669, 2671, 2689, 2662]
+const nuxt = [
+  3059,
+  3042,
+  3028,
+  3091,
+  3049,
+  3070,
+  3086,
+  3051,
+]
+const next = [
+  2806,
+  2811,
+  2821,
+  2848,
+  2784,
+  2801,
+  2851,
+  2790,
+]
+const wordpress = [
+  2696,
+  2695,
+  2681,
+  2707,
+  2669,
+  2671,
+  2689,
+  2662,
+]
 
 const data = months.map((_, i) => ({
   i,

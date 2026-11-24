@@ -7,13 +7,48 @@ const colors = {
 }
 
 const data = [
-  { framework: 'Next.js', firstParty: 8, thirdParty: 18, total: 26 },
-  { framework: 'Nuxt', firstParty: 9, thirdParty: 16, total: 25 },
-  { framework: 'Angular', firstParty: 6, thirdParty: 22, total: 28 },
-  { framework: 'Gatsby', firstParty: 7, thirdParty: 14, total: 21 },
-  { framework: 'SvelteKit', firstParty: 7, thirdParty: 12, total: 19 },
-  { framework: 'Remix', firstParty: 8, thirdParty: 10, total: 18 },
-  { framework: 'Astro', firstParty: 6, thirdParty: 9, total: 15 },
+  {
+    framework: 'Next.js',
+    firstParty: 8,
+    thirdParty: 18,
+    total: 26,
+  },
+  {
+    framework: 'Nuxt',
+    firstParty: 9,
+    thirdParty: 16,
+    total: 25,
+  },
+  {
+    framework: 'Angular',
+    firstParty: 6,
+    thirdParty: 22,
+    total: 28,
+  },
+  {
+    framework: 'Gatsby',
+    firstParty: 7,
+    thirdParty: 14,
+    total: 21,
+  },
+  {
+    framework: 'SvelteKit',
+    firstParty: 7,
+    thirdParty: 12,
+    total: 19,
+  },
+  {
+    framework: 'Remix',
+    firstParty: 8,
+    thirdParty: 10,
+    total: 18,
+  },
+  {
+    framework: 'Astro',
+    firstParty: 6,
+    thirdParty: 9,
+    total: 15,
+  },
 ]
 
 type D = typeof data[number]

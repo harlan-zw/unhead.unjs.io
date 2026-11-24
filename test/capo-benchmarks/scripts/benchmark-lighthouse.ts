@@ -6,7 +6,12 @@ import lighthouse from 'lighthouse'
 // --- Config ---
 
 const COMPLEXITIES = ['minimal', 'medium', 'heavy'] as const
-const VARIANTS = ['optimal', 'common-bad', 'random', 'worst'] as const
+const VARIANTS = [
+  'optimal',
+  'common-bad',
+  'random',
+  'worst',
+] as const
 const METRICS = ['lcp', 'fcp', 'ttfb', 'si', 'tbt'] as const
 
 const THROTTLING = {
@@ -78,7 +83,9 @@ const TimestampPattern = /[:.]/g
 async function run() {
   await mkdir(RESULTS_DIR, { recursive: true })
 
-  const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless', '--no-sandbox'] })
+  const chrome = await chromeLauncher.launch({
+    chromeFlags: ['--headless', '--no-sandbox'],
+  })
   console.log(`Chrome launched on port ${chrome.port}`)
   console.log(`Base URL: ${BASE_URL}`)
   console.log(`Runs per config: ${RUNS} (+ ${WARMUP_RUNS} warmup)`)
@@ -89,7 +96,15 @@ async function run() {
   console.log(`Total runs (randomized): ${totalRuns}\n`)
 
   const rows: string[] = []
-  rows.push(['page', 'variant', 'complexity', 'speed', 'run', 'warmup', ...METRICS].join(','))
+  rows.push([
+    'page',
+    'variant',
+    'complexity',
+    'speed',
+    'run',
+    'warmup',
+    ...METRICS,
+  ].join(','))
 
   // Track per-config run counts to identify warmup runs
   const runCounts = new Map<string, number>()
@@ -112,7 +127,9 @@ async function run() {
       onlyCategories: ['performance'],
       formFactor: 'mobile' as const,
       throttlingMethod: 'simulate' as const,
-      ...(Object.keys(throttlingOverrides).length > 0 ? { throttling: throttlingOverrides } : {}),
+      ...(Object.keys(throttlingOverrides).length > 0
+        ? { throttling: throttlingOverrides }
+        : {}),
     }
 
     const result = await lighthouse(url, flags)

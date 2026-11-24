@@ -76,7 +76,9 @@ function evaluateExpression(expression: string, context: Record<string, unknown>
   function parseTerm(): unknown {
     const token = tokens[index] ?? ''
     index += 1
-    return token.startsWith('github.') ? lookup(context, token) : token
+    return token.startsWith('github.')
+      ? lookup(context, token)
+      : token
   }
 
   function parseComparison(): unknown {
@@ -91,7 +93,9 @@ function evaluateExpression(expression: string, context: Record<string, unknown>
       const operator = tokens[index]
       index += 1
       const right = parseTerm()
-      return operator === '==' ? left === right : left !== right
+      return operator === '=='
+        ? left === right
+        : left !== right
     }
     return left
   }
@@ -137,7 +141,9 @@ const workflowRunOnMain = {
   github: {
     event_name: 'workflow_run',
     ref_name: 'main',
-    event: { workflow_run: { conclusion: 'success', head_branch: 'main' } },
+    event: {
+      workflow_run: { conclusion: 'success', head_branch: 'main' },
+    },
   },
 }
 
@@ -153,7 +159,9 @@ describe('deploy-cloudflare.yml job gate', () => {
       github: {
         event_name: 'workflow_run',
         ref_name: 'main',
-        event: { workflow_run: { conclusion: 'success', head_branch: 'feature/x' } },
+        event: {
+          workflow_run: { conclusion: 'success', head_branch: 'feature/x' },
+        },
       },
     }
     expect(deployJobRuns(workflow, featureRun)).toBe(false)
@@ -165,7 +173,9 @@ describe('deploy-cloudflare.yml job gate', () => {
       github: {
         event_name: 'workflow_run',
         ref_name: 'main',
-        event: { workflow_run: { conclusion: 'failure', head_branch: 'main' } },
+        event: {
+          workflow_run: { conclusion: 'failure', head_branch: 'main' },
+        },
       },
     }
     expect(deployJobRuns(workflow, failedRun)).toBe(false)
@@ -173,19 +183,25 @@ describe('deploy-cloudflare.yml job gate', () => {
 
   it('runs for a manual dispatch on main', async () => {
     const workflow = await loadDeployWorkflow()
-    const dispatch = { github: { event_name: 'workflow_dispatch', ref_name: 'main' } }
+    const dispatch = {
+      github: { event_name: 'workflow_dispatch', ref_name: 'main' },
+    }
     expect(deployJobRuns(workflow, dispatch)).toBe(true)
   })
 
   it('skips a manual dispatch on a feature branch so it cannot reach the Pages production branch', async () => {
     const workflow = await loadDeployWorkflow()
-    const dispatch = { github: { event_name: 'workflow_dispatch', ref_name: 'feature/x' } }
+    const dispatch = {
+      github: { event_name: 'workflow_dispatch', ref_name: 'feature/x' },
+    }
     expect(deployJobRuns(workflow, dispatch)).toBe(false)
   })
 
   it('runs for a repository dispatch on the default branch', async () => {
     const workflow = await loadDeployWorkflow()
-    const dispatch = { github: { event_name: 'repository_dispatch', ref_name: 'main' } }
+    const dispatch = {
+      github: { event_name: 'repository_dispatch', ref_name: 'main' },
+    }
     expect(deployJobRuns(workflow, dispatch)).toBe(true)
   })
 })
@@ -193,8 +209,12 @@ describe('deploy-cloudflare.yml job gate', () => {
 describe('deploy-cloudflare.yml concurrency group', () => {
   it('serializes every path that writes to the production branch', async () => {
     const workflow = await loadDeployWorkflow()
-    const manualDispatch = { github: { event_name: 'workflow_dispatch', ref_name: 'main' } }
-    const repositoryDispatch = { github: { event_name: 'repository_dispatch', ref_name: 'main' } }
+    const manualDispatch = {
+      github: { event_name: 'workflow_dispatch', ref_name: 'main' },
+    }
+    const repositoryDispatch = {
+      github: { event_name: 'repository_dispatch', ref_name: 'main' },
+    }
     const groups = [
       resolveConcurrencyGroup(workflow, workflowRunOnMain),
       resolveConcurrencyGroup(workflow, manualDispatch),

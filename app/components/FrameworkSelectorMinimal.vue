@@ -7,7 +7,9 @@ defineProps<{
 }>()
 const route = useRoute()
 const docsNav = useDocsNav()
-const docsNavForFrameworks = computed(() => route.path.startsWith('/docs') ? docsNav.value : undefined)
+const docsNavForFrameworks = computed(() => route.path.startsWith('/docs')
+  ? docsNav.value
+  : undefined)
 const { selectedFramework, switchFramework, frameworks } = useFrameworkSelector(docsNavForFrameworks)
 </script>
 

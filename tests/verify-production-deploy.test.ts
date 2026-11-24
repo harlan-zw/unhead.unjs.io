@@ -41,7 +41,10 @@ describe('evaluateProductionBuild', () => {
   it('rejects the build production kept while the deploy went to a preview branch', () => {
     // unhead.unjs.io served the 2026-08-11 build for five days of green deploys.
     const result = evaluateProductionBuild({
-      served: { id: '2026-08-11-build', timestamp: Date.parse('2026-08-11T05:28:25Z') },
+      served: {
+        id: '2026-08-11-build',
+        timestamp: Date.parse('2026-08-11T05:28:25Z'),
+      },
       expected: { id: 'this-deploy' },
       now,
       maxAgeMs,
@@ -98,7 +101,12 @@ describe('parseBuildManifest', () => {
     })
   })
 
-  it.each([null, undefined, {}, { timestamp: 'yesterday' }])('returns an unreadable timestamp for %s', (manifest) => {
+  it.each([
+    null,
+    undefined,
+    {},
+    { timestamp: 'yesterday' },
+  ])('returns an unreadable timestamp for %s', (manifest) => {
     const parsed = parseBuildManifest(manifest)
     expect(parsed.id).toBeUndefined()
     expect(parsed.timestamp).toBeNaN()
@@ -128,7 +136,10 @@ describe('readLocalBuildManifest', () => {
 
 describe('pollProductionBuild', () => {
   it('retries a transient fetch failure and accepts the build once reachable', async () => {
-    const responses = [new Error('502 from the edge'), { id: 'this-deploy', timestamp: now - 60_000 }]
+    const responses = [
+      new Error('502 from the edge'),
+      { id: 'this-deploy', timestamp: now - 60_000 },
+    ]
     const fetcher = async () => {
       const next = responses.shift()
       if (next instanceof Error)
@@ -149,12 +160,20 @@ describe('pollProductionBuild', () => {
     const fetcher = async () => {
       throw new Error('the site is unreachable')
     }
-    const result = await pollProductionBuild(fetcher, { maxAgeMs, attempts: 2, delayMs: 0, now: () => now })
+    const result = await pollProductionBuild(fetcher, {
+      maxAgeMs,
+      attempts: 2,
+      delayMs: 0,
+      now: () => now,
+    })
     expect(result).toEqual({ _tag: 'unreadable' })
   })
 
   it('keeps polling while the served build stays stale in the no-id fallback', async () => {
-    const timestamps = [Date.parse('2026-08-11T05:28:25Z'), now - 60_000]
+    const timestamps = [
+      Date.parse('2026-08-11T05:28:25Z'),
+      now - 60_000,
+    ]
     const fetcher = async () => {
       const next = timestamps.shift() ?? now
       return { timestamp: next }
@@ -229,7 +248,12 @@ describe('verifyProductionBuild', () => {
 
 describe('parseVerifyArgs', () => {
   it('reads the site and the freshness window', () => {
-    expect(parseVerifyArgs(['--url', 'https://unhead.unjs.io', '--max-age-minutes', '45'])).toEqual({
+    expect(parseVerifyArgs([
+      '--url',
+      'https://unhead.unjs.io',
+      '--max-age-minutes',
+      '45',
+    ])).toEqual({
       url: 'https://unhead.unjs.io',
       maxAgeMs: 45 * 60 * 1000,
     })

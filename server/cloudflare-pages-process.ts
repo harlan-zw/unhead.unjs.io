@@ -38,8 +38,14 @@ export function withProcessFallbacks<T extends object>(target: T, sink: ConsoleS
   }
   const current = target as Partial<Record<keyof ProcessFallbacks, unknown>>
   for (const key of Object.keys(fallbacks) as (keyof ProcessFallbacks)[]) {
-    if (current[key] === undefined)
-      Object.defineProperty(target, key, { value: fallbacks[key], configurable: true, enumerable: true, writable: true })
+    if (current[key] === undefined) {
+      Object.defineProperty(target, key, {
+        value: fallbacks[key],
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      })
+    }
   }
   return target as T & ProcessFallbacks
 }
@@ -49,8 +55,12 @@ function createConsoleStream(writeLine: (line: string) => void): ConsoleStream {
   return {
     isTTY: false,
     write(chunk) {
-      const text = typeof chunk === 'string' ? chunk : decoder.decode(chunk)
-      writeLine(text.endsWith('\n') ? text.slice(0, -1) : text)
+      const text = typeof chunk === 'string'
+        ? chunk
+        : decoder.decode(chunk)
+      writeLine(text.endsWith('\n')
+        ? text.slice(0, -1)
+        : text)
       return true
     },
   }

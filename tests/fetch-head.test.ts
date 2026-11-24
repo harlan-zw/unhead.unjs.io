@@ -7,7 +7,9 @@ import {
 } from '../layers/tools/server/utils/fetch-head'
 
 function htmlResponse(body = '<html><head><title>Safe</title></head></html>'): Response {
-  return new Response(body, { headers: { 'content-type': 'text/html; charset=utf-8' } })
+  return new Response(body, {
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  })
 }
 
 describe('normalizePublicHttpUrl', () => {
@@ -52,7 +54,10 @@ describe('fetchHeadHtml', () => {
 
   it('revalidates redirect targets', async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response(null, { status: 302, headers: { location: 'http://127.0.0.1/admin' } }),
+      new Response(null, {
+        status: 302,
+        headers: { location: 'http://127.0.0.1/admin' },
+      }),
     )
 
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 400 })
@@ -60,7 +65,9 @@ describe('fetchHeadHtml', () => {
 
   it('rejects non-HTML responses', async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response('{}', { headers: { 'content-type': 'application/json' } }),
+      new Response('{}', {
+        headers: { 'content-type': 'application/json' },
+      }),
     )
 
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 415 })
@@ -75,7 +82,9 @@ describe('fetchHeadHtml', () => {
           }, { once: true })
         },
       })
-      return Promise.resolve(new Response(body, { headers: { 'content-type': 'text/html' } }))
+      return Promise.resolve(new Response(body, {
+        headers: { 'content-type': 'text/html' },
+      }))
     })
 
     await expect(fetchHeadHtml('https://example.com', fetcher, 10)).rejects.toMatchObject({
@@ -93,7 +102,9 @@ describe('fetchHeadHtml', () => {
       },
     })
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response(body, { headers: { 'content-type': 'text/html' } }),
+      new Response(body, {
+        headers: { 'content-type': 'text/html' },
+      }),
     )
 
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({
@@ -105,7 +116,10 @@ describe('fetchHeadHtml', () => {
 
   it('preserves the response byte limit when fetching HTML', async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('too large', {
-      headers: { 'content-type': 'text/html', 'content-length': String(3 * 1024 * 1024) },
+      headers: {
+        'content-type': 'text/html',
+        'content-length': String(3 * 1024 * 1024),
+      },
     }))
 
     await expect(fetchHeadHtml('https://example.com', fetcher)).rejects.toMatchObject({ statusCode: 413 })
@@ -126,7 +140,9 @@ describe('isFetchHeadUpstreamError', () => {
   })
 
   it('marks empty upstream HTML as an upstream error', async () => {
-    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('', { headers: { 'content-type': 'text/html' } }))
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('', {
+      headers: { 'content-type': 'text/html' },
+    }))
     const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
     expect(isFetchHeadUpstreamError(error)).toBe(true)
   })
@@ -143,7 +159,10 @@ describe('isFetchHeadUpstreamError', () => {
     'https://example.com:8443',
   ])('does not mark an unsafe redirect target as an upstream error: %s', async (location) => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response(null, { status: 302, headers: { location } }),
+      new Response(null, {
+        status: 302,
+        headers: { location },
+      }),
     )
     const error = await fetchHeadHtml('https://example.com', fetcher).catch((caught: unknown) => caught)
     expect(isFetchHeadUpstreamError(error)).toBe(false)

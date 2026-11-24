@@ -246,7 +246,9 @@ function runCoalescedFill(
 
 async function fillWithoutCaching(event: H3Event, options: ContentQueryCacheHandlerOptions): Promise<FillOutcome> {
   const value = await options.original(event)
-  return { body: JSON.stringify(value) }
+  return {
+    body: JSON.stringify(value),
+  }
 }
 
 async function storeResponse(

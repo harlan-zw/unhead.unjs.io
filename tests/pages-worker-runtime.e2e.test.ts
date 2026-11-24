@@ -22,7 +22,12 @@ beforeAll(async () => {
     no_bundle: true,
     find_additional_modules: true,
     base_dir: join(dist, '_worker.js'),
-    rules: [{ type: 'ESModule', globs: ['**/*.mjs', '**/*.js'] }],
+    rules: [
+      {
+        type: 'ESModule',
+        globs: ['**/*.mjs', '**/*.js'],
+      },
+    ],
     compatibility_date: PRE_PROCESS_V2_DATE,
     compatibility_flags: ['nodejs_compat', 'nodejs_compat_populate_process_env'],
     assets: { directory: dist, binding: 'ASSETS' },
@@ -32,7 +37,10 @@ beforeAll(async () => {
     ],
     vars: { NUXT_AI_READY_RUNTIME_SYNC_SECRET: CRON_TOKEN },
   }))
-  worker = await unstable_dev(main, { config, experimental: { disableExperimentalWarning: true } })
+  worker = await unstable_dev(main, {
+    config,
+    experimental: { disableExperimentalWarning: true },
+  })
 }, 120_000)
 
 afterAll(async () => {
@@ -47,7 +55,9 @@ describe('pages Worker on a runtime without process v2', () => {
   })
 
   it('reports the cron outcome after logging its deprecated secret warning', async () => {
-    const response = await worker.fetch('/__ai-ready/cron', { headers: { authorization: `Bearer ${CRON_TOKEN}` } })
+    const response = await worker.fetch('/__ai-ready/cron', {
+      headers: { authorization: `Bearer ${CRON_TOKEN}` },
+    })
     expect(response.status).toBe(200)
   })
 

@@ -1,12 +1,47 @@
 <script setup lang="ts">
 const frameworkDefs = [
-  { slot: 'typescript', icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript' },
-  { slot: 'vue', icon: 'i-logos-vue', label: 'Vue', slug: 'vue' },
-  { slot: 'react', icon: 'i-logos-react', label: 'React', slug: 'react' },
-  { slot: 'svelte', icon: 'i-logos-svelte-icon', label: 'Svelte', slug: 'svelte' },
-  { slot: 'solid', icon: 'i-logos-solidjs-icon', label: 'Solid.js', slug: 'solid-js' },
-  { slot: 'angular', icon: 'i-logos-angular-icon', label: 'Angular', slug: 'angular' },
-  { slot: 'nuxt', icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt' },
+  {
+    slot: 'typescript',
+    icon: 'i-logos-typescript-icon',
+    label: 'TypeScript',
+    slug: 'typescript',
+  },
+  {
+    slot: 'vue',
+    icon: 'i-logos-vue',
+    label: 'Vue',
+    slug: 'vue',
+  },
+  {
+    slot: 'react',
+    icon: 'i-logos-react',
+    label: 'React',
+    slug: 'react',
+  },
+  {
+    slot: 'svelte',
+    icon: 'i-logos-svelte-icon',
+    label: 'Svelte',
+    slug: 'svelte',
+  },
+  {
+    slot: 'solid',
+    icon: 'i-logos-solidjs-icon',
+    label: 'Solid.js',
+    slug: 'solid-js',
+  },
+  {
+    slot: 'angular',
+    icon: 'i-logos-angular-icon',
+    label: 'Angular',
+    slug: 'angular',
+  },
+  {
+    slot: 'nuxt',
+    icon: 'i-logos-nuxt-icon',
+    label: 'Nuxt',
+    slug: 'nuxt',
+  },
 ] as const
 
 const slots = useSlots()

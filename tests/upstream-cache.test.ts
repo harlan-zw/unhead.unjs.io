@@ -3,7 +3,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import { readThroughUpstreamCache } from '../server/utils/upstream-cache'
 
-const schema = z.object({ value: z.string() })
+const schema = z.object({
+  value: z.string(),
+})
 
 afterEach(() => vi.restoreAllMocks())
 

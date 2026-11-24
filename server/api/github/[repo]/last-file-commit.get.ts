@@ -19,7 +19,9 @@ const LastFileCommitSchema = z.object({
 export default defineEventHandler(async (e) => {
   const { octokit, repo, owner } = initOctokitRequestHandler(e)
   const fileQuery = getQuery(e).file
-  const file = typeof fileQuery === 'string' ? fileQuery : ''
+  const file = typeof fileQuery === 'string'
+    ? fileQuery
+    : ''
 
   return withUpstreamCache(e, {
     key: `${owner}/${repo}:${file}`,
@@ -33,7 +35,9 @@ export default defineEventHandler(async (e) => {
       repo,
       path: file,
       per_page: 10,
-      request: { signal: AbortSignal.timeout(GitHubRequestTimeoutMs) },
+      request: {
+        signal: AbortSignal.timeout(GitHubRequestTimeoutMs),
+      },
     })
 
     // Skip merge commits to find the actual content change
@@ -53,7 +57,9 @@ export default defineEventHandler(async (e) => {
           owner,
           repo,
           pull_number: Number.parseInt(prMatch[1]),
-          request: { signal: AbortSignal.timeout(GitHubRequestTimeoutMs) },
+          request: {
+            signal: AbortSignal.timeout(GitHubRequestTimeoutMs),
+          },
         }).catch(() => ({ data: null }))
         if (prData) {
           committerLogin = prData.user.login
@@ -71,7 +77,9 @@ export default defineEventHandler(async (e) => {
     })
     return {
       author: {
-        name: committerName.toLowerCase().startsWith('harlan') ? 'Harlan Wilton' : committerName,
+        name: committerName.toLowerCase().startsWith('harlan')
+          ? 'Harlan Wilton'
+          : committerName,
         committer: committerLogin,
       },
       dateHuman: formattedDate,

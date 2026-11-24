@@ -4,12 +4,48 @@ import { VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContai
 const colors = ['#059669', '#7c3aed']
 
 const data = [
-  { name: 'Shopify', headOptimization: 'None', lcp: 1685, ttfb: 534, goodLcp: 87.3 },
-  { name: 'Wix', headOptimization: 'Partial', lcp: 1724, ttfb: 797, goodLcp: 81.6 },
-  { name: 'Squarespace', headOptimization: 'Partial', lcp: 1969, ttfb: 586, goodLcp: 76.6 },
-  { name: 'WordPress', headOptimization: 'Manual/Plugins', lcp: 2663, ttfb: 1550, goodLcp: 55.2 },
-  { name: 'Next.js', headOptimization: 'Partial (Auto-hoist)', lcp: 2790, ttfb: 956, goodLcp: 50.9 },
-  { name: 'Nuxt', headOptimization: 'Full (Auto Capo.js)', lcp: 3051, ttfb: 989, goodLcp: 44.2 },
+  {
+    name: 'Shopify',
+    headOptimization: 'None',
+    lcp: 1685,
+    ttfb: 534,
+    goodLcp: 87.3,
+  },
+  {
+    name: 'Wix',
+    headOptimization: 'Partial',
+    lcp: 1724,
+    ttfb: 797,
+    goodLcp: 81.6,
+  },
+  {
+    name: 'Squarespace',
+    headOptimization: 'Partial',
+    lcp: 1969,
+    ttfb: 586,
+    goodLcp: 76.6,
+  },
+  {
+    name: 'WordPress',
+    headOptimization: 'Manual/Plugins',
+    lcp: 2663,
+    ttfb: 1550,
+    goodLcp: 55.2,
+  },
+  {
+    name: 'Next.js',
+    headOptimization: 'Partial (Auto-hoist)',
+    lcp: 2790,
+    ttfb: 956,
+    goodLcp: 50.9,
+  },
+  {
+    name: 'Nuxt',
+    headOptimization: 'Full (Auto Capo.js)',
+    lcp: 3051,
+    ttfb: 989,
+    goodLcp: 44.2,
+  },
 ]
 
 type D = typeof data[number]
@@ -32,7 +68,9 @@ function tooltipTemplate(d: D) {
     <div style="color:${colors[0]}">LCP: ${d.lcp}ms</div>
     <div style="color:${colors[1]}">TTFB: ${d.ttfb}ms</div>
     <div style="margin-top:4px;opacity:0.8">Head Optimization: <span style="font-weight:600">${d.headOptimization}</span></div>
-    <div style="opacity:0.8">Good LCP Rate: <span style="font-weight:600;color:${d.goodLcp > 75 ? '#059669' : '#dc2626'}">${d.goodLcp}%</span></div>
+    <div style="opacity:0.8">Good LCP Rate: <span style="font-weight:600;color:${d.goodLcp > 75
+      ? '#059669'
+      : '#dc2626'}">${d.goodLcp}%</span></div>
   </div>`
 }
 </script>

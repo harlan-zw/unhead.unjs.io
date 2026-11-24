@@ -21,10 +21,16 @@ async function main() {
   const args = process.argv.slice(2)
   const projectIndex = args.findIndex(arg => arg === '-p' || arg === '--project')
   const buildIndex = args.findIndex(arg => arg === '-b' || arg === '--build')
-  const configArg = projectIndex >= 0 ? args[projectIndex + 1] : buildIndex >= 0 && !args[buildIndex + 1]?.startsWith('-') ? args[buildIndex + 1] : 'tsconfig.json'
+  const configArg = projectIndex >= 0
+    ? args[projectIndex + 1]
+    : buildIndex >= 0 && !args[buildIndex + 1]?.startsWith('-')
+      ? args[buildIndex + 1]
+      : 'tsconfig.json'
   if (!configArg)
     throw new Error('If you use --project, provide a config path.')
-  const project = resolve(configArg.endsWith('.json') ? configArg : `${configArg}/tsconfig.json`)
+  const project = resolve(configArg.endsWith('.json')
+    ? configArg
+    : `${configArg}/tsconfig.json`)
   const cache = resolve(import.meta.dirname, '.generated', createHash('sha256').update(project).digest('hex').slice(0, 16))
   await mkdir(cache, { recursive: true })
   const wrappers = new Map<string, string>()
@@ -41,7 +47,9 @@ async function main() {
 
   function vueOptions(file: string): Record<string, unknown> {
     const config = readConfig(file)
-    const parents: string[] = typeof config.extends === 'string' ? [config.extends] : config.extends ?? []
+    const parents: string[] = typeof config.extends === 'string'
+      ? [config.extends]
+      : config.extends ?? []
     const inherited = parents.map(parent => vueOptions(createRequire(file).resolve(parent)))
     return Object.assign({}, ...inherited, config.vueCompilerOptions)
   }
@@ -57,29 +65,48 @@ async function main() {
     // Keep all other plugins so unsupported integrations fail explicitly.
     const { plugins = [], ...options } = vueOptions(file)
     if (!Array.isArray(plugins))
-      throw new Error('Vue compiler plugins must be an array.')
+      throw new TypeError('Vue compiler plugins must be an array.')
     options.plugins = plugins.flatMap((plugin) => {
-      const entry = typeof plugin === 'string' ? { name: plugin } : plugin
+      const entry = typeof plugin === 'string'
+        ? { name: plugin }
+        : plugin
       if (entry?.name === 'vue-router/volar/sfc-route-blocks')
         return []
       if (entry?.name === 'vue-router/volar/sfc-typed-router') {
-        return [{
-          ...entry,
-          name: resolve(import.meta.dirname, 'typed-routes.ts'),
-          options: { rootDir: process.cwd(), ...entry.options },
-        }]
+        return [
+          {
+            ...entry,
+            name: resolve(import.meta.dirname, 'typed-routes.ts'),
+            options: {
+              rootDir: process.cwd(),
+              ...entry.options,
+            },
+          },
+        ]
       }
       return [plugin]
     })
     options.dataAttributes = ['data-*']
     const references = await Promise.all((config.references ?? []).map(async ({ path }: { path: string }) => {
-      const target = isAbsolute(path) ? path : resolve(dirname(file), path)
-      return { path: await wrap(target.endsWith('.json') ? target : resolve(target, 'tsconfig.json')) }
+      const target = isAbsolute(path)
+        ? path
+        : resolve(dirname(file), path)
+      return { path: await wrap(target.endsWith('.json')
+        ? target
+        : resolve(target, 'tsconfig.json')) }
     }))
     await writeFile(output, `${JSON.stringify({
       extends: file,
-      ...(config.references ? { references } : {}),
-      contentMappers: [{ package: 'site-typecheck', extensions: ['.vue'], options }],
+      ...(config.references
+        ? { references }
+        : {}),
+      contentMappers: [
+        {
+          package: 'site-typecheck',
+          extensions: ['.vue'],
+          options,
+        },
+      ],
     }, null, 2)}\n`)
     return output
   }
@@ -96,7 +123,11 @@ async function main() {
   else {
     args.push('--project', wrapped)
   }
-  const result = spawnSync(process.execPath, [resolve(dirname(require.resolve('typescript/package.json')), 'bin/tsc'), ...args, '--runExternalCode'], { stdio: 'inherit' })
+  const result = spawnSync(process.execPath, [
+    resolve(dirname(require.resolve('typescript/package.json')), 'bin/tsc'),
+    ...args,
+    '--runExternalCode',
+  ], { stdio: 'inherit' })
   if (result.error)
     throw result.error
   if (result.signal)

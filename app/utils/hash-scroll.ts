@@ -17,7 +17,10 @@ export function parseHashTarget(hash: string): HashTarget {
   if (!hash.startsWith('#') || hash.length === 1)
     return { _tag: 'invalid' }
 
-  return { _tag: 'valid', id: hash.slice(1) }
+  return {
+    _tag: 'valid',
+    id: hash.slice(1),
+  }
 }
 
 export function resolveHashScrollPosition(

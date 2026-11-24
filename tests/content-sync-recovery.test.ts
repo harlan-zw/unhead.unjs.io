@@ -6,7 +6,9 @@ import { gzipSync } from 'node:zlib'
 import { afterEach, expect, it, vi } from 'vitest'
 import { main } from '../scripts/sync-nuxt-content-d1.mjs'
 
-vi.mock('node:child_process', () => ({ spawnSync: vi.fn() }))
+vi.mock('node:child_process', () => ({
+  spawnSync: vi.fn(),
+}))
 
 const databases: DatabaseSync[] = []
 
@@ -47,20 +49,38 @@ function fixture() {
       writes.push(basename(path, '.sql'))
       database.exec(readFileSync(path, 'utf8'))
     }
-    return { pid: 1, output: [null, '', ''], stdout: JSON.stringify([{ results }]), stderr: '', status: 0, signal: null }
+    return {
+      pid: 1,
+      output: [null, '', ''],
+      stdout: JSON.stringify([
+        { results },
+      ]),
+      stderr: '',
+      status: 0,
+      signal: null,
+    }
   })
   vi.spyOn(console, 'log').mockImplementation(() => {})
   vi.spyOn(console, 'error').mockImplementation(() => {})
   return { database, writes }
 }
 
-const args = ['--database', 'content-fixture', '--source-url', 'https://fixtures.example', '--collection', 'docs']
+const args = [
+  '--database',
+  'content-fixture',
+  '--source-url',
+  'https://fixtures.example',
+  '--collection',
+  'docs',
+]
 
 it('imports content into an empty database', async () => {
   const { database } = fixture()
 
   expect(await main(args)).toBe(0)
-  expect(database.prepare('SELECT id, path FROM _content_docs').all()).toEqual([{ id: 'a', path: '/a' }])
+  expect(database.prepare('SELECT id, path FROM _content_docs').all()).toEqual([
+    { id: 'a', path: '/a' },
+  ])
   expect(database.prepare('SELECT ready FROM _content_info').get()).toEqual({ ready: 1 })
 })
 
@@ -70,7 +90,9 @@ it('rebuilds a missing table despite metadata claiming that it is ready', async 
   database.exec('DROP TABLE _content_docs')
 
   expect(await main(args)).toBe(0)
-  expect(database.prepare('SELECT id, path FROM _content_docs').all()).toEqual([{ id: 'a', path: '/a' }])
+  expect(database.prepare('SELECT id, path FROM _content_docs').all()).toEqual([
+    { id: 'a', path: '/a' },
+  ])
   expect(database.prepare('SELECT ready FROM _content_info').get()).toEqual({ ready: 1 })
 })
 
@@ -82,8 +104,12 @@ it('restores only the missing collection in a partial schema', async () => {
 
   expect(await main([...args, '--collection', 'snippets'])).toBe(0)
   expect(writes).toEqual(['snippets'])
-  expect(database.prepare('SELECT id, path FROM _content_docs').all()).toEqual([{ id: 'a', path: '/a' }])
-  expect(database.prepare('SELECT id, path FROM _content_snippets').all()).toEqual([{ id: 'a', path: '/a' }])
+  expect(database.prepare('SELECT id, path FROM _content_docs').all()).toEqual([
+    { id: 'a', path: '/a' },
+  ])
+  expect(database.prepare('SELECT id, path FROM _content_snippets').all()).toEqual([
+    { id: 'a', path: '/a' },
+  ])
 })
 
 it('keeps a healthy collection unchanged', async () => {
@@ -92,7 +118,9 @@ it('keeps a healthy collection unchanged', async () => {
 
   expect(await main(args)).toBe(0)
   expect(writes).toEqual([])
-  expect(database.prepare('SELECT id, path FROM _content_docs').all()).toEqual([{ id: 'a', path: '/a' }])
+  expect(database.prepare('SELECT id, path FROM _content_docs').all()).toEqual([
+    { id: 'a', path: '/a' },
+  ])
 })
 
 it('plans a missing-table rebuild without changing D1 during preflight', async () => {

@@ -123,13 +123,17 @@ export default defineNuxtPlugin((nuxtApp) => {
       const name = internal.type?.__name || internal.type?.name
       if (name && !FRAMEWORK_COMPONENTS.has(name)) {
         const file = internal.type?.__file
-        entries.push(file ? `${name} (${relPath(file)})` : name)
+        entries.push(file
+          ? `${name} (${relPath(file)})`
+          : name)
       }
       internal = internal.parent
     }
     if (!entries.length)
       return ''
-    return `  in: ${entries.slice(0, 4).join(' > ')}${entries.length > 4 ? ' > ...' : ''}`
+    return `  in: ${entries.slice(0, 4).join(' > ')}${entries.length > 4
+      ? ' > ...'
+      : ''}`
   }
 
   // Extract the source file from a ComponentPublicInstance
@@ -157,8 +161,11 @@ export default defineNuxtPlugin((nuxtApp) => {
       parts.push(`  element: <${selector}>`)
       // Show a snippet of the element's outer HTML (first 120 chars)
       const html = el.outerHTML
-      if (html)
-        parts.push(`  html: ${html.slice(0, 120)}${html.length > 120 ? '...' : ''}`)
+      if (html) {
+        parts.push(`  html: ${html.slice(0, 120)}${html.length > 120
+          ? '...'
+          : ''}`)
+      }
     }
     return parts.join('\n')
   }
@@ -192,7 +199,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     // Collect all unique files referenced in issues for quick access
     const fileRefs = new Set<string>()
-    for (const msg of [...errors, ...warnings]) {
+    for (const msg of [
+      ...errors,
+      ...warnings,
+    ]) {
       const fileMatch = msg.match(/file: (.+)/g)
       if (fileMatch)
         fileMatch.forEach(f => fileRefs.add(f.replace('file: ', '').trim()))
@@ -251,14 +261,20 @@ export default defineNuxtPlugin((nuxtApp) => {
     const w = warnings.length
     const total = e + w
 
-    overlay.style.background = total === 0 ? '#16a34a' : e > 0 ? '#dc2626' : '#ca8a04'
+    overlay.style.background = total === 0
+      ? '#16a34a'
+      : e > 0
+        ? '#dc2626'
+        : '#ca8a04'
 
     const parts: string[] = []
     if (e > 0)
       parts.push(`${e} err`)
     if (w > 0)
       parts.push(`${w} warn`)
-    overlay.textContent = parts.length ? parts.join(' | ') : '0 issues'
+    overlay.textContent = parts.length
+      ? parts.join(' | ')
+      : '0 issues'
 
     if (panel.style.display !== 'none') {
       renderPanel()
@@ -270,7 +286,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     const lines: string[] = []
     for (const msg of errors) lines.push(`\u274C ${msg}`)
     for (const msg of warnings) lines.push(`\u26A0\uFE0F  ${msg}`)
-    content.textContent = lines.length ? lines.join('\n\n') : 'No issues'
+    content.textContent = lines.length
+      ? lines.join('\n\n')
+      : 'No issues'
   }
 
   overlay.addEventListener('click', () => {
@@ -306,7 +324,9 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   // Vue error handler: catch render/lifecycle errors
   nuxtApp.vueApp.config.errorHandler = (err, instance, info) => {
-    const errMsg = err instanceof Error ? (err.stack || err.message) : String(err)
+    const errMsg = err instanceof Error
+      ? (err.stack || err.message)
+      : String(err)
     const parts = [`${info}: ${errMsg}`]
     const inst = instance as any
     const file = sourceFile(inst)
@@ -327,7 +347,11 @@ export default defineNuxtPlugin((nuxtApp) => {
       origError.apply(console, args)
       return
     }
-    const raw = args.map(a => typeof a === 'string' ? a : a instanceof Error ? (a.stack || a.message) : String(a)).join(' ')
+    const raw = args.map(a => typeof a === 'string'
+      ? a
+      : a instanceof Error
+        ? (a.stack || a.message)
+        : String(a)).join(' ')
     // Clean: strip Vue component tree traces from any source
     const cleaned = raw
       .replace(/\s*at <[A-Z][^>]*>\s*/g, '')

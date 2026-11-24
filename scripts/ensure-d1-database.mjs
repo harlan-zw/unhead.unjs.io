@@ -6,7 +6,9 @@ import { resolve } from 'node:path'
 import process from 'node:process'
 
 const repoRoot = resolve(import.meta.dirname, '..')
-const wranglerBin = resolve(repoRoot, `node_modules/.bin/wrangler${process.platform === 'win32' ? '.cmd' : ''}`)
+const wranglerBin = resolve(repoRoot, `node_modules/.bin/wrangler${process.platform === 'win32'
+  ? '.cmd'
+  : ''}`)
 
 export function databaseNeedsCreating(databases, name) {
   return !databases.some(database => database.name === name)
@@ -19,7 +21,9 @@ function runWrangler(args, { inherit = false } = {}) {
     cwd: repoRoot,
     encoding: 'utf8',
     env: process.env,
-    stdio: inherit ? 'inherit' : ['ignore', 'pipe', 'pipe'],
+    stdio: inherit
+      ? 'inherit'
+      : ['ignore', 'pipe', 'pipe'],
   })
   if (result.error)
     throw result.error
@@ -31,13 +35,15 @@ function runWrangler(args, { inherit = false } = {}) {
 export async function main(argv = process.argv.slice(2)) {
   try {
     const nameIndex = argv.indexOf('--name')
-    const name = nameIndex > -1 ? argv[nameIndex + 1] : null
+    const name = nameIndex > -1
+      ? argv[nameIndex + 1]
+      : null
     if (!name || name.startsWith('--'))
       throw new Error('--name requires a value')
 
     const databases = JSON.parse(runWrangler(['d1', 'list', '--json']))
     if (!Array.isArray(databases))
-      throw new Error('Unexpected `wrangler d1 list` output; expected a JSON array')
+      throw new TypeError('Unexpected `wrangler d1 list` output; expected a JSON array')
 
     if (!databaseNeedsCreating(databases, name)) {
       console.log(`[ensure-d1] ${name} exists`)
@@ -49,7 +55,9 @@ export async function main(argv = process.argv.slice(2)) {
     return 0
   }
   catch (error) {
-    console.error(`[ensure-d1] ${error instanceof Error ? error.message : String(error)}`)
+    console.error(`[ensure-d1] ${error instanceof Error
+      ? error.message
+      : String(error)}`)
     return 1
   }
 }

@@ -61,8 +61,12 @@ it('renders the data table when the client chart is unavailable', async () => {
   await nextTick()
 
   expect(host.querySelector('caption')?.textContent).toBe('The Head-Breaker Prevalence')
-  const rows = [...host.querySelectorAll('tbody tr')]
-    .map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))
+  const rows = [
+    ...host.querySelectorAll('tbody tr'),
+  ]
+    .map(row => [
+      ...row.querySelectorAll('td'),
+    ].map(cell => cell.textContent))
   expect(rows).toEqual([
     ['Invalid Heads (Breakers)', '22'],
     ['Valid Heads', '78'],

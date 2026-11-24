@@ -11,7 +11,9 @@ const route = useRoute()
 
 const nav = useDocsNav()
 
-const versionPrefix = computed(() => selectedVersion.value.slug === 'v2' ? '/docs/v2' : '/docs')
+const versionPrefix = computed(() => selectedVersion.value.slug === 'v2'
+  ? '/docs/v2'
+  : '/docs')
 
 function docPath(path: string) {
   return `${versionPrefix.value}${path}`
@@ -27,8 +29,18 @@ const currentSection = computed(() => {
 })
 
 const sections = [
-  { label: 'Head', slug: 'head', icon: 'i-heroicons-code-bracket', path: '/head/guides/get-started/overview' },
-  { label: 'Schema.org', slug: 'schema-org', icon: 'i-heroicons-cube', path: '/schema-org/guides/get-started/overview' },
+  {
+    label: 'Head',
+    slug: 'head',
+    icon: 'i-heroicons-code-bracket',
+    path: '/head/guides/get-started/overview',
+  },
+  {
+    label: 'Schema.org',
+    slug: 'schema-org',
+    icon: 'i-heroicons-cube',
+    path: '/schema-org/guides/get-started/overview',
+  },
 ]
 
 const activeSection = computed(() => sections.find(s => s.slug === currentSection.value) || sections[0])

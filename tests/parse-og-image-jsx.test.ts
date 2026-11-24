@@ -18,8 +18,14 @@ describe('parseOgImageJsx', () => {
       props: {
         style: { width: 1200, color: '#fff' },
         children: [
-          { type: 'h1', props: { children: 'Hello' } },
-          { type: 'span', props: { children: 'World' } },
+          {
+            type: 'h1',
+            props: { children: 'Hello' },
+          },
+          {
+            type: 'span',
+            props: { children: 'World' },
+          },
         ],
       },
     })

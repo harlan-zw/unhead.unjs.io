@@ -22,8 +22,12 @@ const HomepageDocPaths = {
 export type HomepageDoc = keyof typeof HomepageDocPaths
 
 export function getDocPath(path: string, target: DocPathTarget): string {
-  const versionPrefix = target.version === 'v2' ? '/docs/v2' : '/docs'
-  const frameworkPrefix = target._tag === 'framework' ? `/${target.framework}` : ''
+  const versionPrefix = target.version === 'v2'
+    ? '/docs/v2'
+    : '/docs'
+  const frameworkPrefix = target._tag === 'framework'
+    ? `/${target.framework}`
+    : ''
   return `${versionPrefix}${frameworkPrefix}/${path.replace(/^\/+/, '')}`
 }
 

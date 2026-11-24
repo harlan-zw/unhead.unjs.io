@@ -23,7 +23,14 @@ describe('parseHeadTags', () => {
 describe('generateUseHeadCode', () => {
   it('serializes attribute names and untrusted values as valid JavaScript', () => {
     const [tag] = parseHeadTags(`<meta http-equiv="refresh" content="'; globalThis.location='bad">`)
-    const code = generateUseHeadCode([{ ...tag, weight: 100, weightLabel: 'Other', priority: 14 }], 'typescript')
+    const code = generateUseHeadCode([
+      {
+        ...tag,
+        weight: 100,
+        weightLabel: 'Other',
+        priority: 14,
+      },
+    ], 'typescript')
 
     expect(code).toContain('"http-equiv": "refresh"')
     expect(code).toContain('"content": "\'; globalThis.location=\'bad"')

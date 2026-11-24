@@ -15,7 +15,9 @@ const sort = (arr: number[]) => arr.toSorted((a, b) => a - b)
 function median(arr: number[]): number {
   const s = sort(arr)
   const mid = Math.floor(s.length / 2)
-  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2
+  return s.length % 2
+    ? s[mid]
+    : (s[mid - 1] + s[mid]) / 2
 }
 
 function mean(arr: number[]): number {
@@ -79,7 +81,9 @@ function mannWhitneyU(a: number[], b: number[]): { U: number, z: number, p: numb
   // Normal approximation for large samples
   const mU = (n1 * n2) / 2
   const sigmaU = Math.sqrt((n1 * n2 * (n1 + n2 + 1)) / 12)
-  const z = sigmaU === 0 ? 0 : (U - mU) / sigmaU
+  const z = sigmaU === 0
+    ? 0
+    : (U - mU) / sigmaU
 
   // Two-tailed p-value approximation using error function
   const p = 2 * (1 - normalCDF(Math.abs(z)))
@@ -96,7 +100,9 @@ function normalCDF(x: number): number {
   const a5 = 1.061405429
   const p = 0.3275911
 
-  const sign = x < 0 ? -1 : 1
+  const sign = x < 0
+    ? -1
+    : 1
   x = Math.abs(x) / Math.SQRT2
 
   const t = 1.0 / (1.0 + p * x)
@@ -185,7 +191,10 @@ async function run() {
   let allRows: Row[] = []
   for (const file of csvFiles) {
     const content = await readFile(join(RESULTS_DIR, file), 'utf-8')
-    allRows = [...allRows, ...parseCSV(content)]
+    allRows = [
+      ...allRows,
+      ...parseCSV(content),
+    ]
   }
 
   // Exclude warmup runs
@@ -260,15 +269,24 @@ async function run() {
   for (const [groupKey, variantData] of Object.entries(summary)) {
     console.log(`\n--- ${groupKey} ---\n`)
 
-    const header = ['variant', ...METRICS.flatMap(m => [`${m}_med`, `${m}_std`])]
+    const header = [
+      'variant',
+      ...METRICS.flatMap(m => [`${m}_med`, `${m}_std`]),
+    ]
     console.log(header.map(h => h.padStart(10)).join(''))
 
     for (const [variant, metricData] of Object.entries(variantData)) {
-      const cols = [variant.padStart(10)]
+      const cols = [
+        variant.padStart(10),
+      ]
       for (const metric of METRICS) {
         const stats = (metricData as any)[metric] as GroupStats | undefined
-        cols.push(stats ? String(stats.median).padStart(10) : '       N/A')
-        cols.push(stats ? String(stats.stddev).padStart(10) : '       N/A')
+        cols.push(stats
+          ? String(stats.median).padStart(10)
+          : '       N/A')
+        cols.push(stats
+          ? String(stats.stddev).padStart(10)
+          : '       N/A')
       }
       console.log(cols.join(''))
     }

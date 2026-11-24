@@ -63,7 +63,9 @@ export function trackToolUsage(
       timestamp,
       metadata?.responseTime || 0,
     ],
-    indexes: [sessionId.substring(0, 8)],
+    indexes: [
+      sessionId.substring(0, 8),
+    ],
   }
 
   analytics.writeDataPoint(dataPoint)

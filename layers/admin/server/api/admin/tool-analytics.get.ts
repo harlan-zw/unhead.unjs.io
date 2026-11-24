@@ -26,7 +26,11 @@ export default defineEventHandler(async (event): Promise<ToolAnalyticsSummary> =
   if (!accountId || !apiToken) {
     throw createError({
       statusCode: 500,
-      message: `Missing config: ${!accountId ? 'cloudflareAccountId' : ''} ${!apiToken ? 'cloudflareAnalyticsApiToken' : ''}`.trim(),
+      message: `Missing config: ${!accountId
+        ? 'cloudflareAccountId'
+        : ''} ${!apiToken
+        ? 'cloudflareAnalyticsApiToken'
+        : ''}`.trim(),
     })
   }
 
@@ -97,6 +101,8 @@ export default defineEventHandler(async (event): Promise<ToolAnalyticsSummary> =
       .sort((a, b) => b.count - a.count),
     topActions: Array.from(actionCounts.entries(), ([action, count]) => ({ action, count }))
       .sort((a, b) => b.count - a.count),
-    errorRate: totalEvents > 0 ? (errorCount / totalEvents) * 100 : 0,
+    errorRate: totalEvents > 0
+      ? (errorCount / totalEvents) * 100
+      : 0,
   }
 })

@@ -6,8 +6,20 @@ import { getOrCreateAnalyticsSession, trackToolLookup, trackToolUsage } from '~~
 import { checkFreeToolRateLimit } from '~~/server/utils/rate-limit'
 
 const schema = z.object({
-  tool: z.enum(['meta-tag-generator', 'schema-generator', 'og-image-generator', 'capo-analyzer']),
-  action: z.enum(['view', 'use', 'copy', 'reset', 'preset', 'download']),
+  tool: z.enum([
+    'meta-tag-generator',
+    'schema-generator',
+    'og-image-generator',
+    'capo-analyzer',
+  ]),
+  action: z.enum([
+    'view',
+    'use',
+    'copy',
+    'reset',
+    'preset',
+    'download',
+  ]),
   label: z.string().trim().max(100).optional(),
   outcome: z.enum(['success', 'error']).optional(),
 })

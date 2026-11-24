@@ -9,7 +9,9 @@ export function normalizeReleaseBodyHeadings(markdown: string): string {
     const fence = MarkdownFencePattern.exec(line)?.[1]
     if (fence) {
       const marker = fence[0] as '`' | '~'
-      activeFence = activeFence === marker ? undefined : activeFence || marker
+      activeFence = activeFence === marker
+        ? undefined
+        : activeFence || marker
       return line
     }
 

@@ -41,27 +41,112 @@ const day = 24 * hour
 
 const routeCacheRules: RouteCacheRule[] = [
   // Framework-generated data endpoints.
-  { kind: 'data', matches: path => path === '/api/_mdc/highlight', maxAge: minute, staleMaxAge: day },
-  { kind: 'data', matches: path => path.startsWith('/__nuxt_content/'), maxAge: minute, staleMaxAge: day },
-  { kind: 'data', matches: path => path === '/api/_nuxt_icon', maxAge: 7 * day, staleMaxAge: 7 * day },
+  {
+    kind: 'data',
+    matches: path => path === '/api/_mdc/highlight',
+    maxAge: minute,
+    staleMaxAge: day,
+  },
+  {
+    kind: 'data',
+    matches: path => path.startsWith('/__nuxt_content/'),
+    maxAge: minute,
+    staleMaxAge: day,
+  },
+  {
+    kind: 'data',
+    matches: path => path === '/api/_nuxt_icon',
+    maxAge: 7 * day,
+    staleMaxAge: 7 * day,
+  },
 
   // Public data endpoints.
-  { kind: 'data', matches: path => /^\/api\/npm\/[^/]+\/downloads$/.test(path), maxAge: day, staleMaxAge: 7 * day },
-  { kind: 'data', matches: path => /^\/api\/get-tweet\/[^/]+$/.test(path), maxAge: day, staleMaxAge: 7 * day },
-  { kind: 'data', matches: path => path === '/api/stats.json', maxAge: day, staleMaxAge: 7 * day },
-  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/commit-count$/.test(path), maxAge: 7 * day, staleMaxAge: 7 * day },
-  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/contributors$/.test(path), maxAge: hour, staleMaxAge: day },
-  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/issues-closed$/.test(path), maxAge: 7 * day, staleMaxAge: 7 * day },
-  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/last-file-commit$/.test(path), maxAge: day, staleMaxAge: 7 * day },
-  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/releases$/.test(path), maxAge: hour, staleMaxAge: day },
-  { kind: 'data', matches: path => /^\/api\/github\/[^/]+\/stars$/.test(path), maxAge: hour, staleMaxAge: day },
+  {
+    kind: 'data',
+    matches: path => /^\/api\/npm\/[^/]+\/downloads$/.test(path),
+    maxAge: day,
+    staleMaxAge: 7 * day,
+  },
+  {
+    kind: 'data',
+    matches: path => /^\/api\/get-tweet\/[^/]+$/.test(path),
+    maxAge: day,
+    staleMaxAge: 7 * day,
+  },
+  {
+    kind: 'data',
+    matches: path => path === '/api/stats.json',
+    maxAge: day,
+    staleMaxAge: 7 * day,
+  },
+  {
+    kind: 'data',
+    matches: path => /^\/api\/github\/[^/]+\/commit-count$/.test(path),
+    maxAge: 7 * day,
+    staleMaxAge: 7 * day,
+  },
+  {
+    kind: 'data',
+    matches: path => /^\/api\/github\/[^/]+\/contributors$/.test(path),
+    maxAge: hour,
+    staleMaxAge: day,
+  },
+  {
+    kind: 'data',
+    matches: path => /^\/api\/github\/[^/]+\/issues-closed$/.test(path),
+    maxAge: 7 * day,
+    staleMaxAge: 7 * day,
+  },
+  {
+    kind: 'data',
+    matches: path => /^\/api\/github\/[^/]+\/last-file-commit$/.test(path),
+    maxAge: day,
+    staleMaxAge: 7 * day,
+  },
+  {
+    kind: 'data',
+    matches: path => /^\/api\/github\/[^/]+\/releases$/.test(path),
+    maxAge: hour,
+    staleMaxAge: day,
+  },
+  {
+    kind: 'data',
+    matches: path => /^\/api\/github\/[^/]+\/stars$/.test(path),
+    maxAge: hour,
+    staleMaxAge: day,
+  },
 
   // Public SSR pages. Authenticated requests bypass the shared cache below.
-  { kind: 'page', matches: path => path === '/', maxAge: minute, staleMaxAge: day },
-  { kind: 'page', matches: path => path === '/docs' || path.startsWith('/docs/'), maxAge: minute, staleMaxAge: day },
-  { kind: 'page', matches: path => path === '/learn' || path.startsWith('/learn/'), maxAge: minute, staleMaxAge: day },
-  { kind: 'page', matches: path => path === '/tools/meta-tag-generator', maxAge: minute, staleMaxAge: day },
-  { kind: 'page', matches: path => path === '/tools/schema-generator', maxAge: minute, staleMaxAge: day },
+  {
+    kind: 'page',
+    matches: path => path === '/',
+    maxAge: minute,
+    staleMaxAge: day,
+  },
+  {
+    kind: 'page',
+    matches: path => path === '/docs' || path.startsWith('/docs/'),
+    maxAge: minute,
+    staleMaxAge: day,
+  },
+  {
+    kind: 'page',
+    matches: path => path === '/learn' || path.startsWith('/learn/'),
+    maxAge: minute,
+    staleMaxAge: day,
+  },
+  {
+    kind: 'page',
+    matches: path => path === '/tools/meta-tag-generator',
+    maxAge: minute,
+    staleMaxAge: day,
+  },
+  {
+    kind: 'page',
+    matches: path => path === '/tools/schema-generator',
+    maxAge: minute,
+    staleMaxAge: day,
+  },
 ]
 
 export function getCloudflareResponseCacheRule(pathname: string): CloudflareResponseCacheRule | undefined {
@@ -174,7 +259,9 @@ async function storeResponse(
   const cacheControl = headers.get('cache-control')
 
   headers.set(CACHE_CREATED_AT_HEADER, String(now()))
-  headers.set(CACHE_CONTROL_PRESENT_HEADER, cacheControl === null ? '0' : '1')
+  headers.set(CACHE_CONTROL_PRESENT_HEADER, cacheControl === null
+    ? '0'
+    : '1')
   headers.set(CACHE_CONTROL_VALUE_HEADER, cacheControl || '')
   headers.set('cache-control', `public, max-age=${rule.maxAge + rule.staleMaxAge}`)
   headers.delete(CACHE_STATUS_HEADER)

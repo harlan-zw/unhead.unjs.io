@@ -4,7 +4,9 @@ import { describe, expect, it } from 'vitest'
 import { parseContentDump, planContentSync } from '../scripts/sync-nuxt-content-d1.mjs'
 
 const PATH_LOOKUP = '/docs/api/use-head'
-const EXPECTED_LOOKUP_ROW = [{ id: 'b', path: PATH_LOOKUP, title: 'useHead()' }]
+const EXPECTED_LOOKUP_ROW = [
+  { id: 'b', path: PATH_LOOKUP, title: 'useHead()' },
+]
 
 function docsDump(collection = 'docs') {
   const rows = [
@@ -49,7 +51,14 @@ describe('nuxt content D1 path index', () => {
   const docs = docsDump()
   const lookup = `SELECT id, path, title FROM ${docs.table} WHERE path = ?`
   const pathIndex = `${docs.table}_path_idx`
-  const allHashes = ['hash-a', 'hash-b', 'hash-c', 'hash-d', 'hash-e', 'hash-f']
+  const allHashes = [
+    'hash-a',
+    'hash-b',
+    'hash-c',
+    'hash-d',
+    'hash-e',
+    'hash-f',
+  ]
 
   it('moves the by-path lookup from a scan to the index on rebuilds', () => {
     const plan = planContentSync(docs, {
