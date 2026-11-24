@@ -20,7 +20,13 @@ type Strategy = 'no-stream' | 'delay-head' | 'early-head' | 'shell-head' | 'out-
 type Complexity = 'light' | 'medium' | 'heavy'
 type Delay = 'fast' | 'slow'
 
-const STRATEGIES: Strategy[] = ['no-stream', 'delay-head', 'early-head', 'shell-head', 'out-of-order']
+const STRATEGIES: Strategy[] = [
+  'no-stream',
+  'delay-head',
+  'early-head',
+  'shell-head',
+  'out-of-order',
+]
 const COMPLEXITIES: Complexity[] = ['light', 'medium', 'heavy']
 const DELAYS: Delay[] = ['fast', 'slow']
 
@@ -140,7 +146,10 @@ async function noStream(res: ServerResponse, tags: HeadTags, delay: number) {
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
-${[...tags.sync, ...tags.async].join('\n')}
+${[
+  ...tags.sync,
+  ...tags.async,
+].join('\n')}
 </head>
 <body>
 ${bodyContent()}
@@ -226,7 +235,10 @@ async function shellHead(res: ServerResponse, tags: HeadTags, delay: number) {
   // Simulate hydration — all tags applied via script
   await sleep(delay)
 
-  const allTags = [...tags.sync.slice(2), ...tags.async] // skip charset+viewport (already sent)
+  const allTags = [
+    ...tags.sync.slice(2),
+    ...tags.async,
+  ] // skip charset+viewport (already sent)
   const patchScript = generatePatchScript(allTags)
   res.write(patchScript)
 
@@ -305,7 +317,9 @@ function generateOutOfOrderScript(tags: string[]): string {
       return `<script data-ssr-head="${i}">document.title=${JSON.stringify(title)}</script>`
     }
     if (MetaPattern.test(tag) || LinkPattern.test(tag)) {
-      const el = MetaPattern.test(tag) ? 'meta' : 'link'
+      const el = MetaPattern.test(tag)
+        ? 'meta'
+        : 'link'
       const attrs = parseAttributes(tag)
       const attrStr = attrs.map(([k, v]) => `e.setAttribute(${JSON.stringify(k)},${JSON.stringify(v)})`).join(';')
       return `<script data-ssr-head="${i}">{const e=document.createElement('${el}');${attrStr};document.head.appendChild(e)}</script>`

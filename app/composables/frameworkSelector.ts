@@ -3,13 +3,55 @@ import { getPathFramework, getPathWithFramework, getPathWithoutFramework } from 
 import { useVersionSelector } from '~/composables/versionSelector'
 
 const items = [
-  { icon: 'i-logos-typescript-icon', label: 'TypeScript', slug: 'typescript', import: 'unhead', schemaImport: '@unhead/schema-org' },
-  { icon: 'i-logos-vue', label: 'Vue', slug: 'vue', import: '@unhead/vue', schemaImport: '@unhead/schema-org/vue' },
-  { icon: 'i-logos-react', label: 'React', slug: 'react', import: '@unhead/react', schemaImport: '@unhead/schema-org/react' },
-  { icon: 'i-logos-svelte-icon', label: 'Svelte', slug: 'svelte', import: '@unhead/svelte', schemaImport: '@unhead/schema-org/svelte' },
-  { icon: 'i-logos-solidjs-icon', label: 'Solid.js', slug: 'solid-js', import: '@unhead/solid-js', schemaImport: '@unhead/schema-org/solid-js' },
-  { icon: 'i-logos-angular-icon', label: 'Angular', slug: 'angular', import: '@unhead/angular', schemaImport: '@unhead/schema-org/angular' },
-  { icon: 'i-logos-nuxt-icon', label: 'Nuxt', slug: 'nuxt', import: '#imports', schemaImport: '#imports' },
+  {
+    icon: 'i-logos-typescript-icon',
+    label: 'TypeScript',
+    slug: 'typescript',
+    import: 'unhead',
+    schemaImport: '@unhead/schema-org',
+  },
+  {
+    icon: 'i-logos-vue',
+    label: 'Vue',
+    slug: 'vue',
+    import: '@unhead/vue',
+    schemaImport: '@unhead/schema-org/vue',
+  },
+  {
+    icon: 'i-logos-react',
+    label: 'React',
+    slug: 'react',
+    import: '@unhead/react',
+    schemaImport: '@unhead/schema-org/react',
+  },
+  {
+    icon: 'i-logos-svelte-icon',
+    label: 'Svelte',
+    slug: 'svelte',
+    import: '@unhead/svelte',
+    schemaImport: '@unhead/schema-org/svelte',
+  },
+  {
+    icon: 'i-logos-solidjs-icon',
+    label: 'Solid.js',
+    slug: 'solid-js',
+    import: '@unhead/solid-js',
+    schemaImport: '@unhead/schema-org/solid-js',
+  },
+  {
+    icon: 'i-logos-angular-icon',
+    label: 'Angular',
+    slug: 'angular',
+    import: '@unhead/angular',
+    schemaImport: '@unhead/schema-org/angular',
+  },
+  {
+    icon: 'i-logos-nuxt-icon',
+    label: 'Nuxt',
+    slug: 'nuxt',
+    import: '#imports',
+    schemaImport: '#imports',
+  },
 ] as const
 
 export interface FrameworkNav {
@@ -27,7 +69,9 @@ export function useFrameworkSelector(nav?: Ref<FrameworkNav | undefined> | Compu
     }
   }, { immediate: true })
 
-  const versionPrefix = computed(() => currentVersion.value === 'v2' ? '/docs/v2' : '/docs')
+  const versionPrefix = computed(() => currentVersion.value === 'v2'
+    ? '/docs/v2'
+    : '/docs')
 
   const frameworkSlug = computed(() => {
     return routeFramework.value || fallbackFramework.value
@@ -66,7 +110,12 @@ export function useFrameworkSelector(nav?: Ref<FrameworkNav | undefined> | Compu
         const fallbackPath = `${versionPrefix.value}/${f.slug}/head/guides/get-started/installation`
         const hasCanonicalPath = nav.value.navFlat.some(l => l?.path === canonicalPath)
         const hasFrameworkPath = nav.value.navFlat.some(l => l?.path === frameworkPath)
-        return { ...f, to: hasFrameworkPath ? frameworkPath : hasCanonicalPath ? canonicalPath : fallbackPath }
+        return {
+          ...f,
+          to: hasFrameworkPath
+            ? frameworkPath
+            : hasCanonicalPath ? canonicalPath : fallbackPath,
+        }
       })
     }),
   }

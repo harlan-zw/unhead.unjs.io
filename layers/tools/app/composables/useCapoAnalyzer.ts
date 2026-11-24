@@ -24,23 +24,87 @@ const PrefetchPattern = /^(?:prefetch|dns-prefetch|prerender)$/i
 
 // Capo.js weight definitions — 14 levels
 const WEIGHT_TABLE = [
-  { weight: -30, label: 'Content-Security-Policy', test: (t: ParsedTag) => t.tag === 'meta' && t.attributes['http-equiv']?.toLowerCase() === 'content-security-policy' },
-  { weight: -20, label: 'Charset', test: (t: ParsedTag) => t.tag === 'meta' && 'charset' in t.attributes },
-  { weight: -15, label: 'Viewport', test: (t: ParsedTag) => t.tag === 'meta' && t.attributes.name?.toLowerCase() === 'viewport' },
-  { weight: -10, label: 'Base', test: (t: ParsedTag) => t.tag === 'base' },
-  { weight: 10, label: 'Title', test: (t: ParsedTag) => t.tag === 'title' },
-  { weight: 20, label: 'Preconnect', test: (t: ParsedTag) => t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'preconnect' },
-  { weight: 30, label: 'Async Script', test: (t: ParsedTag) => t.tag === 'script' && 'async' in t.attributes && !('defer' in t.attributes) },
-  { weight: 40, label: 'Style @import', test: (t: ParsedTag) => t.tag === 'style' && (t.content?.includes('@import') ?? false) },
-  { weight: 50, label: 'Sync Script', test: (t: ParsedTag) => t.tag === 'script' && t.attributes.src && !('async' in t.attributes) && !('defer' in t.attributes) && !('type' in t.attributes && t.attributes.type === 'module') },
-  { weight: 60, label: 'Stylesheet', test: (t: ParsedTag) => (t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'stylesheet') || (t.tag === 'style' && !(t.content?.includes('@import') ?? false)) },
-  { weight: 70, label: 'Preload', test: (t: ParsedTag) => t.tag === 'link' && PreloadPattern.test(t.attributes.rel || '') },
-  { weight: 80, label: 'Deferred Script', test: (t: ParsedTag) => t.tag === 'script' && ('defer' in t.attributes || t.attributes.type === 'module') },
-  { weight: 90, label: 'Prefetch/DNS', test: (t: ParsedTag) => t.tag === 'link' && PrefetchPattern.test(t.attributes.rel || '') },
-  { weight: 100, label: 'Other', test: () => true },
+  {
+    weight: -30,
+    label: 'Content-Security-Policy',
+    test: (t: ParsedTag) => t.tag === 'meta' && t.attributes['http-equiv']?.toLowerCase() === 'content-security-policy',
+  },
+  {
+    weight: -20,
+    label: 'Charset',
+    test: (t: ParsedTag) => t.tag === 'meta' && 'charset' in t.attributes,
+  },
+  {
+    weight: -15,
+    label: 'Viewport',
+    test: (t: ParsedTag) => t.tag === 'meta' && t.attributes.name?.toLowerCase() === 'viewport',
+  },
+  {
+    weight: -10,
+    label: 'Base',
+    test: (t: ParsedTag) => t.tag === 'base',
+  },
+  {
+    weight: 10,
+    label: 'Title',
+    test: (t: ParsedTag) => t.tag === 'title',
+  },
+  {
+    weight: 20,
+    label: 'Preconnect',
+    test: (t: ParsedTag) => t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'preconnect',
+  },
+  {
+    weight: 30,
+    label: 'Async Script',
+    test: (t: ParsedTag) => t.tag === 'script' && 'async' in t.attributes && !('defer' in t.attributes),
+  },
+  {
+    weight: 40,
+    label: 'Style @import',
+    test: (t: ParsedTag) => t.tag === 'style' && (t.content?.includes('@import') ?? false),
+  },
+  {
+    weight: 50,
+    label: 'Sync Script',
+    test: (t: ParsedTag) => t.tag === 'script' && t.attributes.src && !('async' in t.attributes) && !('defer' in t.attributes) && !('type' in t.attributes && t.attributes.type === 'module'),
+  },
+  {
+    weight: 60,
+    label: 'Stylesheet',
+    test: (t: ParsedTag) => (t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'stylesheet') || (t.tag === 'style' && !(t.content?.includes('@import') ?? false)),
+  },
+  {
+    weight: 70,
+    label: 'Preload',
+    test: (t: ParsedTag) => t.tag === 'link' && PreloadPattern.test(t.attributes.rel || ''),
+  },
+  {
+    weight: 80,
+    label: 'Deferred Script',
+    test: (t: ParsedTag) => t.tag === 'script' && ('defer' in t.attributes || t.attributes.type === 'module'),
+  },
+  {
+    weight: 90,
+    label: 'Prefetch/DNS',
+    test: (t: ParsedTag) => t.tag === 'link' && PrefetchPattern.test(t.attributes.rel || ''),
+  },
+  {
+    weight: 100,
+    label: 'Other',
+    test: () => true,
+  },
 ] as const
 
-const HEAD_TAGS = new Set(['meta', 'link', 'title', 'base', 'style', 'script', 'noscript'])
+const HEAD_TAGS = new Set([
+  'meta',
+  'link',
+  'title',
+  'base',
+  'style',
+  'script',
+  'noscript',
+])
 const VOID_TAGS = new Set(['meta', 'link', 'base'])
 
 function classifyTag(tag: ParsedTag): AnalyzedTag {
@@ -55,7 +119,12 @@ function classifyTag(tag: ParsedTag): AnalyzedTag {
       }
     }
   }
-  return { ...tag, weight: 100, weightLabel: 'Other', priority: 14 }
+  return {
+    ...tag,
+    weight: 100,
+    weightLabel: 'Other',
+    priority: 14,
+  }
 }
 
 function findTagEnd(html: string, start: number): number {
@@ -160,7 +229,9 @@ export function parseHeadTags(html: string): ParsedTag[] {
       if (closingStart !== -1) {
         const closingEnd = findTagEnd(html, closingStart + 2)
         content = html.slice(rawEnd, closingStart).trim()
-        rawEnd = closingEnd === -1 ? html.length : closingEnd + 1
+        rawEnd = closingEnd === -1
+          ? html.length
+          : closingEnd + 1
       }
     }
 
@@ -212,7 +283,9 @@ function findIssues(tags: AnalyzedTag[]): Issue[] {
         currentPosition: i + 1,
         optimalPosition: optimalIndex + 1,
         delta,
-        severity: delta > 3 ? 'error' : 'warning',
+        severity: delta > 3
+          ? 'error'
+          : 'warning',
       })
     }
   }
@@ -243,7 +316,9 @@ const FRAMEWORK_IMPORTS: Record<string, string> = {
 
 function serializeAttributes(attributes: Record<string, string>): string {
   return Object.entries(attributes)
-    .map(([key, value]) => `${JSON.stringify(key)}: ${value ? JSON.stringify(value) : 'true'}`)
+    .map(([key, value]) => `${JSON.stringify(key)}: ${value
+      ? JSON.stringify(value)
+      : 'true'}`)
     .join(', ')
 }
 
@@ -276,7 +351,9 @@ export function generateUseHeadCode(tags: AnalyzedTag[], framework: string): str
     else if (tag.tag === 'script') {
       const attrs = serializeAttributes(tag.attributes)
       if (tag.content) {
-        scripts.push(`    { ${attrs ? `${attrs}, ` : ''}innerHTML: ${JSON.stringify(tag.content.trim())} }`)
+        scripts.push(`    { ${attrs
+          ? `${attrs}, `
+          : ''}innerHTML: ${JSON.stringify(tag.content.trim())} }`)
       }
       else {
         scripts.push(`    { ${attrs} }`)

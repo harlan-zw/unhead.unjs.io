@@ -16,7 +16,10 @@ function withD1Retry(env: Cloudflare.Env): Cloudflare.Env {
   const db = (env as { DB?: D1Database }).DB
   if (!db)
     return env
-  return { ...env, DB: wrapD1WithRetry(db) } as Cloudflare.Env
+  return {
+    ...env,
+    DB: wrapD1WithRetry(db),
+  } as Cloudflare.Env
 }
 
 export default {
@@ -42,7 +45,13 @@ export default {
 
     try {
       const cache = await caches.open(CLOUDFLARE_RESPONSE_CACHE_NAME)
-      return handleCloudflareResponseCache({ cache, context, render, request, rule })
+      return handleCloudflareResponseCache({
+        cache,
+        context,
+        render,
+        request,
+        rule,
+      })
     }
     catch {
       const event = createWideEvent({

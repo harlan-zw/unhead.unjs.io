@@ -14,7 +14,9 @@ export default defineEventHandler(async (event) => {
       tool: toolLookups.tool,
       count: sql<number>`count(*)`.as('count'),
     }).from(toolLookups).groupBy(toolLookups.tool),
-    db.select({ count: sql<number>`count(*)`.as('count') }).from(toolLookups).get(),
+    db.select({
+      count: sql<number>`count(*)`.as('count'),
+    }).from(toolLookups).get(),
   ])
 
   const statsByTool = Object.fromEntries(

@@ -5,10 +5,30 @@ const toolCategories = [
     description: 'Generate & validate',
     color: 'emerald' as const,
     tools: [
-      { label: 'Meta Tag Generator', icon: 'i-heroicons-code-bracket', to: '/tools/meta-tag-generator', description: 'Generate meta tags for any page' },
-      { label: 'OG Image Generator', icon: 'i-heroicons-photo', to: '/tools/og-image-generator', description: 'Create social share images' },
-      { label: 'Schema.org Generator', icon: 'i-heroicons-cube', to: '/tools/schema-generator', description: 'Build structured data markup' },
-      { label: 'Capo.js Analyzer', icon: 'i-heroicons-chart-bar', to: '/tools/capo-analyzer', description: 'Analyze head tag ordering' },
+      {
+        label: 'Meta Tag Generator',
+        icon: 'i-heroicons-code-bracket',
+        to: '/tools/meta-tag-generator',
+        description: 'Generate meta tags for any page',
+      },
+      {
+        label: 'OG Image Generator',
+        icon: 'i-heroicons-photo',
+        to: '/tools/og-image-generator',
+        description: 'Create social share images',
+      },
+      {
+        label: 'Schema.org Generator',
+        icon: 'i-heroicons-cube',
+        to: '/tools/schema-generator',
+        description: 'Build structured data markup',
+      },
+      {
+        label: 'Capo.js Analyzer',
+        icon: 'i-heroicons-chart-bar',
+        to: '/tools/capo-analyzer',
+        description: 'Analyze head tag ordering',
+      },
     ],
   },
 ]

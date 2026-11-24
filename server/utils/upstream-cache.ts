@@ -179,7 +179,9 @@ function findKVNamespace(env: unknown): KVNamespace | undefined {
 
   // Transition path for the existing Pages dashboard binding.
   const legacyCache = Reflect.get(env, 'KV')
-  return isKVNamespace(legacyCache) ? legacyCache : undefined
+  return isKVNamespace(legacyCache)
+    ? legacyCache
+    : undefined
 }
 
 function isKVNamespace(value: unknown): value is KVNamespace {

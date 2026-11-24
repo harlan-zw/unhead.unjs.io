@@ -15,8 +15,24 @@ export const toolLookups = sqliteTable('tool_lookups', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
   sessionId: text('session_id'),
-  tool: text('tool', { enum: ['meta-tag-generator', 'schema-generator', 'og-image-generator', 'capo-analyzer'] }).notNull(),
-  action: text('action', { enum: ['view', 'use', 'copy', 'reset', 'preset', 'download'] }).notNull(),
+  tool: text('tool', {
+    enum: [
+      'meta-tag-generator',
+      'schema-generator',
+      'og-image-generator',
+      'capo-analyzer',
+    ],
+  }).notNull(),
+  action: text('action', {
+    enum: [
+      'view',
+      'use',
+      'copy',
+      'reset',
+      'preset',
+      'download',
+    ],
+  }).notNull(),
   label: text('label'),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 }, t => [
@@ -27,7 +43,9 @@ export const toolLookups = sqliteTable('tool_lookups', {
 export const feedback = sqliteTable('feedback', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   path: text('path').notNull(),
-  thumb: text('thumb', { enum: ['up', 'down'] }),
+  thumb: text('thumb', {
+    enum: ['up', 'down'],
+  }),
   comment: text('comment'),
   metadata: text('metadata', { mode: 'json' }).$type<Record<string, unknown>>(),
   userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),

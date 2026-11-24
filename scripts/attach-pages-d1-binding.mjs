@@ -10,7 +10,9 @@ export function parseArgs(argv) {
     const index = argv.indexOf(flag)
     if (index === -1 && !required)
       return undefined
-    const value = index > -1 ? argv[index + 1] : null
+    const value = index > -1
+      ? argv[index + 1]
+      : null
     if (!value || value.startsWith('--'))
       throw new Error(`${flag} requires a value`)
     return value
@@ -30,7 +32,9 @@ async function apiRequest({ method, url, apiToken, body }) {
       'authorization': `Bearer ${apiToken}`,
       'content-type': 'application/json',
     },
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: body === undefined
+      ? undefined
+      : JSON.stringify(body),
   })
   if (!response.ok)
     throw new Error(`${method} ${url} failed with HTTP ${response.status}`)
@@ -50,7 +54,7 @@ export async function findD1DatabaseId({ baseUrl = DEFAULT_API_BASE, accountId, 
       apiToken,
     })
     if (!Array.isArray(payload.result))
-      throw new Error('Unexpected D1 database list response; expected a JSON array')
+      throw new TypeError('Unexpected D1 database list response; expected a JSON array')
     databases.push(...payload.result)
     // Cloudflare may omit result_info.total_pages. Wrangler decides with
     // page * per_page < total_count; without total_count, a page shorter
@@ -70,7 +74,12 @@ export async function findD1DatabaseId({ baseUrl = DEFAULT_API_BASE, accountId, 
 }
 
 export async function attachPagesD1Binding({ accountId, apiToken, project, database, binding, compatibilityFlag = '', baseUrl = DEFAULT_API_BASE }) {
-  const databaseId = await findD1DatabaseId({ baseUrl, accountId, apiToken, name: database })
+  const databaseId = await findD1DatabaseId({
+    baseUrl,
+    accountId,
+    apiToken,
+    name: database,
+  })
   const projectUrl = `${baseUrl}/accounts/${accountId}/pages/projects/${project}`
 
   const current = await apiRequest({ method: 'GET', url: projectUrl, apiToken })
@@ -84,12 +93,23 @@ export async function attachPagesD1Binding({ accountId, apiToken, project, datab
     return { attached: false }
 
   const changes = {}
-  if (attached)
-    changes.d1_databases = { ...production.d1_databases, [binding]: { id: databaseId } }
+  if (attached) {
+    changes.d1_databases = {
+      ...production.d1_databases,
+      [binding]: { id: databaseId },
+    }
+  }
   if (addFlag)
     changes.compatibility_flags = [...flags, compatibilityFlag]
-  const body = { deployment_configs: { production: changes } }
-  await apiRequest({ method: 'PATCH', url: projectUrl, apiToken, body })
+  const body = {
+    deployment_configs: { production: changes },
+  }
+  await apiRequest({
+    method: 'PATCH',
+    url: projectUrl,
+    apiToken,
+    body,
+  })
 
   const verified = await apiRequest({ method: 'GET', url: projectUrl, apiToken })
   const settings = verified.result?.deployment_configs?.production
@@ -118,7 +138,9 @@ export async function main(argv = process.argv.slice(2)) {
     return 0
   }
   catch (error) {
-    console.error(`[attach-pages-d1] ${error instanceof Error ? error.message : String(error)}`)
+    console.error(`[attach-pages-d1] ${error instanceof Error
+      ? error.message
+      : String(error)}`)
     return 1
   }
 }

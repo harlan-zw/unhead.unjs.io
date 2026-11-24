@@ -71,7 +71,9 @@ function startFixture(state: FixtureState): Promise<Fixture> {
       requests.push({
         method: request.method ?? '',
         pathname: `${url.pathname}${url.search}`,
-        body: raw ? JSON.parse(raw) as PatchBody : undefined,
+        body: raw
+          ? JSON.parse(raw) as PatchBody
+          : undefined,
       })
 
       if (state.responseOverride?.pathname === url.pathname) {
@@ -156,19 +158,36 @@ function makeDocsProject(): FixtureState['project'] {
   return {
     deployment_configs: {
       production: {
-        d1_databases: { DB: { id: 'docs-db-id' } },
-        analytics_engine_datasets: { TOOL_ANALYTICS: { dataset: 'unhead_tool_usage' } },
-        env_vars: { NUXT_SESSION_PASSWORD: { type: 'secret_text' } },
+        d1_databases: {
+          DB: { id: 'docs-db-id' },
+        },
+        analytics_engine_datasets: {
+          TOOL_ANALYTICS: { dataset: 'unhead_tool_usage' },
+        },
+        env_vars: {
+          NUXT_SESSION_PASSWORD: { type: 'secret_text' },
+        },
       },
       preview: {
-        d1_databases: { DB: { id: 'docs-db-id' } },
-        env_vars: { MODE: { type: 'plain_text', value: 'preview' } },
+        d1_databases: {
+          DB: { id: 'docs-db-id' },
+        },
+        env_vars: {
+          MODE: { type: 'plain_text', value: 'preview' },
+        },
       },
     },
   }
 }
 
-const workflowArgs = ['--project', 'unhead-unjs-io', '--database', 'unhead-ai-ready', '--binding', 'AI_READY_DB']
+const workflowArgs = [
+  '--project',
+  'unhead-unjs-io',
+  '--database',
+  'unhead-ai-ready',
+  '--binding',
+  'AI_READY_DB',
+]
 const populateEnvFlag = 'nodejs_compat_populate_process_env'
 
 describe('parseArgs', () => {
@@ -190,7 +209,11 @@ describe('main', () => {
   it('attaches the binding with the deploy workflow arguments', async () => {
     const project = makeDocsProject()
     const fixture = await startFixture({
-      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project,
       patchApplies: true,
     })
@@ -218,7 +241,11 @@ describe('attachPagesD1Binding', () => {
     production.compatibility_date = '2025-01-01'
     production.compatibility_flags = ['nodejs_compat_v2']
     const fixture = await startFixture({
-      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project,
       patchApplies: true,
     })
@@ -236,11 +263,15 @@ describe('attachPagesD1Binding', () => {
     expect(await main(args)).toBe(0)
 
     const patches = fixture.requests.filter(request => request.method === 'PATCH')
-    expect(patches.map(request => request.body)).toEqual([{
-      deployment_configs: {
-        production: { compatibility_flags: ['nodejs_compat_v2', populateEnvFlag] },
+    expect(patches.map(request => request.body)).toEqual([
+      {
+        deployment_configs: {
+          production: {
+            compatibility_flags: ['nodejs_compat_v2', populateEnvFlag],
+          },
+        },
       },
-    }])
+    ])
     initialProject.deployment_configs.production.compatibility_flags!.push(populateEnvFlag)
     expect(project).toEqual(initialProject)
   })
@@ -248,7 +279,11 @@ describe('attachPagesD1Binding', () => {
   it('patches only production D1 bindings and preserves unrelated project settings', async () => {
     const project = makeDocsProject()
     const fixture = await startFixture({
-      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project,
       patchApplies: true,
     })
@@ -275,7 +310,12 @@ describe('attachPagesD1Binding', () => {
   it('follows the D1 list pagination before patching', async () => {
     const filler = Array.from({ length: 100 }, (_, index) => ({ uuid: `filler-${index}`, name: `db-${index}` }))
     const fixture = await startFixture({
-      databasePages: [filler, [{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        filler,
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project: makeDocsProject(),
       patchApplies: true,
     })
@@ -287,7 +327,12 @@ describe('attachPagesD1Binding', () => {
   it('paginates by total_count when the response omits total_pages', async () => {
     const filler = Array.from({ length: 100 }, (_, index) => ({ uuid: `filler-${index}`, name: `db-${index}` }))
     const fixture = await startFixture({
-      databasePages: [filler, [{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        filler,
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project: makeDocsProject(),
       patchApplies: true,
       omitTotalPages: true,
@@ -300,7 +345,12 @@ describe('attachPagesD1Binding', () => {
   it('paginates a full page when the response omits total_pages and total_count', async () => {
     const filler = Array.from({ length: 100 }, (_, index) => ({ uuid: `filler-${index}`, name: `db-${index}` }))
     const fixture = await startFixture({
-      databasePages: [filler, [{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        filler,
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project: makeDocsProject(),
       patchApplies: true,
       omitTotalPages: true,
@@ -313,10 +363,18 @@ describe('attachPagesD1Binding', () => {
 
   it('does not patch when the binding already points at the database', async () => {
     const fixture = await startFixture({
-      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project: {
         deployment_configs: {
-          production: { d1_databases: { AI_READY_DB: { id: 'ai-ready-id' } } },
+          production: {
+            d1_databases: {
+              AI_READY_DB: { id: 'ai-ready-id' },
+            },
+          },
         },
       },
       patchApplies: true,
@@ -328,7 +386,11 @@ describe('attachPagesD1Binding', () => {
 
   it('fails when the project still lacks the binding after the patch', async () => {
     const fixture = await startFixture({
-      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project: makeDocsProject(),
       patchApplies: false,
     })
@@ -339,7 +401,11 @@ describe('attachPagesD1Binding', () => {
 
   it('fails and never patches when the database is missing', async () => {
     const fixture = await startFixture({
-      databasePages: [[{ uuid: 'docs-db-id', name: 'unhead-unjs-io' }]],
+      databasePages: [
+        [
+          { uuid: 'docs-db-id', name: 'unhead-unjs-io' },
+        ],
+      ],
       project: makeDocsProject(),
       patchApplies: true,
     })
@@ -350,7 +416,11 @@ describe('attachPagesD1Binding', () => {
 
   it('rejects a malformed project response before patching', async () => {
     const fixture = await startFixture({
-      databasePages: [[{ uuid: 'ai-ready-id', name: 'unhead-ai-ready' }]],
+      databasePages: [
+        [
+          { uuid: 'ai-ready-id', name: 'unhead-ai-ready' },
+        ],
+      ],
       project: makeDocsProject(),
       patchApplies: true,
       responseOverride: {
@@ -365,9 +435,31 @@ describe('attachPagesD1Binding', () => {
   })
 
   it.each([
-    { status: 403, body: { success: false, errors: [{ code: 10000, message: 'Authentication error' }] }, error: /HTTP 403/ },
-    { status: 200, body: { success: false, errors: [{ code: 10000, message: 'Authentication error' }] }, error: /Authentication error/ },
-    { status: 200, body: { success: true, result: {} }, error: /expected a JSON array/ },
+    {
+      status: 403,
+      body: {
+        success: false,
+        errors: [
+          { code: 10000, message: 'Authentication error' },
+        ],
+      },
+      error: /HTTP 403/,
+    },
+    {
+      status: 200,
+      body: {
+        success: false,
+        errors: [
+          { code: 10000, message: 'Authentication error' },
+        ],
+      },
+      error: /Authentication error/,
+    },
+    {
+      status: 200,
+      body: { success: true, result: {} },
+      error: /expected a JSON array/,
+    },
   ])('stops after a failed database response: $error', async ({ status, body, error }) => {
     const fixture = await startFixture({
       databasePages: [],

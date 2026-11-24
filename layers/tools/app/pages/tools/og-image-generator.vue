@@ -48,18 +48,50 @@ function downloadImage() {
 
 const activePlatform = ref('twitter')
 const platformTabs = [
-  { label: 'Twitter/X', value: 'twitter', icon: 'i-carbon-logo-x', color: 'text-neutral-100' },
-  { label: 'Facebook', value: 'facebook', icon: 'i-carbon-logo-facebook', color: 'text-blue-400' },
-  { label: 'LinkedIn', value: 'linkedin', icon: 'i-carbon-logo-linkedin', color: 'text-sky-400' },
-  { label: 'WhatsApp', value: 'whatsapp', icon: 'i-carbon-chat', color: 'text-green-500' },
-  { label: 'Slack', value: 'slack', icon: 'i-carbon-logo-slack', color: 'text-purple-400' },
-  { label: 'Discord', value: 'discord', icon: 'i-carbon-logo-discord', color: 'text-indigo-400' },
+  {
+    label: 'Twitter/X',
+    value: 'twitter',
+    icon: 'i-carbon-logo-x',
+    color: 'text-neutral-100',
+  },
+  {
+    label: 'Facebook',
+    value: 'facebook',
+    icon: 'i-carbon-logo-facebook',
+    color: 'text-blue-400',
+  },
+  {
+    label: 'LinkedIn',
+    value: 'linkedin',
+    icon: 'i-carbon-logo-linkedin',
+    color: 'text-sky-400',
+  },
+  {
+    label: 'WhatsApp',
+    value: 'whatsapp',
+    icon: 'i-carbon-chat',
+    color: 'text-green-500',
+  },
+  {
+    label: 'Slack',
+    value: 'slack',
+    icon: 'i-carbon-logo-slack',
+    color: 'text-purple-400',
+  },
+  {
+    label: 'Discord',
+    value: 'discord',
+    icon: 'i-carbon-logo-discord',
+    color: 'text-indigo-400',
+  },
 ]
 
 function truncate(text: string, max: number): string {
   if (!text)
     return ''
-  return text.length > max ? `${text.slice(0, max)}...` : text
+  return text.length > max
+    ? `${text.slice(0, max)}...`
+    : text
 }
 
 const previewTitle = computed(() => title.value || 'Your Page Title')

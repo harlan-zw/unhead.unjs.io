@@ -37,7 +37,9 @@ function getRateLimiter(event: H3Event): RateLimit | undefined {
     return undefined
 
   const limiter = Reflect.get(env, 'RL_FREE_TOOLS')
-  return isRateLimiter(limiter) ? limiter : undefined
+  return isRateLimiter(limiter)
+    ? limiter
+    : undefined
 }
 
 function isRateLimiter(value: unknown): value is RateLimit {

@@ -7,17 +7,32 @@ import { defineConfig } from 'vitest/config'
 const rootDir = import.meta.dirname
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+  ],
   resolve: {
     alias: [
-      { find: '#unhead-cloudflare-pages-runtime', replacement: resolve(rootDir, 'node_modules/nitro/dist/presets/cloudflare/runtime/cloudflare-pages.mjs') },
+      {
+        find: '#unhead-cloudflare-pages-runtime',
+        replacement: resolve(rootDir, 'node_modules/nitro/dist/presets/cloudflare/runtime/cloudflare-pages.mjs'),
+      },
       { find: /^~~(?=\/|$)/, replacement: rootDir },
-      { find: /^~(?=\/|$)/, replacement: resolve(rootDir, 'app') },
-      { find: /^#imports$/, replacement: resolve(rootDir, '.nuxt/imports') },
+      {
+        find: /^~(?=\/|$)/,
+        replacement: resolve(rootDir, 'app'),
+      },
+      {
+        find: /^#imports$/,
+        replacement: resolve(rootDir, '.nuxt/imports'),
+      },
     ],
   },
   test: {
-    server: { deps: { inline: [/\/nitro\//, /\/crossws\//] } },
+    server: {
+      deps: {
+        inline: [/\/nitro\//, /\/crossws\//],
+      },
+    },
     exclude: [
       '**/.data/**',
       '**/.nuxt/**',

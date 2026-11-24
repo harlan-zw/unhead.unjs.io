@@ -20,7 +20,9 @@ const propsAsRefs = toRefs(reactive({
   version,
 }))
 
-const module = _module ? propsAsRefs.module : useModule(await useStats(), propsAsRefs.slug)
+const module = _module
+  ? propsAsRefs.module
+  : useModule(await useStats(), propsAsRefs.slug)
 </script>
 
 <template>

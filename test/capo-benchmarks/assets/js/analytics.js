@@ -7,7 +7,11 @@
   }
 
   window.__analytics.track = function (event, data) {
-    window.__analytics.events.push({ event, data, time: Date.now() })
+    window.__analytics.events.push({
+      event,
+      data,
+      time: Date.now(),
+    })
     console.log(`[analytics.js] tracked: ${event}`)
   }
 

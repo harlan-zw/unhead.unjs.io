@@ -82,7 +82,9 @@ const processedContent = computed(() => {
     }
 
     // Return a cloned node with processed content
-    return cloneVNode(vnode, { children: processNode(vnode.children) })
+    return cloneVNode(vnode, {
+      children: processNode(vnode.children),
+    })
   })
 })
 </script>

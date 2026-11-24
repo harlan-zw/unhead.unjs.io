@@ -6,7 +6,9 @@ import { modules } from '../../const'
 async function jsonOr<T, F>(request: Promise<ServerFetchResponse<T>>, fallback: F): Promise<T | F> {
   // Public statistics can render with defaults while a source is unavailable.
   return request
-    .then(async response => response.ok ? await response.json() : fallback)
+    .then(async response => response.ok
+      ? await response.json()
+      : fallback)
     .catch(() => fallback)
 }
 

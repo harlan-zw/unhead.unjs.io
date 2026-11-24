@@ -12,7 +12,9 @@ export function useVersionSelector() {
   const route = useRoute()
 
   const currentVersion = computed<DocsVersion>(() => {
-    return route.path.startsWith('/docs/v2') ? 'v2' : 'v3'
+    return route.path.startsWith('/docs/v2')
+      ? 'v2'
+      : 'v3'
   })
 
   const selectedVersion = computed(() => {

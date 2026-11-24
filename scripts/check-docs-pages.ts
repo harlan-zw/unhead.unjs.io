@@ -44,7 +44,13 @@ async function requestPage(origin: string, path: string, fetcher: Fetcher): Prom
     response => response.status >= 500
       ? { _tag: 'failed' as const, path, reason: `answered ${response.status}` }
       : { _tag: 'ok' as const, path, status: response.status },
-    (error: unknown) => ({ _tag: 'failed' as const, path, reason: error instanceof Error ? error.message : String(error) }),
+    (error: unknown) => ({
+      _tag: 'failed' as const,
+      path,
+      reason: error instanceof Error
+        ? error.message
+        : String(error),
+    }),
   )
 }
 
@@ -63,7 +69,9 @@ export async function checkDocsPages({ origin, pages, fetcher = fetch, attempts 
 
 async function main(): Promise<number> {
   const urlIndex = process.argv.indexOf('--url')
-  const origin = urlIndex === -1 ? '' : process.argv[urlIndex + 1] ?? ''
+  const origin = urlIndex === -1
+    ? ''
+    : process.argv[urlIndex + 1] ?? ''
   if (!origin) {
     console.error('[check-docs-pages] Pass the production site with --url.')
     return 1
@@ -77,7 +85,9 @@ async function main(): Promise<number> {
     else
       console.log(`[check-docs-pages] ${result.path} 200`)
   }
-  return results.some(result => result._tag === 'failed') ? 1 : 0
+  return results.some(result => result._tag === 'failed')
+    ? 1
+    : 0
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === import.meta.filename)

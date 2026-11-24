@@ -35,7 +35,9 @@ function oversizedDump(collection = 'docs', continuations: string[] = []) {
     `DROP TABLE IF EXISTS _content_${collection}; -- structure`,
     `CREATE TABLE IF NOT EXISTS _content_${collection} (id TEXT PRIMARY KEY, "body" TEXT, "__hash__" TEXT UNIQUE); -- structure`,
     `INSERT INTO _content_${collection} VALUES ('large', '${body.replaceAll('\'', '\'\'')}', '${storedHash}'); -- hash-large`,
-    ...continuations.map((chunk, index) => `UPDATE _content_${collection} SET body = CONCAT(body, '${chunk.replaceAll('\'', '\'\'')}')${index === continuations.length - 1 ? ', "__hash__" = \'hash-large\'' : ''} WHERE id = 'large' AND "__hash__" = '${storedHash}'; -- hash-large`),
+    ...continuations.map((chunk, index) => `UPDATE _content_${collection} SET body = CONCAT(body, '${chunk.replaceAll('\'', '\'\'')}')${index === continuations.length - 1
+      ? ', "__hash__" = \'hash-large\''
+      : ''} WHERE id = 'large' AND "__hash__" = '${storedHash}'; -- hash-large`),
     `UPDATE _content_info SET ready = true WHERE id = 'checksum_${collection}'; -- meta`,
   ]
   return parseContentDump(gzipSync(JSON.stringify(rows)).toString('base64'), collection)
@@ -100,7 +102,10 @@ describe('nuxt content D1 sync planning', () => {
       }
 
       expect(database.prepare(`SELECT body, "__hash__" AS hash FROM ${docs.table} WHERE id = 'large'`).get())
-        .toEqual({ body: `😀'content`.repeat(12_000), hash: 'hash-large' })
+        .toEqual({
+          body: `😀'content`.repeat(12_000),
+          hash: 'hash-large',
+        })
       expect(database.prepare(`SELECT ready, structureVersion, version FROM _content_info WHERE id = 'checksum_docs'`).get())
         .toEqual({ ready: 1, structureVersion: 'structure-a', version: 'v3--version-a' })
     }
@@ -201,7 +206,10 @@ describe('nuxt content D1 sync planning', () => {
     }).not.toThrow()
 
     expect(database.prepare(`SELECT "body", "__hash__" AS hash FROM ${docs.table} WHERE id = 'large'`).get())
-      .toEqual({ body: `😀'content`.repeat(12_000), hash: 'hash-large' })
+      .toEqual({
+        body: `😀'content`.repeat(12_000),
+        hash: 'hash-large',
+      })
   })
 
   it('detects missing final hashes after import', () => {
@@ -231,18 +239,24 @@ describe('nuxt content D1 sync planning', () => {
   it('retries readiness metadata until D1 exposes the checksum', async () => {
     const docs = dump()
     const stale = new Map([
-      ['checksum_docs', {
-        ready: 0,
-        structureVersion: docs.structureVersion,
-        version: 'v3--older',
-      }],
+      [
+        'checksum_docs',
+        {
+          ready: 0,
+          structureVersion: docs.structureVersion,
+          version: 'v3--older',
+        },
+      ],
     ])
     const ready = new Map([
-      ['checksum_docs', {
-        ready: 1,
-        structureVersion: docs.structureVersion,
-        version: docs.version,
-      }],
+      [
+        'checksum_docs',
+        {
+          ready: 1,
+          structureVersion: docs.structureVersion,
+          version: docs.version,
+        },
+      ],
     ])
     const observations = [stale, ready]
     const delays: number[] = []

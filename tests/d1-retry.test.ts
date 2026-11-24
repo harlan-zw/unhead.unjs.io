@@ -12,7 +12,12 @@ function createStatement(outcomes: Array<() => Promise<unknown>>) {
   const all = vi.fn(next)
   return {
     all,
-    bind: vi.fn(() => ({ all, first: vi.fn(), run: vi.fn(), raw: vi.fn() })),
+    bind: vi.fn(() => ({
+      all,
+      first: vi.fn(),
+      run: vi.fn(),
+      raw: vi.fn(),
+    })),
     first: vi.fn(next),
     raw: vi.fn(next),
     run: vi.fn(next),
@@ -40,17 +45,27 @@ describe('d1 retry wrapper', () => {
     const statement = createStatement([
       () => { throw new Error(OVERLOADED) },
       () => { throw new Error(OVERLOADED) },
-      async () => ({ results: [{ id: 1 }], success: true }),
+      async () => ({
+        results: [
+          { id: 1 },
+        ],
+        success: true,
+      }),
     ])
     const sleep = vi.fn(async () => {})
     const db = wrapD1WithRetry(createDatabase(statement) as unknown as D1Database, { sleep })
 
     const result = await db.prepare('SELECT * FROM content').bind('docs').all()
 
-    expect(result.results).toEqual([{ id: 1 }])
+    expect(result.results).toEqual([
+      { id: 1 },
+    ])
     expect(statement.bind).toHaveBeenCalledWith('docs')
     expect(statement.all).toHaveBeenCalledTimes(3)
-    expect(sleep.mock.calls).toEqual([[100], [200]])
+    expect(sleep.mock.calls).toEqual([
+      [100],
+      [200],
+    ])
   })
 
   it('gives up after the retry cap and rethrows the transient error', async () => {
@@ -62,7 +77,10 @@ describe('d1 retry wrapper', () => {
 
     await expect(db.prepare('SELECT 1').bind().all()).rejects.toThrow(OVERLOADED)
     expect(statement.all).toHaveBeenCalledTimes(3)
-    expect(sleep.mock.calls).toEqual([[100], [200]])
+    expect(sleep.mock.calls).toEqual([
+      [100],
+      [200],
+    ])
   })
 
   it('does not retry permanent D1 errors', async () => {
@@ -106,7 +124,9 @@ describe('d1 retry wrapper', () => {
   })
 
   it('retries batch and passes the original statements to the binding', async () => {
-    const statement = createStatement([async () => ({ results: [], success: true })])
+    const statement = createStatement([
+      async () => ({ results: [], success: true }),
+    ])
     let batchAttempts = 0
     const rawDatabase = createDatabase(statement, {
       batch: async (statements) => {
@@ -119,7 +139,9 @@ describe('d1 retry wrapper', () => {
     const sleep = vi.fn(async () => {})
     const db = wrapD1WithRetry(rawDatabase as unknown as D1Database, { sleep })
 
-    const results = await db.batch([db.prepare('SELECT 1')])
+    const results = await db.batch([
+      db.prepare('SELECT 1'),
+    ])
 
     expect(results).toHaveLength(1)
     expect(rawDatabase.batch).toHaveBeenCalledTimes(2)
@@ -127,7 +149,9 @@ describe('d1 retry wrapper', () => {
   })
 
   it('retries transient failures on raw SQL exec', async () => {
-    const statement = createStatement([async () => ({ results: [], success: true })])
+    const statement = createStatement([
+      async () => ({ results: [], success: true }),
+    ])
     let execAttempts = 0
     const rawDatabase = createDatabase(statement, {
       exec: async () => {

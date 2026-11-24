@@ -20,9 +20,15 @@ const data = [
 
 const x = (_d: typeof data[number], i: number) => i
 const y = [
-  (d: typeof data[number]) => d.type === 'blocker' ? d.value : 0,
-  (d: typeof data[number]) => d.type === 'firstFlush' ? d.value : 0,
-  (d: typeof data[number]) => d.type === 'patcher' ? d.value : 0,
+  (d: typeof data[number]) => d.type === 'blocker'
+    ? d.value
+    : 0,
+  (d: typeof data[number]) => d.type === 'firstFlush'
+    ? d.value
+    : 0,
+  (d: typeof data[number]) => d.type === 'patcher'
+    ? d.value
+    : 0,
 ]
 const color = [colors.blocker, colors.firstFlush, colors.patcher]
 const tickFormat = (i: number) => data[i]?.name ?? ''

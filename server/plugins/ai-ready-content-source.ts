@@ -23,10 +23,18 @@ async function getContentSource(event: H3Event, route: string) {
   const body = structuredClone(page.body)
   if (route.startsWith('/docs/')) {
     const framework = getPathFramework(route) || 'typescript'
-    const specifier = framework === 'nuxt' ? '#imports' : framework === 'typescript' ? 'unhead' : `@unhead/${framework}`
+    const specifier = framework === 'nuxt'
+      ? '#imports'
+      : framework === 'typescript'
+        ? 'unhead'
+        : `@unhead/${framework}`
     replaceImportSpecifier(body.value, {
       '@unhead/dynamic-import': specifier,
-      '@unhead/schema-org/@framework': framework === 'nuxt' ? '#imports' : framework === 'typescript' ? '@unhead/schema-org' : `@unhead/schema-org/${framework}`,
+      '@unhead/schema-org/@framework': framework === 'nuxt'
+        ? '#imports'
+        : framework === 'typescript'
+          ? '@unhead/schema-org'
+          : `@unhead/schema-org/${framework}`,
     }, !page.stem?.includes('typescript/'))
     modifyRelativeDocLinksWithFramework(body.value, framework)
   }

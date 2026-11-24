@@ -13,7 +13,11 @@ const props = defineProps<{
 // the footer off the card, so the title steps down by length.
 const titleFontSize = computed(() => {
   const length = props.title?.length ?? 0
-  return length > 60 ? 52 : length > 36 ? 64 : 78
+  return length > 60
+    ? 52
+    : length > 36
+      ? 64
+      : 78
 })
 </script>
 

@@ -50,17 +50,72 @@ const iconClasses: Record<ToolColor, string> = {
 }
 
 const loadingPillClasses: Record<ToolColor, { bg: string, border: string, icon: string, text: string }> = {
-  emerald: { bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-200 dark:border-emerald-800', icon: 'text-emerald-500', text: 'text-emerald-700 dark:text-emerald-300' },
-  sky: { bg: 'bg-sky-50 dark:bg-sky-900/20', border: 'border-sky-200 dark:border-sky-800', icon: 'text-sky-500', text: 'text-sky-700 dark:text-sky-300' },
-  violet: { bg: 'bg-violet-50 dark:bg-violet-900/20', border: 'border-violet-200 dark:border-violet-800', icon: 'text-violet-500', text: 'text-violet-700 dark:text-violet-300' },
-  amber: { bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-200 dark:border-amber-800', icon: 'text-amber-500', text: 'text-amber-700 dark:text-amber-300' },
-  cyan: { bg: 'bg-cyan-50 dark:bg-cyan-900/20', border: 'border-cyan-200 dark:border-cyan-800', icon: 'text-cyan-500', text: 'text-cyan-700 dark:text-cyan-300' },
-  teal: { bg: 'bg-teal-50 dark:bg-teal-900/20', border: 'border-teal-200 dark:border-teal-800', icon: 'text-teal-500', text: 'text-teal-700 dark:text-teal-300' },
-  blue: { bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-200 dark:border-blue-800', icon: 'text-blue-500', text: 'text-blue-700 dark:text-blue-300' },
-  indigo: { bg: 'bg-indigo-50 dark:bg-indigo-900/20', border: 'border-indigo-200 dark:border-indigo-800', icon: 'text-indigo-500', text: 'text-indigo-700 dark:text-indigo-300' },
-  orange: { bg: 'bg-orange-50 dark:bg-orange-900/20', border: 'border-orange-200 dark:border-orange-800', icon: 'text-orange-500', text: 'text-orange-700 dark:text-orange-300' },
-  green: { bg: 'bg-green-50 dark:bg-green-900/20', border: 'border-green-200 dark:border-green-800', icon: 'text-green-500', text: 'text-green-700 dark:text-green-300' },
-  purple: { bg: 'bg-purple-50 dark:bg-purple-900/20', border: 'border-purple-200 dark:border-purple-800', icon: 'text-purple-500', text: 'text-purple-700 dark:text-purple-300' },
+  emerald: {
+    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
+    border: 'border-emerald-200 dark:border-emerald-800',
+    icon: 'text-emerald-500',
+    text: 'text-emerald-700 dark:text-emerald-300',
+  },
+  sky: {
+    bg: 'bg-sky-50 dark:bg-sky-900/20',
+    border: 'border-sky-200 dark:border-sky-800',
+    icon: 'text-sky-500',
+    text: 'text-sky-700 dark:text-sky-300',
+  },
+  violet: {
+    bg: 'bg-violet-50 dark:bg-violet-900/20',
+    border: 'border-violet-200 dark:border-violet-800',
+    icon: 'text-violet-500',
+    text: 'text-violet-700 dark:text-violet-300',
+  },
+  amber: {
+    bg: 'bg-amber-50 dark:bg-amber-900/20',
+    border: 'border-amber-200 dark:border-amber-800',
+    icon: 'text-amber-500',
+    text: 'text-amber-700 dark:text-amber-300',
+  },
+  cyan: {
+    bg: 'bg-cyan-50 dark:bg-cyan-900/20',
+    border: 'border-cyan-200 dark:border-cyan-800',
+    icon: 'text-cyan-500',
+    text: 'text-cyan-700 dark:text-cyan-300',
+  },
+  teal: {
+    bg: 'bg-teal-50 dark:bg-teal-900/20',
+    border: 'border-teal-200 dark:border-teal-800',
+    icon: 'text-teal-500',
+    text: 'text-teal-700 dark:text-teal-300',
+  },
+  blue: {
+    bg: 'bg-blue-50 dark:bg-blue-900/20',
+    border: 'border-blue-200 dark:border-blue-800',
+    icon: 'text-blue-500',
+    text: 'text-blue-700 dark:text-blue-300',
+  },
+  indigo: {
+    bg: 'bg-indigo-50 dark:bg-indigo-900/20',
+    border: 'border-indigo-200 dark:border-indigo-800',
+    icon: 'text-indigo-500',
+    text: 'text-indigo-700 dark:text-indigo-300',
+  },
+  orange: {
+    bg: 'bg-orange-50 dark:bg-orange-900/20',
+    border: 'border-orange-200 dark:border-orange-800',
+    icon: 'text-orange-500',
+    text: 'text-orange-700 dark:text-orange-300',
+  },
+  green: {
+    bg: 'bg-green-50 dark:bg-green-900/20',
+    border: 'border-green-200 dark:border-green-800',
+    icon: 'text-green-500',
+    text: 'text-green-700 dark:text-green-300',
+  },
+  purple: {
+    bg: 'bg-purple-50 dark:bg-purple-900/20',
+    border: 'border-purple-200 dark:border-purple-800',
+    icon: 'text-purple-500',
+    text: 'text-purple-700 dark:text-purple-300',
+  },
 }
 
 const buttonClasses: Record<ToolColor, string> = {

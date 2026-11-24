@@ -58,7 +58,9 @@ export async function generateMetadata({ params }) {
   const product = await fetch(`/api/products/${id}`).then(r => r.json())
   return {
     title: product.name,
-    openGraph: { images: [product.image] },
+    openGraph: {
+      images: [product.image]
+    },
   }
 }
 // Users see the page instantly; bots wait for this to resolve

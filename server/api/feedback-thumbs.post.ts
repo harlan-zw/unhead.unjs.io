@@ -19,11 +19,18 @@ export default defineEventHandler(async (e): Promise<ThumbsFeedbackResponse> => 
 
   const { thumbs, toolId, context } = body.data
   const referrer = parseURL(getHeader(e, 'Referer') || '').pathname
-  const path = (toolId ? `/tools/${toolId}` : referrer.replace(LeadingSlashPattern, '')).slice(0, 500)
+  const path = (toolId
+    ? `/tools/${toolId}`
+    : referrer.replace(LeadingSlashPattern, '')).slice(0, 500)
   const sessionId = getOrCreateAnalyticsSession(e)
 
   const db = getDB(e)
-  await db.insert(feedback).values({ path, thumb: thumbs, metadata: context, sessionId })
+  await db.insert(feedback).values({
+    path,
+    thumb: thumbs,
+    metadata: context,
+    sessionId,
+  })
 
   const stats = await db
     .select({

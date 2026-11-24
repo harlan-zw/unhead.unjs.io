@@ -32,7 +32,9 @@ function createQueryEvent(options: {
     'content-type': 'application/json',
     ...headers,
   })
-  const requestBody = method === 'GET' || method === 'HEAD' ? undefined : body
+  const requestBody = method === 'GET' || method === 'HEAD'
+    ? undefined
+    : body
   if (requestBody !== undefined)
     requestHeaders.set('content-length', String(Buffer.byteLength(requestBody)))
 
@@ -41,7 +43,9 @@ function createQueryEvent(options: {
 
 function mockCache(): { entries: Map<string, Response>, cache: ContentQueryCacheAdapter & { match: ReturnType<typeof vi.fn>, put: ReturnType<typeof vi.fn> } } {
   const entries = new Map<string, Response>()
-  const keyFor = (request: RequestInfo | URL) => request instanceof Request ? request.url : String(request)
+  const keyFor = (request: RequestInfo | URL) => request instanceof Request
+    ? request.url
+    : String(request)
   const cache = {
     match: vi.fn(async (request: RequestInfo | URL) => entries.get(keyFor(request))?.clone()),
     put: vi.fn(async (request: RequestInfo | URL, response: Response) => {
@@ -56,7 +60,9 @@ function createHarness(overrides: Partial<ContentQueryCacheHandlerOptions> = {})
   const waitUntilPromises: Promise<unknown>[] = []
   const clock = { now: 1_000 }
   const options: ContentQueryCacheHandlerOptions = {
-    original: vi.fn(async () => [{ path: '/docs/head' }]),
+    original: vi.fn(async () => [
+      { path: '/docs/head' },
+    ]),
     resolveChecksum: () => CHECKSUM,
     resolveDeployment: () => DEPLOYMENT,
     openCache: async () => cache,
@@ -87,7 +93,9 @@ describe('content query cache', () => {
 
     const response = await handler(createQueryEvent())
 
-    expect(await response.json()).toEqual([{ sql: SQL }])
+    expect(await response.json()).toEqual([
+      { sql: SQL },
+    ])
   })
 
   it('stores a cold miss and serves fresh hits without querying again', async () => {
@@ -135,7 +143,9 @@ describe('content query cache', () => {
   it('serves stale content while refreshing through waitUntil', async () => {
     let version = 0
     const harness = createHarness({
-      original: vi.fn(async () => [{ path: '/docs/head', version: version++ }]),
+      original: vi.fn(async () => [
+        { path: '/docs/head', version: version++ },
+      ]),
     })
     const { cache, handler, options } = harness
 
@@ -158,7 +168,9 @@ describe('content query cache', () => {
   })
 
   it('caches valid empty array results', async () => {
-    const harness = createHarness({ original: async () => [] })
+    const harness = createHarness({
+      original: async () => [],
+    })
     const { handler } = harness
 
     await handler(createQueryEvent())
@@ -171,10 +183,15 @@ describe('content query cache', () => {
 
   it.each([
     { name: 'a cacheable request', request: {} },
-    { name: 'an uncached request', request: { path: QUERY_ROUTE } },
+    {
+      name: 'an uncached request',
+      request: { path: QUERY_ROUTE },
+    },
   ])('answers 400 when Nuxt Content refuses the client SQL on $name', async ({ request }) => {
     const refusal = 'Invalid query: Query must be a valid SELECT statement with proper syntax'
-    const { cache, handler } = createHarness({ original: vi.fn().mockRejectedValue(new Error(refusal)) })
+    const { cache, handler } = createHarness({
+      original: vi.fn().mockRejectedValue(new Error(refusal)),
+    })
 
     await expect(handler(createQueryEvent(request))).rejects.toMatchObject({ statusCode: 400, message: refusal })
     expect(cache.put).not.toHaveBeenCalled()
@@ -184,7 +201,9 @@ describe('content query cache', () => {
     const failure = Object.assign(new Error('D1_ERROR: requests queued too long'), { statusCode: 500 })
     const original = vi.fn()
       .mockRejectedValueOnce(failure)
-      .mockResolvedValueOnce([{ path: '/docs/head' }])
+      .mockResolvedValueOnce([
+        { path: '/docs/head' },
+      ])
     const { cache, handler } = createHarness({ original })
 
     await expect(handler(createQueryEvent())).rejects.toBe(failure)
@@ -201,9 +220,13 @@ describe('content query cache', () => {
     const failure = new Error('D1_ERROR: requests queued too long')
     const harness = createHarness({
       original: vi.fn()
-        .mockResolvedValueOnce([{ path: '/docs/head', version: 0 }])
+        .mockResolvedValueOnce([
+          { path: '/docs/head', version: 0 },
+        ])
         .mockRejectedValueOnce(failure)
-        .mockResolvedValueOnce([{ path: '/docs/head', version: 1 }]),
+        .mockResolvedValueOnce([
+          { path: '/docs/head', version: 1 },
+        ]),
     })
     const { cache, handler } = harness
 
@@ -235,17 +258,64 @@ describe('content query cache', () => {
   })
 
   it.each([
-    { name: 'a GET request', request: { method: 'GET' } },
-    { name: 'a missing caller version', request: { path: QUERY_ROUTE } },
-    { name: 'a mismatched caller version', request: { path: `${QUERY_ROUTE}?v=checksum-old` } },
-    { name: 'a body without a single sql field', request: { body: JSON.stringify({ page: 1 }) } },
-    { name: 'a body with extra fields', request: { body: JSON.stringify({ sql: SQL, version: 2 }) } },
-    { name: 'an unparseable body', request: { body: 'not-json' } },
-    { name: 'an oversized request body', request: { body: JSON.stringify({ sql: `SELECT ${'x'.repeat(64 * 1024)}` }) } },
-    { name: 'a cookie-bearing request', request: { headers: { cookie: 'session=private' } } },
-    { name: 'an authorized request', request: { headers: { authorization: 'Bearer secret' } } },
-    { name: 'a range request', request: { headers: { range: 'bytes=0-1' } } },
-    { name: 'a no-cache request', request: { headers: { 'cache-control': 'no-cache' } } },
+    {
+      name: 'a GET request',
+      request: { method: 'GET' },
+    },
+    {
+      name: 'a missing caller version',
+      request: { path: QUERY_ROUTE },
+    },
+    {
+      name: 'a mismatched caller version',
+      request: { path: `${QUERY_ROUTE}?v=checksum-old` },
+    },
+    {
+      name: 'a body without a single sql field',
+      request: {
+        body: JSON.stringify({ page: 1 }),
+      },
+    },
+    {
+      name: 'a body with extra fields',
+      request: {
+        body: JSON.stringify({ sql: SQL, version: 2 }),
+      },
+    },
+    {
+      name: 'an unparseable body',
+      request: { body: 'not-json' },
+    },
+    {
+      name: 'an oversized request body',
+      request: {
+        body: JSON.stringify({ sql: `SELECT ${'x'.repeat(64 * 1024)}` }),
+      },
+    },
+    {
+      name: 'a cookie-bearing request',
+      request: {
+        headers: { cookie: 'session=private' },
+      },
+    },
+    {
+      name: 'an authorized request',
+      request: {
+        headers: { authorization: 'Bearer secret' },
+      },
+    },
+    {
+      name: 'a range request',
+      request: {
+        headers: { range: 'bytes=0-1' },
+      },
+    },
+    {
+      name: 'a no-cache request',
+      request: {
+        headers: { 'cache-control': 'no-cache' },
+      },
+    },
   ])('bypasses caching for $name', async ({ request }) => {
     const { cache, handler, options } = createHarness()
 
@@ -258,9 +328,24 @@ describe('content query cache', () => {
   })
 
   it.each([
-    { name: 'the content checksum is unavailable', overrides: { resolveChecksum: () => undefined } },
-    { name: 'the deployment identity is unavailable', overrides: { resolveDeployment: () => '' } },
-    { name: 'the cache is unavailable', overrides: { openCache: async () => undefined } },
+    {
+      name: 'the content checksum is unavailable',
+      overrides: {
+        resolveChecksum: () => undefined,
+      },
+    },
+    {
+      name: 'the deployment identity is unavailable',
+      overrides: {
+        resolveDeployment: () => '',
+      },
+    },
+    {
+      name: 'the cache is unavailable',
+      overrides: {
+        openCache: async () => undefined,
+      },
+    },
   ])('bypasses caching when $name', async ({ overrides }) => {
     const { cache, handler, options } = createHarness(overrides)
 
@@ -274,7 +359,12 @@ describe('content query cache', () => {
 
   it('delegates without caching when a result exceeds the size bound', async () => {
     const harness = createHarness({
-      original: vi.fn(async () => [{ path: '/docs/head', body: 'x'.repeat(1024 * 1024) }]),
+      original: vi.fn(async () => [
+        {
+          path: '/docs/head',
+          body: 'x'.repeat(1024 * 1024),
+        },
+      ]),
     })
     const { cache, handler, options } = harness
 
@@ -317,7 +407,9 @@ describe('content query cache', () => {
     const second = handler(createQueryEvent())
     expect(options.original).toHaveBeenCalledOnce()
 
-    resolveOriginal([{ path: '/docs/head' }])
+    resolveOriginal([
+      { path: '/docs/head' },
+    ])
     const [firstResponse, secondResponse] = await Promise.all([first, second])
     expect(await firstResponse.text()).toBe('[{"path":"/docs/head"}]')
     expect(await secondResponse.text()).toBe('[{"path":"/docs/head"}]')
@@ -334,16 +426,26 @@ describe('content query cache', () => {
     })
 
     const requests: Promise<Response>[] = []
-    for (let index = 0; index < 100; index++)
-      requests.push(handler(createQueryEvent({ body: JSON.stringify({ sql: `SELECT ${index}` }) })))
+    for (let index = 0; index < 100; index++) {
+      requests.push(handler(createQueryEvent({
+        body: JSON.stringify({ sql: `SELECT ${index}` }),
+      })))
+    }
     await vi.waitFor(() => expect(options.original).toHaveBeenCalledTimes(100))
 
-    const overflow = handler(createQueryEvent({ body: JSON.stringify({ sql: 'SELECT a distinct overflow query' }) }))
+    const overflow = handler(createQueryEvent({
+      body: JSON.stringify({ sql: 'SELECT a distinct overflow query' }),
+    }))
     await vi.waitFor(() => expect(options.original).toHaveBeenCalledTimes(101))
 
-    for (let index = 0; index < 100; index++)
-      resolvers[index]!([{ index }])
-    resolvers[100]!([{ index: 0, source: 'overflow' }])
+    for (let index = 0; index < 100; index++) {
+      resolvers[index]!([
+        { index },
+      ])
+    }
+    resolvers[100]!([
+      { index: 0, source: 'overflow' },
+    ])
 
     const overflowResponse = await overflow
     expect(await overflowResponse.text()).toBe('[{"index":0,"source":"overflow"}]')
@@ -383,7 +485,9 @@ describe('content query cache nitro wiring', () => {
   }
 
   it('wraps only the docs query routes and aliases the captured handler', async () => {
-    const config: Record<string, unknown> = { handlers: contentHandlers() }
+    const config: Record<string, unknown> = {
+      handlers: contentHandlers(),
+    }
     await fireNitroConfigHooks(config)
 
     const handlers = config.handlers as { route: string, handler: string }[]
@@ -409,7 +513,10 @@ describe('content query cache nitro wiring', () => {
 
   it('fails the build when a docs query handler is ambiguous', async () => {
     const config: Record<string, unknown> = {
-      handlers: [...contentHandlers(), ...contentHandlers()],
+      handlers: [
+        ...contentHandlers(),
+        ...contentHandlers(),
+      ],
     }
 
     await expect(fireNitroConfigHooks(config)).rejects.toThrow('/__nuxt_content/docsUnhead/query')

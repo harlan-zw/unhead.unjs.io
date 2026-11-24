@@ -1,9 +1,19 @@
 import { z } from 'zod'
 
-export const ToolIdSchema = z.enum(['meta-tag-generator', 'schema-generator', 'og-image-generator', 'capo-analyzer'])
+export const ToolIdSchema = z.enum([
+  'meta-tag-generator',
+  'schema-generator',
+  'og-image-generator',
+  'capo-analyzer',
+])
 export const FeedbackContextSchema = z.record(
   z.string().max(64),
-  z.union([z.string().max(500), z.number().finite(), z.boolean(), z.null()]),
+  z.union([
+    z.string().max(500),
+    z.number().finite(),
+    z.boolean(),
+    z.null(),
+  ]),
 ).refine(context => Object.keys(context).length <= 20, 'Too many context fields')
 
 export interface ThumbsFeedbackResponse {

@@ -3,7 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { checkFreeToolRateLimit } from '~~/server/utils/rate-limit'
 import fetchHeadHandler from '../layers/tools/server/api/tools/fetch-head.get'
 
-vi.mock('~~/server/utils/rate-limit', () => ({ checkFreeToolRateLimit: vi.fn() }))
+vi.mock('~~/server/utils/rate-limit', () => ({
+  checkFreeToolRateLimit: vi.fn(),
+}))
 
 const fetcher = vi.fn<typeof fetch>()
 
@@ -12,7 +14,10 @@ function requestHead(url = 'https://example.com') {
   const app = createApp({ onError })
   app.use('/api/tools/fetch-head', fetchHeadHandler)
   const request = new Request(`https://unhead.unjs.io/api/tools/fetch-head?url=${encodeURIComponent(url)}`)
-  return { response: toWebHandler(app)(request), onError }
+  return {
+    response: toWebHandler(app)(request),
+    onError,
+  }
 }
 
 beforeEach(() => {
@@ -48,7 +53,10 @@ describe('fetch-head route', () => {
   })
 
   it('answers a malformed upstream redirect without invoking the error hook', async () => {
-    fetcher.mockResolvedValue(new Response(null, { status: 302, headers: { location: 'http://[' } }))
+    fetcher.mockResolvedValue(new Response(null, {
+      status: 302,
+      headers: { location: 'http://[' },
+    }))
 
     const { response, onError } = requestHead()
     const result = await response
@@ -60,8 +68,16 @@ describe('fetch-head route', () => {
   })
 
   it.each([
-    [new TypeError('fetch failed'), 502, 'Failed to fetch URL'],
-    [new DOMException('The operation was aborted', 'AbortError'), 504, 'Upstream request timed out'],
+    [
+      new TypeError('fetch failed'),
+      502,
+      'Failed to fetch URL',
+    ],
+    [
+      new DOMException('The operation was aborted', 'AbortError'),
+      504,
+      'Upstream request timed out',
+    ],
   ])('answers an upstream fetch failure without invoking the error hook: %s', async (error, statusCode, statusMessage) => {
     fetcher.mockRejectedValue(error)
 
@@ -74,15 +90,25 @@ describe('fetch-head route', () => {
   })
 
   it.each([
-    [new TypeError('terminated'), 502, 'Failed to fetch URL'],
-    [new DOMException('The operation was aborted', 'AbortError'), 504, 'Upstream request timed out'],
+    [
+      new TypeError('terminated'),
+      502,
+      'Failed to fetch URL',
+    ],
+    [
+      new DOMException('The operation was aborted', 'AbortError'),
+      504,
+      'Upstream request timed out',
+    ],
   ])('answers a response stream failure without invoking the error hook: %s', async (error, statusCode, statusMessage) => {
     const body = new ReadableStream<Uint8Array>({
       start(controller) {
         controller.error(error)
       },
     })
-    fetcher.mockResolvedValue(new Response(body, { headers: { 'content-type': 'text/html' } }))
+    fetcher.mockResolvedValue(new Response(body, {
+      headers: { 'content-type': 'text/html' },
+    }))
 
     const { response, onError } = requestHead()
     const result = await response

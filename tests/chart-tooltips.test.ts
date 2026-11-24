@@ -27,7 +27,11 @@ let dispose: (() => void) | undefined
 const svgGeometry = {
   getBBox: () => ({ x: 0, y: 0, width: 24, height: 12 }),
   getComputedTextLength: () => 24,
-  transform: { baseVal: { consolidate: () => null } },
+  transform: {
+    baseVal: {
+      consolidate: () => null,
+    },
+  },
 }
 
 beforeAll(() => {
@@ -73,16 +77,66 @@ async function mountChart(chart: Component) {
 }
 
 it.each<[string, Component, string, string]>([
-  ['ChartCruxLcp', ChartCruxLcp, VisGroupedBarSelectors.bar, 'LCP:'],
-  ['ChartDclParadox', ChartDclParadox, VisGroupedBarSelectors.bar, 'DCL:'],
-  ['ChartDuplicateTags', ChartDuplicateTags, VisGroupedBarSelectors.bar, 'Duplicate title:'],
-  ['ChartFcpComparison', ChartFcpComparison, VisGroupedBarSelectors.bar, 'Optimal: 460ms'],
-  ['ChartFrameworkHealth', ChartFrameworkHealth, VisStackedBarSelectors.bar, 'Changed:'],
-  ['ChartHeadBreakerImpact', ChartHeadBreakerImpact, VisDonutSelectors.segment, 'Valid Heads: 78%'],
-  ['ChartLcpTrend', ChartLcpTrend, VisScatterSelectors.point, 'Nuxt: 3059ms'],
-  ['ChartOgCompleteness', ChartOgCompleteness, VisGroupedBarSelectors.bar, 'og:title:'],
-  ['ChartTheNuxtParadox', ChartTheNuxtParadox, VisGroupedBarSelectors.bar, 'TTFB:'],
-  ['ChartThirdPartyPollution', ChartThirdPartyPollution, VisStackedBarSelectors.bar, 'First-party:'],
+  [
+    'ChartCruxLcp',
+    ChartCruxLcp,
+    VisGroupedBarSelectors.bar,
+    'LCP:',
+  ],
+  [
+    'ChartDclParadox',
+    ChartDclParadox,
+    VisGroupedBarSelectors.bar,
+    'DCL:',
+  ],
+  [
+    'ChartDuplicateTags',
+    ChartDuplicateTags,
+    VisGroupedBarSelectors.bar,
+    'Duplicate title:',
+  ],
+  [
+    'ChartFcpComparison',
+    ChartFcpComparison,
+    VisGroupedBarSelectors.bar,
+    'Optimal: 460ms',
+  ],
+  [
+    'ChartFrameworkHealth',
+    ChartFrameworkHealth,
+    VisStackedBarSelectors.bar,
+    'Changed:',
+  ],
+  [
+    'ChartHeadBreakerImpact',
+    ChartHeadBreakerImpact,
+    VisDonutSelectors.segment,
+    'Valid Heads: 78%',
+  ],
+  [
+    'ChartLcpTrend',
+    ChartLcpTrend,
+    VisScatterSelectors.point,
+    'Nuxt: 3059ms',
+  ],
+  [
+    'ChartOgCompleteness',
+    ChartOgCompleteness,
+    VisGroupedBarSelectors.bar,
+    'og:title:',
+  ],
+  [
+    'ChartTheNuxtParadox',
+    ChartTheNuxtParadox,
+    VisGroupedBarSelectors.bar,
+    'TTFB:',
+  ],
+  [
+    'ChartThirdPartyPollution',
+    ChartThirdPartyPollution,
+    VisStackedBarSelectors.bar,
+    'First-party:',
+  ],
 ])('%s shows its tooltip when a mark is hovered', async (_name, chart, selector, expected) => {
   const { errors, host } = await mountChart(chart)
   const mark = await vi.waitFor(() => {

@@ -16,7 +16,11 @@ it('keeps a complete warning baseline after removing the daily workspace', async
     const previous = new Date(Date.now() - 86400000).toISOString()
     await writeFile(join(archive, 'state.json'), JSON.stringify({ lastRunAt: previous }))
     const artifact = join(workspace, 'checks.mjs')
-    await writeFile(artifact, `export const options = ${JSON.stringify({ ...externalCheckin, required: ['fixture'], credentials: {} })}; export default [{ id: 'fixture', run: () => ({ _tag: 'Warn', reason: 'Fixture warning', evidence: {} }) }];`)
+    await writeFile(artifact, `export const options = ${JSON.stringify({
+      ...externalCheckin,
+      required: ['fixture'],
+      credentials: {},
+    })}; export default [{ id: 'fixture', run: () => ({ _tag: 'Warn', reason: 'Fixture warning', evidence: {} }) }];`)
     const result = spawnSync(process.execPath, [cli, '--artifact', artifact, '--save'], {
       cwd: workspace,
       env: { ...process.env, DAILY_CHECKIN_DIR: archive },

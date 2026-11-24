@@ -29,7 +29,11 @@ function getMedianTimings(result: any) {
   }
   const out: Record<string, { start: number, end: number, duration: number }> = {}
   for (const [name, data] of map) {
-    out[name] = { start: median(data.starts), end: median(data.ends), duration: median(data.durations) }
+    out[name] = {
+      start: median(data.starts),
+      end: median(data.ends),
+      duration: median(data.durations),
+    }
   }
   return out
 }
@@ -40,7 +44,12 @@ const worstR = getMedianTimings(worst)
 console.log('Resource'.padEnd(55), 'Opt end'.padEnd(10), 'Worst end'.padEnd(10), 'Delta')
 console.log('-'.repeat(90))
 
-const allKeys = [...new Set([...Object.keys(optR), ...Object.keys(worstR)])]
+const allKeys = [
+  ...new Set([
+    ...Object.keys(optR),
+    ...Object.keys(worstR),
+  ]),
+]
 for (const key of allKeys) {
   if (!optR[key] || !worstR[key])
     continue
@@ -50,7 +59,9 @@ for (const key of allKeys) {
     shortKey.padEnd(55),
     `${optR[key].end}ms`.padEnd(10),
     `${worstR[key].end}ms`.padEnd(10),
-    `${delta >= 0 ? '+' : ''}${delta}ms`,
+    `${delta >= 0
+      ? '+'
+      : ''}${delta}ms`,
   )
 }
 console.log()

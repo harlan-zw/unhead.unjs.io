@@ -6,7 +6,12 @@ import puppeteer from 'puppeteer'
 // --- Config ---
 
 const COMPLEXITIES = ['minimal', 'medium', 'heavy'] as const
-const VARIANTS = ['optimal', 'common-bad', 'random', 'worst'] as const
+const VARIANTS = [
+  'optimal',
+  'common-bad',
+  'random',
+  'worst',
+] as const
 
 const THROTTLE_PROFILES = {
   'fast-4g': {
@@ -273,7 +278,13 @@ async function run() {
         const lcpDelta = round(other.summary.lcp.median - optimal.summary.lcp.median)
         const dclDelta = round(other.summary.domContentLoaded.median - optimal.summary.domContentLoaded.median)
 
-        console.log(`  ${variant.padEnd(12)} FCP: ${fcpDelta >= 0 ? '+' : ''}${fcpDelta}ms | LCP: ${lcpDelta >= 0 ? '+' : ''}${lcpDelta}ms | DCL: ${dclDelta >= 0 ? '+' : ''}${dclDelta}ms`)
+        console.log(`  ${variant.padEnd(12)} FCP: ${fcpDelta >= 0
+          ? '+'
+          : ''}${fcpDelta}ms | LCP: ${lcpDelta >= 0
+          ? '+'
+          : ''}${lcpDelta}ms | DCL: ${dclDelta >= 0
+          ? '+'
+          : ''}${dclDelta}ms`)
       }
     }
   }

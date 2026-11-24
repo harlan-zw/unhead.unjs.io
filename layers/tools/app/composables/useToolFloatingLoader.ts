@@ -7,7 +7,9 @@ export function useToolFloatingLoader(loading: Ref<boolean>, containerRef: Ref<H
         showFloatingLoader.value = false
         return
       }
-      const el = '$el' in containerRef.value ? containerRef.value.$el as HTMLElement : containerRef.value
+      const el = '$el' in containerRef.value
+        ? containerRef.value.$el as HTMLElement
+        : containerRef.value
       const rect = el.getBoundingClientRect()
       showFloatingLoader.value = rect.bottom < 0
     }
