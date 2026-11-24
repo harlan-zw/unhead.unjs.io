@@ -1,4 +1,6 @@
+import { addWideEventFields } from '@harlan-zw/nuxt-wide-events/server'
 import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
+import { createError, defineEventHandler, readBody } from 'h3'
 import { z } from 'zod'
 import { getOrCreateAnalyticsSession, trackToolLookup, trackToolUsage } from '~~/server/utils/analytics'
 import { checkFreeToolRateLimit } from '~~/server/utils/rate-limit'

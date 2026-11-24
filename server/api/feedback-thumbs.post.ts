@@ -1,6 +1,6 @@
 import type { ThumbsFeedbackResponse } from '~~/types/schemas'
 import { sql } from 'drizzle-orm'
-import { getHeader } from 'h3'
+import { createError, defineEventHandler, getHeader, readValidatedBody } from 'h3'
 import { parseURL } from 'ufo'
 import { ThumbsFeedbackSchema } from '~~/types/schemas'
 import { feedback } from '../database/schema'
@@ -10,7 +10,7 @@ import { checkFreeToolRateLimit } from '../utils/rate-limit'
 
 const LeadingSlashPattern = /^\/+/
 
-export default defineEventHandler<Promise<ThumbsFeedbackResponse>>(async (e) => {
+export default defineEventHandler(async (e): Promise<ThumbsFeedbackResponse> => {
   await checkFreeToolRateLimit(e)
   const body = await readValidatedBody(e, ThumbsFeedbackSchema.safeParse)
   if (!body.success) {

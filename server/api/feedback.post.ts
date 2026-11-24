@@ -1,4 +1,4 @@
-import { getHeader } from 'h3'
+import { createError, defineEventHandler, getHeader, readValidatedBody } from 'h3'
 import { parseURL } from 'ufo'
 import { CommentFeedbackSchema, FeedbackContextSchema, ToolIdSchema } from '~~/types/schemas'
 import { feedback } from '../database/schema'

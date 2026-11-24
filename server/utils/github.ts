@@ -1,4 +1,6 @@
 import type { H3Event } from 'h3'
+import { getRouterParam } from 'h3'
+import { useRuntimeConfig } from 'nuxt/server'
 import { Octokit } from 'octokit'
 
 export const githubThrottleOptions = {
@@ -29,7 +31,7 @@ export function createPublicGithubFetch(fetchImpl: typeof fetch = globalThis.fet
 }
 
 export function initOctokitRequestHandler(e: H3Event) {
-  const { githubAccessToken } = useRuntimeConfig(e)
+  const { githubAccessToken } = useRuntimeConfig()
   const repo = (getRouterParam(e, 'repo') || '').replace('@', '/')
   const allowedRepos = ['unjs/unhead', 'harlan-zw/unhead.unjs.io']
   if (!allowedRepos.includes(repo)) {

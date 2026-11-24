@@ -38,8 +38,8 @@ function parseSessionPassword(value: unknown): SessionPassword {
 
 function failureMessage(password: Exclude<SessionPassword, { _tag: 'ready' }>): string {
   const cause = password._tag === 'missing'
-    ? 'NUXT_SESSION_PASSWORD is not set.'
-    : `NUXT_SESSION_PASSWORD has ${password.length} characters. It needs at least ${SESSION_PASSWORD_MIN_LENGTH}.`
+    ? 'NUXT_APP_SECRET is not set.'
+    : `NUXT_APP_SECRET has ${password.length} characters. It needs at least ${SESSION_PASSWORD_MIN_LENGTH}.`
   return `Sessions are unavailable. ${cause}`
 }
 

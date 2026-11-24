@@ -2,10 +2,8 @@
 
 import { setCloudflareBindings } from '@harlan-zw/nuxt-cloudflare/bindings'
 import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
-import wsAdapter from 'crossws/adapters/cloudflare'
-import { useNitroApp } from 'nitropack/runtime'
-import { requestHasBody, runCronTasks } from 'nitropack/runtime/internal'
-import { isPublicAssetURL } from '#nitro-internal-virtual/public-assets'
+import { isPublicAssetURL } from '#nitro/virtual/public-assets'
+import nitroWorker from '#unhead-cloudflare-pages-runtime'
 import {
   CLOUDFLARE_RESPONSE_CACHE_NAME,
   getCloudflareResponseCacheRule,
@@ -13,10 +11,6 @@ import {
 } from './utils/cloudflare-response-cache'
 import { wrapD1WithRetry } from './utils/d1-retry'
 import { extendRenderLifetime, getLeadingSlashRedirect } from './utils/worker-request'
-import '#nitro-internal-pollyfills'
-
-const nitroApp = useNitroApp()
-const ws = import.meta._websocket ? wsAdapter(nitroApp.h3App.websocket) : undefined
 
 function withD1Retry(env: Cloudflare.Env): Cloudflare.Env {
   const db = (env as { DB?: D1Database }).DB
@@ -28,7 +22,7 @@ function withD1Retry(env: Cloudflare.Env): Cloudflare.Env {
 export default {
   async fetch(request: Request, env: Cloudflare.Env, context: ExecutionContext) {
     if (import.meta._websocket && request.headers.get('upgrade') === 'websocket')
-      return ws!.handleUpgrade(request, env, context)
+      return nitroWorker.fetch(request, env, context)
 
     const url = new URL(request.url)
     const canonical = getLeadingSlashRedirect(url)
@@ -36,28 +30,11 @@ export default {
       return Response.redirect(canonical.href, 301)
 
     if (env.ASSETS && isPublicAssetURL(url.pathname))
-      return env.ASSETS.fetch(request)
-
-    let body: Buffer | undefined
-    if (requestHasBody(request))
-      body = Buffer.from(await request.arrayBuffer())
+      return nitroWorker.fetch(request, env, context)
 
     const bindings = withD1Retry(env)
     setCloudflareBindings(bindings)
-    const render = () => extendRenderLifetime(context, () => nitroApp.localFetch(url.pathname + url.search, {
-      body,
-      context: {
-        waitUntil: (promise: Promise<unknown>) => context.waitUntil(promise),
-        _platform: {
-          cf: request.cf,
-          cloudflare: { request, env: bindings, context },
-        },
-      },
-      headers: request.headers,
-      host: url.hostname,
-      method: request.method,
-      protocol: url.protocol,
-    }))
+    const render = () => extendRenderLifetime(context, () => nitroWorker.fetch(request, bindings, context))
 
     const rule = getCloudflareResponseCacheRule(url.pathname)
     if (!rule || typeof caches === 'undefined')
@@ -79,17 +56,8 @@ export default {
     }
   },
   scheduled(event: ScheduledController, env: Cloudflare.Env, context: ExecutionContext) {
-    if (import.meta._tasks) {
-      const bindings = withD1Retry(env)
-      setCloudflareBindings(bindings)
-      context.waitUntil(
-        runCronTasks(event.cron, {
-          context: {
-            cloudflare: { env: bindings, context },
-          },
-          payload: {},
-        }),
-      )
-    }
+    const bindings = withD1Retry(env)
+    setCloudflareBindings(bindings)
+    return nitroWorker.scheduled(event, bindings, context)
   },
 } satisfies ExportedHandler<Cloudflare.Env>

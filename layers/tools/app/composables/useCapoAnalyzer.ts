@@ -334,7 +334,7 @@ export function useCapoAnalyzer() {
     loading.value = true
     error.value = ''
     try {
-      const result = await $fetch('/api/tools/fetch-head', {
+      const result = await $fetch<{ head: string }>('/api/tools/fetch-head', {
         query: { url: url.value },
       })
       input.value = result.head

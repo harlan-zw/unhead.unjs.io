@@ -115,7 +115,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: >-
-          pnpm exec wrangler pages deploy dist
+          pnpm exec wrangler pages deploy dist --no-bundle
           --project-name=unhead-unjs-io
           --branch=main
           --commit-hash=${{ github.event.workflow_run.head_sha || github.sha }}

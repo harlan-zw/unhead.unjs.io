@@ -1,3 +1,5 @@
+import { defineHandler } from 'h3'
+import { $fetch } from 'ofetch'
 import { z } from 'zod'
 import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'
 
@@ -5,11 +7,11 @@ const TweetSchema = z.object({
   text: z.string().min(1),
 }).passthrough()
 
-export default defineEventHandler(async (event) => {
+export default defineHandler(async (event) => {
   const tweetId = event.context.params?.tweetId
 
   if (!tweetId)
-    return sendError(event, new Error('Missing tweetId'))
+    throw new Error('Missing tweetId')
 
   const SYNDICATION_URL = 'https://cdn.syndication.twimg.com'
 

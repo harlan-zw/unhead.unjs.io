@@ -20,6 +20,10 @@
     "checkin": "nuxt-checkin prepare && nuxt-checkin --save",
     "typecheck:legacy": "nuxt typecheck"
   },
+  "dependencies": {
+    "nitro": "catalog:",
+    "ofetch": "catalog:"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
     "@babel/parser": "catalog:",

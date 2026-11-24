@@ -43,7 +43,7 @@ describe('fetch-head route', () => {
     const result = await response
 
     expect(result.status).toBe(400)
-    expect(await result.json()).toMatchObject({ statusCode: 400, statusMessage: 'Invalid URL format' })
+    expect(await result.json()).toMatchObject({ status: 400, statusText: 'Invalid URL format' })
     expect(fetcher).not.toHaveBeenCalled()
   })
 

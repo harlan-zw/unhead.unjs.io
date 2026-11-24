@@ -1,5 +1,4 @@
-import { createServer } from 'node:http'
-import { createApp, eventHandler, toNodeListener } from 'h3'
+import type { RequestEvent } from 'nuxt/server'
 import { describe, expect, it } from 'vitest'
 import {
   resolveSessionGuard,
@@ -62,36 +61,21 @@ describe('resolveSessionGuard', () => {
 
 describe('clearUnavailableSession', () => {
   it('expires the configured session cookie without reading the password', async () => {
-    const app = createApp()
-    app.use(eventHandler(event => clearUnavailableSession(event, {
+    const responseHeaders = new Headers()
+    const event = {
+      req: new Request('https://unhead.unjs.io/api/_auth/session', {
+        method: 'DELETE',
+        headers: { cookie: 'nuxt-auth-session=existing-session' },
+      }),
+      res: { headers: responseHeaders },
+    } as RequestEvent
+    const result = await clearUnavailableSession(event, {
       cookie: {
         sameSite: 'lax',
         secure: true,
       },
-    })))
-    const server = createServer(toNodeListener(app))
-
-    await new Promise<void>((resolve, reject) => {
-      server.once('error', reject)
-      server.listen(0, '127.0.0.1', resolve)
     })
-
-    try {
-      const address = server.address()
-      if (!address || typeof address === 'string')
-        throw new Error('Test server did not expose a TCP port.')
-
-      const response = await fetch(`http://127.0.0.1:${address.port}`, {
-        headers: { cookie: 'h3=existing-session' },
-      })
-
-      expect(await response.json()).toEqual({ loggedOut: true })
-      expect(response.headers.get('set-cookie')).toContain('h3=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax')
-    }
-    finally {
-      await new Promise<void>((resolve, reject) => {
-        server.close(error => error ? reject(error) : resolve())
-      })
-    }
+    expect(result).toEqual({ loggedOut: true })
+    expect(responseHeaders.get('set-cookie')).toContain('nuxt-auth-session=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax')
   })
 })

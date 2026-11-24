@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { setHeader } from 'h3'
 import { titleCase } from 'scule'
 import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/utils/content'
 import {
@@ -114,7 +113,7 @@ const repoLinks = computed(() => [
 
 // allow pages to be cached for an hour
 if (import.meta.server) {
-  setHeader(useRequestEvent(), 'Cache-Control', 'public, max-age=3600, s-maxage=3600')
+  useRequestEvent()?.res.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600')
 }
 
 const transformedPage = computed(() => {

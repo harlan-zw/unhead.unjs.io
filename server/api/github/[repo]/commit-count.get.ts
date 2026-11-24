@@ -1,3 +1,4 @@
+import { defineEventHandler } from 'h3'
 import { z } from 'zod'
 import { initOctokitRequestHandler } from '~~/server/utils/github'
 import { getLastPageFromLinkHeader } from '~~/server/utils/project-stats'
