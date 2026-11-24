@@ -1,4 +1,5 @@
 import type { H3Event } from 'h3'
+import { resolveCloudflareBindings } from '@harlan-zw/nuxt-cloudflare/bindings'
 import { createError, getHeader, getRequestIP, setResponseHeaders } from 'h3'
 
 const FREE_TOOL_MINUTE_LIMIT = 10
@@ -31,7 +32,7 @@ export async function checkFreeToolRateLimit(event: H3Event) {
 }
 
 function getRateLimiter(event: H3Event): RateLimit | undefined {
-  const env: unknown = event.context.cloudflare?.env
+  const env = resolveCloudflareBindings(event)
   if (!env || typeof env !== 'object')
     return undefined
 

@@ -1,5 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 import type { H3Event } from 'h3'
+import { resolveCloudflareBindings } from '@harlan-zw/nuxt-cloudflare/bindings'
 import { getCookie, setCookie } from 'h3'
 import { toolLookups } from '../database/schema'
 import { getDB } from './db'
@@ -14,7 +15,7 @@ export interface AnalyticsDataPoint {
 }
 
 export function getAnalyticsEngine(event: H3Event): AnalyticsEngineDataset | undefined {
-  return (event.context.cloudflare?.env as { TOOL_ANALYTICS?: AnalyticsEngineDataset } | undefined)?.TOOL_ANALYTICS
+  return resolveCloudflareBindings<{ TOOL_ANALYTICS?: AnalyticsEngineDataset }>(event)?.TOOL_ANALYTICS
 }
 
 export function getOrCreateAnalyticsSession(event: H3Event): string {

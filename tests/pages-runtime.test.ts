@@ -2,26 +2,39 @@
 
 import type { SQLInputValue } from 'node:sqlite'
 import { DatabaseSync } from 'node:sqlite'
+import { setCloudflareBindings } from '@harlan-zw/nuxt-cloudflare/bindings'
 import { H3, mockEvent } from 'h3'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import fetchHeadHandler from '../layers/tools/server/api/tools/fetch-head.get'
+import trackHandler from '../layers/tools/server/api/tools/track.post'
+import thumbsHandler from '../server/api/feedback-thumbs.post'
 import feedbackHandler from '../server/api/feedback.post'
 import worker from '../server/cloudflare-pages-worker'
 import { feedback } from '../server/database/schema'
 import queryHandler from '../server/handlers/content-query-cache'
+import { trackToolUsage } from '../server/utils/analytics'
 import { getDB } from '../server/utils/db'
+import { checkFreeToolRateLimit } from '../server/utils/rate-limit'
 
 vi.mock('cloudflare:workers', () => ({ env: {} }))
 vi.mock('#nitro/virtual/polyfills', () => ({}))
 vi.mock('#nitro/virtual/public-assets', () => ({ isPublicAssetURL: () => false }))
 vi.mock('#nitro/runtime/app', () => ({ resolveWebsocketHooks: () => ({}) }))
 vi.mock('#nitro/runtime/task', () => ({ runCronTasks: vi.fn() }))
-vi.mock('nitro/app', () => ({ useNitroApp: () => ({ fetch: (request: Request) => app.fetch(request) }) }))
+vi.mock('nitro/app', () => ({ useNitroApp: () => ({ fetch: (request: Request) => {
+  // Require request-scoped bindings, rather than the Worker's global fallback.
+  setCloudflareBindings(undefined)
+  return app.fetch(request)
+} }) }))
 vi.mock('#content/manifest', () => ({ checksums: { docsUnhead: 'current-checksum' } }))
 vi.mock('#unhead-content-query-original', () => ({ default: async () => [{ path: '/docs/head' }] }))
 vi.mock('nuxt/server', () => ({ useRuntimeConfig: () => ({ checkinDeployment: 'runtime-regression' }) }))
 
 const app = new H3()
 app.post('/api/feedback', feedbackHandler)
+app.post('/api/feedback-thumbs', thumbsHandler)
+app.post('/api/tools/track', trackHandler)
+app.get('/api/tools/fetch-head', fetchHeadHandler)
 app.post('/__nuxt_content/docsUnhead/query', queryHandler)
 
 function executionContext() {
@@ -37,6 +50,10 @@ function feedbackDatabase() {
   sqlite.exec(`CREATE TABLE feedback (
     id TEXT PRIMARY KEY, path TEXT NOT NULL, thumb TEXT, comment TEXT,
     metadata TEXT, user_id TEXT, session_id TEXT, created_at INTEGER
+  )`)
+  sqlite.exec(`CREATE TABLE tool_lookups (
+    id TEXT PRIMARY KEY, user_id TEXT, session_id TEXT, tool TEXT NOT NULL,
+    action TEXT NOT NULL, label TEXT, created_at INTEGER
   )`)
   let attempts = 0
   const binding = {
@@ -68,6 +85,84 @@ afterEach(() => {
 })
 
 describe('pages request runtime', () => {
+  it.each([
+    ['/api/feedback', { comment: 'Useful documentation' }],
+    ['/api/feedback-thumbs', { thumbs: 'up' }],
+    ['/api/tools/track', { tool: 'capo-analyzer', action: 'use' }],
+    ['/api/tools/fetch-head?url=https://example.com', undefined],
+  ])('rejects rate-limited Pages requests before downstream work: %s', async (path, body) => {
+    const fixture = feedbackDatabase()
+    const limit = vi.fn(async () => ({ success: false }))
+    const writeDataPoint = vi.fn()
+    const fetcher = vi.fn(async () => new Response('<head><title>Fixture</title></head>', {
+      headers: { 'content-type': 'text/html' },
+    }))
+    vi.stubGlobal('fetch', fetcher)
+    const context = executionContext()
+    try {
+      const response = await worker.fetch(new Request(`https://unhead.unjs.io${path}`, {
+        method: body ? 'POST' : 'GET',
+        headers: { 'content-type': 'application/json', 'cf-connecting-ip': '192.0.2.1' },
+        body: body ? JSON.stringify(body) : undefined,
+      }), { DB: fixture.binding, RL_FREE_TOOLS: { limit }, TOOL_ANALYTICS: { writeDataPoint } } as unknown as Cloudflare.Env, context.context)
+
+      expect(response.status).toBe(429)
+      expect(limit).toHaveBeenCalledWith({ key: 'ip:192.0.2.1' })
+      await context.settle()
+      expect(fixture.attempts()).toBe(0)
+      expect(writeDataPoint).not.toHaveBeenCalled()
+      expect(fetcher).not.toHaveBeenCalled()
+    }
+    finally {
+      await context.settle()
+      fixture.sqlite.close()
+    }
+  })
+
+  it('keeps legacy context rate limits and analytics writes', async () => {
+    const event = mockEvent('https://unhead.unjs.io/api/tools/track')
+    const limit = vi.fn(async () => ({ success: false }))
+    const writeDataPoint = vi.fn()
+    event.context.cloudflare = { env: { RL_FREE_TOOLS: { limit }, TOOL_ANALYTICS: { writeDataPoint } } }
+
+    await expect(checkFreeToolRateLimit(event)).rejects.toMatchObject({ status: 429 })
+    trackToolUsage(event, 'capo-analyzer', 'copy', { error: true }, 'legacy-session')
+    expect(writeDataPoint).toHaveBeenCalledExactlyOnceWith({
+      blobs: ['tool', 'capo-analyzer', 'copy', 'legacy-session', 'error', ''],
+      doubles: [expect.any(Number), 0],
+      indexes: ['legacy-s'],
+    })
+  })
+
+  it.each(['success', 'error'])('writes tool action and %s outcome through the Pages Worker', async (outcome) => {
+    const fixture = feedbackDatabase()
+    const context = executionContext()
+    const writeDataPoint = vi.fn()
+    try {
+      const response = await worker.fetch(new Request('https://unhead.unjs.io/api/tools/track', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'cookie': 'analytics-session=fixture-session' },
+        body: JSON.stringify({ tool: 'capo-analyzer', action: 'use', outcome, label: 'fixture' }),
+      }), { DB: fixture.binding, TOOL_ANALYTICS: { writeDataPoint } } as unknown as Cloudflare.Env, context.context)
+
+      expect(response.status).toBe(200)
+      expect(await response.json()).toEqual({ ok: true })
+      expect(writeDataPoint).toHaveBeenCalledExactlyOnceWith({
+        blobs: ['tool', 'capo-analyzer', 'use', 'fixture-session', outcome, 'fixture'],
+        doubles: [expect.any(Number), 0],
+        indexes: ['fixture-'],
+      })
+      await context.settle()
+      expect(fixture.sqlite.prepare('SELECT tool, action, label FROM tool_lookups').all()).toEqual([
+        { tool: 'capo-analyzer', action: 'use', label: 'fixture' },
+      ])
+    }
+    finally {
+      await context.settle()
+      fixture.sqlite.close()
+    }
+  })
+
   it('retries a transient D1 failure and persists valid feedback through the Pages Worker', async () => {
     const fixture = feedbackDatabase()
     const context = executionContext()
