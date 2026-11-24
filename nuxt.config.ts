@@ -139,6 +139,8 @@ export default defineNuxtConfig({
           // Content uses D1 on Pages. Keep its Node connector out of the Worker.
           nitro.options.alias['better-sqlite3'] = 'unenv/mock/empty'
           nitro.options.alias['db0/connectors/better-sqlite3'] = 'unenv/mock/empty'
+          // The Pages project date predates workerd process v2, so native process lacks the stdio and cwd that consola reads.
+          nitro.options.inject.process = resolve('./server/cloudflare-pages-process.ts')
           nitro.options.alias['#unhead-cloudflare-pages-runtime'] = nitro.options.entry
           nitro.options.entry = resolve('./server/cloudflare-pages-worker.ts')
         })
