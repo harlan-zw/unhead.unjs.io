@@ -110,12 +110,13 @@ jobs:
       # `--branch` is required. Wrangler otherwise reads the branch from git, and
       # the checkout above is by SHA, which leaves a detached HEAD. Wrangler read
       # that as the branch `head` and uploaded every build as a preview.
+      # Run outside the checkout so Wrangler reads the Pages project settings.
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: >-
-          pnpm exec wrangler pages deploy dist --no-bundle
+          pnpm exec wrangler --cwd="$RUNNER_TEMP" pages deploy "$GITHUB_WORKSPACE/dist" --no-bundle
           --project-name=unhead-unjs-io
           --branch=main
           --commit-hash=${{ github.event.workflow_run.head_sha || github.sha }}
