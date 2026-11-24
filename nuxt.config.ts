@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
+import { fileURLToPath } from 'node:url'
 import { defineNuxtConfig } from 'nuxt/config'
 import { dirname, resolve } from 'pathe'
 import { parse as parseYaml } from 'yaml'
@@ -127,11 +128,12 @@ export default defineNuxtConfig({
         nitro.options.alias.sharp = 'unenv/mock/empty'
         nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
         nitro.options.alias['better-sqlite3'] = 'unenv/mock/empty'
-        if (!nitro.options.dev) {
-          nitro.hooks.hook('rollup:before', (_nitro, rollupConfig) => {
-            rollupConfig.input = resolve('./server/cloudflare-pages-worker.ts')
-          })
-        }
+        nitro.hooks.hook('build:before', (nitro) => {
+          if (nitro.options.preset !== 'cloudflare-pages')
+            return
+          nitro.options.alias['#unhead-cloudflare-pages-runtime'] = nitro.options.entry
+          nitro.options.entry = resolve('./server/cloudflare-pages-worker.ts')
+        })
       })
     },
   ],
@@ -236,6 +238,8 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 5,
   },
+  // Preserve h3 v1 server APIs while using Nitro 3.
+  nitroLegacy: true,
 
   runtimeConfig: {
     checkinToken: '',
@@ -284,6 +288,10 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
+    alias: {
+      // Docs examples use the parser at runtime, even without Vue's runtime compiler.
+      '@babel/parser': fileURLToPath(import.meta.resolve('@babel/parser')),
+    },
     publicAssets: [unheadSkill.publicAssets],
     rollupConfig: {
       plugins: [{

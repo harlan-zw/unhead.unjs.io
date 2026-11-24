@@ -1,4 +1,6 @@
 import type { SessionConfig } from 'h3'
+import { createError, defineEventHandler, setResponseHeader } from 'h3'
+import { useRuntimeConfig } from 'nitropack/runtime'
 import { resolveSessionGuard } from '../utils/session-password'
 import { clearUnavailableSession } from '../utils/unavailable-session'
 

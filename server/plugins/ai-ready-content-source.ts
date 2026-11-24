@@ -1,6 +1,7 @@
 import type { H3Event } from 'h3'
 import { queryCollection } from '@nuxt/content/server'
 import { stringify } from 'minimark/stringify'
+import { definePlugin } from 'nitro'
 import { modifyRelativeDocLinksWithFramework, replaceImportSpecifier } from '~~/utils/content'
 import { getPathFramework, getPathWithoutFramework } from '~~/utils/urls'
 
@@ -37,7 +38,7 @@ async function getContentSource(event: H3Event, route: string) {
   }
 }
 
-export default defineNitroPlugin((nitroApp) => {
+export default definePlugin((nitroApp) => {
   nitroApp.hooks.hook('ai-ready:markdown:source', async (context) => {
     const source = await getContentSource(context.event, context.route)
     if (source)

@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { query } = vi.hoisted(() => ({ query: vi.fn() }))
 vi.mock('@nuxt/content/server', () => ({ queryCollection: query }))
-vi.stubGlobal('defineNitroPlugin', (plugin: unknown) => plugin)
 const { default: install } = await import('../server/plugins/ai-ready-content-source')
 
 describe('ordinary Content bodies during page indexing', () => {

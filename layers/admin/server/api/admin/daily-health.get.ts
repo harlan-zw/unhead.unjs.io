@@ -1,3 +1,4 @@
+import { defineEventHandler, setResponseHeader } from 'h3'
 import { runDailyCheckin } from '~~/server/utils/daily-checkin'
 import { requireAdminAuth } from '../../utils/admin'
 

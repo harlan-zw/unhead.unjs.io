@@ -1,4 +1,7 @@
+import { addWideEventFields } from '@harlan-zw/nuxt-wide-events/server'
 import { eq } from 'drizzle-orm'
+import { defineEventHandler, deleteCookie, getCookie, getQuery, sendRedirect } from 'h3'
+import { $fetch } from 'ofetch'
 import { users } from '~~/server/database/schema'
 import { getDB } from '~~/server/utils/db'
 

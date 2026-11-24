@@ -1,3 +1,4 @@
+import { defineEventHandler } from 'h3'
 import { z } from 'zod'
 import { initOctokitRequestHandler } from '~~/server/utils/github'
 import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'

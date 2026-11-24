@@ -1,3 +1,5 @@
+import { defineEventHandler, sendError } from 'h3'
+import { $fetch } from 'ofetch'
 import { z } from 'zod'
 import { upstreamCacheTtl, withUpstreamCache } from '~~/server/utils/upstream-cache'
 

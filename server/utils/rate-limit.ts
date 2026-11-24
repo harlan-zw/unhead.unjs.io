@@ -1,4 +1,5 @@
 import type { H3Event } from 'h3'
+import { createError, getHeader, getRequestIP, setResponseHeaders } from 'h3'
 
 const FREE_TOOL_MINUTE_LIMIT = 10
 

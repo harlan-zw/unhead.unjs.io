@@ -1,24 +1,31 @@
+import type { ServerFetchResponse } from 'nuxt/server'
+import { defineHandler, serverFetch } from 'nuxt/server'
 import { selectLatestMajorVersions } from '~~/server/utils/project-stats'
 import { modules } from '../../const'
 
-export default defineEventHandler(async (e) => {
+async function jsonOr<T, F>(request: Promise<ServerFetchResponse<T>>, fallback: F): Promise<T | F> {
+  // Public statistics can render with defaults while a source is unavailable.
+  return request
+    .then(async response => response.ok ? await response.json() : fallback)
+    .catch(() => fallback)
+}
+
+export default defineHandler(async (event) => {
   const [stars, commitCount, issuesClosed, releases, contributors] = await Promise.all([
-    e.$fetch(`/api/github/unjs@unhead/stars`).catch(() => ({ stars: 0 })),
-    e.$fetch(`/api/github/unjs@unhead/commit-count`).catch(() => 0),
-    e.$fetch(`/api/github/unjs@unhead/issues-closed`).catch(() => 0),
-    e.$fetch(`/api/github/unjs@unhead/releases`).catch(() => []),
-    e.$fetch(`/api/github/unjs@unhead/contributors`).catch(() => []),
+    jsonOr(serverFetch(event, '/api/github/unjs@unhead/stars'), { stars: 0 }),
+    jsonOr(serverFetch(event, '/api/github/unjs@unhead/commit-count'), 0),
+    jsonOr(serverFetch(event, '/api/github/unjs@unhead/issues-closed'), 0),
+    jsonOr(serverFetch(event, '/api/github/unjs@unhead/releases'), []),
+    jsonOr(serverFetch(event, '/api/github/unjs@unhead/contributors'), []),
   ])
   const versions = selectLatestMajorVersions(releases.map(release => release.name))
   const moduleStats = await Promise.all(modules.map(async (module) => {
-    const downloads = await e.$fetch(`/api/npm/${module.npm.replace('/', '_')}/downloads`).catch(() => {
-      return {
-        totalDownloads90: 0,
-        totalDownloads30: 0,
-        averageDownloads30: 0,
-        averageDownloads90: 0,
-        percentageChange: 0,
-      }
+    const downloads = await jsonOr(serverFetch(event, `/api/npm/${module.npm.replace('/', '_')}/downloads`), {
+      totalDownloads90: 0,
+      totalDownloads30: 0,
+      averageDownloads30: 0,
+      averageDownloads90: 0,
+      percentageChange: 0,
     })
     return {
       slug: module.slug,

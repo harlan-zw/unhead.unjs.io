@@ -1,6 +1,7 @@
 /// <reference types="@cloudflare/workers-types" />
 
 import type { H3Event } from 'h3'
+import { useRuntimeConfig } from 'nitropack/runtime'
 import { checksums } from '#content/manifest'
 import originalHandler from '#unhead-content-query-original'
 import { CONTENT_QUERY_CACHE_NAME, createCachedContentQueryHandler } from '../utils/content-query-cache'

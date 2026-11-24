@@ -1,6 +1,7 @@
 import type { H3Event } from 'h3'
 import { runChecks } from '@harlan-zw/nuxt-checkin/server'
 import { queryCollection } from '@nuxt/content/server'
+import { useRuntimeConfig } from 'nitropack/runtime'
 import checks from '#checkin/checks'
 
 export function runDailyCheckin(event: H3Event) {
