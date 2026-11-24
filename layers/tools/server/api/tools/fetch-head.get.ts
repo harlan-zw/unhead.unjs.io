@@ -1,4 +1,4 @@
-import { createError, defineEventHandler, getQuery, send, setResponseStatus } from 'h3'
+import { createError, defineHandler, getQuery } from 'h3'
 import { z } from 'zod'
 import { checkFreeToolRateLimit } from '~~/server/utils/rate-limit'
 import { fetchHeadHtml, isFetchHeadUpstreamError } from '../../utils/fetch-head'
@@ -8,7 +8,7 @@ const QuerySchema = z.object({
 })
 const HeadPattern = /<head[^>]*>([\s\S]*?)<\/head>/i
 
-export default defineEventHandler(async (event) => {
+export default defineHandler(async (event) => {
   const query = QuerySchema.safeParse(getQuery(event))
   if (!query.success)
     throw createError({ statusCode: 400, statusMessage: 'A valid url parameter is required' })
@@ -24,8 +24,10 @@ export default defineEventHandler(async (event) => {
     // these directly instead of throwing.
     if (!isFetchHeadUpstreamError(error))
       throw error
-    setResponseStatus(event, error.statusCode, error.statusMessage)
-    return send(event, JSON.stringify({ statusCode: error.statusCode, statusMessage: error.statusMessage }), 'application/json')
+    return Response.json({ statusCode: error.statusCode, statusMessage: error.statusMessage }, {
+      status: error.statusCode,
+      statusText: error.statusMessage,
+    })
   }
   const head = html.match(HeadPattern)?.[1]
 

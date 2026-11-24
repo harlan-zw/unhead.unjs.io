@@ -1,6 +1,6 @@
 import type { EventHandler, H3Event } from 'h3'
 import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
-import { createError, defineEventHandler, getRequestHeaders, getRequestURL, readRawBody } from 'h3'
+import { createError, defineEventHandler, getRequestHeaders, getRequestURL } from 'h3'
 
 export const CONTENT_QUERY_CACHE_NAME = 'unhead:content-queries:v1'
 
@@ -150,11 +150,11 @@ export function createContentQueryCacheKey(identity: ContentQueryCacheIdentity):
 }
 
 async function parseContentQueryEligibility(event: H3Event): Promise<ContentQueryEligibility> {
-  if (event.method !== 'POST')
+  if (event.req.method !== 'POST')
     return { tag: 'ineligible' }
 
-  const body = await readRawBody(event, 'utf8')
-  if (body === undefined || byteLength(body) > MAX_REQUEST_BODY_BYTES)
+  const body = await event.req.clone().text()
+  if (byteLength(body) > MAX_REQUEST_BODY_BYTES)
     return { tag: 'ineligible' }
 
   let parsed: unknown

@@ -1,6 +1,6 @@
 import { addWideEventFields } from '@harlan-zw/nuxt-wide-events/server'
 import { eq } from 'drizzle-orm'
-import { defineEventHandler, deleteCookie, getCookie, getQuery, sendRedirect } from 'h3'
+import { defineHandler, deleteCookie, getCookie, getQuery, sendRedirect } from 'nuxt/server'
 import { $fetch } from 'ofetch'
 import { users } from '~~/server/database/schema'
 import { getDB } from '~~/server/utils/db'
@@ -76,7 +76,7 @@ const handler = defineOAuthGitHubEventHandler({
 })
 
 // Workaround for nuxt-auth-utils bug: https://github.com/atinux/nuxt-auth-utils/issues/461
-export default defineEventHandler(async (event) => {
+export default defineHandler(async (event) => {
   const query = getQuery(event)
   const stateCookie = getCookie(event, 'nuxt-auth-state')
 
@@ -89,7 +89,8 @@ export default defineEventHandler(async (event) => {
   // Clear stale state cookie if starting fresh OAuth flow
   if (query.code === undefined && !query.error && !query.state && stateCookie) {
     deleteCookie(event, 'nuxt-auth-state')
-    return sendRedirect(event, event.path)
+    const { pathname, search } = new URL(event.req.url)
+    return sendRedirect(event, pathname + search)
   }
   return handler(event)
 })

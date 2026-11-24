@@ -238,7 +238,8 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 5,
   },
-  // Preserve h3 v1 server APIs while using Nitro 3.
+
+  // Nuxt Content reads event.$fetch from the legacy event in server-side queries.
   nitroLegacy: true,
 
   runtimeConfig: {
@@ -252,7 +253,6 @@ export default defineNuxtConfig({
     },
     session: {
       maxAge: 60 * 60 * 24 * 7, // 7 days
-      password: '', // NUXT_SESSION_PASSWORD
       cookie: {
         sameSite: 'lax',
         secure: true,

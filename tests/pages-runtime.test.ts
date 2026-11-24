@@ -1,9 +1,8 @@
 /// <reference types="@cloudflare/workers-types" />
 
-import type { H3Event as LegacyH3Event } from 'h3'
 import type { SQLInputValue } from 'node:sqlite'
 import { DatabaseSync } from 'node:sqlite'
-import { H3, H3Event } from 'nitro/h3'
+import { H3, mockEvent } from 'h3'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import feedbackHandler from '../server/api/feedback.post'
 import worker from '../server/cloudflare-pages-worker'
@@ -11,8 +10,6 @@ import { feedback } from '../server/database/schema'
 import queryHandler from '../server/handlers/content-query-cache'
 import { getDB } from '../server/utils/db'
 
-// Exercise handlers with Nitro 3's H3 APIs, rather than the root H3 v1 package.
-vi.mock('h3', async () => import('nitro/h3'))
 vi.mock('cloudflare:workers', () => ({ env: {} }))
 vi.mock('#nitro/virtual/polyfills', () => ({}))
 vi.mock('#nitro/virtual/public-assets', () => ({ isPublicAssetURL: () => false }))
@@ -21,11 +18,11 @@ vi.mock('#nitro/runtime/task', () => ({ runCronTasks: vi.fn() }))
 vi.mock('nitro/app', () => ({ useNitroApp: () => ({ fetch: (request: Request) => app.fetch(request) }) }))
 vi.mock('#content/manifest', () => ({ checksums: { docsUnhead: 'current-checksum' } }))
 vi.mock('#unhead-content-query-original', () => ({ default: async () => [{ path: '/docs/head' }] }))
-vi.mock('nitropack/runtime', () => ({ useRuntimeConfig: () => ({ checkinDeployment: 'runtime-regression' }) }))
+vi.mock('nuxt/server', () => ({ useRuntimeConfig: () => ({ checkinDeployment: 'runtime-regression' }) }))
 
 const app = new H3()
-app.post('/api/feedback', event => feedbackHandler(event as unknown as LegacyH3Event))
-app.post('/__nuxt_content/docsUnhead/query', event => queryHandler(event as unknown as LegacyH3Event))
+app.post('/api/feedback', feedbackHandler)
+app.post('/__nuxt_content/docsUnhead/query', queryHandler)
 
 function executionContext() {
   const pending: Promise<unknown>[] = []
@@ -89,10 +86,10 @@ describe('pages request runtime', () => {
         { path: 'docs/head', comment: 'Useful documentation' },
       ])
 
-      const event = new H3Event(Object.assign(new Request('https://unhead.unjs.io/admin'), {
+      const event = mockEvent(Object.assign(new Request('https://unhead.unjs.io/admin'), {
         runtime: { name: 'cloudflare', cloudflare: { env: { DB: fixture.binding }, context: context.context } },
       }))
-      const rows = await getDB(event as unknown as LegacyH3Event).select({ comment: feedback.comment }).from(feedback).all()
+      const rows = await getDB(event).select({ comment: feedback.comment }).from(feedback).all()
       expect(rows).toEqual([{ comment: 'Useful documentation' }])
     }
     finally {
@@ -103,8 +100,9 @@ describe('pages request runtime', () => {
   it('keeps the legacy event context D1 fallback', async () => {
     const fixture = feedbackDatabase()
     try {
-      const event = new H3Event(new Request('https://unhead.unjs.io/admin'), { cloudflare: { env: { DB: fixture.binding } } })
-      expect(await getDB(event as unknown as LegacyH3Event).select().from(feedback).all()).toEqual([])
+      const event = mockEvent('https://unhead.unjs.io/admin')
+      event.context.cloudflare = { env: { DB: fixture.binding } }
+      expect(await getDB(event).select().from(feedback).all()).toEqual([])
     }
     finally {
       fixture.sqlite.close()

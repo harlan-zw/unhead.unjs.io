@@ -1,8 +1,6 @@
 import type { H3Event } from 'h3'
-import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { ContentQueryCacheAdapter, ContentQueryCacheHandlerOptions } from '../server/utils/content-query-cache'
-import { EventEmitter } from 'node:events'
-import { createEvent } from 'h3'
+import { mockEvent } from 'h3'
 import { resolve } from 'pathe'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createCachedContentQueryHandler } from '../server/utils/content-query-cache'
@@ -29,25 +27,16 @@ function createQueryEvent(options: {
     headers = {},
   } = options
 
-  const req = new EventEmitter() as unknown as IncomingMessage
-  req.method = method
-  req.url = path
-  req.headers = {
+  const requestHeaders = new Headers({
     'host': 'unhead.unjs.io',
     'content-type': 'application/json',
     ...headers,
-  }
-  if (body !== undefined)
-    req.headers['content-length'] = String(Buffer.byteLength(body))
+  })
+  const requestBody = method === 'GET' || method === 'HEAD' ? undefined : body
+  if (requestBody !== undefined)
+    requestHeaders.set('content-length', String(Buffer.byteLength(requestBody)))
 
-  const event = createEvent(req, {} as ServerResponse)
-  if (body !== undefined) {
-    queueMicrotask(() => {
-      req.emit('data', Buffer.from(body))
-      req.emit('end')
-    })
-  }
-  return event
+  return mockEvent(new URL(path, 'http://unhead.unjs.io'), { method, headers: requestHeaders, body: requestBody })
 }
 
 function mockCache(): { entries: Map<string, Response>, cache: ContentQueryCacheAdapter & { match: ReturnType<typeof vi.fn>, put: ReturnType<typeof vi.fn> } } {
@@ -91,6 +80,16 @@ function createHarness(overrides: Partial<ContentQueryCacheHandlerOptions> = {})
 afterEach(() => vi.restoreAllMocks())
 
 describe('content query cache', () => {
+  it('preserves the body for the Nuxt Content handler after checking cache eligibility', async () => {
+    const { handler } = createHarness({
+      original: async event => [await event.req.json()],
+    })
+
+    const response = await handler(createQueryEvent())
+
+    expect(await response.json()).toEqual([{ sql: SQL }])
+  })
+
   it('stores a cold miss and serves fresh hits without querying again', async () => {
     const { cache, handler, options } = createHarness()
 

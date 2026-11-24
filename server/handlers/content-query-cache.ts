@@ -1,7 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 
-import type { H3Event } from 'h3'
-import { useRuntimeConfig } from 'nitropack/runtime'
+import { useRuntimeConfig } from 'nuxt/server'
 import { checksums } from '#content/manifest'
 import originalHandler from '#unhead-content-query-original'
 import { CONTENT_QUERY_CACHE_NAME, createCachedContentQueryHandler } from '../utils/content-query-cache'
@@ -18,9 +17,9 @@ const contentChecksums = checksums as unknown as Record<string, string | undefin
  * swaps both routes to this module.
  */
 export default createCachedContentQueryHandler({
-  original: event => originalHandler(event),
+  original: async event => originalHandler(event),
   resolveChecksum: collection => contentChecksums[collection],
-  resolveDeployment: event => useRuntimeConfig(event).checkinDeployment || '',
+  resolveDeployment: () => useRuntimeConfig().checkinDeployment || '',
   openCache: async () => {
     // Cloudflare Cache API. Environments without it (prerender, plain Node)
     // get no adapter and the handler delegates uncached.
@@ -28,17 +27,5 @@ export default createCachedContentQueryHandler({
       return undefined
     return caches.open(CONTENT_QUERY_CACHE_NAME)
   },
-  waitUntil: (event: H3Event, promise: Promise<unknown>) => {
-    const nitroEvent = event as unknown as { waitUntil?: (promise: Promise<unknown>) => void }
-    if (nitroEvent.waitUntil) {
-      nitroEvent.waitUntil(promise)
-      return
-    }
-    // Nitro spreads the worker's `_platform` into the event context; the
-    // Cloudflare execution context carries waitUntil there. If neither
-    // exists the runtime cannot run background work, so dropping the
-    // refresh is the only option.
-    const cloudflareContext = (event.context.cloudflare as { context?: { waitUntil?: (promise: Promise<unknown>) => void } } | undefined)?.context
-    cloudflareContext?.waitUntil?.(promise)
-  },
+  waitUntil: (event, promise) => event.waitUntil(promise),
 })

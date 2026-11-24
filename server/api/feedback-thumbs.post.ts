@@ -10,7 +10,7 @@ import { checkFreeToolRateLimit } from '../utils/rate-limit'
 
 const LeadingSlashPattern = /^\/+/
 
-export default defineEventHandler<Promise<ThumbsFeedbackResponse>>(async (e) => {
+export default defineEventHandler(async (e): Promise<ThumbsFeedbackResponse> => {
   await checkFreeToolRateLimit(e)
   const body = await readValidatedBody(e, ThumbsFeedbackSchema.safeParse)
   if (!body.success) {

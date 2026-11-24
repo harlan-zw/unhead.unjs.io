@@ -1,6 +1,5 @@
-import type { SessionConfig } from 'h3'
-import { createError, defineEventHandler, setResponseHeader } from 'h3'
-import { useRuntimeConfig } from 'nitropack/runtime'
+import type { SessionConfig } from 'nuxt/server'
+import { createError, defineHandler, useRuntimeConfig } from 'nuxt/server'
 import { resolveSessionGuard } from '../utils/session-password'
 import { clearUnavailableSession } from '../utils/unavailable-session'
 
@@ -18,19 +17,19 @@ function logOnce(message: string) {
   console.error(`[session-password] ${message}`)
 }
 
-export default defineEventHandler(async (event) => {
-  const sessionConfig = useRuntimeConfig(event).session as Partial<SessionConfig> | undefined
-  const guard = resolveSessionGuard({ method: event.method, path: event.path }, sessionConfig?.password)
+export default defineHandler(async (event) => {
+  const { appSecret, session } = useRuntimeConfig()
+  const guard = resolveSessionGuard({ method: event.req.method, path: new URL(event.req.url).pathname }, appSecret)
   if (guard._tag === 'pass')
     return
 
   if (guard._tag === 'clearSession')
-    return clearUnavailableSession(event, sessionConfig ?? {})
+    return clearUnavailableSession(event, session as SessionConfig)
 
   logOnce(guard.message)
 
   if (guard._tag === 'emptySession') {
-    setResponseHeader(event, 'cache-control', 'no-store')
+    event.res.headers.set('cache-control', 'no-store')
     return {}
   }
 
