@@ -83,7 +83,6 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     'radix-vue/nuxt',
     '@vueuse/nuxt',
-    'nitro-cloudflare-dev',
     '@nuxt/fonts',
     '@nuxt/content',
     '@nuxt/scripts',
@@ -127,11 +126,18 @@ export default defineNuxtConfig({
         // from sponsorkit
         nitro.options.alias.sharp = 'unenv/mock/empty'
         nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
-        nitro.options.alias['better-sqlite3'] = 'unenv/mock/empty'
+        nitro.hooks.hook('prerender:init', (prerenderer) => {
+          // Content's legacy handler reads the generated dumps from build storage.
+          // Nitro 3 cannot serve the raw assets through serverFetch during prerender.
+          for (const handler of prerenderer.options.handlers) {
+            handler.handler = handler.handler.replace(/(\/presets\/cloudflare\/database-handler)(?:\.js)?$/, '$1.legacy.js')
+          }
+        })
         nitro.hooks.hook('build:before', (nitro) => {
           if (nitro.options.preset !== 'cloudflare-pages')
             return
           // Content uses D1 on Pages. Keep its Node connector out of the Worker.
+          nitro.options.alias['better-sqlite3'] = 'unenv/mock/empty'
           nitro.options.alias['db0/connectors/better-sqlite3'] = 'unenv/mock/empty'
           // The Pages project date predates workerd process v2, so native process lacks the stdio and cwd that consola reads.
           nitro.options.inject.process = resolve('./server/cloudflare-pages-process.ts')
@@ -288,6 +294,15 @@ export default defineNuxtConfig({
       { name: 'Hubot Sans', stretch: '75% 125%', global: true },
       { name: 'Nunito Sans' },
     ],
+  },
+
+  $development: {
+    nitro: {
+      // Attach Wrangler bindings to H3 requests, including in-process requests.
+      devServer: { runner: 'node-worker' },
+      plugins: [resolve('./server/internal/cloudflare-dev.ts')],
+      rolldownConfig: { external: ['wrangler'] },
+    },
   },
 
   nitro: {

@@ -2,6 +2,7 @@
 
 import type { H3Event } from 'h3'
 import type { ZodType } from 'zod'
+import { resolveCloudflareBindings } from '@harlan-zw/nuxt-cloudflare/bindings'
 import { createWideEvent } from '@harlan-zw/nuxt-wide-events/standalone'
 import { z } from 'zod'
 
@@ -165,10 +166,7 @@ async function createUpstreamCacheKey(name: string, key: string): Promise<string
 }
 
 function getUpstreamCacheNamespace(event: H3Event): KVNamespace | undefined {
-  const contextualEnv: unknown = event.context.cloudflare?.env
-  const globalEnv: unknown = Reflect.get(globalThis, '__env__')
-
-  return findKVNamespace(contextualEnv) || findKVNamespace(globalEnv)
+  return findKVNamespace(resolveCloudflareBindings(event)) || findKVNamespace(resolveCloudflareBindings())
 }
 
 function findKVNamespace(env: unknown): KVNamespace | undefined {

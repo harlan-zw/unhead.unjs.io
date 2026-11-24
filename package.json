@@ -75,7 +75,6 @@
     "lint-staged": "catalog:",
     "markdownlint-cli": "catalog:",
     "minimark": "catalog:",
-    "nitro-cloudflare-dev": "catalog:",
     "nostics": "catalog:",
     "nuxt": "catalog:",
     "nuxt-auth-utils": "catalog:",
