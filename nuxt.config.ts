@@ -127,11 +127,18 @@ export default defineNuxtConfig({
         // from sponsorkit
         nitro.options.alias.sharp = 'unenv/mock/empty'
         nitro.options.alias.pnpapi = 'unenv/mock/empty' // ?
-        nitro.options.alias['better-sqlite3'] = 'unenv/mock/empty'
+        nitro.hooks.hook('prerender:init', (prerenderer) => {
+          // Content's legacy handler reads the generated dumps from build storage.
+          // Nitro 3 cannot serve the raw assets through serverFetch during prerender.
+          for (const handler of prerenderer.options.handlers) {
+            handler.handler = handler.handler.replace(/(\/presets\/cloudflare\/database-handler)(?:\.js)?$/, '$1.legacy.js')
+          }
+        })
         nitro.hooks.hook('build:before', (nitro) => {
           if (nitro.options.preset !== 'cloudflare-pages')
             return
           // Content uses D1 on Pages. Keep its Node connector out of the Worker.
+          nitro.options.alias['better-sqlite3'] = 'unenv/mock/empty'
           nitro.options.alias['db0/connectors/better-sqlite3'] = 'unenv/mock/empty'
           nitro.options.alias['#unhead-cloudflare-pages-runtime'] = nitro.options.entry
           nitro.options.entry = resolve('./server/cloudflare-pages-worker.ts')
@@ -289,6 +296,8 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    // Local Cloudflare bindings come from nitro-cloudflare-dev.
+    devServer: { runner: 'node-worker' },
     preset: 'cloudflare-pages',
     alias: {
       // Docs examples use the parser at runtime, even without Vue's runtime compiler.
