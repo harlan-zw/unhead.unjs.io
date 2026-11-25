@@ -4,7 +4,7 @@ import { relative } from 'node:path'
 export const codegen: VueCodegenPlugin = ({ ts, fileName, ir, name }, ctx) => {
   const rootDir = ctx.config.options?.rootDir
   if (typeof rootDir !== 'string')
-    throw new Error('Typed routes require a rootDir option.')
+    throw new TypeError('Typed routes require a rootDir option.')
   const file = JSON.stringify(relative(rootDir, fileName).replaceAll('\\', '/'))
   const Names = name('NativeRouteNames')
   const Route = name('NativeUseRoute')
@@ -46,10 +46,20 @@ export const codegen: VueCodegenPlugin = ({ ts, fileName, ir, name }, ctx) => {
         ? `/** @import { ${value} } from '${source}' */\n`
         : `import type { ${value} } from '${source}';\n`
       return [
-        ...(imports.has('names') ? [declaration(`_RouteNamesForFilePath as ${Names}`, 'vue-router/auto-routes')] : []),
-        ...(imports.has('route') ? [declaration(`useRoute as ${Route}`, 'vue-router')] : []),
+        ...(imports.has('names')
+          ? [
+              declaration(`_RouteNamesForFilePath as ${Names}`, 'vue-router/auto-routes'),
+            ]
+          : []),
+        ...(imports.has('route')
+          ? [
+              declaration(`useRoute as ${Route}`, 'vue-router'),
+            ]
+          : []),
       ]
     },
-    templateContext: () => ir.template ? [`{ $route: ReturnType<typeof ${Route}${routeArguments}> }`] : [],
+    templateContext: () => ir.template
+      ? [`{ $route: ReturnType<typeof ${Route}${routeArguments}> }`]
+      : [],
   }
 }

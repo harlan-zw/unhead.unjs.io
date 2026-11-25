@@ -47,7 +47,9 @@ const tabs = computed(() => slots.default?.()?.flatMap(transformSlot).filter(Boo
 
 const { selectedFramework } = useFrameworkSelector()
 const selectedFrameworkIndex = tabs.value.findIndex(tab => tab.label.toLowerCase() === selectedFramework.value.slug)
-const selectedIndex = ref(selectedFrameworkIndex >= 0 ? selectedFrameworkIndex : 0)
+const selectedIndex = ref(selectedFrameworkIndex >= 0
+  ? selectedFrameworkIndex
+  : 0)
 defineExpose({ selectedIndex })
 
 const selectedTab = computed(() => tabs.value.find((_, index) => index === selectedIndex.value) || tabs.value[0])

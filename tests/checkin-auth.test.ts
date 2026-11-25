@@ -6,19 +6,34 @@ import { requireCheckinAuth } from '../server/utils/checkin-auth'
 const identity = { site: 'unhead.unjs.io', environment: 'production', deployment: 'deployed-1' }
 
 function request(path = '/api/internal/checkin', authorization?: string, token = 'private-token', method = 'GET') {
-  const collect = vi.fn(() => runChecks([defineCheck({ id: 'health', run: () => pass({ ready: true }) })], { identity }))
+  const collect = vi.fn(() => runChecks([
+    defineCheck({
+      id: 'health',
+      run: () => pass({ ready: true }),
+    }),
+  ], { identity }))
   const app = createApp()
   app.use(defineEventHandler(async (event) => {
     requireCheckinAuth(event, token)
     return collect()
   }))
-  return { collect, response: toWebHandler(app)(new Request(`https://example.com${path}`, {
-    method,
-    headers: authorization ? { authorization } : {},
-  })) }
+  return {
+    collect,
+    response: toWebHandler(app)(new Request(`https://example.com${path}`, {
+      method,
+      headers: authorization
+        ? { authorization }
+        : {},
+    })),
+  }
 }
 
-it.each([undefined, 'Bearer wrong', 'Basic private-token', 'Bearer private-token-extra'])(
+it.each([
+  undefined,
+  'Bearer wrong',
+  'Basic private-token',
+  'Bearer private-token-extra',
+])(
   'rejects invalid authentication before collecting: %s',
   async (authorization) => {
     const result = request('/api/internal/checkin', authorization)
@@ -35,7 +50,11 @@ it('rejects an unconfigured token', async () => {
   expect(result.collect).not.toHaveBeenCalled()
 })
 
-it.each([['/api/admin/users', 'GET'], ['/api/internal/checkin', 'POST'], ['/api/internal/checkin/extra', 'GET']])(
+it.each([
+  ['/api/admin/users', 'GET'],
+  ['/api/internal/checkin', 'POST'],
+  ['/api/internal/checkin/extra', 'GET'],
+])(
   'limits the token to the report endpoint: %s %s',
   async (path, method) => {
     const result = request(path, 'Bearer private-token', 'private-token', method)

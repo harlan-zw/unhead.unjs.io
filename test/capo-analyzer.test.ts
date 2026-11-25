@@ -18,20 +18,76 @@ interface AnalyzedTag extends ParsedTag {
 }
 
 const WEIGHT_TABLE = [
-  { weight: -30, label: 'Content-Security-Policy', test: (t: ParsedTag) => t.tag === 'meta' && t.attributes['http-equiv']?.toLowerCase() === 'content-security-policy' },
-  { weight: -20, label: 'Charset', test: (t: ParsedTag) => t.tag === 'meta' && 'charset' in t.attributes },
-  { weight: -15, label: 'Viewport', test: (t: ParsedTag) => t.tag === 'meta' && t.attributes.name?.toLowerCase() === 'viewport' },
-  { weight: -10, label: 'Base', test: (t: ParsedTag) => t.tag === 'base' },
-  { weight: 10, label: 'Title', test: (t: ParsedTag) => t.tag === 'title' },
-  { weight: 20, label: 'Preconnect', test: (t: ParsedTag) => t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'preconnect' },
-  { weight: 30, label: 'Async Script', test: (t: ParsedTag) => t.tag === 'script' && 'async' in t.attributes && !('defer' in t.attributes) },
-  { weight: 40, label: 'Style @import', test: (t: ParsedTag) => t.tag === 'style' && (t.content?.includes('@import') ?? false) },
-  { weight: 50, label: 'Sync Script', test: (t: ParsedTag) => t.tag === 'script' && t.attributes.src && !('async' in t.attributes) && !('defer' in t.attributes) && !('type' in t.attributes && t.attributes.type === 'module') },
-  { weight: 60, label: 'Stylesheet', test: (t: ParsedTag) => (t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'stylesheet') || (t.tag === 'style' && !(t.content?.includes('@import') ?? false)) },
-  { weight: 70, label: 'Preload', test: (t: ParsedTag) => t.tag === 'link' && /^(?:preload|modulepreload)$/i.test(t.attributes.rel || '') },
-  { weight: 80, label: 'Deferred Script', test: (t: ParsedTag) => t.tag === 'script' && ('defer' in t.attributes || t.attributes.type === 'module') },
-  { weight: 90, label: 'Prefetch/DNS', test: (t: ParsedTag) => t.tag === 'link' && /^(?:prefetch|dns-prefetch|prerender)$/i.test(t.attributes.rel || '') },
-  { weight: 100, label: 'Other', test: () => true },
+  {
+    weight: -30,
+    label: 'Content-Security-Policy',
+    test: (t: ParsedTag) => t.tag === 'meta' && t.attributes['http-equiv']?.toLowerCase() === 'content-security-policy',
+  },
+  {
+    weight: -20,
+    label: 'Charset',
+    test: (t: ParsedTag) => t.tag === 'meta' && 'charset' in t.attributes,
+  },
+  {
+    weight: -15,
+    label: 'Viewport',
+    test: (t: ParsedTag) => t.tag === 'meta' && t.attributes.name?.toLowerCase() === 'viewport',
+  },
+  {
+    weight: -10,
+    label: 'Base',
+    test: (t: ParsedTag) => t.tag === 'base',
+  },
+  {
+    weight: 10,
+    label: 'Title',
+    test: (t: ParsedTag) => t.tag === 'title',
+  },
+  {
+    weight: 20,
+    label: 'Preconnect',
+    test: (t: ParsedTag) => t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'preconnect',
+  },
+  {
+    weight: 30,
+    label: 'Async Script',
+    test: (t: ParsedTag) => t.tag === 'script' && 'async' in t.attributes && !('defer' in t.attributes),
+  },
+  {
+    weight: 40,
+    label: 'Style @import',
+    test: (t: ParsedTag) => t.tag === 'style' && (t.content?.includes('@import') ?? false),
+  },
+  {
+    weight: 50,
+    label: 'Sync Script',
+    test: (t: ParsedTag) => t.tag === 'script' && t.attributes.src && !('async' in t.attributes) && !('defer' in t.attributes) && !('type' in t.attributes && t.attributes.type === 'module'),
+  },
+  {
+    weight: 60,
+    label: 'Stylesheet',
+    test: (t: ParsedTag) => (t.tag === 'link' && t.attributes.rel?.toLowerCase() === 'stylesheet') || (t.tag === 'style' && !(t.content?.includes('@import') ?? false)),
+  },
+  {
+    weight: 70,
+    label: 'Preload',
+    test: (t: ParsedTag) => t.tag === 'link' && /^(?:preload|modulepreload)$/i.test(t.attributes.rel || ''),
+  },
+  {
+    weight: 80,
+    label: 'Deferred Script',
+    test: (t: ParsedTag) => t.tag === 'script' && ('defer' in t.attributes || t.attributes.type === 'module'),
+  },
+  {
+    weight: 90,
+    label: 'Prefetch/DNS',
+    test: (t: ParsedTag) => t.tag === 'link' && /^(?:prefetch|dns-prefetch|prerender)$/i.test(t.attributes.rel || ''),
+  },
+  {
+    weight: 100,
+    label: 'Other',
+    test: () => true,
+  },
 ] as const
 
 const TagRegex = /<(meta|link|title|base|style|script|noscript)(\s[^>]*?)?\/?>(?:([\s\S]*?)<\/\1>)?/gi
@@ -41,10 +97,20 @@ function classifyTag(tag: ParsedTag): AnalyzedTag {
   for (let i = 0; i < WEIGHT_TABLE.length; i++) {
     const entry = WEIGHT_TABLE[i]
     if (entry.test(tag)) {
-      return { ...tag, weight: entry.weight, weightLabel: entry.label, priority: i + 1 }
+      return {
+        ...tag,
+        weight: entry.weight,
+        weightLabel: entry.label,
+        priority: i + 1,
+      }
     }
   }
-  return { ...tag, weight: 100, weightLabel: 'Other', priority: 14 }
+  return {
+    ...tag,
+    weight: 100,
+    weightLabel: 'Other',
+    priority: 14,
+  }
 }
 
 function parseHeadTags(html: string): ParsedTag[] {
@@ -58,7 +124,12 @@ function parseHeadTags(html: string): ParsedTag[] {
         attributes[name] = v1 ?? v2 ?? v3 ?? ''
       }
     }
-    tags.push({ tag: tagName.toLowerCase(), attributes, content: content?.trim(), raw })
+    tags.push({
+      tag: tagName.toLowerCase(),
+      attributes,
+      content: content?.trim(),
+      raw,
+    })
   }
   return tags
 }
@@ -149,106 +220,177 @@ describe('parseHeadTags', () => {
 
 describe('classifyTag', () => {
   it('classifies meta charset as weight -20', () => {
-    const tag: ParsedTag = { tag: 'meta', attributes: { charset: 'utf-8' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'meta',
+      attributes: { charset: 'utf-8' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(-20)
     expect(result.weightLabel).toBe('Charset')
   })
 
   it('classifies viewport as weight -15', () => {
-    const tag: ParsedTag = { tag: 'meta', attributes: { name: 'viewport', content: 'width=device-width' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'meta',
+      attributes: { name: 'viewport', content: 'width=device-width' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(-15)
     expect(result.weightLabel).toBe('Viewport')
   })
 
   it('classifies CSP as weight -30', () => {
-    const tag: ParsedTag = { tag: 'meta', attributes: { 'http-equiv': 'Content-Security-Policy', 'content': 'default-src \'self\'' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'meta',
+      attributes: { 'http-equiv': 'Content-Security-Policy', 'content': 'default-src \'self\'' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(-30)
     expect(result.weightLabel).toBe('Content-Security-Policy')
   })
 
   it('classifies title as weight 10', () => {
-    const tag: ParsedTag = { tag: 'title', attributes: {}, content: 'My Page', raw: '' }
+    const tag: ParsedTag = {
+      tag: 'title',
+      attributes: {},
+      content: 'My Page',
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(10)
   })
 
   it('classifies preconnect as weight 20', () => {
-    const tag: ParsedTag = { tag: 'link', attributes: { rel: 'preconnect', href: 'https://fonts.googleapis.com' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'link',
+      attributes: { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(20)
   })
 
   it('classifies async script as weight 30', () => {
-    const tag: ParsedTag = { tag: 'script', attributes: { async: '', src: '/app.js' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'script',
+      attributes: { async: '', src: '/app.js' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(30)
   })
 
   it('classifies sync script as weight 50', () => {
-    const tag: ParsedTag = { tag: 'script', attributes: { src: '/app.js' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'script',
+      attributes: { src: '/app.js' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(50)
   })
 
   it('classifies stylesheet as weight 60', () => {
-    const tag: ParsedTag = { tag: 'link', attributes: { rel: 'stylesheet', href: '/style.css' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'link',
+      attributes: { rel: 'stylesheet', href: '/style.css' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(60)
   })
 
   it('classifies defer script as weight 80', () => {
-    const tag: ParsedTag = { tag: 'script', attributes: { defer: '', src: '/app.js' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'script',
+      attributes: { defer: '', src: '/app.js' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(80)
   })
 
   it('classifies module script as weight 80', () => {
-    const tag: ParsedTag = { tag: 'script', attributes: { type: 'module', src: '/app.js' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'script',
+      attributes: { type: 'module', src: '/app.js' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(80)
   })
 
   it('classifies preload as weight 70', () => {
-    const tag: ParsedTag = { tag: 'link', attributes: { rel: 'preload', href: '/font.woff2', as: 'font' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'link',
+      attributes: { rel: 'preload', href: '/font.woff2', as: 'font' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(70)
   })
 
   it('classifies prefetch as weight 90', () => {
-    const tag: ParsedTag = { tag: 'link', attributes: { rel: 'prefetch', href: '/next-page.js' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'link',
+      attributes: { rel: 'prefetch', href: '/next-page.js' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(90)
   })
 
   it('classifies dns-prefetch as weight 90', () => {
-    const tag: ParsedTag = { tag: 'link', attributes: { rel: 'dns-prefetch', href: '//cdn.example.com' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'link',
+      attributes: { rel: 'dns-prefetch', href: '//cdn.example.com' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(90)
   })
 
   it('classifies meta description as weight 100 (Other)', () => {
-    const tag: ParsedTag = { tag: 'meta', attributes: { name: 'description', content: 'A page' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'meta',
+      attributes: { name: 'description', content: 'A page' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(100)
   })
 
   it('classifies style with @import as weight 40', () => {
-    const tag: ParsedTag = { tag: 'style', attributes: {}, content: '@import url("fonts.css");', raw: '' }
+    const tag: ParsedTag = {
+      tag: 'style',
+      attributes: {},
+      content: '@import url("fonts.css");',
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(40)
   })
 
   it('classifies inline style (no @import) as weight 60', () => {
-    const tag: ParsedTag = { tag: 'style', attributes: {}, content: 'body { margin: 0 }', raw: '' }
+    const tag: ParsedTag = {
+      tag: 'style',
+      attributes: {},
+      content: 'body { margin: 0 }',
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(60)
   })
 
   it('classifies base as weight -10', () => {
-    const tag: ParsedTag = { tag: 'base', attributes: { href: '/' }, raw: '' }
+    const tag: ParsedTag = {
+      tag: 'base',
+      attributes: { href: '/' },
+      raw: '',
+    }
     const result = classifyTag(tag)
     expect(result.weight).toBe(-10)
   })
@@ -257,18 +399,62 @@ describe('classifyTag', () => {
 describe('computeScore', () => {
   it('returns 100 for perfectly ordered tags', () => {
     const tags: AnalyzedTag[] = [
-      { tag: 'meta', attributes: { charset: 'utf-8' }, raw: '', weight: -20, weightLabel: 'Charset', priority: 2 },
-      { tag: 'title', attributes: {}, content: 'Test', raw: '', weight: 10, weightLabel: 'Title', priority: 5 },
-      { tag: 'link', attributes: { rel: 'stylesheet' }, raw: '', weight: 60, weightLabel: 'Stylesheet', priority: 10 },
+      {
+        tag: 'meta',
+        attributes: { charset: 'utf-8' },
+        raw: '',
+        weight: -20,
+        weightLabel: 'Charset',
+        priority: 2,
+      },
+      {
+        tag: 'title',
+        attributes: {},
+        content: 'Test',
+        raw: '',
+        weight: 10,
+        weightLabel: 'Title',
+        priority: 5,
+      },
+      {
+        tag: 'link',
+        attributes: { rel: 'stylesheet' },
+        raw: '',
+        weight: 60,
+        weightLabel: 'Stylesheet',
+        priority: 10,
+      },
     ]
     expect(computeScore(tags)).toBe(100)
   })
 
   it('returns less than 100 for out-of-order tags', () => {
     const tags: AnalyzedTag[] = [
-      { tag: 'title', attributes: {}, content: 'Test', raw: '', weight: 10, weightLabel: 'Title', priority: 5 },
-      { tag: 'meta', attributes: { charset: 'utf-8' }, raw: '', weight: -20, weightLabel: 'Charset', priority: 2 },
-      { tag: 'link', attributes: { rel: 'stylesheet' }, raw: '', weight: 60, weightLabel: 'Stylesheet', priority: 10 },
+      {
+        tag: 'title',
+        attributes: {},
+        content: 'Test',
+        raw: '',
+        weight: 10,
+        weightLabel: 'Title',
+        priority: 5,
+      },
+      {
+        tag: 'meta',
+        attributes: { charset: 'utf-8' },
+        raw: '',
+        weight: -20,
+        weightLabel: 'Charset',
+        priority: 2,
+      },
+      {
+        tag: 'link',
+        attributes: { rel: 'stylesheet' },
+        raw: '',
+        weight: 60,
+        weightLabel: 'Stylesheet',
+        priority: 10,
+      },
     ]
     const score = computeScore(tags)
     expect(score).toBeLessThan(100)
@@ -277,7 +463,14 @@ describe('computeScore', () => {
 
   it('returns 100 for single tag', () => {
     const tags: AnalyzedTag[] = [
-      { tag: 'meta', attributes: { charset: 'utf-8' }, raw: '', weight: -20, weightLabel: 'Charset', priority: 2 },
+      {
+        tag: 'meta',
+        attributes: { charset: 'utf-8' },
+        raw: '',
+        weight: -20,
+        weightLabel: 'Charset',
+        priority: 2,
+      },
     ]
     expect(computeScore(tags)).toBe(100)
   })
@@ -288,10 +481,38 @@ describe('computeScore', () => {
 
   it('returns 0 for completely reversed order', () => {
     const tags: AnalyzedTag[] = [
-      { tag: 'meta', attributes: { name: 'description' }, raw: '', weight: 100, weightLabel: 'Other', priority: 14 },
-      { tag: 'link', attributes: { rel: 'stylesheet' }, raw: '', weight: 60, weightLabel: 'Stylesheet', priority: 10 },
-      { tag: 'title', attributes: {}, raw: '', weight: 10, weightLabel: 'Title', priority: 5 },
-      { tag: 'meta', attributes: { charset: 'utf-8' }, raw: '', weight: -20, weightLabel: 'Charset', priority: 2 },
+      {
+        tag: 'meta',
+        attributes: { name: 'description' },
+        raw: '',
+        weight: 100,
+        weightLabel: 'Other',
+        priority: 14,
+      },
+      {
+        tag: 'link',
+        attributes: { rel: 'stylesheet' },
+        raw: '',
+        weight: 60,
+        weightLabel: 'Stylesheet',
+        priority: 10,
+      },
+      {
+        tag: 'title',
+        attributes: {},
+        raw: '',
+        weight: 10,
+        weightLabel: 'Title',
+        priority: 5,
+      },
+      {
+        tag: 'meta',
+        attributes: { charset: 'utf-8' },
+        raw: '',
+        weight: -20,
+        weightLabel: 'Charset',
+        priority: 2,
+      },
     ]
     expect(computeScore(tags)).toBe(0)
   })
@@ -341,7 +562,22 @@ describe('integration: parse + classify + score', () => {
     `
     const tags = parseHeadTags(html).map(classifyTag)
     const weights = tags.map(t => t.weight)
-    expect(weights).toEqual([-30, -20, -15, -10, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
+    expect(weights).toEqual([
+      -30,
+      -20,
+      -15,
+      -10,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100,
+    ])
     expect(computeScore(tags)).toBe(100)
   })
 })

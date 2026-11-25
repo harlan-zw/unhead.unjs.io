@@ -406,7 +406,9 @@ export default function ProductCardTemplate() {
   watch(selectedTemplate, (newVal, oldVal) => {
     if (newVal === 'code' && oldVal && oldVal !== 'code') {
       const tmpl = templates[oldVal]
-      const img = oldVal === 'product' ? productImage.value : logo.value
+      const img = oldVal === 'product'
+        ? productImage.value
+        : logo.value
 
       customCode.value = tmpl(title.value, description.value, backgroundColor.value, textColor.value, {
         siteName: siteName.value,

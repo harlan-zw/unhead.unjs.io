@@ -4,12 +4,48 @@ import { VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContai
 const colors = ['#3b82f6', '#64748b']
 
 const data = [
-  { name: 'Shopify', lcp: 1685, ttfb: 534, origins: '401K', goodLcp: 87.3 },
-  { name: 'Wix', lcp: 1724, ttfb: 797, origins: '185K', goodLcp: 81.6 },
-  { name: 'Squarespace', lcp: 1969, ttfb: 586, origins: '93K', goodLcp: 76.6 },
-  { name: 'WordPress', lcp: 2663, ttfb: 1550, origins: '2.9M', goodLcp: 55.2 },
-  { name: 'Next.js', lcp: 2790, ttfb: 956, origins: '260K', goodLcp: 50.9 },
-  { name: 'Nuxt.js', lcp: 3051, ttfb: 989, origins: '88K', goodLcp: 44.2 },
+  {
+    name: 'Shopify',
+    lcp: 1685,
+    ttfb: 534,
+    origins: '401K',
+    goodLcp: 87.3,
+  },
+  {
+    name: 'Wix',
+    lcp: 1724,
+    ttfb: 797,
+    origins: '185K',
+    goodLcp: 81.6,
+  },
+  {
+    name: 'Squarespace',
+    lcp: 1969,
+    ttfb: 586,
+    origins: '93K',
+    goodLcp: 76.6,
+  },
+  {
+    name: 'WordPress',
+    lcp: 2663,
+    ttfb: 1550,
+    origins: '2.9M',
+    goodLcp: 55.2,
+  },
+  {
+    name: 'Next.js',
+    lcp: 2790,
+    ttfb: 956,
+    origins: '260K',
+    goodLcp: 50.9,
+  },
+  {
+    name: 'Nuxt.js',
+    lcp: 3051,
+    ttfb: 989,
+    origins: '88K',
+    goodLcp: 44.2,
+  },
 ]
 
 type D = typeof data[number]

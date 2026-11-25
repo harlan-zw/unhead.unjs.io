@@ -16,7 +16,9 @@ afterEach(() => vi.restoreAllMocks())
 
 function mockCache() {
   const entries = new Map<string, Response>()
-  const keyFor = (request: RequestInfo | URL) => request instanceof Request ? request.url : String(request)
+  const keyFor = (request: RequestInfo | URL) => request instanceof Request
+    ? request.url
+    : String(request)
   return {
     entries,
     cache: {
@@ -51,10 +53,18 @@ describe('cloudflare response cache', () => {
       headers: { 'x-unhead-cache': status, 'content-type': 'application/json' },
     })
 
-    const response = await handleCloudflareResponseCache({ cache, context, render, request, rule })
+    const response = await handleCloudflareResponseCache({
+      cache,
+      context,
+      render,
+      request,
+      rule,
+    })
 
     expect(response.headers.get('x-unhead-cache')).toBe(status)
-    expect(await response.json()).toEqual([{ path: '/docs/head' }])
+    expect(await response.json()).toEqual([
+      { path: '/docs/head' },
+    ])
     expect(cache.match).not.toHaveBeenCalled()
     expect(cache.put).not.toHaveBeenCalled()
   })
@@ -84,11 +94,25 @@ describe('cloudflare response cache', () => {
     }))
     const request = new Request('https://unhead.unjs.io/docs/cache')
 
-    const miss = await handleCloudflareResponseCache({ cache, context, render, request, rule, now: () => 1_000 })
+    const miss = await handleCloudflareResponseCache({
+      cache,
+      context,
+      render,
+      request,
+      rule,
+      now: () => 1_000,
+    })
     expect(miss.headers.get('x-unhead-cache')).toBe('MISS')
     await settle()
 
-    const hit = await handleCloudflareResponseCache({ cache, context, render, request, rule, now: () => 30_000 })
+    const hit = await handleCloudflareResponseCache({
+      cache,
+      context,
+      render,
+      request,
+      rule,
+      now: () => 30_000,
+    })
     expect(hit.headers.get('x-unhead-cache')).toBe('HIT')
     expect(hit.headers.get('cache-control')).toBe('public, s-maxage=60')
     expect(await hit.text()).toBe('fresh')
@@ -103,7 +127,14 @@ describe('cloudflare response cache', () => {
       .mockResolvedValueOnce(new Response('refreshed'))
     const request = new Request('https://unhead.unjs.io/docs/cache')
 
-    await handleCloudflareResponseCache({ cache, context: firstContext.context, render, request, rule, now: () => 1_000 })
+    await handleCloudflareResponseCache({
+      cache,
+      context: firstContext.context,
+      render,
+      request,
+      rule,
+      now: () => 1_000,
+    })
     await firstContext.settle()
 
     const staleContext = mockContext()
@@ -119,7 +150,14 @@ describe('cloudflare response cache', () => {
     expect(await stale.text()).toBe('stale')
 
     await staleContext.settle()
-    const hit = await handleCloudflareResponseCache({ cache, context: mockContext().context, render, request, rule, now: () => 63_000 })
+    const hit = await handleCloudflareResponseCache({
+      cache,
+      context: mockContext().context,
+      render,
+      request,
+      rule,
+      now: () => 63_000,
+    })
     expect(hit.headers.get('x-unhead-cache')).toBe('HIT')
     expect(await hit.text()).toBe('refreshed')
   })
@@ -132,7 +170,9 @@ describe('cloudflare response cache', () => {
     await handleCloudflareResponseCache({
       cache,
       context: privateContext.context,
-      render: async () => new Response('private', { headers: { 'cache-control': 'private' } }),
+      render: async () => new Response('private', {
+        headers: { 'cache-control': 'private' },
+      }),
       request,
       rule,
     })
@@ -142,7 +182,9 @@ describe('cloudflare response cache', () => {
     await handleCloudflareResponseCache({
       cache,
       context: mockContext().context,
-      render: async () => new Response('cookie', { headers: { 'set-cookie': 'session=secret' } }),
+      render: async () => new Response('cookie', {
+        headers: { 'set-cookie': 'session=secret' },
+      }),
       request,
       rule,
     })
@@ -179,18 +221,34 @@ describe('cloudflare response cache', () => {
     const page = (accept: string, headers: Record<string, string> = {}) => new Request('https://unhead.unjs.io/docs/head/api/use-head', {
       headers: { accept, ...headers },
     })
-    const renderHtml = async () => new Response('<!doctype html>', { headers: { 'content-type': 'text/html;charset=utf-8' } })
-    const renderMarkdown = async () => new Response('# useHead', { headers: { 'content-type': 'text/markdown;charset=utf-8' } })
+    const renderHtml = async () => new Response('<!doctype html>', {
+      headers: { 'content-type': 'text/html;charset=utf-8' },
+    })
+    const renderMarkdown = async () => new Response('# useHead', {
+      headers: { 'content-type': 'text/markdown;charset=utf-8' },
+    })
 
     it('never answers a Markdown request with the cached HTML page', async () => {
       const { cache } = mockCache()
       const browser = mockContext()
-      await handleCloudflareResponseCache({ cache, context: browser.context, render: renderHtml, request: page('text/html,application/xhtml+xml,*/*;q=0.8'), rule })
+      await handleCloudflareResponseCache({
+        cache,
+        context: browser.context,
+        render: renderHtml,
+        request: page('text/html,application/xhtml+xml,*/*;q=0.8'),
+        rule,
+      })
       await browser.settle()
 
       for (const accept of ['text/markdown', 'text/markdown, text/html;q=0.9, */*;q=0.8']) {
         const agent = mockContext()
-        const response = await handleCloudflareResponseCache({ cache, context: agent.context, render: renderMarkdown, request: page(accept), rule })
+        const response = await handleCloudflareResponseCache({
+          cache,
+          context: agent.context,
+          render: renderMarkdown,
+          request: page(accept),
+          rule,
+        })
         await agent.settle()
         expect(await response.text()).toBe('# useHead')
       }
@@ -199,14 +257,32 @@ describe('cloudflare response cache', () => {
     it('never answers a browser with a Markdown body cached for an agent', async () => {
       const { cache } = mockCache()
       const agent = mockContext()
-      await handleCloudflareResponseCache({ cache, context: agent.context, render: renderMarkdown, request: page('text/markdown'), rule })
+      await handleCloudflareResponseCache({
+        cache,
+        context: agent.context,
+        render: renderMarkdown,
+        request: page('text/markdown'),
+        rule,
+      })
       await agent.settle()
 
-      const browser = await handleCloudflareResponseCache({ cache, context: mockContext().context, render: renderHtml, request: page('text/html'), rule })
+      const browser = await handleCloudflareResponseCache({
+        cache,
+        context: mockContext().context,
+        render: renderHtml,
+        request: page('text/html'),
+        rule,
+      })
       expect(browser.headers.get('x-unhead-cache')).toBe('MISS')
       expect(await browser.text()).toBe('<!doctype html>')
 
-      const nextAgent = await handleCloudflareResponseCache({ cache, context: mockContext().context, render: renderHtml, request: page('text/markdown'), rule })
+      const nextAgent = await handleCloudflareResponseCache({
+        cache,
+        context: mockContext().context,
+        render: renderHtml,
+        request: page('text/markdown'),
+        rule,
+      })
       expect(nextAgent.headers.get('x-unhead-cache')).toBe('HIT')
       expect(await nextAgent.text()).toBe('# useHead')
     })
@@ -217,10 +293,22 @@ describe('cloudflare response cache', () => {
       const { cache } = mockCache()
       const browser = mockContext()
       const render = vi.fn(renderHtml)
-      await handleCloudflareResponseCache({ cache, context: browser.context, render, request: page('text/html'), rule })
+      await handleCloudflareResponseCache({
+        cache,
+        context: browser.context,
+        render,
+        request: page('text/html'),
+        rule,
+      })
       await browser.settle()
 
-      const crawler = await handleCloudflareResponseCache({ cache, context: mockContext().context, render, request: page('*/*', { 'user-agent': GPTBOT }), rule })
+      const crawler = await handleCloudflareResponseCache({
+        cache,
+        context: mockContext().context,
+        render,
+        request: page('*/*', { 'user-agent': GPTBOT }),
+        rule,
+      })
       expect(crawler.headers.get('x-unhead-cache')).toBe('HIT')
       expect(render).toHaveBeenCalledTimes(1)
     })
@@ -228,13 +316,29 @@ describe('cloudflare response cache', () => {
     it('keys data routes on the URL alone, whatever the Accept header', async () => {
       const { cache } = mockCache()
       const first = mockContext()
-      const render = vi.fn(async () => new Response('{"stars":1}', { headers: { 'content-type': 'application/json' } }))
-      const data = (accept: string) => new Request('https://unhead.unjs.io/api/github/unjs@unhead/stars', { headers: { accept } })
+      const render = vi.fn(async () => new Response('{"stars":1}', {
+        headers: { 'content-type': 'application/json' },
+      }))
+      const data = (accept: string) => new Request('https://unhead.unjs.io/api/github/unjs@unhead/stars', {
+        headers: { accept },
+      })
       const dataRule: CloudflareResponseCacheRule = { kind: 'data', maxAge: 60, staleMaxAge: 300 }
 
-      await handleCloudflareResponseCache({ cache, context: first.context, render, request: data('application/json'), rule: dataRule })
+      await handleCloudflareResponseCache({
+        cache,
+        context: first.context,
+        render,
+        request: data('application/json'),
+        rule: dataRule,
+      })
       await first.settle()
-      const hit = await handleCloudflareResponseCache({ cache, context: mockContext().context, render, request: data('text/markdown'), rule: dataRule })
+      const hit = await handleCloudflareResponseCache({
+        cache,
+        context: mockContext().context,
+        render,
+        request: data('text/markdown'),
+        rule: dataRule,
+      })
 
       expect(hit.headers.get('x-unhead-cache')).toBe('HIT')
       expect(render).toHaveBeenCalledTimes(1)

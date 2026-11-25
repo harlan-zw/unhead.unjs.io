@@ -18,17 +18,35 @@ import { checkFreeToolRateLimit } from '../server/utils/rate-limit'
 
 vi.mock('cloudflare:workers', () => ({ env: {} }))
 vi.mock('#nitro/virtual/polyfills', () => ({}))
-vi.mock('#nitro/virtual/public-assets', () => ({ isPublicAssetURL: () => false }))
-vi.mock('#nitro/runtime/app', () => ({ resolveWebsocketHooks: () => ({}) }))
-vi.mock('#nitro/runtime/task', () => ({ runCronTasks: vi.fn() }))
-vi.mock('nitro/app', () => ({ useNitroApp: () => ({ fetch: (request: Request) => {
-  // Require request-scoped bindings, rather than the Worker's global fallback.
-  setCloudflareBindings(undefined)
-  return app.fetch(request)
-} }) }))
-vi.mock('#content/manifest', () => ({ checksums: { docsUnhead: 'current-checksum' } }))
-vi.mock('#unhead-content-query-original', () => ({ default: async () => [{ path: '/docs/head' }] }))
-vi.mock('nuxt/server', () => ({ useRuntimeConfig: () => ({ checkinDeployment: 'runtime-regression' }) }))
+vi.mock('#nitro/virtual/public-assets', () => ({
+  isPublicAssetURL: () => false,
+}))
+vi.mock('#nitro/runtime/app', () => ({
+  resolveWebsocketHooks: () => ({}),
+}))
+vi.mock('#nitro/runtime/task', () => ({
+  runCronTasks: vi.fn(),
+}))
+vi.mock('nitro/app', () => ({
+  useNitroApp: () => ({
+    fetch: (request: Request) => {
+      // Require request-scoped bindings, rather than the Worker's global fallback.
+      setCloudflareBindings(undefined)
+      return app.fetch(request)
+    },
+  }),
+}))
+vi.mock('#content/manifest', () => ({
+  checksums: { docsUnhead: 'current-checksum' },
+}))
+vi.mock('#unhead-content-query-original', () => ({
+  default: async () => [
+    { path: '/docs/head' },
+  ],
+}))
+vi.mock('nuxt/server', () => ({
+  useRuntimeConfig: () => ({ checkinDeployment: 'runtime-regression' }),
+}))
 
 const app = new H3()
 app.post('/api/feedback', feedbackHandler)
@@ -40,7 +58,9 @@ app.post('/__nuxt_content/docsUnhead/query', queryHandler)
 function executionContext() {
   const pending: Promise<unknown>[] = []
   return {
-    context: { waitUntil: (promise: Promise<unknown>) => pending.push(promise) } as unknown as ExecutionContext,
+    context: {
+      waitUntil: (promise: Promise<unknown>) => pending.push(promise),
+    } as unknown as ExecutionContext,
     settle: () => Promise.all(pending),
   }
 }
@@ -77,7 +97,11 @@ function feedbackDatabase() {
       }
     },
   } as unknown as D1Database
-  return { sqlite, binding, attempts: () => attempts }
+  return {
+    sqlite,
+    binding,
+    attempts: () => attempts,
+  }
 }
 
 afterEach(() => {
@@ -86,9 +110,18 @@ afterEach(() => {
 
 describe('pages request runtime', () => {
   it.each([
-    ['/api/feedback', { comment: 'Useful documentation' }],
-    ['/api/feedback-thumbs', { thumbs: 'up' }],
-    ['/api/tools/track', { tool: 'capo-analyzer', action: 'use' }],
+    [
+      '/api/feedback',
+      { comment: 'Useful documentation' },
+    ],
+    [
+      '/api/feedback-thumbs',
+      { thumbs: 'up' },
+    ],
+    [
+      '/api/tools/track',
+      { tool: 'capo-analyzer', action: 'use' },
+    ],
     ['/api/tools/fetch-head?url=https://example.com', undefined],
   ])('rejects rate-limited Pages requests before downstream work: %s', async (path, body) => {
     const fixture = feedbackDatabase()
@@ -103,8 +136,14 @@ describe('pages request runtime', () => {
       const response = await worker.fetch(new Request(`https://unhead.unjs.io${path}`, {
         method: body ? 'POST' : 'GET',
         headers: { 'content-type': 'application/json', 'cf-connecting-ip': '192.0.2.1' },
-        body: body ? JSON.stringify(body) : undefined,
-      }), { DB: fixture.binding, RL_FREE_TOOLS: { limit }, TOOL_ANALYTICS: { writeDataPoint } } as unknown as Cloudflare.Env, context.context)
+        body: body
+          ? JSON.stringify(body)
+          : undefined,
+      }), {
+        DB: fixture.binding,
+        RL_FREE_TOOLS: { limit },
+        TOOL_ANALYTICS: { writeDataPoint },
+      } as unknown as Cloudflare.Env, context.context)
 
       expect(response.status).toBe(429)
       expect(limit).toHaveBeenCalledWith({ key: 'ip:192.0.2.1' })
@@ -123,13 +162,28 @@ describe('pages request runtime', () => {
     const event = mockEvent('https://unhead.unjs.io/api/tools/track')
     const limit = vi.fn(async () => ({ success: false }))
     const writeDataPoint = vi.fn()
-    event.context.cloudflare = { env: { RL_FREE_TOOLS: { limit }, TOOL_ANALYTICS: { writeDataPoint } } }
+    event.context.cloudflare = {
+      env: {
+        RL_FREE_TOOLS: { limit },
+        TOOL_ANALYTICS: { writeDataPoint },
+      },
+    }
 
     await expect(checkFreeToolRateLimit(event)).rejects.toMatchObject({ status: 429 })
     trackToolUsage(event, 'capo-analyzer', 'copy', { error: true }, 'legacy-session')
     expect(writeDataPoint).toHaveBeenCalledExactlyOnceWith({
-      blobs: ['tool', 'capo-analyzer', 'copy', 'legacy-session', 'error', ''],
-      doubles: [expect.any(Number), 0],
+      blobs: [
+        'tool',
+        'capo-analyzer',
+        'copy',
+        'legacy-session',
+        'error',
+        '',
+      ],
+      doubles: [
+        expect.any(Number),
+        0,
+      ],
       indexes: ['legacy-s'],
     })
   })
@@ -142,14 +196,32 @@ describe('pages request runtime', () => {
       const response = await worker.fetch(new Request('https://unhead.unjs.io/api/tools/track', {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'cookie': 'analytics-session=fixture-session' },
-        body: JSON.stringify({ tool: 'capo-analyzer', action: 'use', outcome, label: 'fixture' }),
-      }), { DB: fixture.binding, TOOL_ANALYTICS: { writeDataPoint } } as unknown as Cloudflare.Env, context.context)
+        body: JSON.stringify({
+          tool: 'capo-analyzer',
+          action: 'use',
+          outcome,
+          label: 'fixture',
+        }),
+      }), {
+        DB: fixture.binding,
+        TOOL_ANALYTICS: { writeDataPoint },
+      } as unknown as Cloudflare.Env, context.context)
 
       expect(response.status).toBe(200)
       expect(await response.json()).toEqual({ ok: true })
       expect(writeDataPoint).toHaveBeenCalledExactlyOnceWith({
-        blobs: ['tool', 'capo-analyzer', 'use', 'fixture-session', outcome, 'fixture'],
-        doubles: [expect.any(Number), 0],
+        blobs: [
+          'tool',
+          'capo-analyzer',
+          'use',
+          'fixture-session',
+          outcome,
+          'fixture',
+        ],
+        doubles: [
+          expect.any(Number),
+          0,
+        ],
         indexes: ['fixture-'],
       })
       await context.settle()
@@ -182,10 +254,18 @@ describe('pages request runtime', () => {
       ])
 
       const event = mockEvent(Object.assign(new Request('https://unhead.unjs.io/admin'), {
-        runtime: { name: 'cloudflare', cloudflare: { env: { DB: fixture.binding }, context: context.context } },
+        runtime: {
+          name: 'cloudflare',
+          cloudflare: {
+            env: { DB: fixture.binding },
+            context: context.context,
+          },
+        },
       }))
       const rows = await getDB(event).select({ comment: feedback.comment }).from(feedback).all()
-      expect(rows).toEqual([{ comment: 'Useful documentation' }])
+      expect(rows).toEqual([
+        { comment: 'Useful documentation' },
+      ])
     }
     finally {
       fixture.sqlite.close()
@@ -196,7 +276,9 @@ describe('pages request runtime', () => {
     const fixture = feedbackDatabase()
     try {
       const event = mockEvent('https://unhead.unjs.io/admin')
-      event.context.cloudflare = { env: { DB: fixture.binding } }
+      event.context.cloudflare = {
+        env: { DB: fixture.binding },
+      }
       expect(await getDB(event).select().from(feedback).all()).toEqual([])
     }
     finally {
@@ -206,10 +288,12 @@ describe('pages request runtime', () => {
 
   it('returns a 200 MISS then a HIT after the registered cache write settles', async () => {
     const entries = new Map<string, Response>()
-    vi.stubGlobal('caches', { open: async () => ({
-      match: async (key: Request) => entries.get(key.url)?.clone(),
-      put: async (key: Request, response: Response) => { entries.set(key.url, response.clone()) },
-    }) })
+    vi.stubGlobal('caches', {
+      open: async () => ({
+        match: async (key: Request) => entries.get(key.url)?.clone(),
+        put: async (key: Request, response: Response) => { entries.set(key.url, response.clone()) },
+      }),
+    })
     const context = executionContext()
     const dispatch = () => worker.fetch(new Request('https://unhead.unjs.io/__nuxt_content/docsUnhead/query?v=current-checksum', {
       method: 'POST',
@@ -220,19 +304,25 @@ describe('pages request runtime', () => {
     const miss = await dispatch()
     expect(miss.status).toBe(200)
     expect(miss.headers.get('x-unhead-cache')).toBe('MISS')
-    expect(await miss.json()).toEqual([{ path: '/docs/head' }])
+    expect(await miss.json()).toEqual([
+      { path: '/docs/head' },
+    ])
     await context.settle()
     const hit = await dispatch()
     expect(hit.status).toBe(200)
     expect(hit.headers.get('x-unhead-cache')).toBe('HIT')
-    expect(await hit.json()).toEqual([{ path: '/docs/head' }])
+    expect(await hit.json()).toEqual([
+      { path: '/docs/head' },
+    ])
 
     for (const response of entries.values())
       response.headers.set('x-unhead-cache-created-at', String(Date.now() - 25 * 60 * 60 * 1000))
     const stale = await dispatch()
     expect(stale.status).toBe(200)
     expect(stale.headers.get('x-unhead-cache')).toBe('STALE')
-    expect(await stale.json()).toEqual([{ path: '/docs/head' }])
+    expect(await stale.json()).toEqual([
+      { path: '/docs/head' },
+    ])
     await context.settle()
     expect((await dispatch()).headers.get('x-unhead-cache')).toBe('HIT')
   })

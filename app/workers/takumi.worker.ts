@@ -78,7 +78,9 @@ self.onmessage = async (event) => {
       self.postMessage({ type: 'ready' })
     }
     catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to initialize renderer'
+      const message = error instanceof Error
+        ? error.message
+        : 'Failed to initialize renderer'
       console.error('Worker: Failed to initialize renderer', error)
       self.postMessage({ type: 'init-error', error: message })
     }
@@ -141,10 +143,18 @@ self.onmessage = async (event) => {
 
         // Handle Fragment
         if (type === 'symbol-fragment') {
-          const children = Array.isArray(props.children) ? props.children : [props.children]
+          const children = Array.isArray(props.children)
+            ? props.children
+            : [props.children]
           return {
             type: 'container',
-            style: { display: 'flex', flexDirection: 'column', width: '100%', height: '100%', ...style },
+            style: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              height: '100%',
+              ...style,
+            },
             children: children.map((n: any) => toTakumiNode(n, nextInheritedStyle)).filter(Boolean),
           }
         }
@@ -155,7 +165,9 @@ self.onmessage = async (event) => {
         }
 
         const children = props.children
-          ? (Array.isArray(props.children) ? props.children : [props.children])
+          ? (Array.isArray(props.children)
+              ? props.children
+              : [props.children])
           : []
 
         const mappedChildren = children.flat().map((n: any) => toTakumiNode(n, nextInheritedStyle)).filter(Boolean)
@@ -253,7 +265,9 @@ self.onmessage = async (event) => {
         id,
         result: {
           success: false,
-          error: err instanceof Error ? err.message : 'Rendering failed',
+          error: err instanceof Error
+            ? err.message
+            : 'Rendering failed',
         },
       })
     }

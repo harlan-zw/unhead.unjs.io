@@ -5,7 +5,9 @@ export function useModule(stats: any, _slug?: Ref<string>) {
   const { selectedFramework } = useFrameworkSelector()
   const route = useRoute()
   return computed(() => {
-    let slug = selectedFramework.value.slug === 'typescript' ? 'unhead' : selectedFramework.value.slug
+    let slug = selectedFramework.value.slug === 'typescript'
+      ? 'unhead'
+      : selectedFramework.value.slug
     const maybeSubModulePath = route.path.split('/')[2]
     if (['schema-org', 'scripts'].includes(maybeSubModulePath)) {
       slug = maybeSubModulePath

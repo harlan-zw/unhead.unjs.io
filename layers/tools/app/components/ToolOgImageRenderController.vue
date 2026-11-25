@@ -26,11 +26,17 @@ const render = useDebounceFn(() => {
     height,
     format: 'png',
   }).catch((renderError) => {
-    error.value = renderError instanceof Error ? renderError.message : 'Image rendering failed'
+    error.value = renderError instanceof Error
+      ? renderError.message
+      : 'Image rendering failed'
   })
 }, 500)
 
-watch([() => code, () => width, () => height], render)
+watch([
+  () => code,
+  () => width,
+  () => height,
+], render)
 watch(renderer.isReady, (value) => {
   if (value)
     render()

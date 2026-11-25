@@ -16,7 +16,9 @@ const appConfig = useAppConfig()
 const ContentSearchModal = shallowRef<Component | null>(null)
 
 useSeoMeta({
-  title: props.error.statusCode === 404 ? 'Page not found' : props.error.statusMessage,
+  title: props.error.statusCode === 404
+    ? 'Page not found'
+    : props.error.statusMessage,
   description: 'We are sorry but this page could not be found.',
 })
 const { selectedFramework } = useFrameworkSelector()

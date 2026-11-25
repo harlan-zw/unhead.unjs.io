@@ -150,8 +150,12 @@ function formatTagPreview(tag: { tag: string, attributes: Record<string, string>
   }
   if (tag.tag === 'link') {
     const href = tag.attributes.href
-    const short = href ? `/${href.split('/').pop()}` : ''
-    return `<link rel="${tag.attributes.rel || '?'}"${short ? ` href="...${short}"` : ''}>`
+    const short = href
+      ? `/${href.split('/').pop()}`
+      : ''
+    return `<link rel="${tag.attributes.rel || '?'}"${short
+      ? ` href="...${short}"`
+      : ''}>`
   }
   if (tag.tag === 'script' && tag.attributes.src) {
     const src = `/${tag.attributes.src.split('/').pop()}`

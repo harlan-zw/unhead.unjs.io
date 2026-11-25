@@ -14,7 +14,9 @@ vi.mock('#imports', () => ({
   useAsyncData: (...args: any[]) => useAsyncDataMock(...args),
   createError: (input: any) => Object.assign(new Error(input?.statusMessage ?? 'error'), input),
   toRaw: (value: any) => value,
-  toValue: (value: any) => (value && typeof value === 'object' && 'value' in value ? value.value : value),
+  toValue: (value: any) => (value && typeof value === 'object' && 'value' in value
+    ? value.value
+    : value),
   queryCollection: (...args: any[]) => queryCollectionMock(...args),
   queryCollectionNavigation: (...args: any[]) => queryCollectionNavigationMock(...args),
   inject: (...args: any[]) => injectInSetup(...args),
@@ -78,16 +80,24 @@ function requireNuxtContext() {
 
 // Vue warns and returns undefined when inject() runs outside setup().
 function injectInSetup(...args: any[]) {
-  return setupActive ? injectMock(...args) : undefined
+  return setupActive
+    ? injectMock(...args)
+    : undefined
 }
 
 Object.defineProperty(globalThis, 'ref', { value: vueRef, configurable: true, writable: true })
 Object.defineProperty(globalThis, 'computed', { value: vueComputed, configurable: true, writable: true })
-Object.defineProperty(globalThis, 'toRaw', { value: (v: any) => v, configurable: true, writable: true })
+Object.defineProperty(globalThis, 'toRaw', {
+  value: (v: any) => v,
+  configurable: true,
+  writable: true,
+})
 Object.defineProperty(globalThis, 'useNuxtApp', {
   value: () => {
     requireNuxtContext()
-    return { static: { data: nuxtAppStaticData } }
+    return {
+      static: { data: nuxtAppStaticData },
+    }
   },
   configurable: true,
   writable: true,
@@ -95,7 +105,11 @@ Object.defineProperty(globalThis, 'useNuxtApp', {
 Object.defineProperty(globalThis, 'useRouter', {
   value: () => {
     requireNuxtContext()
-    return { currentRoute: { value: { path: currentRoutePath } } }
+    return {
+      currentRoute: {
+        value: { path: currentRoutePath },
+      },
+    }
   },
   configurable: true,
   writable: true,
@@ -139,7 +153,9 @@ function injectNuxt({ navigation, loadNavigation }: { navigation: NavRef, loadNa
       return loadNavigation
     return undefined
   })
-  return { static: { data: {} } }
+  return {
+    static: { data: {} },
+  }
 }
 
 /**
@@ -149,10 +165,20 @@ function injectNuxt({ navigation, loadNavigation }: { navigation: NavRef, loadNa
 function makeNavigation() {
   const root: NavNode = { title: 'docs', path: '/', children: [] }
   const head: NavNode = { title: 'Head', path: '/docs/head', children: [] }
-  const gettingStarted: NavNode = { title: 'Getting Started', path: '/docs/head/getting-started', page: false, children: [] }
+  const gettingStarted: NavNode = {
+    title: 'Getting Started',
+    path: '/docs/head/getting-started',
+    page: false,
+    children: [],
+  }
   const overview: NavNode = { title: 'Overview', path: '/docs/head/getting-started/overview' }
   const installation: NavNode = { title: 'Installation', path: '/docs/head/getting-started/installation' }
-  const api: NavNode = { title: 'API', path: '/docs/head/api', page: false, children: [] }
+  const api: NavNode = {
+    title: 'API',
+    path: '/docs/head/api',
+    page: false,
+    children: [],
+  }
   const useHead: NavNode = { title: 'useHead()', path: '/docs/head/api/use-head' }
   gettingStarted.children.push(overview, installation)
   api.children.push(useHead)
@@ -160,9 +186,24 @@ function makeNavigation() {
   root.children.push(head)
 
   const rows: ContentRow[] = [
-    { id: 'overview', path: overview.path, title: overview.title, description: 'desc overview' },
-    { id: 'installation', path: installation.path, title: installation.title, description: 'desc installation' },
-    { id: 'use-head', path: useHead.path, title: useHead.title, description: 'desc use-head' },
+    {
+      id: 'overview',
+      path: overview.path,
+      title: overview.title,
+      description: 'desc overview',
+    },
+    {
+      id: 'installation',
+      path: installation.path,
+      title: installation.title,
+      description: 'desc installation',
+    },
+    {
+      id: 'use-head',
+      path: useHead.path,
+      title: useHead.title,
+      description: 'desc use-head',
+    },
   ]
   return { tree: root, rows }
 }
@@ -170,7 +211,9 @@ function makeNavigation() {
 function stubQueryCollectionPage(page: { path: string, title: string, body: { value: string } }) {
   queryCollectionMock.mockImplementation(() => ({
     path: (path: string) => ({
-      first: async () => (path === page.path ? page : null),
+      first: async () => (path === page.path
+        ? page
+        : null),
     }),
     where: (field: string, op: string, values: string[]) => ({
       select: (...fields: string[]) => ({
@@ -202,7 +245,11 @@ beforeEach(() => {
     const { tree } = makeNavigation()
     return [tree]
   })
-  stubQueryCollectionPage({ path: '/docs/head/getting-started/overview', title: 'Overview', body: { value: 'content' } })
+  stubQueryCollectionPage({
+    path: '/docs/head/getting-started/overview',
+    title: 'Overview',
+    body: { value: 'content' },
+  })
 
   // Like Nuxt, read the app synchronously, then start the handler in a later
   // microtask with the app context restored for its synchronous part only.
@@ -210,7 +257,10 @@ beforeEach(() => {
     requireNuxtContext()
     await Promise.resolve()
     const data = await runWithNuxtContext(handler)
-    return { data: { value: data }, error: { value: null } }
+    return {
+      data: { value: data },
+      error: { value: null },
+    }
   })
 
   // The @nuxt/content runtime implements queryCollectionItemSurroundings by
@@ -219,7 +269,10 @@ beforeEach(() => {
   queryCollectionItemSurroundingsMock.mockImplementation(async (collection: string, path: string) => {
     surroundingsCalls.push({ collection, path })
     await queryCollectionNavigationMock(collection, ['title'])
-    return [null, { path: '/docs/head/getting-started/installation', title: 'Installation', description: 'desc installation' }]
+    return [
+      null,
+      { path: '/docs/head/getting-started/installation', title: 'Installation', description: 'desc installation' },
+    ]
   })
 })
 
@@ -245,7 +298,11 @@ describe('useCurrentDocPage SSR render queries', () => {
 
   it('carries only a predecessor link on the last docs page', async () => {
     currentRoutePath = '/docs/head/api/use-head'
-    stubQueryCollectionPage({ path: '/docs/head/api/use-head', title: 'useHead()', body: { value: 'content' } })
+    stubQueryCollectionPage({
+      path: '/docs/head/api/use-head',
+      title: 'useHead()',
+      body: { value: 'content' },
+    })
 
     const loadNavigation = vi.fn(async () => {
       const [tree] = await queryCollectionNavigationMock('docsUnhead', ['new', 'deprecated'])

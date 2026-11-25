@@ -34,5 +34,10 @@ export function useToolTracking(toolId: string) {
 
   onMounted(trackView)
 
-  return { track, trackView, trackUse, resetUseTracking }
+  return {
+    track,
+    trackView,
+    trackUse,
+    resetUseTracking,
+  }
 }

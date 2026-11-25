@@ -7,7 +7,9 @@ function findHashPosition(hash: string) {
     // vue-router does not incorporate scroll-margin-top on its own.
     getScrollMarginTop: (element) => {
       const margin = Number.parseFloat(getComputedStyle(element).scrollMarginTop)
-      return Number.isFinite(margin) ? margin : 0
+      return Number.isFinite(margin)
+        ? margin
+        : 0
     },
   })
 }

@@ -15,9 +15,15 @@ describe('createResilientDocsQuery', () => {
 
     const result = await query('docsUnhead:page:/docs/head/getting-started', run)
 
-    expect(result).toEqual({ data: { path: '/docs/head/getting-started' }, stale: false })
+    expect(result).toEqual({
+      data: { path: '/docs/head/getting-started' },
+      stale: false,
+    })
     expect(attempts).toBe(3)
-    expect(sleep.mock.calls).toEqual([[200], [400]])
+    expect(sleep.mock.calls).toEqual([
+      [200],
+      [400],
+    ])
   })
 
   it('throws the last error when every attempt fails and nothing is cached', async () => {
@@ -30,7 +36,9 @@ describe('createResilientDocsQuery', () => {
     await expect(query('docsUnhead:page:/docs/head', run))
       .rejects
       .toThrow('D1_ERROR: requests queued too long')
-    expect(sleep.mock.calls).toEqual([[5]])
+    expect(sleep.mock.calls).toEqual([
+      [5],
+    ])
   })
 
   it.each([
@@ -77,7 +85,9 @@ describe('createResilientDocsQuery', () => {
       name: 'FetchError',
       cause: new TypeError('Failed to fetch'),
     }),
-    new Error('D1_ERROR', { cause: new Error('Database overloaded. Too many requests queued.') }),
+    new Error('D1_ERROR', {
+      cause: new Error('Database overloaded. Too many requests queued.'),
+    }),
   ])('retries transient endpoint and database failures: %s', async (error) => {
     const sleep = vi.fn(async () => {})
     const query = createResilientDocsQuery({ sleep, baseDelayMs: 5 })
@@ -87,13 +97,20 @@ describe('createResilientDocsQuery', () => {
     await expect(query('docsUnhead:page:/docs/head', run)).resolves.toEqual({ data, stale: false })
 
     expect(run).toHaveBeenCalledTimes(2)
-    expect(sleep.mock.calls).toEqual([[5]])
+    expect(sleep.mock.calls).toEqual([
+      [5],
+    ])
   })
 
   it('serves stale cached content when a previously fetched page starts failing', async () => {
     const sleep = vi.fn(async () => {})
     const onStaleFallback = vi.fn()
-    const query = createResilientDocsQuery({ retries: 1, baseDelayMs: 5, sleep, onStaleFallback })
+    const query = createResilientDocsQuery({
+      retries: 1,
+      baseDelayMs: 5,
+      sleep,
+      onStaleFallback,
+    })
     const staleRun = async () => {
       throw new Error('D1_ERROR: requests queued too long')
     }
@@ -102,7 +119,10 @@ describe('createResilientDocsQuery', () => {
 
     const result = await query('docsUnhead:page:/docs/head', staleRun)
 
-    expect(result).toEqual({ data: { path: '/docs/head', title: 'Introduction' }, stale: true })
+    expect(result).toEqual({
+      data: { path: '/docs/head', title: 'Introduction' },
+      stale: true,
+    })
     expect(onStaleFallback).toHaveBeenCalledOnce()
     expect(onStaleFallback.mock.calls[0][0]).toBeInstanceOf(Error)
     expect(onStaleFallback.mock.calls[0][1]).toBe('docsUnhead:page:/docs/head')
@@ -121,7 +141,10 @@ describe('createResilientDocsQuery', () => {
 
     const result = await query('docsUnhead:page:/docs/head', failRun)
 
-    expect(result).toEqual({ data: { path: '/docs/head', version: 2 }, stale: true })
+    expect(result).toEqual({
+      data: { path: '/docs/head', version: 2 },
+      stale: true,
+    })
   })
 
   it('never caches a null miss so a not-found page cannot mask a later outage', async () => {
@@ -166,7 +189,12 @@ describe('createResilientDocsQuery', () => {
 
   it('evicts the oldest entries beyond the cache size limit', async () => {
     const sleep = vi.fn(async () => {})
-    const query = createResilientDocsQuery({ retries: 1, baseDelayMs: 5, sleep, maxCacheEntries: 2 })
+    const query = createResilientDocsQuery({
+      retries: 1,
+      baseDelayMs: 5,
+      sleep,
+      maxCacheEntries: 2,
+    })
     const fail = async () => {
       throw new Error('D1_ERROR: requests queued too long')
     }

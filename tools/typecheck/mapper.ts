@@ -10,7 +10,10 @@ const mapper: ContentMapper = {
   ...vue,
   transform(params) {
     if (params.fileName.split(/[\\/]/).includes('node_modules')) {
-      const candidates = [params.fileName.replace(/\.vue$/, '.d.vue.ts'), `${params.fileName}.d.ts`]
+      const candidates = [
+        params.fileName.replace(/\.vue$/, '.d.vue.ts'),
+        `${params.fileName}.d.ts`,
+      ]
       const declaration = candidates.find(existsSync)
       if (declaration) {
         const specifier = JSON.stringify(declaration.replace(/\.ts$/, '.js'))

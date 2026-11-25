@@ -8,7 +8,9 @@ import process from 'node:process'
 import { gunzipSync } from 'node:zlib'
 
 const repoRoot = resolve(import.meta.dirname, '..')
-const wranglerBin = resolve(repoRoot, `node_modules/.bin/wrangler${process.platform === 'win32' ? '.cmd' : ''}`)
+const wranglerBin = resolve(repoRoot, `node_modules/.bin/wrangler${process.platform === 'win32'
+  ? '.cmd'
+  : ''}`)
 const D1_MAX_STATEMENT_BYTES = 100_000
 const D1_TARGET_STATEMENT_BYTES = 95_000
 
@@ -124,7 +126,10 @@ function rechunkInsert(statement, table, columns) {
     throw new Error(`Could not map oversized row for ${table}`)
 
   const candidates = values
-    .map((value, index) => ({ index, value: parseSqlString(value) }))
+    .map((value, index) => ({
+      index,
+      value: parseSqlString(value),
+    }))
     .filter(candidate => candidate.value !== null && candidate.index !== idIndex && candidate.index !== hashIndex)
     .sort((left, right) => Buffer.byteLength(right.value) - Buffer.byteLength(left.value))
   const selected = candidates[0]
@@ -138,14 +143,20 @@ function rechunkInsert(statement, table, columns) {
   const provisionalHash = `${hash}-d1-sync`
   const insertValues = [...values]
   insertValues[hashIndex] = sqlString(provisionalHash)
-  const buildInsert = chunk => `INSERT INTO ${table} VALUES (${insertValues.map((value, index) => index === selected.index ? sqlString(chunk) : value).join(', ')}); -- ${hash}`
-  const buildUpdate = (chunk, final) => `UPDATE ${table} SET ${column} = CONCAT(${column}, ${sqlString(chunk)})${final ? `, "__hash__" = ${storedHash}` : ''} WHERE "id" = ${id} AND "__hash__" = ${sqlString(provisionalHash)}; -- ${hash}`
+  const buildInsert = chunk => `INSERT INTO ${table} VALUES (${insertValues.map((value, index) => index === selected.index
+    ? sqlString(chunk)
+    : value).join(', ')}); -- ${hash}`
+  const buildUpdate = (chunk, final) => `UPDATE ${table} SET ${column} = CONCAT(${column}, ${sqlString(chunk)})${final
+    ? `, "__hash__" = ${storedHash}`
+    : ''} WHERE "id" = ${id} AND "__hash__" = ${sqlString(provisionalHash)}; -- ${hash}`
 
   if (Buffer.byteLength(buildInsert('')) > D1_TARGET_STATEMENT_BYTES)
     throw new Error(`Oversized row in ${table} has more than ${D1_TARGET_STATEMENT_BYTES} bytes outside its largest text column`)
 
   const characters = Array.from(selected.value)
-  const chunks = [takeStatementChunk(characters, buildInsert)]
+  const chunks = [
+    takeStatementChunk(characters, buildInsert),
+  ]
   while (characters.length)
     chunks.push(takeStatementChunk(characters, chunk => buildUpdate(chunk, true)))
 
@@ -176,7 +187,9 @@ export function parseContentDump(encoded, collectionHint) {
   // Every statement in that row shares its final hash, so replay the whole group.
   // Keep rebuilds and incremental imports on the same byte-limited statements.
   const normalizedStatements = statements
-    .flatMap(statement => statement.startsWith(`INSERT INTO ${table} `) ? rechunkInsert(statement, table, columns) : statement)
+    .flatMap(statement => statement.startsWith(`INSERT INTO ${table} `)
+      ? rechunkInsert(statement, table, columns)
+      : statement)
   const contentStatements = normalizedStatements
     .filter(statement => statement.startsWith(`INSERT INTO ${table} `) || statement.startsWith(`UPDATE ${table} `))
   const oversizedStatement = contentStatements.find(statement => Buffer.byteLength(statement) > D1_MAX_STATEMENT_BYTES)
@@ -187,7 +200,10 @@ export function parseContentDump(encoded, collectionHint) {
     const hash = statementHash(statement)
     if (!hash)
       throw new Error(`Content row in ${collectionHint} has no hash`)
-    contentByHash.set(hash, [...contentByHash.get(hash) ?? [], statement])
+    contentByHash.set(hash, [
+      ...contentByHash.get(hash) ?? [],
+      statement,
+    ])
   }
 
   const finalStatement = statements.find(statement => statement === `UPDATE _content_info SET ready = true WHERE id = 'checksum_${collectionHint}'; -- meta`)
@@ -225,8 +241,14 @@ export function planContentSync(dump, current, existingHashes = []) {
   const missingGroups = [...dump.contentByHash].filter(([hash]) => !present.has(hash))
   const contentPathIndex = contentPathIndexStatement(dump)
 
-  if (sameStructure && current?.version === dump.version && Boolean(current.ready) && !missingGroups.length && !staleHashes.length)
-    return { mode: 'ready', statements: [], missing: 0, stale: 0 }
+  if (sameStructure && current?.version === dump.version && Boolean(current.ready) && !missingGroups.length && !staleHashes.length) {
+    return {
+      mode: 'ready',
+      statements: [],
+      missing: 0,
+      stale: 0,
+    }
+  }
 
   const resetInfo = `DELETE FROM _content_info WHERE id = ${sqlString(`checksum_${dump.collection}`)};`
 
@@ -237,7 +259,13 @@ export function planContentSync(dump, current, existingHashes = []) {
       // The index is created after the inserts but before the ready flag flips,
       // so a partially applied plan always resumes instead of being left ready
       // and unindexed.
-      statements: [dump.infoCreateStatement, resetInfo, ...replay.slice(0, -1), contentPathIndex, ...replay.slice(-1)].filter(Boolean),
+      statements: [
+        dump.infoCreateStatement,
+        resetInfo,
+        ...replay.slice(0, -1),
+        contentPathIndex,
+        ...replay.slice(-1),
+      ].filter(Boolean),
       missing: dump.contentByHash.size,
       stale: existingHashes.length,
     }
@@ -257,7 +285,9 @@ export function planContentSync(dump, current, existingHashes = []) {
     : null
 
   return {
-    mode: current?.version === dump.version ? 'resume' : 'incremental',
+    mode: current?.version === dump.version
+      ? 'resume'
+      : 'incremental',
     statements: [
       dump.infoCreateStatement,
       resetInfo,
@@ -274,7 +304,9 @@ export function planContentSync(dump, current, existingHashes = []) {
 
 export function missingWantedHashes(dump, hashes) {
   const present = new Set(hashes)
-  return [...dump.contentByHash.keys()].filter(hash => !present.has(hash))
+  return [
+    ...dump.contentByHash.keys(),
+  ].filter(hash => !present.has(hash))
 }
 
 const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -319,7 +351,13 @@ export async function pollMissingReadyDumps(dumps, readInfo, {
 }
 
 export function parseSyncArgs(argv) {
-  const options = { collections: [], database: null, dryRun: false, help: false, sourceUrl: null }
+  const options = {
+    collections: [],
+    database: null,
+    dryRun: false,
+    help: false,
+    sourceUrl: null,
+  }
   for (let index = 0; index < argv.length; index++) {
     const arg = argv[index]
     if (arg === '--')
@@ -333,7 +371,9 @@ export function parseSyncArgs(argv) {
       continue
     }
     const readValue = (name) => {
-      const value = arg === name ? argv[++index] : arg.slice(name.length + 1)
+      const value = arg === name
+        ? argv[++index]
+        : arg.slice(name.length + 1)
       if (!value || value.startsWith('--'))
         throw new Error(`${name} requires a value`)
       return value
@@ -362,12 +402,20 @@ export function parseSyncArgs(argv) {
 function runWrangler(database, args, { inherit = false } = {}) {
   if (!existsSync(wranglerBin))
     throw new Error('Local Wrangler binary is missing; run pnpm install --frozen-lockfile first')
-  const result = spawnSync(wranglerBin, ['d1', 'execute', database, '--remote', ...args], {
+  const result = spawnSync(wranglerBin, [
+    'd1',
+    'execute',
+    database,
+    '--remote',
+    ...args,
+  ], {
     cwd: repoRoot,
     encoding: 'utf8',
     env: process.env,
     maxBuffer: 20 * 1024 * 1024,
-    stdio: inherit ? 'inherit' : ['ignore', 'pipe', 'pipe'],
+    stdio: inherit
+      ? 'inherit'
+      : ['ignore', 'pipe', 'pipe'],
   })
   if (result.error)
     throw result.error
@@ -389,7 +437,9 @@ async function loadDumps(options) {
   if (options.sourceUrl) {
     return await Promise.all(options.collections.map(async (collection) => {
       const url = `${options.sourceUrl}/__nuxt_content/${collection}/sql_dump.txt`
-      const response = await fetch(url, { signal: AbortSignal.timeout(30_000) })
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(30_000),
+      })
       if (!response.ok)
         throw new Error(`Could not fetch ${url}: HTTP ${response.status}`)
       return parseContentDump(await response.text(), collection)
@@ -422,7 +472,10 @@ function currentInfo(database, dumps) {
 }
 
 function existingTables(database, dumps) {
-  const names = ['_content_info', ...dumps.map(dump => dump.table)].map(sqlString).join(', ')
+  const names = [
+    '_content_info',
+    ...dumps.map(dump => dump.table),
+  ].map(sqlString).join(', ')
   return new Set(
     queryD1(database, `SELECT name FROM sqlite_schema WHERE type = 'table' AND name IN (${names})`)
       .map(row => row.name),
@@ -449,11 +502,15 @@ export async function main(argv = process.argv.slice(2)) {
     if (!dumps.length)
       throw new Error('No Nuxt Content dumps found')
     const tables = existingTables(options.database, dumps)
-    const before = tables.has('_content_info') ? currentInfo(options.database, dumps) : new Map()
+    const before = tables.has('_content_info')
+      ? currentInfo(options.database, dumps)
+      : new Map()
 
     tempDir = mkdtempSync(resolve(tmpdir(), 'nuxt-content-sync-'))
     for (const dump of dumps) {
-      const current = tables.has(dump.table) ? before.get(`checksum_${dump.collection}`) : undefined
+      const current = tables.has(dump.table)
+        ? before.get(`checksum_${dump.collection}`)
+        : undefined
       const hashes = existingHashes(options.database, dump, current)
       const plan = planContentSync(dump, current, hashes)
       console.log(`[nuxt-content-sync] ${dump.collection}: ${plan.mode} (${plan.missing} missing, ${plan.stale} stale)`)
@@ -486,7 +543,9 @@ export async function main(argv = process.argv.slice(2)) {
     return 0
   }
   catch (error) {
-    console.error(`[nuxt-content-sync] ${error instanceof Error ? error.message : String(error)}`)
+    console.error(`[nuxt-content-sync] ${error instanceof Error
+      ? error.message
+      : String(error)}`)
     return 1
   }
   finally {

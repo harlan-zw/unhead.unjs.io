@@ -22,11 +22,18 @@ export default defineEventHandler(async (e) => {
 
   const { comment, toolId, context } = body.data
   const referrer = parseURL(getHeader(e, 'Referer') || '').pathname
-  const path = (toolId ? `/tools/${toolId}` : referrer.replace(LeadingSlashPattern, '')).slice(0, 500)
+  const path = (toolId
+    ? `/tools/${toolId}`
+    : referrer.replace(LeadingSlashPattern, '')).slice(0, 500)
   const sessionId = getOrCreateAnalyticsSession(e)
 
   const db = getDB(e)
-  await db.insert(feedback).values({ path, comment, metadata: context, sessionId })
+  await db.insert(feedback).values({
+    path,
+    comment,
+    metadata: context,
+    sessionId,
+  })
 
   return { ok: true }
 })

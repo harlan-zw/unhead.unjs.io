@@ -26,12 +26,37 @@ async function check(script: string, template: string, language = 'ts') {
     writeFile(resolve(fixture, 'routes.ts'), 'export type _RouteNamesForFilePath<Path extends string> = Path extends "App.vue" ? "docs" : "other"\n'),
     writeFile(resolve(fixture, 'env.d.ts'), 'import type { useRoute as TypedUseRoute, definePage as TypedDefinePage } from "./router"\ndeclare global { const useRoute: typeof TypedUseRoute; const definePage: typeof TypedDefinePage }\n'),
     writeFile(resolve(fixture, 'tsconfig.json'), JSON.stringify({
-      compilerOptions: { strict: true, checkJs: true, noEmit: true, module: 'esnext', moduleResolution: 'bundler', target: 'esnext', skipLibCheck: true, types: [], paths: { 'vue': [vueTypes], 'vue-router': ['./router.ts'], 'vue-router/auto-routes': ['./routes.ts'] } },
+      compilerOptions: {
+        strict: true,
+        checkJs: true,
+        noEmit: true,
+        module: 'esnext',
+        moduleResolution: 'bundler',
+        target: 'esnext',
+        skipLibCheck: true,
+        types: [],
+        paths: {
+          'vue': [vueTypes],
+          'vue-router': ['./router.ts'],
+          'vue-router/auto-routes': ['./routes.ts'],
+        },
+      },
       include: ['*.ts', '*.vue'],
-      vueCompilerOptions: { plugins: [{ name: 'vue-router/volar/sfc-typed-router', options: { rootDir: fixture } }] },
+      vueCompilerOptions: {
+        plugins: [
+          {
+            name: 'vue-router/volar/sfc-typed-router',
+            options: { rootDir: fixture },
+          },
+        ],
+      },
     })),
   ])
-  const result = spawnSync(process.execPath, [resolve(root, 'tools/typecheck/check.ts'), '-p', resolve(fixture, 'tsconfig.json')], { cwd: root, encoding: 'utf8', timeout: 15_000 })
+  const result = spawnSync(process.execPath, [
+    resolve(root, 'tools/typecheck/check.ts'),
+    '-p',
+    resolve(fixture, 'tsconfig.json'),
+  ], { cwd: root, encoding: 'utf8', timeout: 15_000 })
   if (result.error)
     throw result.error
   return { status: result.status, output: result.stdout + result.stderr }

@@ -16,7 +16,9 @@ const props = withDefaults(defineProps<{
 })
 
 const loadingType = computed(() => {
-  return props.lazy === true || props.lazy === 'true' ? 'lazy' : 'eager'
+  return props.lazy === true || props.lazy === 'true'
+    ? 'lazy'
+    : 'eager'
 })
 </script>
 

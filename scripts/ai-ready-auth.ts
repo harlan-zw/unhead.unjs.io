@@ -26,7 +26,10 @@ if (import.meta.main) {
   if (!environmentFile)
     throw new Error('Run this script inside GitHub Actions.')
 
-  const result = createRuntimeSyncToken(process.env.NUXT_APP_SECRET, { cwd: process.cwd(), env: process.env })
+  const result = createRuntimeSyncToken(process.env.NUXT_APP_SECRET, {
+    cwd: process.cwd(),
+    env: process.env,
+  })
   if (result._tag === 'Err')
     throw new Error(result.message)
 

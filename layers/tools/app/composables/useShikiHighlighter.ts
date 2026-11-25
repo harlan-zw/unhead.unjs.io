@@ -38,7 +38,14 @@ async function initHighlighter() {
 
     highlighter.value = await createHighlighterCore({
       themes: [githubLightHighContrast.default, githubDarkHighContrast.default],
-      langs: [langTs.default, langJson.default, langHtml.default, langVue.default, langTsx.default, langJsx.default],
+      langs: [
+        langTs.default,
+        langJson.default,
+        langHtml.default,
+        langVue.default,
+        langTsx.default,
+        langJsx.default,
+      ],
       engine: createJavaScriptRegexEngine(),
     })
     isLoading.value = false
@@ -59,7 +66,9 @@ export function useShikiHighlighter() {
     if (!highlighter.value)
       return renderPlainCode(code)
 
-    const theme = colorMode.value === 'dark' ? 'github-dark-high-contrast' : 'github-light-high-contrast'
+    const theme = colorMode.value === 'dark'
+      ? 'github-dark-high-contrast'
+      : 'github-light-high-contrast'
     // Map short names to full names
     const langMap: Record<string, string> = {
       ts: 'typescript',
@@ -75,7 +84,9 @@ export function useShikiHighlighter() {
       })
     }
     catch (renderError) {
-      error.value = renderError instanceof Error ? renderError : new Error('Failed to highlight code')
+      error.value = renderError instanceof Error
+        ? renderError
+        : new Error('Failed to highlight code')
       return renderPlainCode(code)
     }
   }

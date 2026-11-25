@@ -3,12 +3,23 @@ import { describe, expect, it } from 'vitest'
 import { replaceImportSpecifier } from '../utils/content'
 
 function transform(source: string) {
-  const pre = ['pre', { language: 'ts', code: source }, ['code', {}, ['span', {}, source]]] as [string, { language: string, code: string }, any[]]
+  const pre = [
+    'pre',
+    { language: 'ts', code: source },
+    [
+      'code',
+      {},
+      ['span', {}, source],
+    ],
+  ] as [string, { language: string, code: string }, any[]]
   replaceImportSpecifier([pre], {
     '@unhead/dynamic-import': 'unhead',
     '@unhead/schema-org/@framework': '@unhead/schema-org',
   }, true)
-  return { copy: pre[1].code, visible: textContent(pre as any) }
+  return {
+    copy: pre[1].code,
+    visible: textContent(pre as any),
+  }
 }
 
 describe('typeScript documentation instance arguments', () => {

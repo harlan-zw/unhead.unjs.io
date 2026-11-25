@@ -1,22 +1,37 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { query } = vi.hoisted(() => ({ query: vi.fn() }))
+const { query } = vi.hoisted(() => ({
+  query: vi.fn(),
+}))
 vi.mock('@nuxt/content/server', () => ({ queryCollection: query }))
 const { default: install } = await import('../server/plugins/ai-ready-content-source')
 
 describe('ordinary Content bodies during page indexing', () => {
   beforeEach(() => {
     query.mockReset()
-    query.mockReturnValue({ path: () => ({ first: async () => ({
-      title: 'Installation',
-      description: 'Install Schema.org',
-      body: { value: [['p', {}, 'npm install @unhead/schema-org'], ['p', {}, 'pnpm add @unhead/schema-org']] },
-    }) }) })
+    query.mockReturnValue({
+      path: () => ({
+        first: async () => ({
+          title: 'Installation',
+          description: 'Install Schema.org',
+          body: {
+            value: [
+              ['p', {}, 'npm install @unhead/schema-org'],
+              ['p', {}, 'pnpm add @unhead/schema-org'],
+            ],
+          },
+        }),
+      }),
+    })
   })
 
   async function convert(route: string, event: unknown = {}) {
     const hooks = new Map<string, (context: any) => Promise<void>>()
-    install({ hooks: { hook: (name: string, callback: (context: any) => Promise<void>) => hooks.set(name, callback) } } as any)
+    install({
+      hooks: {
+        hook: (name: string, callback: (context: any) => Promise<void>) => hooks.set(name, callback),
+      },
+    } as any)
     const context = { route, event, markdown: 'Only the visible installation tab' }
     await hooks.get('ai-ready:page:markdown')?.(context)
     return context.markdown
@@ -31,11 +46,40 @@ describe('ordinary Content bodies during page indexing', () => {
     ['/docs/vue/head/api/composables/use-head-safe', '@unhead/vue', 'useHeadSafe({ title: \'safe\' })'],
     ['/docs/nuxt/head/api/composables/use-head-safe', '#imports', 'useHeadSafe({ title: \'safe\' })'],
   ])('resolves code templates at %s', async (route, specifier, call) => {
-    query.mockReturnValue({ path: () => ({ first: async () => ({
-      title: 'useHeadSafe()',
-      stem: 'head/api/composables/use-head-safe',
-      body: { value: [['pre', { language: 'ts', code: 'import { useHeadSafe } from \'@unhead/dynamic-import\'\nuseHeadSafe({ title: \'safe\' })' }, ['code', {}, ['span', {}, ['span', {}, 'import { useHeadSafe } from '], ['span', {}, '\'@unhead/dynamic-import\'']], '\n', ['span', {}, ['span', {}, 'useHeadSafe'], ['span', {}, '('], ['span', {}, '{ title: \'safe\' })']]]]] },
-    }) }) })
+    query.mockReturnValue({
+      path: () => ({
+        first: async () => ({
+          title: 'useHeadSafe()',
+          stem: 'head/api/composables/use-head-safe',
+          body: {
+            value: [
+              [
+                'pre',
+                { language: 'ts', code: 'import { useHeadSafe } from \'@unhead/dynamic-import\'\nuseHeadSafe({ title: \'safe\' })' },
+                [
+                  'code',
+                  {},
+                  [
+                    'span',
+                    {},
+                    ['span', {}, 'import { useHeadSafe } from '],
+                    ['span', {}, '\'@unhead/dynamic-import\''],
+                  ],
+                  '\n',
+                  [
+                    'span',
+                    {},
+                    ['span', {}, 'useHeadSafe'],
+                    ['span', {}, '('],
+                    ['span', {}, '{ title: \'safe\' })'],
+                  ],
+                ],
+              ],
+            ],
+          },
+        }),
+      }),
+    })
     const markdown = await convert(route)
     expect(markdown).toContain(`from '${specifier}'`)
     expect(markdown).toContain(call)

@@ -4,13 +4,48 @@ import { VisAxis, VisGroupedBar, VisGroupedBarSelectors, VisTooltip, VisXYContai
 const colors = ['#ef4444', '#f59e0b', '#8b5cf6']
 
 const data = [
-  { framework: 'WordPress', dupTitle: 8.2, dupDesc: 9.1, dupCanonical: 5.4 },
-  { framework: 'Angular', dupTitle: 5.1, dupDesc: 4.3, dupCanonical: 2.1 },
-  { framework: 'SvelteKit', dupTitle: 4.8, dupDesc: 3.9, dupCanonical: 1.8 },
-  { framework: 'Gatsby', dupTitle: 3.6, dupDesc: 4.1, dupCanonical: 2.3 },
-  { framework: 'Next.js', dupTitle: 2.1, dupDesc: 1.8, dupCanonical: 1.2 },
-  { framework: 'Nuxt', dupTitle: 1.4, dupDesc: 1.1, dupCanonical: 0.8 },
-  { framework: 'Remix', dupTitle: 1.2, dupDesc: 0.9, dupCanonical: 0.6 },
+  {
+    framework: 'WordPress',
+    dupTitle: 8.2,
+    dupDesc: 9.1,
+    dupCanonical: 5.4,
+  },
+  {
+    framework: 'Angular',
+    dupTitle: 5.1,
+    dupDesc: 4.3,
+    dupCanonical: 2.1,
+  },
+  {
+    framework: 'SvelteKit',
+    dupTitle: 4.8,
+    dupDesc: 3.9,
+    dupCanonical: 1.8,
+  },
+  {
+    framework: 'Gatsby',
+    dupTitle: 3.6,
+    dupDesc: 4.1,
+    dupCanonical: 2.3,
+  },
+  {
+    framework: 'Next.js',
+    dupTitle: 2.1,
+    dupDesc: 1.8,
+    dupCanonical: 1.2,
+  },
+  {
+    framework: 'Nuxt',
+    dupTitle: 1.4,
+    dupDesc: 1.1,
+    dupCanonical: 0.8,
+  },
+  {
+    framework: 'Remix',
+    dupTitle: 1.2,
+    dupDesc: 0.9,
+    dupCanonical: 0.6,
+  },
 ]
 
 type D = typeof data[number]

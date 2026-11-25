@@ -146,7 +146,11 @@ const lookupColumns: TableColumn<ToolLookup>[] = [
     header: 'Time',
     cell: ({ row }) => {
       const raw = row.original.createdAt
-      const date = raw instanceof Date ? raw : new Date(typeof raw === 'number' ? raw * 1000 : raw)
+      const date = raw instanceof Date
+        ? raw
+        : new Date(typeof raw === 'number'
+            ? raw * 1000
+            : raw)
       if (Number.isNaN(date.getTime()))
         return h('span', { class: 'text-dimmed' }, '—')
       return h('time', {
@@ -198,7 +202,9 @@ const statCards = computed(() => [
     label: 'Error Rate',
     value: analytics.value?.errorRate ?? 0,
     icon: 'i-carbon-warning-alt',
-    color: (analytics.value?.errorRate ?? 0) > 5 ? 'red' : 'emerald',
+    color: (analytics.value?.errorRate ?? 0) > 5
+      ? 'red'
+      : 'emerald',
     isPercent: true,
   },
 ])

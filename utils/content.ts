@@ -24,7 +24,10 @@ export function walk<T = any>(
 
     // Process children
     for (let i = 0; i < node.length; i++) {
-      walk(node[i], predicate, callback, [...path, i.toString()])
+      walk(node[i], predicate, callback, [
+        ...path,
+        i.toString(),
+      ])
     }
   }
   // Handle objects (like attributes)
@@ -110,8 +113,18 @@ export function replaceImportSpecifier(
       const code = textContent(node) || node[1].code || ''
       node[1].code = code
       const names = [
-        ...(Object.values(mapping).includes('unhead') ? ['useHead', 'useSeoMeta', 'useHeadSafe', 'useScript', 'useServerHead'] : []),
-        ...(Object.values(mapping).includes('@unhead/schema-org') ? ['useSchemaOrg'] : []),
+        ...(Object.values(mapping).includes('unhead')
+          ? [
+              'useHead',
+              'useSeoMeta',
+              'useHeadSafe',
+              'useScript',
+              'useServerHead',
+            ]
+          : []),
+        ...(Object.values(mapping).includes('@unhead/schema-org')
+          ? ['useSchemaOrg']
+          : []),
       ]
       if (correctUseHeadForTypeScript && names.some(name => code.includes(name))) {
         const result = findInstanceArguments(code, names)
@@ -155,7 +168,10 @@ function findInstanceArguments(code: string, names: string[]):
   | { _tag: 'PartialSnippet', reason: string } {
   let ast
   try {
-    ast = parse(code, { sourceType: 'unambiguous', plugins: ['typescript', 'jsx'] })
+    ast = parse(code, {
+      sourceType: 'unambiguous',
+      plugins: ['typescript', 'jsx'],
+    })
   }
   catch (error) {
     if (error instanceof SyntaxError)
@@ -170,7 +186,9 @@ function findInstanceArguments(code: string, names: string[]):
     for (const specifier of statement.specifiers) {
       if (specifier.type !== 'ImportSpecifier')
         continue
-      const name = specifier.imported.type === 'Identifier' ? specifier.imported.name : specifier.imported.value
+      const name = specifier.imported.type === 'Identifier'
+        ? specifier.imported.name
+        : specifier.imported.value
       if (names.includes(name))
         importedCalls.set(specifier.local.name, ['unhead', '@unhead/schema-org'].includes(statement.source.value))
     }

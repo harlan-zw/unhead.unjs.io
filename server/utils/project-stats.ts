@@ -30,7 +30,9 @@ export function getLastPageFromLinkHeader(link: string | null | undefined): numb
     return 1
 
   const page = Number(new URL(href).searchParams.get('page'))
-  return Number.isSafeInteger(page) && page > 0 ? page : 1
+  return Number.isSafeInteger(page) && page > 0
+    ? page
+    : 1
 }
 
 interface ParsedVersion {
@@ -46,7 +48,9 @@ function parseVersion(tag: string): ParsedVersion | undefined {
   if (!match)
     return
   return {
-    tag: tag.startsWith('v') ? tag : `v${tag}`,
+    tag: tag.startsWith('v')
+      ? tag
+      : `v${tag}`,
     major: Number(match[1]),
     minor: Number(match[2]),
     patch: Number(match[3]),
@@ -71,5 +75,7 @@ export function selectLatestMajorVersions(tags: string[]): string[] {
       latestByMajor.set(version.major, version)
   }
 
-  return [...latestByMajor.values()].sort(compareVersions).map(version => version.tag)
+  return [
+    ...latestByMajor.values(),
+  ].sort(compareVersions).map(version => version.tag)
 }

@@ -22,7 +22,7 @@ const { categories, footer, cols = 1 } = defineProps<{
 <template>
   <div
     class="gap-0 p-0"
-    :class="cols > 1 ? `grid grid-cols-${cols}` : ''"
+    :class="cols > 1 ? 'grid grid-cols-[repeat(var(--cols),minmax(0,1fr))]' : ''"
     :style="{ '--cols': cols }"
   >
     <div
@@ -67,7 +67,7 @@ const { categories, footer, cols = 1 } = defineProps<{
       </div>
     </div>
 
-    <div v-if="footer" :class="cols > 1 ? `col-span-${cols}` : ''" class="border-t border-default bg-[var(--ui-bg-elevated)]/50">
+    <div v-if="footer" :class="cols > 1 ? 'col-span-full' : ''" class="border-t border-default bg-[var(--ui-bg-elevated)]/50">
       <NuxtLink
         :to="footer.to"
         class="flex items-center justify-center gap-2 px-4 py-2 text-[13px] text-muted hover:text-default transition-colors group"

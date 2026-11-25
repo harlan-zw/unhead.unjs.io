@@ -10,12 +10,16 @@ export const githubThrottleOptions = {
 
 export function createPublicGithubFetch(fetchImpl: typeof fetch = globalThis.fetch): typeof fetch {
   return async (input, init) => {
-    const retryInput = input instanceof Request ? input.clone() : input
+    const retryInput = input instanceof Request
+      ? input.clone()
+      : input
     const response = await fetchImpl(input, init)
     if (response.status !== 401 && response.status !== 403)
       return response
 
-    const headers = new Headers(input instanceof Request ? input.headers : init?.headers)
+    const headers = new Headers(input instanceof Request
+      ? input.headers
+      : init?.headers)
     const initHeaders = new Headers(init?.headers)
     const hadAuthorization = headers.has('authorization') || initHeaders.has('authorization')
     if (!hadAuthorization)

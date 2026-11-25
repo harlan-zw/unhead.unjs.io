@@ -4,7 +4,18 @@ import { parse } from '@babel/parser'
 const MAX_SOURCE_LENGTH = 50_000
 const MAX_EVALUATED_NODES = 5_000
 const MAX_DEPTH = 100
-const AllowedElements = new Set(['div', 'span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img'])
+const AllowedElements = new Set([
+  'div',
+  'span',
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'img',
+])
 const BlockedPropertyNames = new Set(['__proto__', 'constructor', 'prototype'])
 
 export interface OgImageJsxNode {
@@ -67,8 +78,11 @@ function evaluateTemplateLiteral(node: Extract<Node, { type: 'TemplateLiteral' }
 
 function evaluateLogical(node: Extract<Node, { type: 'LogicalExpression' }>, state: EvaluationState, depth: number) {
   const left = evaluateNode(node.left, state, depth + 1)
-  if (node.operator === '&&')
-    return left ? evaluateNode(node.right, state, depth + 1) : left
+  if (node.operator === '&&') {
+    return left
+      ? evaluateNode(node.right, state, depth + 1)
+      : left
+  }
   if (node.operator === '||')
     return left || evaluateNode(node.right, state, depth + 1)
   return left ?? evaluateNode(node.right, state, depth + 1)
@@ -152,7 +166,11 @@ function evaluateJsxFragment(node: Extract<Node, { type: 'JSXFragment' }>, state
 
   return {
     type: 'symbol-fragment',
-    props: { children: children.length === 1 ? children[0] : children },
+    props: {
+      children: children.length === 1
+        ? children[0]
+        : children,
+    },
   }
 }
 
@@ -173,7 +191,9 @@ function evaluateNode(node: Node, state: EvaluationState, depth: number): unknow
     case 'ObjectExpression':
       return evaluateObject(node, state, depth)
     case 'ArrayExpression':
-      return node.elements.map(element => element === null ? null : evaluateNode(element, state, depth + 1))
+      return node.elements.map(element => element === null
+        ? null
+        : evaluateNode(element, state, depth + 1))
     case 'TemplateLiteral':
       return evaluateTemplateLiteral(node, state, depth)
     case 'ConditionalExpression':

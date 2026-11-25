@@ -1,3 +1,4 @@
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - mdream@2.0.3
   - '@mdream/js@2.0.3'
@@ -64,9 +65,10 @@ minimumReleaseAgeExclude:
   - '@vercel/nft@1.11.12'
   - nitropack@2.14.0
   - '@nuxt/scripts@2.0.0-beta.17'
-shamefullyHoist: true
-shellEmulator: true
+
 trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 262800
+
 # These exact cssnano releases match official-source provenance and tarball digests.
 trustPolicyExclude:
   - cssnano-preset-default@9.6.0
@@ -99,11 +101,16 @@ trustPolicyExclude:
   - postcss-svgo@9.0.6
   - postcss-unique-selectors@9.0.6
   - stylehacks@9.0.8
+
+shamefullyHoist: true
+shellEmulator: true
+
 packages:
   - .
   - test/capo-benchmarks
   - test/streaming-benchmarks/raw
   - tools/typecheck
+
 overrides:
   '@nuxtjs/robots': 7.1.0
   '@takumi-rs/core': 2.15.2
@@ -138,7 +145,7 @@ overrides:
   brace-expansion@2: ^2.1.4
   # One drizzle copy for the app database and nuxt-ai-ready runtime sync and
   # cron. nuxt-ai-ready 3 declares drizzle-orm ^1.0.0-rc.4 as an optional peer.
-  drizzle-orm: 1.0.0-rc.4
+  drizzle-orm: 1.0.0-rc.6
   esbuild: ^0.28.1
   lighthouse>ws: 7.5.11
   maplibre-gl: ^6.4.1
@@ -154,12 +161,27 @@ overrides:
   vite: ^8.2.1
   vue: 3.5.46
   vue-tsc@3.3.14>@vue/language-core: 3.3.11
+
 patchedDependencies:
   '@harlan-zw/nuxt-wide-events@0.2.0': patches/@harlan-zw__nuxt-wide-events@0.2.0.patch
-  '@nuxtjs/mdc@0.22.2': patches/@nuxtjs__mdc@0.22.2.patch
+  '@nuxtjs/mdc@0.23.4': patches/@nuxtjs__mdc@0.23.4.patch
   '@vueuse/core@14.4.0': patches/@vueuse__core@14.4.0.patch
+
+allowBuilds:
+  '@parcel/watcher': false
+  '@sentry/cli': true
+  '@tailwindcss/oxide': false
+  better-sqlite3: true
+  esbuild: false
+  maplibre-gl: false
+  puppeteer: false
+  sharp: false
+  simple-git-hooks: true
+  vue-demi: false
+  workerd: false
+
 catalog:
-  '@antfu/eslint-config': ^9.3.0
+  '@antfu/eslint-config': ^10.0.0
   '@babel/parser': ^8.1.3
   '@babel/types': ^8.1.3
   '@cloudflare/workers-types': ^5.20261123.1
@@ -183,35 +205,35 @@ catalog:
   '@iconify-json/vscode-icons': ^1.2.100
   '@mdream/js': 2.2.0
   '@nuxt/content': 3.17.0
-  '@nuxt/fonts': ^0.14.0
+  '@nuxt/fonts': ^1.2.0
   '@nuxt/scripts': 2.0.0-beta.17
   '@nuxt/ui': ^4.13.1
-  '@nuxtjs/mdc': 0.22.2
+  '@nuxtjs/mdc': 0.23.4
   '@nuxtjs/seo': ^6.0.1
-  '@sentry/nuxt': ^10.70.0
+  '@sentry/nuxt': ^11.17.0
   '@shikijs/magic-move': ^4.6.0
   '@takumi-rs/core': 2.15.2
   '@takumi-rs/wasm': 2.15.2
   '@tiptap/y-tiptap': 3.3.1
   '@types/node': ^26.6.6
   '@unovis/vue': 1.8.1
-  '@vueuse/core': ^14.4.0
-  '@vueuse/nuxt': ^14.4.0
+  '@vueuse/core': ^15.1.0
+  '@vueuse/nuxt': ^15.1.0
   better-sqlite3: ^13.2.0
   case-police: ^2.2.1
   chrome-launcher: ^1.2.3
   consola: ^3.4.2
-  drizzle-orm: 1.0.0-rc.4
+  drizzle-orm: 1.0.0-rc.6
   eslint: ^10.15.0
-  eslint-plugin-harlanzw: ^0.20.0
+  eslint-plugin-harlanzw: ^0.23.0
   fuse.js: ^7.5.0
   h3: 2.0.8
   jsonc-parser: 3.3.1
 
   lighthouse: ^13.4.1
   lint-staged: ^17.6.2
-  markdownlint-cli: ^0.49.1
-  minimark: 0.2.0
+  markdownlint-cli: ^0.50.1
+  minimark: 1.0.0
   nitro: 3.0.261103-rc
   nostics: ^1.2.0
   nuxt: 4.7.0
@@ -227,7 +249,7 @@ catalog:
   shiki: 4.6.0
   shiki-transformer-color-highlight: ^1.1.0
   simple-git-hooks: ^2.14.0
-  tailwind-variants: ^3.3.1
+  tailwind-variants: ^4.0.2
   tsx: ^4.23.15
   typescript: 6.0.3
   ufo: ^1.6.4
@@ -237,19 +259,7 @@ catalog:
   wrangler: ^4.167.0
   yaml: ^2.9.1
   zod: ^4.6.6
-trustPolicyIgnoreAfter: 262800
-allowBuilds:
-  '@parcel/watcher': false
-  '@sentry/cli': true
-  '@tailwindcss/oxide': false
-  better-sqlite3: true
-  esbuild: false
-  maplibre-gl: false
-  puppeteer: false
-  sharp: false
-  simple-git-hooks: true
-  vue-demi: false
-  workerd: false
+
 catalogs:
   native:
     '@vue/content-mapper': 4.0.0-alpha.3

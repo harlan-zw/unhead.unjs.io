@@ -9,12 +9,16 @@ import nuxtConfig from '../nuxt.config'
 // the serialisable `ReportPolicy` both runtime plugins hand to `beforeSend`.
 // Resolve one scope the same way so these tests drive the wire format.
 function resolvePolicy(policy: ModuleOptions['policy'] | undefined, scope: ReportScope): ReportPolicy {
-  const configured = scope === 'client' ? policy?.dropClientStatus : policy?.dropServerStatus
+  const configured = scope === 'client'
+    ? policy?.dropClientStatus
+    : policy?.dropServerStatus
   return {
     scope,
     dataCollection: 'scrubbed',
     dropStatus: (configured ?? []).map(status =>
-      typeof status === 'number' ? { from: status, to: status } : { from: status[0], to: status[1] },
+      typeof status === 'number'
+        ? { from: status, to: status }
+        : { from: status[0], to: status[1] },
     ),
     dropTransient: policy?.dropTransient ?? true,
     ignoreErrors: (policy?.ignoreErrors ?? []).map(value => ({ _tag: 'literal' as const, value })),
@@ -34,17 +38,27 @@ const clientBeforeSend = createBeforeSend(resolvePolicy(declaredPolicy, 'client'
 const serverBeforeSend = createBeforeSend(resolvePolicy(declaredPolicy, 'server'))
 
 function errorReport(error: { name: string, message: string }): ErrorReport {
-  return { exception: { values: [{ type: error.name, value: error.message }] } }
+  return {
+    exception: {
+      values: [
+        { type: error.name, value: error.message },
+      ],
+    },
+  }
 }
 
 function reportWithStackFrames(filenames: string[]): ErrorReport {
   return {
     exception: {
-      values: [{
-        type: 'Error',
-        value: 'Session verification failed',
-        stacktrace: { frames: filenames.map(filename => ({ filename })) },
-      }],
+      values: [
+        {
+          type: 'Error',
+          value: 'Session verification failed',
+          stacktrace: {
+            frames: filenames.map(filename => ({ filename })),
+          },
+        },
+      ],
     },
   }
 }

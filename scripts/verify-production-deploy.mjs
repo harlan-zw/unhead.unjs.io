@@ -37,8 +37,12 @@ export function parseVerifyArgs(argv) {
 
 export function parseBuildManifest(manifest) {
   return {
-    id: typeof manifest?.id === 'string' ? manifest.id : undefined,
-    timestamp: typeof manifest?.timestamp === 'number' ? manifest.timestamp : Number.NaN,
+    id: typeof manifest?.id === 'string'
+      ? manifest.id
+      : undefined,
+    timestamp: typeof manifest?.timestamp === 'number'
+      ? manifest.timestamp
+      : Number.NaN,
   }
 }
 
@@ -107,11 +111,20 @@ export async function pollProductionBuild(fetcher, {
       served = await fetcher()
     }
     catch (error) {
-      console.warn(`[verify-deploy] attempt ${attempt}: ${error instanceof Error ? error.message : String(error)}`)
+      console.warn(`[verify-deploy] attempt ${attempt}: ${error instanceof Error
+        ? error.message
+        : String(error)}`)
     }
 
     if (served !== undefined) {
-      result = evaluateProductionBuild({ served, expected: expectedId ? { id: expectedId } : null, now: now(), maxAgeMs })
+      result = evaluateProductionBuild({
+        served,
+        expected: expectedId
+          ? { id: expectedId }
+          : null,
+        now: now(),
+        maxAgeMs,
+      })
       if (result._tag === 'fresh')
         return result
     }
@@ -167,7 +180,9 @@ async function main() {
     return 0
   }
   catch (error) {
-    console.error(`[verify-deploy] ${error instanceof Error ? error.message : String(error)}`)
+    console.error(`[verify-deploy] ${error instanceof Error
+      ? error.message
+      : String(error)}`)
     return 1
   }
 }

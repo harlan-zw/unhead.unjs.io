@@ -55,7 +55,10 @@ async function retryTransient<T>(run: () => Promise<T>, options: ResolvedD1Retry
 }
 
 export function wrapD1WithRetry<DB extends D1Database>(db: DB, options: D1RetryOptions = {}): DB {
-  const config: ResolvedD1RetryOptions = { ...defaultRetryOptions, ...options }
+  const config: ResolvedD1RetryOptions = {
+    ...defaultRetryOptions,
+    ...options,
+  }
   const rawStatements = new WeakMap<object, D1PreparedStatement>()
 
   function unwrapStatements(statements: D1PreparedStatement[]): D1PreparedStatement[] {
@@ -70,7 +73,9 @@ export function wrapD1WithRetry<DB extends D1Database>(db: DB, options: D1RetryO
             return (...values: unknown[]) => wrapStatement(statement.bind(...values))
           case 'first':
             return (colName?: string) => retryTransient(
-              () => colName === undefined ? statement.first() : statement.first(colName),
+              () => colName === undefined
+                ? statement.first()
+                : statement.first(colName),
               config,
             )
           case 'run':
