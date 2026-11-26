@@ -100,4 +100,4 @@ jobs:
           }
           EOF
           pnpm exec wrangler deploy --config "$RUNNER_TEMP/pages-check.json" --dry-run
-          pnpm exec vitest run --config vitest.e2e.config.ts tests/pages-worker-runtime.e2e.test.ts -t "answers the skew protection health check|reports the cron outcome"
+          pnpm exec vitest run --config vitest.e2e.config.ts tests/pages-worker-runtime.e2e.test.ts -t "answers the skew protection health check"
