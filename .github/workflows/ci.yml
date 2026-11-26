@@ -80,8 +80,24 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=12288
           UNHEAD_DOCS_SOURCE: remote
-      # Boot the built Pages Worker in workerd at the Pages compatibility date
-      # so missing Node builtins (such as `node:fs`) and startup faults fail on
-      # the pull request instead of during production deploy.
-      - name: Verify Pages Worker startup and runtime
-        run: pnpm test:e2e:pages
+      # Validate the Pages Worker bundle and boot it in workerd at the Pages
+      # compatibility date so missing Node builtins (such as `node:fs`) and
+      # startup faults fail on the pull request instead of during deploy.
+      - name: Verify Pages Worker startup and bundle
+        run: |
+          cat > "$RUNNER_TEMP/pages-check.json" <<EOF
+          {
+            "name": "unhead-unjs-io",
+            "main": "$GITHUB_WORKSPACE/dist/_worker.js/index.js",
+            "no_bundle": true,
+            "find_additional_modules": true,
+            "base_dir": "$GITHUB_WORKSPACE/dist/_worker.js",
+            "rules": [
+              { "type": "ESModule", "globs": ["**/*.mjs", "**/*.js"] }
+            ],
+            "compatibility_date": "2025-03-01",
+            "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"]
+          }
+          EOF
+          pnpm exec wrangler deploy --config "$RUNNER_TEMP/pages-check.json" --dry-run
+          pnpm exec vitest run --config vitest.e2e.config.ts tests/pages-worker-runtime.e2e.test.ts -t "answers the skew protection health check|reports the cron outcome"
