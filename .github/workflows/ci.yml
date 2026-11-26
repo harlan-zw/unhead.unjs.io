@@ -1,35 +1,13 @@
 name: CI
 
-# The pull request gate. Until now this repository had none: lint, typecheck, and
-# test ran only inside deploy-cloudflare.yml, which fires after the merge, so a
-# red branch was discovered by a failed production deploy.
+# The pull request gate. Required checks stay under `harlan-desktop / *`, and
+# the `changes` job skips them on non-rendered docs PRs so required checks still
+# report instead of hanging.
 #
 # The jobs live in harlan-zw/harlan-nuxt so every site shares one pinned copy.
 
 on:
   pull_request:
-    paths:
-      - '**'
-      - '!**/*.md'
-      - '!docs/**'
-      - '!.editorconfig'
-      - '!.gitignore'
-      - '!.idea/**'
-      - '!.vscode/**'
-      - 'content/**/*.md'
-      - 'snippets/**/*.md'
-  push:
-    branches: [main]
-    paths:
-      - '**'
-      - '!**/*.md'
-      - '!docs/**'
-      - '!.editorconfig'
-      - '!.gitignore'
-      - '!.idea/**'
-      - '!.vscode/**'
-      - 'content/**/*.md'
-      - 'snippets/**/*.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,10 +17,40 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      # Run checks when any changed file is code, or site content/snippets that render.
+      - id: filter
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          files=$(git diff --name-only "$BASE...$HEAD")
+          code=false
+          while IFS= read -r file; do
+            case "$file" in
+              content/*|snippets/*) code=true; break ;;
+              *.md|docs/*|.editorconfig|.gitignore|.idea/*|.vscode/*|'') ;;
+              *) code=true; break ;;
+            esac
+          done <<< "$files"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
   harlan-desktop:
+    needs: changes
+    if: ${{ !cancelled() }}
     uses: harlan-zw/harlan-nuxt/.github/workflows/harlan-desktop-site-ci.yml@main
     with:
       node-version: 26.13.0
+      skip: ${{ needs.changes.outputs.code == 'false' }}
       # GitHub-hosted on purpose. This repository is public, and a self-hosted
       # runner on a public repository lets a fork pull request run code on the
       # workstation.
@@ -56,8 +64,8 @@ jobs:
       timeout-minutes: 30
 
   build:
-    # Main builds in the deploy workflow. Keep the build check on pull requests.
-    if: github.event_name == 'pull_request'
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
     steps:
@@ -72,3 +80,24 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=12288
           UNHEAD_DOCS_SOURCE: remote
+      # Validate the Pages Worker bundle and boot it in workerd at the Pages
+      # compatibility date so missing Node builtins (such as `node:fs`) and
+      # startup faults fail on the pull request instead of during deploy.
+      - name: Verify Pages Worker startup and bundle
+        run: |
+          cat > "$RUNNER_TEMP/pages-check.json" <<EOF
+          {
+            "name": "unhead-unjs-io",
+            "main": "$GITHUB_WORKSPACE/dist/_worker.js/index.js",
+            "no_bundle": true,
+            "find_additional_modules": true,
+            "base_dir": "$GITHUB_WORKSPACE/dist/_worker.js",
+            "rules": [
+              { "type": "ESModule", "globs": ["**/*.mjs", "**/*.js"] }
+            ],
+            "compatibility_date": "2025-03-01",
+            "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"]
+          }
+          EOF
+          pnpm exec wrangler deploy --config "$RUNNER_TEMP/pages-check.json" --dry-run
+          pnpm exec vitest run --config vitest.e2e.config.ts tests/pages-worker-runtime.e2e.test.ts -t "answers the skew protection health check"
