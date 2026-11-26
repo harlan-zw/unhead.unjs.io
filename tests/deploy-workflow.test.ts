@@ -137,48 +137,28 @@ function resolveConcurrencyGroup(workflow: Workflow, event: Record<string, unkno
   return `deploy-cloudflare-${evaluateExpression(expression, event)}`
 }
 
-const workflowRunOnMain = {
+const pushOnMain = {
   github: {
-    event_name: 'workflow_run',
+    event_name: 'push',
     ref_name: 'main',
-    event: {
-      workflow_run: { conclusion: 'success', head_branch: 'main' },
-    },
   },
 }
 
 describe('deploy-cloudflare.yml job gate', () => {
-  it('runs for a successful CI run on main', async () => {
+  it('runs for a push to main', async () => {
     const workflow = await loadDeployWorkflow()
-    expect(deployJobRuns(workflow, workflowRunOnMain)).toBe(true)
+    expect(deployJobRuns(workflow, pushOnMain)).toBe(true)
   })
 
-  it('skips a successful CI run on a feature branch', async () => {
+  it('skips a push to a feature branch', async () => {
     const workflow = await loadDeployWorkflow()
-    const featureRun = {
+    const featurePush = {
       github: {
-        event_name: 'workflow_run',
-        ref_name: 'main',
-        event: {
-          workflow_run: { conclusion: 'success', head_branch: 'feature/x' },
-        },
+        event_name: 'push',
+        ref_name: 'feature/x',
       },
     }
-    expect(deployJobRuns(workflow, featureRun)).toBe(false)
-  })
-
-  it('skips a failed CI run on main', async () => {
-    const workflow = await loadDeployWorkflow()
-    const failedRun = {
-      github: {
-        event_name: 'workflow_run',
-        ref_name: 'main',
-        event: {
-          workflow_run: { conclusion: 'failure', head_branch: 'main' },
-        },
-      },
-    }
-    expect(deployJobRuns(workflow, failedRun)).toBe(false)
+    expect(deployJobRuns(workflow, featurePush)).toBe(false)
   })
 
   it('runs for a manual dispatch on main', async () => {
@@ -216,7 +196,7 @@ describe('deploy-cloudflare.yml concurrency group', () => {
       github: { event_name: 'repository_dispatch', ref_name: 'main' },
     }
     const groups = [
-      resolveConcurrencyGroup(workflow, workflowRunOnMain),
+      resolveConcurrencyGroup(workflow, pushOnMain),
       resolveConcurrencyGroup(workflow, manualDispatch),
       resolveConcurrencyGroup(workflow, repositoryDispatch),
     ]
