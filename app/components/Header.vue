@@ -138,7 +138,7 @@ const mobileSchemaNavigationGroups = computed(() => mobileSectionGroups(1))
         opening one only shows it and never renders its rows on the click
         that INP measures.
       -->
-      <NavigationMenuRoot v-model="openMenu" aria-label="Primary navigation" class="hidden lg:flex justify-center relative py-2" :delay-duration="40" :unmount-on-hide="false">
+      <NavigationMenuRoot v-model="openMenu" aria-label="Primary" class="hidden lg:flex justify-center relative py-2" :delay-duration="40" :unmount-on-hide="false">
         <NavigationMenuList class="flex items-center gap-0.5">
           <NavigationMenuItem v-for="item in megaMenuItems" :key="item.value" :value="item.value">
             <NavigationMenuTrigger as-child>

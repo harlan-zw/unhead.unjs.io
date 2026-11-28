@@ -34,7 +34,7 @@ const categories = computed(() => {
       <UPage :ui="{ left: 'lg:col-span-3 xl:col-span-2', center: 'col-span-5 lg:col-span-7 xl:col-span-8' }">
         <template #left>
           <UPageAside class="max-w-[260px]">
-            <nav aria-label="Learn Navigation" class="space-y-6">
+            <nav aria-label="Learn" class="space-y-6">
               <div v-for="category in categories" :key="category.key">
                 <div class="mb-2 pl-2.5">
                   <span class="text-[11px] font-medium uppercase tracking-widest text-dimmed">

@@ -75,7 +75,7 @@ const footerColumns = computed(() =>
               <h2 class="font-bold mb-3 text-xs">
                 {{ category.label }}
               </h2>
-              <nav :aria-label="`${category.label} footer navigation`">
+              <nav :aria-label="`${category.label} footer`">
                 <ul class="grid gap-4">
                   <li v-for="(link, key) in category.items" :key="key">
                     <ULink :to="link.to" class="flex items-center gap-1 hover:underline transition">
