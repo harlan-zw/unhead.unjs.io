@@ -354,7 +354,7 @@ const codeLang = computed(() => codeLanguage.value === 'html'
               </UFormField>
             </div>
 
-            <UFormField label="Author" help="Author name or profile URL">
+            <UFormField label="Article Author" help="Author name or profile URL">
               <UInput
                 v-model="state.articleAuthor"
                 placeholder="John Doe or https://example.com/authors/john"
@@ -382,7 +382,7 @@ const codeLang = computed(() => codeLanguage.value === 'html'
 
           <!-- Technical Tab -->
           <div v-show="activeFormTab === 'technical'" class="space-y-4">
-            <UFormField label="Author" help="Page author name">
+            <UFormField label="Page Author" help="Page author name">
               <UInput
                 v-model="state.author"
                 placeholder="John Doe"

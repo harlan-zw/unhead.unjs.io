@@ -163,7 +163,7 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
 
     <section class="xl:max-w-full max-w-3xl mx-auto py-5 sm:py-12 xl:py-20">
       <UContainer class="container mx-auto">
-        <NuxtLink to="/docs/releases/v3" aria-label="Unhead v3 Beta">
+        <NuxtLink to="/docs/releases/v3">
           <UBadge variant="outline" color="success">
             🌊 Unhead v3 is here
           </UBadge>
@@ -399,12 +399,12 @@ const helloUnheadTitle = `Hello <span><span class="text-[#6F42C1] dark:text-[#82
             @update:model-value="toggleCapo = !toggleCapo"
           />
           <div class="flex flex-wrap gap-2 mt-4 mb-6">
-            <NuxtLink to="/learn/guides/what-is-capo" aria-label="Learn about Capo.js">
+            <NuxtLink to="/learn/guides/what-is-capo">
               <UButton variant="soft" color="primary" trailing-icon="i-carbon-arrow-right" size="sm">
                 What is Capo.js?
               </UButton>
             </NuxtLink>
-            <NuxtLink to="/tools/capo-analyzer" aria-label="Try the Capo.js Analyzer">
+            <NuxtLink to="/tools/capo-analyzer" aria-label="Try the Analyzer (Capo.js)">
               <UButton variant="soft" color="neutral" trailing-icon="i-carbon-arrow-right" size="sm">
                 Try the Analyzer
               </UButton>
